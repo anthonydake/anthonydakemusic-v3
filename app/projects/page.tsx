@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import HomeClient from "../components/HomeClient";
 import TextScramble from "../components/TextScramble";
@@ -17,6 +17,14 @@ function formatColumbusTime(d: Date) {
 }
 
 export default function ProjectsPage() {
+  return (
+    <Suspense fallback={null}>
+      <ProjectsInner />
+    </Suspense>
+  );
+}
+
+function ProjectsInner() {
   const searchParams = useSearchParams();
   const q = searchParams.toString();
   const homeHref = q ? `/?${q}` : "/";

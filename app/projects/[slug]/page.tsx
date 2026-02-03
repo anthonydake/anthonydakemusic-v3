@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import ScrambleText from "@/app/components/ScrambleText";
 import TextScramble from "@/app/components/TextScramble";
@@ -16,8 +17,10 @@ function formatColumbusTime(d: Date) {
   return fmt.format(d);
 }
 
-export default function ProjectDetailPage({ params }: { params: { slug: string } }) {
-  const project = projects.find((p) => p.slug === params.slug);
+export default function ProjectDetailPage() {
+  const params = useParams<{ slug?: string | string[] }>();
+  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  const project = projects.find((p) => p.slug === slug);
   const [now, setNow] = useState<Date>(() => new Date());
   const [showLiveTime, setShowLiveTime] = useState(false);
   const [initialTime] = useState(() => formatColumbusTime(new Date()));
