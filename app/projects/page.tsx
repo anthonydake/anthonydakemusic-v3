@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import HomeClient from "../components/HomeClient";
 import TextScramble from "../components/TextScramble";
 
 function formatColumbusTime(d: Date) {
@@ -79,7 +80,9 @@ export default function ProjectsPage() {
           </nav>
         </div>
       </div>
-      <main className="min-h-screen bg-white pt-14 text-black" />
+      <div className="pt-14">
+        <HomeClient initialSection="projects" />
+      </div>
     </>
   );
 }

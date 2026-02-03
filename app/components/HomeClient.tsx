@@ -1,11 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import { projects } from "@/lib/projects";
 
-export default function HomeClient() {
+type HomeClientProps = {
+  initialSection?: "hero" | "projects";
+  syncRoute?: boolean;
+};
+
+const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+export default function HomeClient({ initialSection = "hero", syncRoute = true }: HomeClientProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -14,9 +24,22 @@ export default function HomeClient() {
   const [visible, setVisible] = useState<{ hero: boolean; projects: boolean }>(() =>
     reduceMotion ? { hero: true, projects: true } : { hero: false, projects: false }
   );
+  const [activeId, setActiveId] = useState<"hero" | "projects">(initialSection);
   const [snapAnimating, setSnapAnimating] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const projectsRef = useRef<HTMLElement | null>(null);
+
+  useIsoLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Ensure route entry points match the intended section without visible jump.
+    const target = initialSection === "projects" ? projectsRef.current?.offsetTop ?? 0 : 0;
+    const prev = container.style.scrollBehavior;
+    container.style.scrollBehavior = "auto";
+    container.scrollTop = target;
+    container.style.scrollBehavior = prev;
+  }, [initialSection]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -31,6 +54,7 @@ export default function HomeClient() {
           const id = entry.target.getAttribute("data-id");
           if (!id) return;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+            setActiveId(id as "hero" | "projects");
             setVisible((prev) => (prev[id as "hero" | "projects"] ? prev : { ...prev, [id as "hero" | "projects"]: true }));
           }
         });
@@ -101,6 +125,16 @@ export default function HomeClient() {
       container.removeEventListener("touchend", handleTouchEnd);
     };
   }, [snapAnimating]);
+
+  useEffect(() => {
+    if (!syncRoute) return;
+    if (snapAnimating) return;
+
+    const desired = activeId === "projects" ? "/projects" : "/";
+    if (pathname !== desired) {
+      router.replace(desired, { scroll: false });
+    }
+  }, [activeId, pathname, router, snapAnimating, syncRoute]);
 
   return (
     <div
