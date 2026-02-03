@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "gen:projects": "node scripts/generate-projects.mjs",
+    "predev": "npm run gen:projects",
+    "prebuild": "npm run gen:projects",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import { projects } from "@/lib/projects";
 
@@ -16,6 +16,7 @@ const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : use
 export default function HomeClient({ initialSection = "hero", syncRoute = true }: HomeClientProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -28,6 +29,47 @@ export default function HomeClient({ initialSection = "hero", syncRoute = true }
   const [snapAnimating, setSnapAnimating] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const projectsRef = useRef<HTMLElement | null>(null);
+
+  const allTags = useMemo(() => {
+    const set = new Set<string>();
+    projects.forEach((p) => p.tags.forEach((t) => set.add(t)));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, []);
+
+  const selectedTags = useMemo(() => {
+    const raw = searchParams.getAll("tag").map((t) => t.trim()).filter(Boolean);
+    if (raw.length === 0) return [] as string[];
+
+    const allowed = new Set(allTags);
+    const out = Array.from(new Set(raw.filter((t) => allowed.has(t))));
+    out.sort((a, b) => a.localeCompare(b));
+    return out;
+  }, [allTags, searchParams]);
+
+  const filteredProjects = useMemo(() => {
+    if (selectedTags.length === 0) return projects;
+    return projects.filter((p) => selectedTags.some((t) => p.tags.includes(t)));
+  }, [selectedTags]);
+
+  const setTagsInUrl = (nextTags: string[]) => {
+    const qs = new URLSearchParams(searchParams.toString());
+    qs.delete("tag");
+    nextTags
+      .filter(Boolean)
+      .slice()
+      .sort((a, b) => a.localeCompare(b))
+      .forEach((t) => qs.append("tag", t));
+    const q = qs.toString();
+    router.replace(q ? `${pathname}?${q}` : pathname, { scroll: false });
+  };
+
+  const toggleTag = (tag: string) => {
+    if (selectedTags.includes(tag)) {
+      setTagsInUrl(selectedTags.filter((t) => t !== tag));
+    } else {
+      setTagsInUrl([...selectedTags, tag]);
+    }
+  };
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
@@ -132,9 +174,10 @@ export default function HomeClient({ initialSection = "hero", syncRoute = true }
 
     const desired = activeId === "projects" ? "/projects" : "/";
     if (pathname !== desired) {
-      router.replace(desired, { scroll: false });
+      const q = searchParams.toString();
+      router.replace(q ? `${desired}?${q}` : desired, { scroll: false });
     }
-  }, [activeId, pathname, router, snapAnimating, syncRoute]);
+  }, [activeId, pathname, router, searchParams, snapAnimating, syncRoute]);
 
   return (
     <div
@@ -185,6 +228,37 @@ export default function HomeClient({ initialSection = "hero", syncRoute = true }
             <h2 className="text-2xl font-semibold tracking-tight">Selected work</h2>
             <p className="text-sm text-black/60">Scroll snapped from the logo — explore the grid below.</p>
           </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setTagsInUrl([])}
+              className={`rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.22em] transition ${
+                selectedTags.length === 0
+                  ? "border-black/60 text-black"
+                  : "border-black/15 text-black/60 hover:border-black/30 hover:text-black"
+              }`}
+            >
+              All
+            </button>
+            {allTags.map((tag) => {
+              const active = selectedTags.includes(tag);
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => toggleTag(tag)}
+                  className={`rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.22em] transition ${
+                    active
+                      ? "border-black/60 text-black"
+                      : "border-black/15 text-black/60 hover:border-black/30 hover:text-black"
+                  }`}
+                >
+                  {tag}
+                </button>
+              );
+            })}
+          </div>
           <div className="rounded-[20px] border border-black/10 bg-white p-4 shadow-sm">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -208,7 +282,7 @@ export default function HomeClient({ initialSection = "hero", syncRoute = true }
             </div>
           </div>
           <div className="mt-4 grid gap-4">
-            {projects.map((p) => (
+            {filteredProjects.map((p) => (
               <Link
                 key={p.slug}
                 href={`/projects/${p.slug}`}

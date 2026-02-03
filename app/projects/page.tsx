@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import HomeClient from "../components/HomeClient";
 import TextScramble from "../components/TextScramble";
 
@@ -16,6 +17,10 @@ function formatColumbusTime(d: Date) {
 }
 
 export default function ProjectsPage() {
+  const searchParams = useSearchParams();
+  const q = searchParams.toString();
+  const homeHref = q ? `/?${q}` : "/";
+  const projectsHref = q ? `/projects?${q}` : "/projects";
   const [now, setNow] = useState<Date>(() => new Date());
   const [showLiveTime, setShowLiveTime] = useState(false);
   const [initialTime] = useState(() => formatColumbusTime(new Date()));
@@ -56,7 +61,7 @@ export default function ProjectsPage() {
             </span>
           </div>
           <Link
-            href="/"
+            href={homeHref}
             className="group inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
             <svg
@@ -68,7 +73,7 @@ export default function ProjectsPage() {
             </svg>
           </Link>
           <nav className="flex items-center justify-self-end gap-6">
-            <Link className="hover:text-black" href="/projects">
+            <Link className="hover:text-black" href={projectsHref}>
               Projects
             </Link>
             <Link className="hover:text-black" href="/contact">

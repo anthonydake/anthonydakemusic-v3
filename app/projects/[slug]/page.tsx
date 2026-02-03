@@ -273,7 +273,8 @@ function MediaEmbed({ media }: { media: ProjectMedia }) {
         <iframe
           title={media.title || "Audio embed"}
           src={media.url}
-          className="h-32 w-full"
+          className="w-full"
+          style={{ height: media.height ?? 160 }}
           allow="autoplay; clipboard-write; encrypted-media"
         />
         {media.title && <div className="px-4 py-3 text-sm text-black/70">{media.title}</div>}
