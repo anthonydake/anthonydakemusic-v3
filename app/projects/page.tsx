@@ -86,7 +86,7 @@ export default function ProjectsPage() {
         </div>
       </div>
       <div className="pt-14">
-        <HomeClient initialSection="projects" />
+        <HomeClient initialSection="projects" showProjectsIntro={false} />
       </div>
     </>
   );

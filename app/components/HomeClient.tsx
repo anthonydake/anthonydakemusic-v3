@@ -9,11 +9,16 @@ import { projects } from "@/lib/projects";
 type HomeClientProps = {
   initialSection?: "hero" | "projects";
   syncRoute?: boolean;
+  showProjectsIntro?: boolean;
 };
 
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export default function HomeClient({ initialSection = "hero", syncRoute = true }: HomeClientProps) {
+export default function HomeClient({
+  initialSection = "hero",
+  syncRoute = true,
+  showProjectsIntro = true,
+}: HomeClientProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -225,8 +230,12 @@ export default function HomeClient({ initialSection = "hero", syncRoute = true }
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white via-white/70 to-white/0" />
           <div className="flex flex-col gap-2">
             <p className="text-xs uppercase tracking-[0.32em] text-black/55">Projects</p>
-            <h2 className="text-2xl font-semibold tracking-tight">Selected work</h2>
-            <p className="text-sm text-black/60">Scroll snapped from the logo — explore the grid below.</p>
+            {showProjectsIntro && (
+              <>
+                <h2 className="text-2xl font-semibold tracking-tight">Selected work</h2>
+                <p className="text-sm text-black/60">Scroll snapped from the logo — explore the grid below.</p>
+              </>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
