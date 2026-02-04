@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import TextScramble from "@/app/components/TextScramble";
 import { ProjectMedia, projects } from "@/lib/projects";
+import { projectIndex } from "@/data/projects.data";
 
 function formatColumbusTime(d: Date) {
   const fmt = new Intl.DateTimeFormat("en-US", {
@@ -20,6 +22,7 @@ export default function ProjectDetailPage() {
   const params = useParams<{ slug?: string | string[] }>();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const project = projects.find((p) => p.slug === slug);
+  const indexItem = projectIndex.find((p) => p.slug === slug);
   const [titleRun, setTitleRun] = useState(0);
   const [now, setNow] = useState<Date>(() => new Date());
   const [showLiveTime, setShowLiveTime] = useState(false);
@@ -42,7 +45,7 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <>
-        <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
+        <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white">
           <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
             <div className="justify-self-start">
               <span>Columbus, (OH)</span>
@@ -86,7 +89,7 @@ export default function ProjectDetailPage() {
             </nav>
           </div>
         </div>
-        <main className="min-h-screen bg-[#f9f7f2] px-6 pb-20 pt-20 font-sans text-[#0c0c0b]">
+        <main className="min-h-screen bg-white px-6 pb-20 pt-20 font-sans text-black">
           <div className="pt-14 text-center text-sm text-black/60">Project not found.</div>
         </main>
       </>
@@ -95,7 +98,7 @@ export default function ProjectDetailPage() {
 
   return (
     <>
-      <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
+      <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white">
         <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
           <div className="justify-self-start">
             <span>Columbus, (OH)</span>
@@ -139,28 +142,36 @@ export default function ProjectDetailPage() {
           </nav>
         </div>
       </div>
-      <main className="min-h-screen bg-[#f9f7f2] px-6 pb-20 pt-20 font-sans text-[#0c0c0b]">
-        <div className="mx-auto max-w-5xl space-y-10">
-          <div className="flex items-center justify-between">
-            <Link className="text-sm underline underline-offset-4" href="/projects">
+      <main className="relative min-h-screen bg-white font-sans text-black">
+        {/* Hairline frame + gridlines (desktop) */}
+        <div className="pointer-events-none absolute inset-0 hidden lg:block">
+          <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
+            <div className="relative h-full">
+              <div className="absolute inset-y-0 left-[clamp(220px,18vw,300px)] w-px bg-black/10" />
+              <div className="absolute inset-y-0 left-[calc(clamp(220px,18vw,300px)+clamp(260px,28vw,520px))] w-px bg-black/10" />
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto max-w-[1600px] px-6 pb-24 pt-24 sm:px-8 lg:px-10 xl:px-12">
+          <div className="flex items-baseline justify-between gap-6">
+            <Link className="text-[11px] uppercase tracking-[0.28em] text-black/70 hover:text-black" href="/projects">
               ← Back to Projects
             </Link>
-            <div className="text-xs uppercase tracking-[0.22em] text-black/50">
-              {project.role} • {project.year}
+            <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">
+              {indexItem?.date ? <span className="tabular-nums">{indexItem.date}</span> : <span className="tabular-nums">{project.year}</span>}
+              <span className="mx-3 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
+              {indexItem?.artist ? <span>{indexItem.artist}</span> : <span>{project.role}</span>}
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-[32px] border border-black/10 bg-white shadow-2xl">
-            <header className="relative overflow-hidden text-white">
-              <div
-                className="absolute inset-0"
-                style={{ backgroundImage: `linear-gradient(135deg, ${project.tone[0]}, ${project.tone[1]})` }}
-              />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.2),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.12),transparent_45%)]" />
-              <div className="relative px-6 py-12 sm:px-10 sm:py-16">
-                <p className="text-xs uppercase tracking-[0.32em] text-white/80">{project.tags.join(" • ")}</p>
+          <div className="mt-10 grid gap-10 lg:grid-cols-[clamp(220px,18vw,300px)_minmax(0,1fr)] lg:gap-0">
+            {/* Left meta column */}
+            <aside className="space-y-8 lg:pr-10">
+              <div className="space-y-2">
+                <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Project</div>
                 <h1
-                  className="mt-4 text-4xl font-semibold leading-tight tracking-[0.06em] sm:text-5xl"
+                  className="text-3xl font-semibold leading-tight tracking-[0.06em] sm:text-4xl"
                   onMouseEnter={() => setTitleRun((n) => n + 1)}
                   onMouseLeave={() => setTitleRun((n) => n + 1)}
                 >
@@ -173,71 +184,81 @@ export default function ProjectDetailPage() {
                     trigger={titleRun}
                   />
                 </h1>
-                <p className="mt-3 max-w-3xl text-lg text-white/85">{project.subtitle}</p>
-                <div className="mt-6 flex flex-wrap gap-3 text-[11px] uppercase tracking-[0.24em] text-white/80">
-                  <span className="rounded-full border border-white/30 px-3 py-1">{project.role}</span>
-                  <span className="rounded-full border border-white/30 px-3 py-1">{project.year}</span>
+                <div className="text-[12px] uppercase tracking-[0.22em] text-black/65">{project.subtitle}</div>
+              </div>
+
+              <div className="space-y-1 text-[11px] uppercase tracking-[0.28em] text-black/60">
+                <div>
+                  <span className="text-black/40">Role</span>
+                  <span className="mx-2">—</span>
+                  <span className="text-black/80">{project.role}</span>
                 </div>
-              </div>
-            </header>
-
-            <div className="grid gap-10 px-6 py-10 sm:px-10">
-              <div className="space-y-3">
-                <h2 className="text-lg font-semibold">Backstory & Approach</h2>
-                {project.narrative.map((para) => (
-                  <p key={para.slice(0, 16)} className="text-base leading-7 text-black/70">
-                    {para}
-                  </p>
-                ))}
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <InfoBlock title="Deliverables" items={project.deliverables} />
-                <InfoBlock title="Credits" items={project.credits} />
-                <InfoBlock title="Tags" items={project.tags} />
-              </div>
-
-              {project.media.length > 0 && (
-                <div className="space-y-4">
-                  <h3 className="text-sm uppercase tracking-[0.28em] text-black/60">Media</h3>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {project.media.map((m, idx) => (
-                      <MediaEmbed key={`${project.slug}-${idx}-${m.kind}`} media={m} />
-                    ))}
+                <div>
+                  <span className="text-black/40">Year</span>
+                  <span className="mx-2">—</span>
+                  <span className="text-black/80 tabular-nums">{project.year}</span>
+                </div>
+                {indexItem?.workTags?.length ? (
+                  <div className="pt-2 text-[11px] tracking-[0.18em] text-black/55 italic">
+                    {indexItem.workTags.join(", ")}
                   </div>
-                </div>
+                ) : null}
+              </div>
+
+              <div className="h-px w-full bg-black/10" />
+
+              <div className="space-y-2">
+                <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Links</div>
+                <ul className="space-y-2 text-[12px] uppercase tracking-[0.22em] text-black/70">
+                  {project.links.map((link) => (
+                    <li key={link.href}>
+                      <a className="underline underline-offset-4 hover:text-black" href={link.href} target="_blank" rel="noreferrer">
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {project.deliverables.length > 0 && (
+                <>
+                  <div className="h-px w-full bg-black/10" />
+                  <MetaList title="Deliverables" items={project.deliverables} />
+                </>
               )}
 
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <h3 className="text-sm uppercase tracking-[0.28em] text-black/60">Links</h3>
-                  <ul className="space-y-2 text-sm">
-                    {project.links.map((link) => (
-                      <li key={link.href}>
-                        <a className="underline underline-offset-4" href={link.href} target="_blank" rel="noreferrer">
-                          {link.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+              {project.credits.length > 0 && (
+                <>
+                  <div className="h-px w-full bg-black/10" />
+                  <MetaList title="Credits" items={project.credits} />
+                </>
+              )}
+            </aside>
+
+            {/* Right content column */}
+            <section className="lg:pl-10">
+              <div className="space-y-10">
+                <div className="space-y-3">
+                  <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Notes</div>
+                  {project.narrative.map((para) => (
+                    <p key={para.slice(0, 24)} className="max-w-3xl text-base leading-7 text-black/75">
+                      {para}
+                    </p>
+                  ))}
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-sm uppercase tracking-[0.28em] text-black/60">Roles</h3>
-                  <p className="text-sm leading-7 text-black/70">
-                    Role focus: {project.role}. I tailor playback, stems, and drum tones so every venue or platform
-                    hears the same intent the artist and I built in the studio.
-                  </p>
-                </div>
+
+                {project.media.length > 0 && (
+                  <div className="space-y-4">
+                    <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Media</div>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      {project.media.map((m, idx) => (
+                        <MediaEmbed key={`${project.slug}-${idx}-${m.kind}`} media={m} />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-3 text-sm">
-            <Link className="underline underline-offset-4" href="/#index">
-              Home
-            </Link>
-            <Link className="underline underline-offset-4" href="/contact">
-              Book this energy
-            </Link>
+            </section>
           </div>
         </div>
       </main>
@@ -245,11 +266,11 @@ export default function ProjectDetailPage() {
   );
 }
 
-function InfoBlock({ title, items }: { title: string; items: string[] }) {
+function MetaList({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="rounded-[18px] border border-black/10 bg-[#f5f3ee] p-4">
-      <p className="text-xs uppercase tracking-[0.26em] text-black/50">{title}</p>
-      <ul className="mt-3 space-y-1 text-sm text-black/75">
+    <div className="space-y-2">
+      <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">{title}</div>
+      <ul className="space-y-1 text-[12px] leading-6 text-black/70">
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}
@@ -266,7 +287,7 @@ function MediaEmbed({ media }: { media: ProjectMedia }) {
         : `https://player.vimeo.com/video/${media.id}`;
 
     return (
-      <div className="overflow-hidden rounded-2xl border border-black/10 bg-black/90 shadow-lg">
+      <div className="overflow-hidden border border-black/10 bg-black">
         <div className="relative aspect-video">
           <iframe
             src={src}
@@ -276,14 +297,14 @@ function MediaEmbed({ media }: { media: ProjectMedia }) {
             allowFullScreen
           />
         </div>
-        {media.title && <div className="px-4 py-3 text-sm text-white/80">{media.title}</div>}
+        {media.title && <div className="px-4 py-3 text-[11px] uppercase tracking-[0.28em] text-white/70">{media.title}</div>}
       </div>
     );
   }
 
   if (media.kind === "audio") {
     return (
-      <div className="overflow-hidden rounded-2xl border border-black/10 bg-white shadow-lg">
+      <div className="overflow-hidden border border-black/10 bg-white">
         <iframe
           title={media.title || "Audio embed"}
           src={media.url}
@@ -291,19 +312,18 @@ function MediaEmbed({ media }: { media: ProjectMedia }) {
           style={{ height: media.height ?? 160 }}
           allow="autoplay; clipboard-write; encrypted-media"
         />
-        {media.title && <div className="px-4 py-3 text-sm text-black/70">{media.title}</div>}
+        {media.title && <div className="px-4 py-3 text-[11px] uppercase tracking-[0.28em] text-black/60">{media.title}</div>}
       </div>
     );
   }
 
   if (media.kind === "image") {
     return (
-      <div className="overflow-hidden rounded-2xl border border-black/10 bg-white shadow-lg">
-        <div className="relative aspect-video overflow-hidden">
-          {/* Regular img keeps this zero-config; replace with next/image if assets are local */}
-          <img src={media.src} alt={media.alt} className="h-full w-full object-cover" />
+      <div className="overflow-hidden border border-black/10 bg-white">
+        <div className="relative aspect-video overflow-hidden bg-black/5">
+          <Image src={media.src} alt={media.alt} fill className="object-cover" sizes="(min-width: 768px) 50vw, 100vw" />
         </div>
-        {media.title && <div className="px-4 py-3 text-sm text-black/70">{media.title}</div>}
+        {media.title && <div className="px-4 py-3 text-[11px] uppercase tracking-[0.28em] text-black/60">{media.title}</div>}
       </div>
     );
   }
