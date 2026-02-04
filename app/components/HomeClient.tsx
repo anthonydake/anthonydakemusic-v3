@@ -4,12 +4,10 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
-import { projects } from "@/lib/projects";
 
 type HomeClientProps = {
   initialSection?: "hero" | "projects";
   syncRoute?: boolean;
-  showProjectsIntro?: boolean;
 };
 
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -17,7 +15,6 @@ const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : use
 export default function HomeClient({
   initialSection = "hero",
   syncRoute = true,
-  showProjectsIntro = true,
 }: HomeClientProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -34,47 +31,6 @@ export default function HomeClient({
   const [snapAnimating, setSnapAnimating] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const projectsRef = useRef<HTMLElement | null>(null);
-
-  const allTags = useMemo(() => {
-    const set = new Set<string>();
-    projects.forEach((p) => p.tags.forEach((t) => set.add(t)));
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, []);
-
-  const selectedTags = useMemo(() => {
-    const raw = searchParams.getAll("tag").map((t) => t.trim()).filter(Boolean);
-    if (raw.length === 0) return [] as string[];
-
-    const allowed = new Set(allTags);
-    const out = Array.from(new Set(raw.filter((t) => allowed.has(t))));
-    out.sort((a, b) => a.localeCompare(b));
-    return out;
-  }, [allTags, searchParams]);
-
-  const filteredProjects = useMemo(() => {
-    if (selectedTags.length === 0) return projects;
-    return projects.filter((p) => selectedTags.some((t) => p.tags.includes(t)));
-  }, [selectedTags]);
-
-  const setTagsInUrl = (nextTags: string[]) => {
-    const qs = new URLSearchParams(searchParams.toString());
-    qs.delete("tag");
-    nextTags
-      .filter(Boolean)
-      .slice()
-      .sort((a, b) => a.localeCompare(b))
-      .forEach((t) => qs.append("tag", t));
-    const q = qs.toString();
-    router.replace(q ? `${pathname}?${q}` : pathname, { scroll: false });
-  };
-
-  const toggleTag = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      setTagsInUrl(selectedTags.filter((t) => t !== tag));
-    } else {
-      setTagsInUrl([...selectedTags, tag]);
-    }
-  };
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
@@ -219,105 +175,15 @@ export default function HomeClient({
         ref={projectsRef}
         data-id="projects"
         data-snap-section
-        className="snap-start min-h-screen bg-white px-6 py-14"
+        className="snap-start min-h-screen bg-white"
       >
         <div
           className={[
-            "mx-auto w-full max-w-6xl space-y-6 transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "mx-auto h-full w-full transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
             visible.projects ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
           ].join(" ")}
-        >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white via-white/70 to-white/0" />
-          <div className="flex flex-col gap-2">
-            <p className="text-xs uppercase tracking-[0.32em] text-black/55">Projects</p>
-            {showProjectsIntro && (
-              <>
-                <h2 className="text-2xl font-semibold tracking-tight">Selected work</h2>
-                <p className="text-sm text-black/60">Scroll snapped from the logo — explore the grid below.</p>
-              </>
-            )}
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setTagsInUrl([])}
-              className={`rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.22em] transition ${
-                selectedTags.length === 0
-                  ? "border-black/60 text-black"
-                  : "border-black/15 text-black/60 hover:border-black/30 hover:text-black"
-              }`}
-            >
-              All
-            </button>
-            {allTags.map((tag) => {
-              const active = selectedTags.includes(tag);
-              return (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => toggleTag(tag)}
-                  className={`rounded-full border px-3 py-1 text-[11px] uppercase tracking-[0.22em] transition ${
-                    active
-                      ? "border-black/60 text-black"
-                      : "border-black/15 text-black/60 hover:border-black/30 hover:text-black"
-                  }`}
-                >
-                  {tag}
-                </button>
-              );
-            })}
-          </div>
-          <div className="rounded-[20px] border border-black/10 bg-white p-4 shadow-sm">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-black/60">Featured audio</p>
-                <p className="text-sm text-black/70">Drive streams while staying on-site.</p>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <a className="underline underline-offset-4" href="https://open.spotify.com/" target="_blank" rel="noreferrer">
-                  Spotify
-                </a>
-                <a className="underline underline-offset-4" href="https://music.apple.com/" target="_blank" rel="noreferrer">
-                  Apple Music
-                </a>
-                <a className="underline underline-offset-4" href="https://soundcloud.com/" target="_blank" rel="noreferrer">
-                  SoundCloud
-                </a>
-              </div>
-            </div>
-            <div className="mt-3 rounded-[14px] border border-black/10 bg-black/3 p-3 text-sm text-black/70">
-              Replace this with your preferred embed or audio source to keep plays counted on your streaming platforms.
-            </div>
-          </div>
-          <div className="mt-4 grid gap-4">
-            {filteredProjects.map((p) => (
-              <Link
-                key={p.slug}
-                href={`/projects/${p.slug}`}
-                className="group relative overflow-hidden rounded-[24px] border border-black/10 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <div className="text-lg font-semibold tracking-tight">
-                      {p.title}
-                      <span className="ml-2 text-sm font-normal text-black/50">— {p.subtitle}</span>
-                    </div>
-                    <div className="text-sm text-black/65">{p.blurb}</div>
-                    <div className="mt-2 text-[11px] uppercase tracking-[0.22em] text-black/50">{p.tags.join(" • ")}</div>
-                  </div>
-                  <div className="text-xs uppercase tracking-[0.24em] text-black/55">
-                    {p.role} • {p.year}
-                  </div>
-                </div>
-                <div
-                  className="pointer-events-none absolute inset-0 opacity-0 transition duration-200 group-hover:opacity-80"
-                  style={{ backgroundImage: `linear-gradient(135deg, ${p.tone[0]}, ${p.tone[1]})`, mixBlendMode: "multiply" }}
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
+          aria-hidden="true"
+        />
       </section>
     </div>
   );
