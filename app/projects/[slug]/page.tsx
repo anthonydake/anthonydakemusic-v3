@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import type { CSSProperties } from "react";
 import TextScramble from "@/app/components/TextScramble";
 import { type ProjectMedia, projects } from "@/lib/projects";
 import { projectIndex } from "@/data/projects.data";
@@ -54,17 +53,8 @@ export default function ProjectDetailPage() {
     return window.localStorage.getItem("ad_location_label_v1") ?? "LOCATION UNAVAILABLE";
   });
 
-  // Desktop/table column sizing (used by top row grid + background hairlines).
-  const frameStyle = useMemo(() => {
-    return {
-      ["--col1"]: "clamp(220px, 18vw, 300px)",
-      ["--col2"]: "clamp(260px, 28vw, 520px)",
-    } as CSSProperties;
-  }, []);
-
   type ImageMedia = Extract<ProjectMedia, { kind: "image" }>;
   const heroImage = (project?.media.find((m): m is ImageMedia => m.kind === "image") as ImageMedia | undefined) ?? null;
-  const nonHeroMedia = project ? (heroImage ? project.media.filter((m) => m !== heroImage) : project.media) : ([] as ProjectMedia[]);
 
   useEffect(() => {
     // Update on minute boundaries (and then every minute).
@@ -128,9 +118,10 @@ export default function ProjectDetailPage() {
           {/* Vertical hairline gridlines (desktop only) */}
           <div className="pointer-events-none absolute inset-0 hidden lg:block">
             <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
-              <div className="relative h-full" style={frameStyle}>
-                <div className="absolute inset-y-0 left-[var(--col1)] w-px bg-black/10" />
-                <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2))] w-px bg-black/10" />
+              <div className="relative h-full">
+                <div className="absolute inset-y-0 left-1/4 w-px bg-black/10" />
+                <div className="absolute inset-y-0 left-1/2 w-px bg-black/10" />
+                <div className="absolute inset-y-0 left-3/4 w-px bg-black/10" />
               </div>
             </div>
           </div>
@@ -190,9 +181,10 @@ export default function ProjectDetailPage() {
         {/* Vertical hairline gridlines (desktop only) */}
         <div className="pointer-events-none absolute inset-0 hidden lg:block">
           <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
-            <div className="relative h-full" style={frameStyle}>
-              <div className="absolute inset-y-0 left-[var(--col1)] w-px bg-black/10" />
-              <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2))] w-px bg-black/10" />
+            <div className="relative h-full">
+              <div className="absolute inset-y-0 left-1/4 w-px bg-black/10" />
+              <div className="absolute inset-y-0 left-1/2 w-px bg-black/10" />
+              <div className="absolute inset-y-0 left-3/4 w-px bg-black/10" />
             </div>
           </div>
         </div>
@@ -231,7 +223,7 @@ export default function ProjectDetailPage() {
           </div>
         </div>
 
-        <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-40 sm:px-8 lg:px-10 xl:px-12" style={frameStyle}>
+        <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-40 sm:px-8 lg:px-10 xl:px-12">
           <div className="flex flex-col gap-20">
             {/* HERO FRAME (Human Person-inspired) */}
             <section aria-label="Project hero">
@@ -295,12 +287,8 @@ export default function ProjectDetailPage() {
                 {/* Right gutter: actions */}
                 <div className="hidden lg:flex lg:flex-col lg:justify-end lg:py-10 lg:pl-6">
                   <div className="space-y-3 text-right text-[10px] uppercase tracking-[0.28em] text-black/55">
-                    <a className="hover:text-black" href="#details">
-                      Read details
-                    </a>
-                    <Link className="hover:text-black" href="/projects">
-                      View other work
-                    </Link>
+                    <div>Read details</div>
+                    <div>View other work</div>
                   </div>
                 </div>
 
@@ -311,66 +299,9 @@ export default function ProjectDetailPage() {
                     <span className="tabular-nums">{dateLabel}</span>
                   </div>
                   <div className="flex items-center gap-6">
-                    <a className="hover:text-black" href="#details">
-                      Read details
-                    </a>
-                    <Link className="hover:text-black" href="/projects">
-                      Back
-                    </Link>
+                    <span>Read details</span>
+                    <span>View other work</span>
                   </div>
-                </div>
-              </div>
-            </section>
-
-            {/* DETAILS */}
-            <section id="details" aria-label="Project details" className="scroll-mt-40">
-              <div className="h-px w-full bg-black/10" />
-
-              <div className="mx-auto mt-12 w-full max-w-[1200px] space-y-14">
-                <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
-                  <div className="space-y-10">
-                    <div className="space-y-4">
-                      <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Notes</div>
-                      {project.narrative.map((para) => (
-                        <p key={para.slice(0, 24)} className="max-w-[78ch] text-[15px] leading-7 text-black/80">
-                          {para}
-                        </p>
-                      ))}
-                    </div>
-
-                    {nonHeroMedia.length > 0 && (
-                      <div className="space-y-4">
-                        <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Media</div>
-                        <div className="grid gap-6">
-                          {nonHeroMedia.map((m, idx) => (
-                            <MediaEmbed key={`${project.slug}-media-${idx}-${m.kind}`} media={m} />
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <aside className="space-y-10">
-                    <div className="space-y-3">
-                      <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Links</div>
-                      <div className="flex flex-col gap-2 text-[11px] uppercase tracking-[0.22em] text-black/70">
-                        {project.links.map((link) => (
-                          <a
-                            key={link.href}
-                            className="underline underline-offset-4 hover:text-black"
-                            href={link.href}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            {link.label}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-
-                    {project.deliverables.length > 0 ? <MetaList title="Deliverables" items={project.deliverables} /> : null}
-                    {project.credits.length > 0 ? <MetaList title="Credits" items={project.credits} /> : null}
-                  </aside>
                 </div>
               </div>
             </section>
@@ -381,87 +312,18 @@ export default function ProjectDetailPage() {
   );
 }
 
-function MetaList({ title, items }: { title: string; items: string[] }) {
-  return (
-    <div className="space-y-2">
-      <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">{title}</div>
-      <ul className="space-y-1 text-[11px] uppercase tracking-[0.22em] leading-6 text-black/70">
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function MediaEmbed({ media }: { media: ProjectMedia }) {
-  if (media.kind === "video") {
-    const src =
-      media.provider === "youtube"
-        ? `https://www.youtube.com/embed/${media.id}`
-        : `https://player.vimeo.com/video/${media.id}`;
-
-    return (
-      <div className="overflow-hidden border border-black/10 bg-white">
-        <div className="relative aspect-video">
-          <iframe
-            src={src}
-            title={media.title || "Video embed"}
-            className="absolute inset-0 h-full w-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-      </div>
-    );
-  }
-
-  if (media.kind === "audio") {
-    return (
-      <div className="overflow-hidden border border-black/10 bg-white">
-        <iframe
-          title={media.title || "Audio embed"}
-          src={media.url}
-          className="w-full"
-          style={{ height: media.height ?? 160 }}
-          allow="autoplay; clipboard-write; encrypted-media"
-        />
-      </div>
-    );
-  }
-
-  if (media.kind === "image") {
-    return (
-      <div className="overflow-hidden border border-black/10 bg-white">
-        <div className="relative aspect-[3/2] overflow-hidden bg-black/5">
-          <Image src={media.src} alt={media.alt} fill className="object-cover" sizes="(min-width: 1024px) 1100px, 100vw" />
-        </div>
-      </div>
-    );
-  }
-
-  return null;
-}
-
 function BlueprintGrid() {
+  const v = [16.6667, 33.3333, 50, 66.6667, 83.3333];
+  const h = [20, 40, 60, 80];
+
   return (
     <div className="pointer-events-none absolute inset-0">
-      {/* Outer inset to mimic a "sheet" margin */}
-      <div className="absolute inset-0">
-        {/* Vertical lines */}
-        <div className="absolute inset-y-0 left-[14%] w-px bg-black/15" />
-        <div className="absolute inset-y-0 left-[38%] w-px bg-black/15" />
-        <div className="absolute inset-y-0 left-[50%] w-px bg-black/15" />
-        <div className="absolute inset-y-0 left-[52.5%] w-px bg-black/10" />
-        <div className="absolute inset-y-0 left-[74%] w-px bg-black/15" />
-        <div className="absolute inset-y-0 left-[77%] w-px bg-black/10" />
-
-        {/* Horizontal lines */}
-        <div className="absolute inset-x-0 top-[22%] h-px bg-black/15" />
-        <div className="absolute inset-x-0 top-[36%] h-px bg-black/10" />
-        <div className="absolute inset-x-0 top-[54%] h-px bg-black/15" />
-        <div className="absolute inset-x-0 top-[70%] h-px bg-black/10" />
-      </div>
+      {v.map((p) => (
+        <div key={`v-${p}`} className="absolute inset-y-0 w-px bg-black/15" style={{ left: `${p}%` }} />
+      ))}
+      {h.map((p) => (
+        <div key={`h-${p}`} className="absolute inset-x-0 h-px bg-black/15" style={{ top: `${p}%` }} />
+      ))}
     </div>
   );
 }
