@@ -247,7 +247,7 @@ export default function ProjectsPage() {
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
           {hoverCapable && (
             <aside className="hidden lg:block lg:pl-10" aria-label="Project preview">
-              <div className="sticky top-40">
+              <div className="sticky top-1/2 -translate-y-1/2">
                 <PreviewPanel current={previewCurrent} next={previewNext} nextVisible={previewNextVisible} onNextReady={onNextReady} />
               </div>
             </aside>
