@@ -172,9 +172,9 @@ export default function ProjectsPage() {
         </div>
       </div>
 
-      {/* Header */}
-      <div className="fixed inset-x-0 top-0 z-[50] bg-white">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-[1fr_auto_1fr] items-start px-6 pt-6 text-[11px] uppercase tracking-[0.28em] text-black/80 sm:px-8 lg:px-10 xl:px-12">
+      {/* Header (match home/about/contact spacing) */}
+      <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
+        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
           <div className="justify-self-start">
             <span>Columbus, (OH)</span>
             <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
@@ -217,10 +217,6 @@ export default function ProjectsPage() {
               About
             </Link>
           </nav>
-        </div>
-
-        <div className="mx-auto mt-4 max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
-          <div className="h-px w-full bg-black/10" />
         </div>
       </div>
 
