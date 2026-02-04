@@ -159,9 +159,9 @@ export default function ProjectsPage() {
   const frameStyle = useMemo(() => {
     return {
       // Tuned to match the reference "index table" proportions without introducing new fonts.
-      ["--col1"]: "clamp(180px, 22vw, 240px)",
-      ["--col2"]: "clamp(220px, 30vw, 380px)",
-      ["--preview"]: "clamp(360px, 34vw, 520px)",
+      ["--col1"]: "clamp(220px, 18vw, 300px)",
+      ["--col2"]: "clamp(260px, 28vw, 520px)",
+      ["--preview"]: "clamp(420px, 32vw, 680px)",
     } as React.CSSProperties;
   }, []);
 
@@ -189,7 +189,7 @@ export default function ProjectsPage() {
     <div className="relative min-h-screen bg-[#f3f0e8] text-black">
       {/* Vertical hairline gridlines (desktop only) */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
-        <div className="mx-auto h-full max-w-6xl px-6">
+        <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
           <div className="relative h-full" style={frameStyle}>
             <div className="absolute inset-y-0 left-[var(--col1)] w-px bg-black/10" />
             <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2))] w-px bg-black/10" />
@@ -202,7 +202,7 @@ export default function ProjectsPage() {
 
       {/* Header */}
       <div className="fixed inset-x-0 top-0 z-[50] bg-[#f3f0e8]">
-        <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-start px-6 pt-6 text-[11px] uppercase tracking-[0.28em] text-black/80">
+        <div className="mx-auto grid max-w-[1600px] grid-cols-[1fr_auto_1fr] items-start px-6 pt-6 text-[11px] uppercase tracking-[0.28em] text-black/80 sm:px-8 lg:px-10 xl:px-12">
           <div className="justify-self-start">
             <span>{locationLabel}</span>
             <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
@@ -229,13 +229,15 @@ export default function ProjectsPage() {
           </nav>
         </div>
 
-        <div className="mx-auto mt-4 h-px max-w-6xl bg-black/10" />
+        <div className="mx-auto mt-4 max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
+          <div className="h-px w-full bg-black/10" />
+        </div>
       </div>
 
-      <main className="relative z-[10] mx-auto max-w-6xl px-6 pb-24 pt-40">
+      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-40 sm:px-8 lg:px-10 xl:px-12">
         <div
           className={[
-            hoverCapable ? "grid gap-12 lg:grid-cols-[minmax(0,1fr)_var(--preview)]" : "grid gap-12",
+            hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
           ].join(" ")}
           style={frameStyle}
         >
@@ -252,7 +254,7 @@ export default function ProjectsPage() {
 
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
           {hoverCapable && (
-            <aside className="hidden lg:block" aria-label="Project preview">
+            <aside className="hidden lg:block lg:pl-10" aria-label="Project preview">
               <div className="sticky top-40">
                 <PreviewPanel current={previewCurrent} next={previewNext} nextVisible={previewNextVisible} onNextReady={onNextReady} />
               </div>
@@ -283,7 +285,7 @@ function YearGroups({ items, onRowHover }: { items: ProjectIndexItem[]; onRowHov
                 <Link
                   key={p.id}
                   href={`/projects/${p.slug}`}
-                  className="projects-row group block py-2.5 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60"
+                  className="projects-row group block py-2.5 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:pr-10"
                   onMouseEnter={() => onRowHover(p.id)}
                 >
                   <div className="flex flex-col gap-1 lg:grid lg:grid-cols-[var(--col1)_var(--col2)_minmax(0,1fr)] lg:items-baseline lg:gap-x-8">
@@ -327,7 +329,7 @@ function PreviewPanel({
   return (
     <div className="space-y-3">
       <div className="relative overflow-hidden border border-black/10 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.10)]">
-        <div className="relative aspect-[5/4]">
+        <div className="relative aspect-[3/2]">
           {current ? <PreviewMedia preview={current} /> : <div className="absolute inset-0 bg-black/5" />}
 
           {next && (
@@ -367,7 +369,7 @@ function PreviewMedia({ preview, onReady }: { preview: ProjectPreview; onReady?:
       alt=""
       fill
       className="object-cover"
-      sizes="(min-width: 1024px) 520px, 100vw"
+      sizes="(min-width: 1024px) 680px, 100vw"
       onLoadingComplete={() => onReady?.()}
     />
   );
