@@ -56,5 +56,14 @@ export const projectIndex: ProjectIndexItem[] = [
     slug: "neon-skyline-tour",
     preview: { type: "image", src: "/projects/neon-skyline.svg" },
   },
+  {
+    id: "A04",
+    date: "02/25/2022",
+    year: 2022,
+    artist: "KJ The Cool Nerd, AR!YAH",
+    workTags: ["PRODUCTION/SONGWRITING"],
+    title: "CLASS LOSER",
+    slug: "missin-u",
+    preview: { type: "image", src: "/projects/missin-u/Missin%20U.jpg" },
+  },
 ];
-
