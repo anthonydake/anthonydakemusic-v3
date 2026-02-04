@@ -186,7 +186,7 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#f3f0e8] text-black">
+    <div className="relative min-h-screen bg-white text-black">
       {/* Vertical hairline gridlines (desktop only) */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
         <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
@@ -201,7 +201,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Header */}
-      <div className="fixed inset-x-0 top-0 z-[50] bg-[#f3f0e8]">
+      <div className="fixed inset-x-0 top-0 z-[50] bg-white">
         <div className="mx-auto grid max-w-[1600px] grid-cols-[1fr_auto_1fr] items-start px-6 pt-6 text-[11px] uppercase tracking-[0.28em] text-black/80 sm:px-8 lg:px-10 xl:px-12">
           <div className="justify-self-start">
             <span>{locationLabel}</span>
