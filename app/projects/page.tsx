@@ -6,21 +6,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { projectIndex, type ProjectIndexItem, type ProjectPreview } from "@/data/projects.data";
+import TextScramble from "@/app/components/TextScramble";
 
 type MediaQueryListLegacy = MediaQueryList & {
   addListener?: (listener: (event: MediaQueryListEvent) => void) => void;
   removeListener?: (listener: (event: MediaQueryListEvent) => void) => void;
 };
 
-type ReverseGeocodeResult = {
-  city?: string;
-  locality?: string;
-  principalSubdivisionCode?: string;
-  countryCode?: string;
-};
-
-function formatLocalTime(d: Date) {
+function formatColumbusTime(d: Date) {
   const fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
@@ -35,23 +30,6 @@ function parseSortKeyMMDDYYYY(date: string) {
   const y = Number(date.slice(6, 10));
   if (!Number.isFinite(m) || !Number.isFinite(d) || !Number.isFinite(y)) return 0;
   return y * 10000 + m * 100 + d;
-}
-
-function formatLocationLabel(city: string | null, stateCode: string | null) {
-  if (!city || !stateCode) return "LOCATION UNAVAILABLE";
-  return `${city.toUpperCase()}, (${stateCode.toUpperCase()})`;
-}
-
-function extractStateCode(result: ReverseGeocodeResult) {
-  // BigDataCloud returns e.g. "US-OH"
-  const code = result.principalSubdivisionCode || "";
-  const parts = code.split("-");
-  const tail = parts[parts.length - 1];
-  return tail && tail.length <= 3 ? tail : null;
-}
-
-function pickCity(result: ReverseGeocodeResult) {
-  return result.city || result.locality || null;
 }
 
 function samePreview(a: ProjectPreview | null, b: ProjectPreview | null) {
@@ -72,10 +50,8 @@ export default function ProjectsPage() {
     return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   });
   const [now, setNow] = useState<Date>(() => new Date());
-  const [locationLabel, setLocationLabel] = useState(() => {
-    if (typeof window === "undefined") return "LOCATION UNAVAILABLE";
-    return window.localStorage.getItem("ad_location_label_v1") ?? "LOCATION UNAVAILABLE";
-  });
+  const [showLiveTime, setShowLiveTime] = useState(false);
+  const [initialTime] = useState(() => formatColumbusTime(new Date()));
 
   const [previewCurrent, setPreviewCurrent] = useState<ProjectPreview | null>(() => items.find((p) => p.preview)?.preview ?? null);
   const [previewNext, setPreviewNext] = useState<ProjectPreview | null>(null);
@@ -95,56 +71,15 @@ export default function ProjectsPage() {
   }, []);
 
   useEffect(() => {
-    // Update on minute boundaries (and then every minute).
-    let interval: number | null = null;
-    const update = () => setNow(new Date());
-
-    const msToNextMinute = 60000 - (Date.now() % 60000);
-    const t = window.setTimeout(() => {
-      update();
-      interval = window.setInterval(update, 60000);
-    }, msToNextMinute);
-
-    return () => {
-      window.clearTimeout(t);
-      if (interval) window.clearInterval(interval);
-    };
+    const tick = () => setNow(new Date());
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
   }, []);
 
   useEffect(() => {
-    const CACHE_KEY = "ad_location_label_v1";
-    if (window.localStorage.getItem(CACHE_KEY)) return;
-
-    if (!("geolocation" in navigator)) return;
-
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        try {
-          const { latitude, longitude } = pos.coords;
-          // Lightweight reverse geocode (no API key). If this fails, fall back silently.
-          const url =
-            "https://api.bigdatacloud.net/data/reverse-geocode-client" +
-            `?latitude=${encodeURIComponent(latitude)}` +
-            `&longitude=${encodeURIComponent(longitude)}` +
-            `&localityLanguage=en`;
-          const res = await fetch(url, { method: "GET" });
-          if (!res.ok) return;
-          const data = (await res.json()) as ReverseGeocodeResult;
-
-          const city = pickCity(data);
-          const state = extractStateCode(data) || (data.countryCode ? data.countryCode : null);
-          const label = formatLocationLabel(city, state);
-          setLocationLabel(label);
-          window.localStorage.setItem(CACHE_KEY, label);
-        } catch {
-          // Ignore — keep placeholder.
-        }
-      },
-      () => {
-        // Denied/failed — keep placeholder.
-      },
-      { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
-    );
+    const t = window.setTimeout(() => setShowLiveTime(true), 650);
+    return () => window.clearTimeout(t);
   }, []);
 
   useEffect(() => {
@@ -153,7 +88,7 @@ export default function ProjectsPage() {
     };
   }, []);
 
-  const timeLabel = useMemo(() => formatLocalTime(now), [now]);
+  const timeLabel = useMemo(() => formatColumbusTime(now), [now]);
 
   // Desktop/table column sizing (used by row grid + background hairlines).
   const frameStyle = useMemo(() => {
@@ -204,9 +139,21 @@ export default function ProjectsPage() {
       <div className="fixed inset-x-0 top-0 z-[50] bg-white">
         <div className="mx-auto grid max-w-[1600px] grid-cols-[1fr_auto_1fr] items-start px-6 pt-6 text-[11px] uppercase tracking-[0.28em] text-black/80 sm:px-8 lg:px-10 xl:px-12">
           <div className="justify-self-start">
-            <span>{locationLabel}</span>
+            <span>Columbus, (OH)</span>
             <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
-            <span suppressHydrationWarning>{timeLabel}</span>
+            <span>
+              {showLiveTime ? (
+                <span suppressHydrationWarning>{timeLabel}</span>
+              ) : (
+                <TextScramble
+                  text={initialTime}
+                  duration={500}
+                  charset="#%&$@+|"
+                  scrambleFraction={0.35}
+                  leftToRight
+                />
+              )}
+            </span>
           </div>
 
           <Link href="/" className="group flex flex-col items-center justify-center gap-3">
@@ -285,24 +232,24 @@ function YearGroups({ items, onRowHover }: { items: ProjectIndexItem[]; onRowHov
                 <Link
                   key={p.id}
                   href={`/projects/${p.slug}`}
-                  className="projects-row group block py-2.5 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:pr-10"
+                  className="projects-row group block py-2 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-10 lg:py-0 lg:pr-10"
                   onMouseEnter={() => onRowHover(p.id)}
                 >
-                  <div className="flex flex-col gap-1 lg:grid lg:grid-cols-[var(--col1)_var(--col2)_minmax(0,1fr)] lg:items-baseline lg:gap-x-8">
+                  <div className="min-w-0 flex flex-col gap-0.5 leading-none lg:grid lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_minmax(0,1fr)] lg:items-center lg:gap-x-8">
                     {/* Line 1 (mobile): date + artist | Column 1 (desktop) */}
-                    <div className="text-[12px] uppercase tracking-[0.22em] lg:text-[11px]">
-                      <span className="tabular-nums">{p.date}</span>{" "}
-                      <span className="projects-row-muted text-black/55">{p.artist}</span>
+                    <div className="flex min-w-0 items-baseline gap-2 text-[11px] uppercase tracking-[0.22em]">
+                      <span className="tabular-nums shrink-0">{p.date}</span>
+                      <span className="projects-row-muted truncate text-black/55">{p.artist}</span>
                     </div>
 
                     {/* Line 2 (mobile): title | Column 3 (desktop) */}
-                    <div className="order-2 text-[13px] uppercase tracking-[0.22em] lg:order-none lg:col-start-3 lg:text-[11px]">
-                      {p.title}
+                    <div className="order-2 truncate text-[11px] uppercase tracking-[0.22em] lg:order-none lg:col-start-3">
+                      <span className="truncate">{p.title}</span>
                     </div>
 
                     {/* Line 3 (mobile): work tags | Column 2 (desktop) */}
-                    <div className="projects-row-muted projects-row-italic order-3 text-[12px] tracking-[0.18em] italic lg:order-none lg:col-start-2 lg:text-[11px] lg:not-italic">
-                      {p.workTags.join(", ")}
+                    <div className="projects-row-muted projects-row-italic order-3 truncate text-[11px] tracking-[0.18em] italic lg:order-none lg:col-start-2 lg:not-italic">
+                      <span className="truncate">{p.workTags.join(", ")}</span>
                     </div>
                   </div>
                 </Link>
