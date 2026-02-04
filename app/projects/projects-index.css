@@ -1,0 +1,15 @@
+@media (hover: hover) and (pointer: fine) {
+  .projects-row:hover {
+    background: #000;
+    color: #fff;
+  }
+
+  .projects-row:hover .projects-row-muted {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .projects-row:hover .projects-row-italic {
+    font-style: italic;
+  }
+}
+
