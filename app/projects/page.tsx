@@ -232,23 +232,23 @@ function YearGroups({ items, onRowHover }: { items: ProjectIndexItem[]; onRowHov
                 <Link
                   key={p.id}
                   href={`/projects/${p.slug}`}
-                  className="projects-row group block py-2 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-10 lg:py-0 lg:pr-10"
+                  className="projects-row group block py-1.5 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-8 lg:py-0 lg:pr-10"
                   onMouseEnter={() => onRowHover(p.id)}
                 >
-                  <div className="min-w-0 flex flex-col gap-0.5 leading-none lg:grid lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_minmax(0,1fr)] lg:items-center lg:gap-x-8">
+                  <div className="min-w-0 flex flex-col gap-0.5 leading-none lg:grid lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_minmax(0,1fr)] lg:items-baseline lg:gap-x-8">
                     {/* Line 1 (mobile): date + artist | Column 1 (desktop) */}
-                    <div className="flex min-w-0 items-baseline gap-2 text-[11px] uppercase tracking-[0.22em]">
+                    <div className="flex min-w-0 items-baseline gap-2 text-[10px] uppercase tracking-[0.22em]">
                       <span className="tabular-nums shrink-0">{p.date}</span>
                       <span className="projects-row-muted truncate text-black/55">{p.artist}</span>
                     </div>
 
                     {/* Line 2 (mobile): title | Column 3 (desktop) */}
-                    <div className="order-2 truncate text-[11px] uppercase tracking-[0.22em] lg:order-none lg:col-start-3">
+                    <div className="order-2 truncate text-[10px] uppercase tracking-[0.22em] lg:order-none lg:col-start-3">
                       <span className="truncate">{p.title}</span>
                     </div>
 
                     {/* Line 3 (mobile): work tags | Column 2 (desktop) */}
-                    <div className="projects-row-muted projects-row-italic order-3 truncate text-[11px] tracking-[0.18em] italic lg:order-none lg:col-start-2 lg:not-italic">
+                    <div className="projects-row-muted projects-row-italic order-3 truncate text-[10px] tracking-[0.22em] italic lg:order-none lg:col-start-2 lg:not-italic">
                       <span className="truncate">{p.workTags.join(", ")}</span>
                     </div>
                   </div>
