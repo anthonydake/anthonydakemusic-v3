@@ -45,6 +45,7 @@ export default function ProjectsPage() {
     return [...projectIndex].sort((a, b) => parseSortKeyMMDDYYYY(b.date) - parseSortKeyMMDDYYYY(a.date));
   }, []);
 
+  const [revealCount, setRevealCount] = useState(0);
   const [hoverCapable, setHoverCapable] = useState(() => {
     if (typeof window === "undefined" || !("matchMedia" in window)) return false;
     return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -58,6 +59,12 @@ export default function ProjectsPage() {
   const [previewNextVisible, setPreviewNextVisible] = useState(false);
   const previewCommitRef = useRef<number | null>(null);
 
+  const revealIndexById = useMemo(() => {
+    const map = new Map<string, number>();
+    items.forEach((p, idx) => map.set(p.id, idx));
+    return map;
+  }, [items]);
+
   useEffect(() => {
     const query = "(hover: hover) and (pointer: fine)";
     const mq = window.matchMedia(query) as MediaQueryListLegacy;
@@ -69,6 +76,36 @@ export default function ProjectsPage() {
       mq.removeListener?.(update);
     };
   }, []);
+
+  useEffect(() => {
+    if (items.length === 0) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let interval: number | null = null;
+
+    // Avoid setState directly in the effect body (lint rule); run from a callback.
+    const t = window.setTimeout(() => {
+      if (reduced) {
+        setRevealCount(items.length);
+        return;
+      }
+
+      // Reveal from top to bottom, one row every quarter second.
+      let count = 1;
+      setRevealCount(1);
+
+      interval = window.setInterval(() => {
+        count += 1;
+        setRevealCount(count);
+        if (count >= items.length && interval) window.clearInterval(interval);
+      }, 250);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(t);
+      if (interval) window.clearInterval(interval);
+    };
+  }, [items.length]);
 
   useEffect(() => {
     const tick = () => setNow(new Date());
@@ -191,6 +228,8 @@ export default function ProjectsPage() {
           <section aria-label="Project index">
             <YearGroups
               items={items}
+              revealCount={revealCount}
+              revealIndexById={revealIndexById}
               onRowHover={(id) => {
                 if (!hoverCapable) return;
                 const item = items.find((p) => p.id === id);
@@ -213,42 +252,55 @@ export default function ProjectsPage() {
   );
 }
 
-function YearGroups({ items, onRowHover }: { items: ProjectIndexItem[]; onRowHover: (id: string) => void }) {
+function YearGroups({
+  items,
+  revealCount,
+  revealIndexById,
+  onRowHover,
+}: {
+  items: ProjectIndexItem[];
+  revealCount: number;
+  revealIndexById: Map<string, number>;
+  onRowHover: (id: string) => void;
+}) {
   const years = Array.from(new Set(items.map((p) => p.year))).sort((a, b) => b - a);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-5">
       {years.map((year) => {
         const yearItems = items.filter((p) => p.year === year);
+        const yearVisible = yearItems.filter((p) => (revealIndexById.get(p.id) ?? Number.POSITIVE_INFINITY) < revealCount);
+        if (yearVisible.length === 0) return null;
+
         return (
-          <div key={year} className="space-y-3">
-            <div className="flex items-center gap-4">
+          <div key={year} className="space-y-2">
+            <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-black/10" />
-              <div className="text-[11px] uppercase tracking-[0.28em] text-black/50">{year}</div>
+              <div className="text-[10px] uppercase tracking-[0.28em] text-black/50">{year}</div>
             </div>
 
-            <div className="space-y-1">
-              {yearItems.map((p) => (
+            <div className="space-y-0.5">
+              {yearVisible.map((p) => (
                 <Link
                   key={p.id}
                   href={`/projects/${p.slug}`}
-                  className="projects-row group block py-1.5 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-8 lg:py-0 lg:pr-10"
+                  className="projects-row projects-row-enter group block py-1 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-6 lg:py-0 lg:pr-10"
                   onMouseEnter={() => onRowHover(p.id)}
                 >
                   <div className="min-w-0 flex flex-col gap-0.5 leading-none lg:grid lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_minmax(0,1fr)] lg:items-baseline lg:gap-x-8">
                     {/* Line 1 (mobile): date + artist | Column 1 (desktop) */}
-                    <div className="flex min-w-0 items-baseline gap-2 text-[10px] uppercase tracking-[0.22em]">
+                    <div className="flex min-w-0 items-baseline gap-2 text-[9px] uppercase tracking-[0.22em]">
                       <span className="tabular-nums shrink-0">{p.date}</span>
                       <span className="projects-row-muted truncate text-black/55">{p.artist}</span>
                     </div>
 
                     {/* Line 2 (mobile): title | Column 3 (desktop) */}
-                    <div className="order-2 truncate text-[10px] uppercase tracking-[0.22em] lg:order-none lg:col-start-3">
+                    <div className="order-2 truncate text-[9px] uppercase tracking-[0.22em] lg:order-none lg:col-start-3">
                       <span className="truncate">{p.title}</span>
                     </div>
 
                     {/* Line 3 (mobile): work tags | Column 2 (desktop) */}
-                    <div className="projects-row-muted projects-row-italic order-3 truncate text-[10px] tracking-[0.22em] italic lg:order-none lg:col-start-2 lg:not-italic">
+                    <div className="projects-row-muted projects-row-italic order-3 truncate text-[9px] tracking-[0.22em] italic lg:order-none lg:col-start-2 lg:not-italic">
                       <span className="truncate">{p.workTags.join(", ")}</span>
                     </div>
                   </div>
