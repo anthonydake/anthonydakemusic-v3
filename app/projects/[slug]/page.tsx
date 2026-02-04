@@ -238,7 +238,7 @@ export default function ProjectDetailPage() {
                         <div className="text-[11px] uppercase tracking-[0.28em] text-black/60">( {contextLabel} )</div>
 
                         <h1
-                          className="mt-8 max-w-[14ch] text-balance text-[clamp(32px,5vw,90px)] font-normal uppercase leading-[0.9] tracking-[0.02em] text-black"
+                          className="mt-8 max-w-[14ch] text-balance text-[clamp(16px,2.5vw,45px)] font-normal uppercase leading-[0.9] tracking-[0.02em] text-black"
                           onMouseEnter={() => setTitleRun((n) => n + 1)}
                           onMouseLeave={() => setTitleRun((n) => n + 1)}
                         >
