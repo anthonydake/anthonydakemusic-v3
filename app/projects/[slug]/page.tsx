@@ -224,7 +224,7 @@ export default function ProjectDetailPage() {
           <div className="flex flex-col gap-20">
             {/* HERO FRAME (Human Person-inspired) */}
             <section aria-label="Project hero">
-              <div className="grid gap-8 lg:grid-cols-[92px_minmax(0,1fr)_200px] lg:gap-0">
+              <div className="grid gap-8 lg:grid-cols-[clamp(48px,6vw,140px)_minmax(0,1fr)_clamp(48px,6vw,140px)] lg:gap-0">
                 {/* Left gutter (reserved spacing) */}
                 <div className="hidden lg:block lg:py-10 lg:pr-6" />
 
