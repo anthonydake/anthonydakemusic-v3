@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import ScrambleText from "@/app/components/ScrambleText";
 import TextScramble from "@/app/components/TextScramble";
 import { ProjectMedia, projects } from "@/lib/projects";
 
@@ -21,6 +20,7 @@ export default function ProjectDetailPage() {
   const params = useParams<{ slug?: string | string[] }>();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const project = projects.find((p) => p.slug === slug);
+  const [titleRun, setTitleRun] = useState(0);
   const [now, setNow] = useState<Date>(() => new Date());
   const [showLiveTime, setShowLiveTime] = useState(false);
   const [initialTime] = useState(() => formatColumbusTime(new Date()));
@@ -159,8 +159,19 @@ export default function ProjectDetailPage() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.2),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.12),transparent_45%)]" />
               <div className="relative px-6 py-12 sm:px-10 sm:py-16">
                 <p className="text-xs uppercase tracking-[0.32em] text-white/80">{project.tags.join(" • ")}</p>
-                <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-                  <ScrambleText text={project.title} />
+                <h1
+                  className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl"
+                  onMouseEnter={() => setTitleRun((n) => n + 1)}
+                  onMouseLeave={() => setTitleRun((n) => n + 1)}
+                >
+                  <TextScramble
+                    key={`${project.slug}-title-${titleRun}`}
+                    text={project.title}
+                    duration={500}
+                    charset="#%&$@+|"
+                    scrambleFraction={0.35}
+                    trigger={titleRun}
+                  />
                 </h1>
                 <p className="mt-3 max-w-3xl text-lg text-white/85">{project.subtitle}</p>
                 <div className="mt-6 flex flex-wrap gap-3 text-[11px] uppercase tracking-[0.24em] text-white/80">
