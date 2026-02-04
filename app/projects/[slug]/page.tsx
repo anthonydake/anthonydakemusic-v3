@@ -171,9 +171,6 @@ export default function ProjectDetailPage() {
   const artistLabel = (indexItem?.artist ?? project.title).toUpperCase();
   const contextLabel = project.title.toUpperCase();
   const subtitleLabel = project.subtitle.toUpperCase();
-  const workTagsLabel = indexItem?.workTags?.length ? indexItem.workTags.join(", ") : project.role;
-  const codeLabel = (indexItem?.id ?? String(project.year)).toUpperCase();
-  const dateLabel = indexItem?.date ?? String(project.year);
 
   return (
     <>
@@ -228,16 +225,8 @@ export default function ProjectDetailPage() {
             {/* HERO FRAME (Human Person-inspired) */}
             <section aria-label="Project hero">
               <div className="grid gap-8 lg:grid-cols-[92px_minmax(0,1fr)_200px] lg:gap-0">
-                {/* Left gutter: code + minimal meta */}
-                <div className="hidden lg:flex lg:flex-col lg:justify-between lg:py-10 lg:pr-6">
-                  <div className="text-[22px] uppercase tracking-[0.10em] text-black/90">{codeLabel}</div>
-                  <div className="space-y-1 text-[10px] uppercase tracking-[0.28em] text-black/55">
-                    <div>AD</div>
-                    <div>ANTHONY DAKE</div>
-                    <div>{workTagsLabel}</div>
-                    <div className="tabular-nums">{dateLabel}</div>
-                  </div>
-                </div>
+                {/* Left gutter (reserved spacing) */}
+                <div className="hidden lg:block lg:py-10 lg:pr-6" />
 
                 {/* Blueprint canvas + bottom image strip */}
                 <div className="border border-black/10 bg-white">
@@ -284,25 +273,10 @@ export default function ProjectDetailPage() {
                   </div>
                 </div>
 
-                {/* Right gutter: actions */}
-                <div className="hidden lg:flex lg:flex-col lg:justify-end lg:py-10 lg:pl-6">
-                  <div className="space-y-3 text-right text-[10px] uppercase tracking-[0.28em] text-black/55">
-                    <div>Read details</div>
-                    <div>View other work</div>
-                  </div>
-                </div>
+                {/* Right gutter (reserved spacing) */}
+                <div className="hidden lg:block lg:py-10 lg:pl-6" />
 
-                {/* Mobile: compact footer actions */}
-                <div className="flex items-center justify-between gap-6 border-t border-black/10 pt-6 text-[10px] uppercase tracking-[0.28em] text-black/60 lg:hidden">
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-black/85">{codeLabel}</span>
-                    <span className="tabular-nums">{dateLabel}</span>
-                  </div>
-                  <div className="flex items-center gap-6">
-                    <span>Read details</span>
-                    <span>View other work</span>
-                  </div>
-                </div>
+                {/* Mobile: no footer labels */}
               </div>
             </section>
           </div>
