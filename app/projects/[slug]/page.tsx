@@ -196,7 +196,7 @@ export default function ProjectDetailPage() {
                     <div className="relative flex-1 overflow-hidden">
                       <BlueprintGrid />
 
-                      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center">
                         <div className="text-[11px] uppercase tracking-[0.28em] text-black/60">( {contextLabel} )</div>
 
                         <h1
@@ -253,12 +253,20 @@ function BlueprintGrid() {
   const h = [20, 40, 60, 80];
 
   return (
-    <div className="pointer-events-none absolute inset-0">
+    <div
+      className="pointer-events-none absolute inset-0 z-0"
+      style={{
+        // Keep the grid as a background layer (separate from foreground content).
+        WebkitMaskImage:
+          "radial-gradient(circle at 50% 50%, transparent 0, transparent 180px, black 250px)",
+        maskImage: "radial-gradient(circle at 50% 50%, transparent 0, transparent 180px, black 250px)",
+      }}
+    >
       {v.map((p) => (
-        <div key={`v-${p}`} className="absolute inset-y-0 w-px bg-black/15" style={{ left: `${p}%` }} />
+        <div key={`v-${p}`} className="absolute inset-y-0 w-px bg-black/12" style={{ left: `${p}%` }} />
       ))}
       {h.map((p) => (
-        <div key={`h-${p}`} className="absolute inset-x-0 h-px bg-black/15" style={{ top: `${p}%` }} />
+        <div key={`h-${p}`} className="absolute inset-x-0 h-px bg-black/12" style={{ top: `${p}%` }} />
       ))}
     </div>
   );
