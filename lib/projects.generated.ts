@@ -158,7 +158,7 @@ export const projects: Project[] = [
     "media": [
       {
         "kind": "image",
-        "src": "/projects/missin-u/Missin%20U.jpg",
+        "src": "/projects/missin-u/Missin U.jpg",
         "alt": "Studio session photo",
         "title": "Missin U"
       },

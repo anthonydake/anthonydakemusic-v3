@@ -64,6 +64,6 @@ export const projectIndex: ProjectIndexItem[] = [
     workTags: ["PRODUCTION/SONGWRITING"],
     title: "CLASS LOSER",
     slug: "missin-u",
-    preview: { type: "image", src: "/projects/missin-u/Missin%20U.jpg" },
+    preview: { type: "image", src: "/projects/missin-u/Missin U.jpg" },
   },
 ];
