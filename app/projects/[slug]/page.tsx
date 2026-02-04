@@ -86,7 +86,7 @@ export default function ProjectDetailPage() {
             </nav>
           </div>
         </div>
-        <main className="min-h-screen bg-[#f9f7f2] px-6 pb-20 pt-20 text-[#0c0c0b]">
+        <main className="min-h-screen bg-[#f9f7f2] px-6 pb-20 pt-20 font-sans text-[#0c0c0b]">
           <div className="pt-14 text-center text-sm text-black/60">Project not found.</div>
         </main>
       </>
@@ -139,7 +139,7 @@ export default function ProjectDetailPage() {
           </nav>
         </div>
       </div>
-      <main className="min-h-screen bg-[#f9f7f2] px-6 pb-20 pt-20 text-[#0c0c0b]">
+      <main className="min-h-screen bg-[#f9f7f2] px-6 pb-20 pt-20 font-sans text-[#0c0c0b]">
         <div className="mx-auto max-w-5xl space-y-10">
           <div className="flex items-center justify-between">
             <Link className="text-sm underline underline-offset-4" href="/projects">
@@ -160,7 +160,7 @@ export default function ProjectDetailPage() {
               <div className="relative px-6 py-12 sm:px-10 sm:py-16">
                 <p className="text-xs uppercase tracking-[0.32em] text-white/80">{project.tags.join(" • ")}</p>
                 <h1
-                  className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl"
+                  className="mt-4 text-4xl font-semibold leading-tight tracking-[0.06em] sm:text-5xl"
                   onMouseEnter={() => setTitleRun((n) => n + 1)}
                   onMouseLeave={() => setTitleRun((n) => n + 1)}
                 >
