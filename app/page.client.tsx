@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import HomeClient from "./components/HomeClient";
 import TextScramble from "./components/TextScramble";
-import LogoArchitectOfSound from "./components/LogoArchitectOfSound";
 import site from "@/content/site";
-import { useTransition } from "./components/TransitionProvider";
 
 function formatColumbusTime(d: Date) {
   const fmt = new Intl.DateTimeFormat("en-US", {
@@ -27,7 +26,6 @@ export default function HomePageClient() {
 }
 
 function HomeInner() {
-  const { triggerTransition, isTransitioning, isMobileFallback } = useTransition();
   const searchParams = useSearchParams();
   const q = searchParams.toString();
   const homeHref = q ? `/?${q}` : "/";
@@ -35,8 +33,6 @@ function HomeInner() {
   const [now, setNow] = useState<Date>(() => new Date());
   const [showLiveTime, setShowLiveTime] = useState(false);
   const [initialTime] = useState(() => formatColumbusTime(new Date()));
-  const accumRef = useRef(0);
-  const triggeredRef = useRef(false);
 
   useEffect(() => {
     const tick = () => setNow(new Date());
@@ -49,31 +45,6 @@ function HomeInner() {
     const t = window.setTimeout(() => setShowLiveTime(true), 650);
     return () => window.clearTimeout(t);
   }, []);
-
-  useEffect(() => {
-    if (isMobileFallback) return;
-    if (isTransitioning) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      if (triggeredRef.current) return;
-      const delta = e.deltaY;
-      if (Math.abs(delta) < 6) return;
-      if (delta <= 0) {
-        accumRef.current = Math.max(0, accumRef.current + delta);
-        return;
-      }
-      e.preventDefault();
-      accumRef.current += delta;
-      if (accumRef.current > 150) {
-        triggeredRef.current = true;
-        window.removeEventListener("wheel", handleWheel);
-        triggerTransition(projectsHref);
-      }
-    };
-
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, [isMobileFallback, isTransitioning, triggerTransition, projectsHref]);
 
   const timeLabel = useMemo(() => formatColumbusTime(now), [now]);
 
@@ -111,14 +82,7 @@ function HomeInner() {
             </svg>
           </Link>
           <nav className="flex items-center justify-self-end gap-6">
-            <Link
-              className="hover:text-black"
-              href={projectsHref}
-              onClick={(e) => {
-                e.preventDefault();
-                triggerTransition(projectsHref);
-              }}
-            >
+            <Link className="hover:text-black" href={projectsHref}>
               Projects
             </Link>
             <Link className="hover:text-black" href={site.hero.cta.href}>
@@ -130,16 +94,10 @@ function HomeInner() {
           </nav>
         </div>
       </div>
-
-      <section className="relative flex h-screen items-center justify-center overflow-hidden pt-14 box-border">
-        <div className="select-none">
-          <LogoArchitectOfSound />
-        </div>
-      </section>
-
-      <div className="fixed inset-x-0 bottom-6 z-[20] flex justify-center">
-        <span className="text-[11px] lowercase tracking-[0.32em] text-black/70 animate-scrollPulse">scroll</span>
+      <div className="pt-14">
+        <HomeClient />
       </div>
     </>
   );
 }
+

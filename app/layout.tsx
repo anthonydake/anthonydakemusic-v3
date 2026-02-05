@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import CustomCursor from "./components/CustomCursor";
 import JsonLd from "./components/JsonLd";
-import TransitionProvider from "./components/TransitionProvider";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
 
@@ -69,9 +68,7 @@ export default function RootLayout({
             ],
           }}
         />
-        <TransitionProvider>
-          <main>{children}</main>
-        </TransitionProvider>
+        <main>{children}</main>
       </body>
     </html>
   );
