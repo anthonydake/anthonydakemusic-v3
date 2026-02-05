@@ -52,3 +52,13 @@ a {
 .animate-scrollFlash {
   animation: scrollFlash 2.4s ease-in-out infinite;
 }
+
+@keyframes scrollPulse {
+  0% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.35; }
+}
+
+.animate-scrollPulse {
+  animation: scrollPulse 3s ease-in-out infinite;
+}
