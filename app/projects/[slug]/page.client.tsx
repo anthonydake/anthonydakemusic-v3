@@ -23,7 +23,6 @@ export default function ProjectDetailClient() {
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const project = projects.find((p) => p.slug === slug);
   const indexItem = projectIndex.find((p) => p.slug === slug);
-  const [titleRun, setTitleRun] = useState(0);
   const [now, setNow] = useState<Date>(() => new Date());
   const [showLiveTime, setShowLiveTime] = useState(false);
   const [initialTime] = useState(() => formatColumbusTime(new Date()));
@@ -118,7 +117,11 @@ export default function ProjectDetailClient() {
 
   const artistLabel = (indexItem?.artist ?? project.title).toUpperCase();
   const contextLabel = project.title.toUpperCase();
-  const subtitleLabel = project.subtitle.toUpperCase();
+  const workDoneLabel = (indexItem?.workTags?.length ? indexItem.workTags.join(", ") : project.role).toUpperCase();
+  type VideoMedia = Extract<ProjectMedia, { kind: "video" }>;
+  const youtubeId = (project.media.find((m): m is VideoMedia => m.kind === "video" && m.provider === "youtube") as VideoMedia | undefined)
+    ?.id;
+  const youtubeHref = youtubeId ? `https://youtu.be/${youtubeId}` : null;
 
   return (
     <>
@@ -190,31 +193,21 @@ export default function ProjectDetailClient() {
                 {/* Left gutter (reserved spacing) */}
                 <div className="hidden lg:block lg:py-10 lg:pr-6" />
 
-                {/* Blueprint canvas + bottom image strip */}
+                {/* Canvas + bottom image strip */}
                 <div className="border border-black/10 bg-white">
                   <div className="flex min-h-[min(760px,calc(100svh-240px))] flex-col">
                     <div className="relative flex-1 overflow-hidden">
-                      <BlueprintGrid />
-
                       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center">
                         <div className="text-[11px] uppercase tracking-[0.28em] text-black/60">( {contextLabel} )</div>
 
-                        <h1
-                          className="mt-8 max-w-[14ch] text-balance text-[clamp(16px,2.5vw,45px)] font-normal uppercase leading-[0.9] tracking-[0.02em] text-black"
-                          onMouseEnter={() => setTitleRun((n) => n + 1)}
-                          onMouseLeave={() => setTitleRun((n) => n + 1)}
-                        >
+                        <h1 className="mt-8 max-w-[14ch] text-balance text-[clamp(16px,2.5vw,45px)] font-normal uppercase leading-[0.9] tracking-[0.02em] text-black">
                           <TextScramble
-                            key={`${project.slug}-hero-${titleRun}`}
                             text={artistLabel}
                             duration={500}
                             charset="#%&$@+|"
                             scrambleFraction={0.35}
-                            trigger={titleRun}
                           />
                         </h1>
-
-                        <div className="mt-10 text-[11px] uppercase tracking-[0.28em] text-black/55">{subtitleLabel}</div>
                       </div>
                     </div>
 
@@ -238,7 +231,27 @@ export default function ProjectDetailClient() {
                 {/* Right gutter (reserved spacing) */}
                 <div className="hidden lg:block lg:py-10 lg:pl-6" />
 
-                {/* Mobile: no footer labels */}
+              </div>
+
+              <div className="mx-auto mt-6 max-w-[1600px] px-0">
+                <div className="flex flex-col gap-3 text-[11px] uppercase tracking-[0.28em] text-black/65 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="text-black/55">{workDoneLabel}</div>
+                  <div className="flex items-center gap-6">
+                    {youtubeHref ? (
+                      <a
+                        href={youtubeHref}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline underline-offset-4 hover:text-black"
+                      >
+                        YouTube
+                      </a>
+                    ) : null}
+                    <Link className="underline underline-offset-4 hover:text-black" href="/projects">
+                      Back to Projects
+                    </Link>
+                  </div>
+                </div>
               </div>
             </section>
           </div>
@@ -247,27 +260,3 @@ export default function ProjectDetailClient() {
     </>
   );
 }
-
-function BlueprintGrid() {
-  const v = [16.6667, 33.3333, 50, 66.6667, 83.3333];
-  const h = [20, 40, 60, 80];
-
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 z-0"
-      style={{
-        // Keep the grid as a background layer (separate from foreground content).
-        WebkitMaskImage: "radial-gradient(circle at 50% 50%, transparent 0, transparent 180px, black 250px)",
-        maskImage: "radial-gradient(circle at 50% 50%, transparent 0, transparent 180px, black 250px)",
-      }}
-    >
-      {v.map((p) => (
-        <div key={`v-${p}`} className="absolute inset-y-0 w-px bg-black/12" style={{ left: `${p}%` }} />
-      ))}
-      {h.map((p) => (
-        <div key={`h-${p}`} className="absolute inset-x-0 h-px bg-black/12" style={{ top: `${p}%` }} />
-      ))}
-    </div>
-  );
-}
-
