@@ -126,6 +126,35 @@ function HomeInner() {
       <div className="pt-14">
         <HomeClient />
       </div>
+      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[20] flex justify-center">
+        <span
+          className="home-scroll-indicator text-[11px] lowercase tracking-[0.28em] text-black"
+          style={{ opacity: 0.35 }}
+        >
+          scroll
+        </span>
+      </div>
+      <style jsx global>{`
+        @keyframes homeScrollPulse {
+          0% {
+            opacity: 0.35;
+          }
+          50% {
+            opacity: 0.9;
+          }
+          100% {
+            opacity: 0.35;
+          }
+        }
+        .home-scroll-indicator {
+          animation: homeScrollPulse 3s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .home-scroll-indicator {
+            animation: none;
+          }
+        }
+      `}</style>
     </>
   );
 }
