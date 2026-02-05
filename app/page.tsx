@@ -5,6 +5,7 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import HomeClient from "./components/HomeClient";
 import TextScramble from "./components/TextScramble";
+import site from "@/content/site";
 
 function formatColumbusTime(d: Date) {
   const fmt = new Intl.DateTimeFormat("en-US", {
@@ -84,8 +85,8 @@ function HomeInner() {
             <Link className="hover:text-black" href={projectsHref}>
               Projects
             </Link>
-            <Link className="hover:text-black" href="/contact">
-              Contact
+            <Link className="hover:text-black" href={site.hero.cta.href}>
+              {site.hero.cta.label}
             </Link>
             <Link className="hover:text-black" href="/about">
               About

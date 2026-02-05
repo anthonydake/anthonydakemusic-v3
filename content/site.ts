@@ -85,7 +85,7 @@ export type SiteContent = {
   };
 };
 
-export const site = {
+export const site: SiteContent = {
   hero: {
     headline: "Anthony Dake — Architect of Sound",
     subheadline: "Production, drums, and music direction with a systems-first mindset that still feels human.",
@@ -148,7 +148,6 @@ export const site = {
       },
     ],
   },
-} as const satisfies SiteContent;
+};
 
 export default site;
-
