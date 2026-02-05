@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import TextScramble from "@/app/components/TextScramble";
-import { type ProjectMedia, projects } from "@/lib/projects";
+import { projects } from "@/lib/projects";
 import { projectIndex } from "@/data/projects.data";
 
 function formatColumbusTime(d: Date) {
@@ -28,9 +27,6 @@ export default function ProjectDetailClient() {
   const [showLiveTime, setShowLiveTime] = useState(false);
   const [initialTime] = useState(() => formatColumbusTime(new Date()));
 
-  type ImageMedia = Extract<ProjectMedia, { kind: "image" }>;
-  const heroImage = (project?.media.find((m): m is ImageMedia => m.kind === "image") as ImageMedia | undefined) ?? null;
-
   useEffect(() => {
     const tick = () => setNow(new Date());
     tick();
@@ -49,17 +45,6 @@ export default function ProjectDetailClient() {
     return (
       <>
         <div className="relative min-h-screen bg-white text-black">
-          {/* Vertical hairline gridlines (desktop only) */}
-          <div className="pointer-events-none absolute inset-0 hidden lg:block">
-            <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
-              <div className="relative h-full">
-                <div className="absolute inset-y-0 left-1/4 w-px bg-black/10" />
-                <div className="absolute inset-y-0 left-1/2 w-px bg-black/10" />
-                <div className="absolute inset-y-0 left-3/4 w-px bg-black/10" />
-              </div>
-            </div>
-          </div>
-
           {/* Header (match home) */}
           <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
             <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
@@ -123,17 +108,6 @@ export default function ProjectDetailClient() {
   return (
     <>
       <div className="relative min-h-screen bg-white text-black">
-        {/* Vertical hairline gridlines (desktop only) */}
-        <div className="pointer-events-none absolute inset-0 hidden lg:block">
-          <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
-            <div className="relative h-full">
-              <div className="absolute inset-y-0 left-1/4 w-px bg-black/10" />
-              <div className="absolute inset-y-0 left-1/2 w-px bg-black/10" />
-              <div className="absolute inset-y-0 left-3/4 w-px bg-black/10" />
-            </div>
-          </div>
-        </div>
-
         {/* Header (match home) */}
         <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
           <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
@@ -194,8 +168,6 @@ export default function ProjectDetailClient() {
                 <div className="border border-black/10 bg-white">
                   <div className="flex min-h-[min(760px,calc(100svh-240px))] flex-col">
                     <div className="relative flex-1 overflow-hidden">
-                      <BlueprintGrid />
-
                       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center">
                         <div className="text-[11px] uppercase tracking-[0.28em] text-black/60">( {contextLabel} )</div>
 
@@ -217,21 +189,6 @@ export default function ProjectDetailClient() {
                         <div className="mt-10 text-[11px] uppercase tracking-[0.28em] text-black/55">{subtitleLabel}</div>
                       </div>
                     </div>
-
-                    <div className="border-t border-black/10 bg-white">
-                      <div className="relative h-[clamp(180px,26vh,340px)] w-full bg-black/5">
-                        {heroImage ? (
-                          <Image
-                            src={heroImage.src}
-                            alt={heroImage.alt}
-                            fill
-                            className="object-cover"
-                            sizes="(min-width: 1024px) 1200px, 100vw"
-                            priority
-                          />
-                        ) : null}
-                      </div>
-                    </div>
                   </div>
                 </div>
 
@@ -247,27 +204,3 @@ export default function ProjectDetailClient() {
     </>
   );
 }
-
-function BlueprintGrid() {
-  const v = [16.6667, 33.3333, 50, 66.6667, 83.3333];
-  const h = [20, 40, 60, 80];
-
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 z-0"
-      style={{
-        // Keep the grid as a background layer (separate from foreground content).
-        WebkitMaskImage: "radial-gradient(circle at 50% 50%, transparent 0, transparent 180px, black 250px)",
-        maskImage: "radial-gradient(circle at 50% 50%, transparent 0, transparent 180px, black 250px)",
-      }}
-    >
-      {v.map((p) => (
-        <div key={`v-${p}`} className="absolute inset-y-0 w-px bg-black/12" style={{ left: `${p}%` }} />
-      ))}
-      {h.map((p) => (
-        <div key={`h-${p}`} className="absolute inset-x-0 h-px bg-black/12" style={{ top: `${p}%` }} />
-      ))}
-    </div>
-  );
-}
-
