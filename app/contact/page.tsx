@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import TextScramble from "../components/TextScramble";
-
-const services = ["Production", "Session Drums", "Music Direction", "Playback Systems", "Other"];
+import site from "@/content/site";
 
 function formatColumbusTime(d: Date) {
   const fmt = new Intl.DateTimeFormat("en-US", {
@@ -18,7 +17,8 @@ function formatColumbusTime(d: Date) {
 
 export default function Page() {
   const [status, setStatus] = useState<string>("");
-  const [service, setService] = useState<string>(services[0]);
+  const services = site.contact.services;
+  const [service, setService] = useState<string>(services[0] ?? "Other");
   const [now, setNow] = useState<Date>(() => new Date());
   const [showLiveTime, setShowLiveTime] = useState(false);
   const [initialTime] = useState(() => formatColumbusTime(new Date()));
@@ -69,10 +69,10 @@ export default function Page() {
       ].join("\n")
     );
 
-    window.location.href = `mailto:booking@anthonydakemusic.com?subject=${subject}&body=${body}`;
-    setStatus("Opening your email client... If it doesn't open, email booking@anthonydakemusic.com.");
+    window.location.href = `mailto:${site.contact.email}?subject=${subject}&body=${body}`;
+    setStatus(`Opening your email client... If it doesn't open, email ${site.contact.email}.`);
     form.reset();
-    setService(services[0]);
+    setService(services[0] ?? "Other");
   }
 
   return (
@@ -129,8 +129,8 @@ export default function Page() {
             Tell me about the project once. I&apos;ll reply with availability and a plan.
           </h1>
           <p className="max-w-2xl text-sm text-black/65">
-            This form captures everything I need to scope production, drums, or music direction quickly. Attach links
-            to references, demos, or Dropbox/Drive folders.
+            This form captures everything I need to scope production, drums, or music direction quickly. Attach links to references,
+            demos, or Dropbox/Drive folders. {site.contact.responseTime}
           </p>
         </header>
 
@@ -139,10 +139,10 @@ export default function Page() {
           <input type="hidden" name="service" value={service} />
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field name="name" label="Name" placeholder="Your name" required />
-            <Field name="email" type="email" label="Email" placeholder="you@email.com" required />
-            <Field name="phone" label="Phone (optional)" placeholder="+1 (---) --- ----" />
-            <Field name="artist" label="Artist / Band" placeholder="If applicable" />
+            <Field name="name" label={labelFor("name")} placeholder={placeholderFor("name")} required={requiredFor("name")} />
+            <Field name="email" type={typeFor("email")} label={labelFor("email")} placeholder={placeholderFor("email")} required={requiredFor("email")} />
+            <Field name="phone" type={typeFor("phone")} label={labelFor("phone")} placeholder={placeholderFor("phone")} required={requiredFor("phone")} />
+            <Field name="artist" label={labelFor("artist")} placeholder={placeholderFor("artist")} required={requiredFor("artist")} />
           </div>
 
           <div className="space-y-2">
@@ -155,10 +155,10 @@ export default function Page() {
                     key={s}
                     type="button"
                     onClick={() => setService(s)}
-                    className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                      active
-                        ? "border-black bg-black text-white shadow-md"
-                        : "border-black/15 bg-white text-black hover:border-black/40"
+                  className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                    active
+                      ? "border-black bg-black text-white shadow-md"
+                      : "border-black/15 bg-white text-black hover:border-black/40"
                     }`}
                   >
                     {s}
@@ -169,25 +169,26 @@ export default function Page() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field name="timeline" label="Timeline / deadline" placeholder="e.g., Master by May 12" />
-            <Field name="budget" label="Budget range" placeholder="$" />
+            <Field name="timeline" label={labelFor("timeline")} placeholder={placeholderFor("timeline")} required={requiredFor("timeline")} />
+            <Field name="budget" label={labelFor("budget")} placeholder={placeholderFor("budget")} required={requiredFor("budget")} />
           </div>
 
           <div className="grid gap-4">
             <Field
               name="links"
-              label="Links (references, demos, Dropbox/Drive, stems)"
-              placeholder="Paste URLs"
+              label={labelFor("links")}
+              placeholder={placeholderFor("links")}
+              required={requiredFor("links")}
             />
-            <Field name="source" label="Where did you find me?" placeholder="Referral, social, show, etc." />
+            <Field name="source" label={labelFor("source")} placeholder={placeholderFor("source")} required={requiredFor("source")} />
             <div className="space-y-2">
-              <label className="text-sm font-medium text-black/70">Project description</label>
+              <label className="text-sm font-medium text-black/70">{labelFor("details")}</label>
               <textarea
                 name="details"
-                required
-                rows={6}
+                required={requiredFor("details")}
+                rows={rowsFor("details")}
                 className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-black/60"
-                placeholder="What you're building, roles needed, references, deliverables, non-negotiables."
+                placeholder={placeholderFor("details")}
               />
             </div>
           </div>
@@ -201,8 +202,8 @@ export default function Page() {
             </button>
             <p className="text-xs text-black/60">
               Direct email:{" "}
-              <a className="underline underline-offset-4" href="mailto:booking@anthonydakemusic.com">
-                booking@anthonydakemusic.com
+              <a className="underline underline-offset-4" href={`mailto:${site.contact.email}`}>
+                {site.contact.email}
               </a>
             </p>
           </div>
@@ -213,6 +214,37 @@ export default function Page() {
       </main>
     </>
   );
+
+  function fieldByName(name: (typeof site.contact.fields)[number]["name"]) {
+    return site.contact.fields.find((f) => f.name === name);
+  }
+
+  function labelFor(name: (typeof site.contact.fields)[number]["name"]) {
+    return fieldByName(name)?.label ?? name;
+  }
+
+  function placeholderFor(name: (typeof site.contact.fields)[number]["name"]) {
+    return fieldByName(name)?.placeholder ?? "";
+  }
+
+  function requiredFor(name: (typeof site.contact.fields)[number]["name"]) {
+    const f = fieldByName(name);
+    return Boolean(f && "required" in f && f.required);
+  }
+
+  function typeFor(
+    name: Exclude<(typeof site.contact.fields)[number]["name"], "details">
+  ): "text" | "email" | "tel" {
+    const f = fieldByName(name);
+    if (f && "type" in f && f.type) return f.type;
+    return "text";
+  }
+
+  function rowsFor(name: "details") {
+    const f = fieldByName(name);
+    if (f && "kind" in f && f.kind === "textarea" && typeof f.rows === "number") return f.rows;
+    return 6;
+  }
 }
 
 function Field({
