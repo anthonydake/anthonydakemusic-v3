@@ -294,7 +294,7 @@ function ProjectTemplate({
       {/* HERO FRAME (Human Person-inspired) */}
       <section aria-label="Project hero" className="fade-section" data-fade-section>
         <div className="w-full border-y border-black/10 bg-white">
-          <div className="mx-auto flex min-h-[min(720px,calc(100svh-240px))] w-full max-w-5xl items-center justify-center px-6 py-24 text-center sm:px-8 lg:px-10 xl:px-12">
+          <div className="mx-auto flex min-h-[min(720px,calc(100svh-240px))] w-full max-w-5xl items-center justify-center px-6 py-20 text-center sm:px-8 lg:px-10 lg:py-32 xl:px-12">
             <div className="space-y-6">
               <div className="text-[11px] uppercase tracking-[0.28em] text-black/45">{year}</div>
               <h1 className="text-balance text-[clamp(28px,4.5vw,64px)] font-semibold uppercase leading-[0.98] tracking-[0.02em] text-black">
@@ -309,17 +309,21 @@ function ProjectTemplate({
       </section>
 
       <section aria-label="Audio" className="fade-section" data-fade-section>
-        <div className="mx-auto w-full max-w-5xl space-y-10 text-center">
+        <div className="mx-auto w-full max-w-5xl space-y-8 py-20 text-center lg:py-32">
+          <div className="h-px w-full bg-black/10" />
           <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">The Record</h2>
-          {audioEmbed}
+          <div className="mx-auto w-full max-w-4xl bg-black/[0.04] p-6">
+            {audioEmbed}
+          </div>
         </div>
       </section>
 
       <section aria-label="Creative direction" className="fade-section" data-fade-section>
-        <div className="mx-auto w-full max-w-4xl space-y-6">
-          <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Creative Direction</h2>
+        <div className="mx-auto w-full max-w-4xl space-y-6 py-20 lg:py-32">
+          <div className="h-px w-full bg-black/10" />
+          <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Creative Direction</h2>
           <p className="text-[15px] leading-relaxed text-black/70">{blurb}</p>
-          <ul className="mx-auto w-full max-w-3xl list-disc list-inside space-y-2 text-center text-[13px] leading-relaxed text-black/60">
+          <ul className="mx-auto w-full max-w-3xl list-disc space-y-2 text-[13px] leading-relaxed text-black/60">
             {creativeDirection.map((line) => (
               <li key={line}>{line}</li>
             ))}
@@ -335,47 +339,54 @@ function ProjectTemplate({
       </section>
 
       <section aria-label="Process" className="fade-section" data-fade-section>
-        <div className="mx-auto w-full max-w-4xl space-y-6">
+        <div className="mx-auto w-full max-w-4xl space-y-6 py-20 lg:py-32">
+          <div className="h-px w-full bg-black/10" />
           <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Process</h2>
           <p className="mx-auto w-full max-w-3xl text-[14px] leading-relaxed text-black/60">{processText}</p>
-          {processImage}
+          <div className="pt-4">
+            <div className="bg-black/[0.03] p-4">{processImage}</div>
+          </div>
         </div>
       </section>
 
       <section aria-label="Credits" className="fade-section" data-fade-section>
-        <div className="mx-auto w-full max-w-4xl space-y-6">
+        <div className="mx-auto w-full max-w-4xl space-y-6 py-20 lg:py-32">
+          <div className="h-px w-full bg-black/10" />
           <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Credits</h2>
-          <div className="grid gap-x-10 gap-y-3 text-[12px] text-black/65 sm:grid-cols-[140px_minmax(0,1fr)]">
-            <div className="uppercase tracking-[0.22em] text-black/45">Artist</div>
+          <div className="mx-auto grid gap-x-10 gap-y-4 text-[12px] text-black/65 sm:grid-cols-[140px_minmax(0,1fr)]">
+            <div className="uppercase tracking-[0.22em] text-black/35">Artist</div>
             <div>{credits.artist}</div>
-            <div className="uppercase tracking-[0.22em] text-black/45">Producer</div>
+            <div className="uppercase tracking-[0.22em] text-black/35">Producer</div>
             <div>{credits.producer}</div>
-            <div className="uppercase tracking-[0.22em] text-black/45">Writers</div>
+            <div className="uppercase tracking-[0.22em] text-black/35">Writers</div>
             <div>{credits.writers}</div>
-            <div className="uppercase tracking-[0.22em] text-black/45">Engineer</div>
+            <div className="uppercase tracking-[0.22em] text-black/35">Engineer</div>
             <div>{credits.engineer}</div>
-            <div className="uppercase tracking-[0.22em] text-black/45">Year</div>
+            <div className="uppercase tracking-[0.22em] text-black/35">Year</div>
             <div>{credits.year}</div>
           </div>
         </div>
       </section>
 
       <section aria-label="Previous and next" className="fade-section" data-fade-section>
-        <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-6 py-6 text-[12px] tracking-[0.16em] text-black/50">
+        <div className="mx-auto w-full max-w-4xl pt-12">
+          <div className="h-px w-full bg-black/10" />
+          <div className="mt-8 flex items-center justify-between gap-6 py-6 text-[12px] tracking-[0.2em] text-black/50">
           {prevProject ? (
-            <Link className="hover:text-black" href={`/projects/${prevProject.slug}`}>
+            <Link className="transition-all duration-200 ease-out hover:underline hover:underline-offset-4 hover:text-black" href={`/projects/${prevProject.slug}`}>
               ← Previous Project
             </Link>
           ) : (
             <span className="text-black/30">← Previous Project</span>
           )}
           {nextProject ? (
-            <Link className="hover:text-black" href={`/projects/${nextProject.slug}`}>
+            <Link className="transition-all duration-200 ease-out hover:underline hover:underline-offset-4 hover:text-black" href={`/projects/${nextProject.slug}`}>
               Next Project →
             </Link>
           ) : (
             <span className="text-black/30">Next Project →</span>
           )}
+          </div>
         </div>
       </section>
     </div>
