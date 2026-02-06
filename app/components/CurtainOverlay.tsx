@@ -41,7 +41,10 @@ export default function CurtainOverlay({
       {isActive ? (
         <motion.div
           key="curtain-overlay"
-          className="fixed inset-0 z-[10000] bg-black"
+          className="fixed inset-0 z-[10000]"
+          style={{
+            background: "linear-gradient(to top, #000000 0%, #050505 60%, #0A0A0A 100%)",
+          }}
           initial="initial"
           animate={phase}
           variants={variants}

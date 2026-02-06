@@ -286,13 +286,13 @@ function ProjectTemplate({
         <div className="w-full border-y border-black/10 bg-white">
           <div className="mx-auto flex min-h-[min(720px,calc(100svh-240px))] w-full max-w-5xl items-center justify-center px-6 pb-20 pt-28 text-center sm:px-8 lg:px-10 xl:px-12">
             <div className="space-y-6">
-              <div className="text-[11px] uppercase tracking-[0.28em] text-black/45">{year}</div>
-              <h1 className="text-balance text-[clamp(28px,4.5vw,64px)] font-semibold uppercase leading-[0.98] tracking-[0.02em] text-black">
+              <div className="text-[11px] uppercase tracking-[0.28em] text-black/35">{year}</div>
+              <h1 className="text-balance text-[clamp(28px,4.5vw,64px)] font-medium uppercase leading-[0.98] tracking-[0.02em] text-black">
                 {title}
               </h1>
               <div className="text-[clamp(14px,2.1vw,24px)] uppercase tracking-[0.18em] text-black/70">{artist}</div>
-              <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">{roles}</div>
-              <div className="text-[11px] uppercase tracking-[0.28em] text-black/50">{subtitle}</div>
+              <div className="text-[11px] uppercase tracking-[0.28em] text-black/45">{roles}</div>
+              <div className="text-[11px] uppercase tracking-[0.28em] text-black/40">{subtitle}</div>
             </div>
           </div>
         </div>
@@ -302,7 +302,7 @@ function ProjectTemplate({
       <section aria-label="Audio" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-5xl space-y-5 py-16 text-center">
           <div className="h-px w-full bg-black/10 mb-8 mt-16" />
-          <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">The Record</h2>
+          <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/50">The Record</h2>
           <div className="mx-auto w-full max-w-4xl bg-black/[0.04] p-6">
             {audioEmbed}
           </div>
@@ -313,8 +313,8 @@ function ProjectTemplate({
       <section aria-label="Creative direction" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
           <div className="h-px w-full bg-black/10 mb-8 mt-16" />
-          <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Creative Direction</h2>
-          <p className="text-[15px] leading-relaxed text-black/70">{blurb}</p>
+          <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/50">Creative Direction</h2>
+          <p className="text-[15px] leading-[1.75] text-black/70">{blurb}</p>
           <ul className="mx-auto w-full max-w-3xl list-disc space-y-2 text-[13px] leading-relaxed text-black/60">
             {creativeDirection.map((line) => (
               <li key={line}>{line}</li>
@@ -334,8 +334,8 @@ function ProjectTemplate({
       <section aria-label="Process" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
           <div className="h-px w-full bg-black/10 mb-8 mt-16" />
-          <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Process</h2>
-          <p className="mx-auto w-full max-w-3xl text-[14px] leading-relaxed text-black/60">{processText}</p>
+          <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/50">Process</h2>
+          <p className="mx-auto w-full max-w-3xl text-[14px] leading-[1.75] text-black/60">{processText}</p>
           <div className="pt-4">
             <div className="bg-black/[0.03] p-4">
               {processImage}
@@ -348,17 +348,17 @@ function ProjectTemplate({
       <section aria-label="Credits" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
           <div className="h-px w-full bg-black/10 mb-8 mt-16" />
-          <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Credits</h2>
+          <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/50">Credits</h2>
           <div className="mx-auto grid gap-x-10 gap-y-3 text-[12px] text-black/65 sm:grid-cols-[140px_minmax(0,1fr)]">
-            <div className="uppercase tracking-[0.22em] text-black/35">Artist</div>
+            <div className="uppercase tracking-[0.22em] text-black/25">Artist</div>
             <div>{credits.artist}</div>
-            <div className="uppercase tracking-[0.22em] text-black/35">Producer</div>
+            <div className="uppercase tracking-[0.22em] text-black/25">Producer</div>
             <div>{credits.producer}</div>
-            <div className="uppercase tracking-[0.22em] text-black/35">Writers</div>
+            <div className="uppercase tracking-[0.22em] text-black/25">Writers</div>
             <div>{credits.writers}</div>
-            <div className="uppercase tracking-[0.22em] text-black/35">Engineer</div>
+            <div className="uppercase tracking-[0.22em] text-black/25">Engineer</div>
             <div>{credits.engineer}</div>
-            <div className="uppercase tracking-[0.22em] text-black/35">Year</div>
+            <div className="uppercase tracking-[0.22em] text-black/25">Year</div>
             <div>{credits.year}</div>
           </div>
         </div>
