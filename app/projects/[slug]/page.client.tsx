@@ -196,10 +196,10 @@ export default function ProjectDetailClient() {
             </section>
 
             <section aria-label="Audio">
-              <div className="mx-auto w-full max-w-4xl space-y-6">
-                <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Audio</h2>
+              <div className="mx-auto w-full max-w-5xl space-y-10 text-center">
+                <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">The Record</h2>
                 {audioMedia.length ? (
-                  <div className="space-y-6">
+                  <div className="mx-auto w-full max-w-3xl space-y-6">
                     {audioMedia.map((item, idx) => (
                       <div key={`${project.slug}-audio-${idx}`} className="border border-black/10 bg-white p-4">
                         <div className="text-[12px] uppercase tracking-[0.24em] text-black/70">{item.title ?? "Audio"}</div>
