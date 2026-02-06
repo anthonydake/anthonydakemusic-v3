@@ -62,7 +62,7 @@ export default function CustomCursor() {
     };
   }, [visible]);
 
-  const size = 24;
+  const size = 8;
 
   return (
     <div
@@ -76,17 +76,14 @@ export default function CustomCursor() {
     >
       <div
         className={`relative flex items-center justify-center transition-transform duration-140 ${
-          clickable ? "scale-[1.05]" : ""
+          clickable ? "scale-[1.2]" : ""
         } ${clickPulse ? "scale-[0.84]" : ""}`}
         style={{ width: size, height: size }}
       >
         <span
-          className={`absolute inset-0 rounded-full border border-black/15 transition-all duration-200 ${
-            clickPulse ? "scale-125 opacity-50" : "scale-100 opacity-0"
-          }`}
+          className="absolute inset-0 rounded-full bg-white"
+          style={{ boxShadow: "0 0 8px rgba(255, 255, 255, 0.6)" }}
         />
-        <span className="absolute left-1/2 top-1/2 h-px w-full -translate-x-1/2 -translate-y-1/2 bg-black" />
-        <span className="absolute left-1/2 top-1/2 h-full w-px -translate-x-1/2 -translate-y-1/2 bg-black" />
       </div>
     </div>
   );
