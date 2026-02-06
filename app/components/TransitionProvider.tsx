@@ -36,8 +36,6 @@ export default function TransitionProvider({ children }: { children: React.React
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isMobileFallback, setIsMobileFallback] = useState(false);
   const navCommittedRef = useRef(false);
-  const restoreOverflowRef = useRef<string | null>(null);
-  const restoreTouchActionRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -87,13 +85,6 @@ export default function TransitionProvider({ children }: { children: React.React
       }
     };
 
-    if (restoreOverflowRef.current === null) {
-      restoreOverflowRef.current = document.body.style.overflow;
-      restoreTouchActionRef.current = document.body.style.touchAction;
-      document.body.style.overflow = "hidden";
-      document.body.style.touchAction = "none";
-    }
-
     window.addEventListener("wheel", prevent, { passive: false });
     window.addEventListener("touchmove", prevent, { passive: false });
     window.addEventListener("keydown", preventKeys);
@@ -103,15 +94,6 @@ export default function TransitionProvider({ children }: { children: React.React
       window.removeEventListener("touchmove", prevent);
       window.removeEventListener("keydown", preventKeys);
     };
-  }, [phase]);
-
-  useEffect(() => {
-    if (phase === "idle" && restoreOverflowRef.current !== null) {
-      document.body.style.overflow = restoreOverflowRef.current;
-      document.body.style.touchAction = restoreTouchActionRef.current ?? "";
-      restoreOverflowRef.current = null;
-      restoreTouchActionRef.current = null;
-    }
   }, [phase]);
 
   useEffect(() => {

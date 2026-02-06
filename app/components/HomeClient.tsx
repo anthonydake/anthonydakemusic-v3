@@ -143,12 +143,12 @@ export default function HomeClient({
   return (
     <div
       ref={containerRef}
-      className="site-bg h-screen snap-y snap-mandatory overflow-y-scroll bg-white scrollbar-hide"
+      className="site-bg min-h-screen snap-y snap-mandatory overflow-y-scroll bg-white scrollbar-hide"
       style={{ scrollBehavior: "smooth" }}
     >
       <section
         ref={heroRef}
-        className="relative grid min-h-screen place-items-center snap-start bg-[#111113]"
+        className="relative grid h-screen place-items-center snap-start bg-[#111113]"
         data-id="hero"
         data-snap-section
       >

@@ -72,7 +72,7 @@ export default function RootLayout({
         />
         <TransitionProvider>
           <LenisProvider>
-            <main>{children}</main>
+            <main className="min-h-screen">{children}</main>
           </LenisProvider>
         </TransitionProvider>
       </body>
