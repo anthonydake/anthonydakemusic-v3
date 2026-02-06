@@ -148,7 +148,7 @@ export default function HomeClient({
     >
       <section
         ref={heroRef}
-        className="relative grid min-h-screen place-items-center snap-start"
+        className="relative grid min-h-screen place-items-center snap-start bg-[#111113]"
         data-id="hero"
         data-snap-section
       >
@@ -162,13 +162,11 @@ export default function HomeClient({
             <LogoArchitectOfSound />
           </Link>
         </div>
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-white" />
         <div className="pointer-events-none absolute inset-x-0 bottom-8 flex justify-center">
           <span className="text-[11px] uppercase tracking-[0.28em] text-black/70 animate-scrollFlash">
             (scroll)
           </span>
         </div>
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent via-white/40 to-white" />
       </section>
 
       <section

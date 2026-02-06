@@ -280,9 +280,9 @@ function ProjectTemplate({
   nextProject: (typeof projectIndex)[number] | null;
 }) {
   return (
-    <div className="flex flex-col gap-24 snap-container">
+    <div className="flex flex-col gap-24">
       {/* HERO SECTION */}
-      <section aria-label="Project hero" className="fade-section snap-section" data-fade-section>
+      <section aria-label="Project hero" className="fade-section" data-fade-section>
         <div className="w-full border-y border-black/10 bg-white">
           <div className="mx-auto flex min-h-[min(720px,calc(100svh-240px))] w-full max-w-5xl items-center justify-center px-6 pb-20 pt-28 text-center sm:px-8 lg:px-10 xl:px-12">
             <div className="space-y-6">
@@ -299,7 +299,7 @@ function ProjectTemplate({
       </section>
 
       {/* AUDIO SECTION */}
-      <section aria-label="Audio" className="fade-section snap-section" data-fade-section>
+      <section aria-label="Audio" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-5xl space-y-5 py-16 text-center">
           <div className="h-px w-full bg-black/10 mb-8 mt-16" />
           <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/50">The Record</h2>
@@ -310,7 +310,7 @@ function ProjectTemplate({
       </section>
 
       {/* CREATIVE DIRECTION SECTION */}
-      <section aria-label="Creative direction" className="fade-section snap-section" data-fade-section>
+      <section aria-label="Creative direction" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
           <div className="h-px w-full bg-black/10 mb-8 mt-16" />
           <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/50">Creative Direction</h2>
@@ -331,7 +331,7 @@ function ProjectTemplate({
       </section>
 
       {/* PROCESS SECTION */}
-      <section aria-label="Process" className="fade-section snap-section" data-fade-section>
+      <section aria-label="Process" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
           <div className="h-px w-full bg-black/10 mb-8 mt-16" />
           <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/50">Process</h2>
@@ -345,7 +345,7 @@ function ProjectTemplate({
       </section>
 
       {/* CREDITS SECTION */}
-      <section aria-label="Credits" className="fade-section snap-section" data-fade-section>
+      <section aria-label="Credits" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
           <div className="h-px w-full bg-black/10 mb-8 mt-16" />
           <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/50">Credits</h2>
