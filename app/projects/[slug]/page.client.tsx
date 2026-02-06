@@ -104,6 +104,13 @@ export default function ProjectDetailClient() {
   const artistLabel = (indexItem?.artist ?? project.title).toUpperCase();
   const contextLabel = project.title.toUpperCase();
   const subtitleLabel = project.subtitle.toUpperCase();
+  const audioMedia = project.media.filter((m) => m.kind === "audio");
+  const projectIndexPosition = projectIndex.findIndex((p) => p.slug === project.slug);
+  const prevProject = projectIndexPosition > 0 ? projectIndex[projectIndexPosition - 1] : null;
+  const nextProject =
+    projectIndexPosition >= 0 && projectIndexPosition < projectIndex.length - 1
+      ? projectIndex[projectIndexPosition + 1]
+      : null;
 
   return (
     <>
@@ -157,7 +164,7 @@ export default function ProjectDetailClient() {
         </div>
 
         <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-40 sm:px-8 lg:px-10 xl:px-12">
-          <div className="flex flex-col gap-20">
+          <div className="flex flex-col gap-24">
             {/* HERO FRAME (Human Person-inspired) */}
             <section aria-label="Project hero">
               <div className="grid gap-8 lg:grid-cols-[clamp(48px,6vw,140px)_minmax(0,1fr)_clamp(48px,6vw,140px)] lg:gap-0">
@@ -196,6 +203,91 @@ export default function ProjectDetailClient() {
                 <div className="hidden lg:block lg:py-10 lg:pl-6" />
 
                 {/* Mobile: no footer labels */}
+              </div>
+            </section>
+
+            <section aria-label="Audio">
+              <div className="mx-auto w-full max-w-4xl space-y-6">
+                <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Audio</h2>
+                {audioMedia.length ? (
+                  <div className="space-y-6">
+                    {audioMedia.map((item, idx) => (
+                      <div key={`${project.slug}-audio-${idx}`} className="border border-black/10 bg-white p-4">
+                        <div className="text-[12px] uppercase tracking-[0.24em] text-black/70">{item.title ?? "Audio"}</div>
+                        <div className="mt-3 text-[12px] text-black/60">
+                          <a className="hover:text-black" href={item.url} target="_blank" rel="noreferrer">
+                            Open {item.provider.replace("_", " ")}
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-black/50">Audio assets coming soon.</div>
+                )}
+              </div>
+            </section>
+
+            <section aria-label="Creative direction">
+              <div className="mx-auto w-full max-w-4xl space-y-6">
+                <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Creative Direction</h2>
+                <p className="text-[15px] leading-relaxed text-black/70">{project.blurb}</p>
+                {project.tags.length ? (
+                  <div className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.22em] text-black/45">
+                    {project.tags.map((tag) => (
+                      <span key={`${project.slug}-tag-${tag}`}>{tag}</span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            </section>
+
+            <section aria-label="Process">
+              <div className="mx-auto w-full max-w-4xl space-y-6">
+                <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Process</h2>
+                {project.narrative.length ? (
+                  <div className="space-y-4 text-[15px] leading-relaxed text-black/70">
+                    {project.narrative.map((line, idx) => (
+                      <p key={`${project.slug}-narrative-${idx}`}>{line}</p>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-sm text-black/50">Process notes coming soon.</div>
+                )}
+              </div>
+            </section>
+
+            <section aria-label="Credits">
+              <div className="mx-auto w-full max-w-4xl space-y-6">
+                <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Credits</h2>
+                {project.credits.length ? (
+                  <ul className="space-y-2 text-[13px] text-black/70">
+                    {project.credits.map((credit) => (
+                      <li key={`${project.slug}-credit-${credit}`}>{credit}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="text-sm text-black/50">Credits coming soon.</div>
+                )}
+              </div>
+            </section>
+
+            <section aria-label="Previous and next">
+              <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-6 text-[11px] uppercase tracking-[0.28em] text-black/60">
+                {prevProject ? (
+                  <Link className="hover:text-black" href={`/projects/${prevProject.slug}`}>
+                    Previous
+                  </Link>
+                ) : (
+                  <span className="text-black/30">Previous</span>
+                )}
+                {nextProject ? (
+                  <Link className="hover:text-black" href={`/projects/${nextProject.slug}`}>
+                    Next
+                  </Link>
+                ) : (
+                  <span className="text-black/30">Next</span>
+                )}
               </div>
             </section>
           </div>
