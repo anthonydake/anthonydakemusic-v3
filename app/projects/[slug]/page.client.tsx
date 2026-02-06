@@ -221,6 +221,12 @@ export default function ProjectDetailClient() {
               <div className="mx-auto w-full max-w-4xl space-y-6">
                 <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Creative Direction</h2>
                 <p className="text-[15px] leading-relaxed text-black/70">{project.blurb}</p>
+                <ul className="mx-auto w-full max-w-3xl list-disc space-y-2 text-[13px] leading-relaxed text-black/60">
+                  <li>Defined sonic palette and aesthetic guardrails.</li>
+                  <li>Guided arrangement flow and emotional pacing.</li>
+                  <li>Directed performance details and session energy.</li>
+                  <li>Refined mix priorities for clarity and impact.</li>
+                </ul>
                 {project.tags.length ? (
                   <div className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.22em] text-black/45">
                     {project.tags.map((tag) => (
