@@ -128,9 +128,8 @@ export default function ProjectDetailClient() {
     );
   }
 
-  const artistLabel = (indexItem?.artist ?? project.title).toUpperCase();
-  const contextLabel = project.title.toUpperCase();
-  const subtitleLabel = project.subtitle.toUpperCase();
+  const artistLabel = "PRIMARY ARTIST";
+  const subtitleLabel = "Optional subtitle or track reference";
   const audioMedia = project.media.filter((m) => m.kind === "audio");
   const projectIndexPosition = projectIndex.findIndex((p) => p.slug === project.slug);
   const prevProject = projectIndexPosition > 0 ? projectIndex[projectIndexPosition - 1] : null;
@@ -192,28 +191,19 @@ export default function ProjectDetailClient() {
 
         <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-40 sm:px-8 lg:px-10 xl:px-12">
           <ProjectTemplate
-            title={project.title}
-            artist={
-              <TextScramble
-                key={`${project.slug}-hero-${titleRun}`}
-                text={artistLabel}
-                duration={500}
-                charset="#%&$@+|"
-                scrambleFraction={0.35}
-                trigger={titleRun}
-              />
-            }
-            year={project.year}
-            roles={project.role}
+            title="PROJECT TITLE"
+            artist={artistLabel}
+            year={"YEAR" as unknown as number}
+            roles="ROLE · ROLE · ROLE"
             audioEmbed={
               audioMedia.length ? (
                 <div className="mx-auto w-full max-w-3xl space-y-6">
                   {audioMedia.map((item, idx) => (
                     <div key={`${project.slug}-audio-${idx}`} className="border border-black/10 bg-white p-4">
-                      <div className="text-[12px] uppercase tracking-[0.24em] text-black/70">{item.title ?? "Audio"}</div>
+                      <div className="text-[12px] uppercase tracking-[0.24em] text-black/70">Streaming Service</div>
                       <div className="mt-3 text-[12px] text-black/60">
-                        <a className="hover:text-black" href={item.url} target="_blank" rel="noreferrer">
-                          Open {item.provider.replace("_", " ")}
+                        <a className="hover:text-black" href="https://example.com" target="_blank" rel="noreferrer">
+                          Open Link
                         </a>
                       </div>
                     </div>
@@ -224,24 +214,24 @@ export default function ProjectDetailClient() {
               )
             }
             creativeDirection={[
-              "Defined sonic palette and aesthetic guardrails.",
-              "Guided arrangement flow and emotional pacing.",
-              "Directed performance details and session energy.",
-              "Refined mix priorities for clarity and impact.",
+              "Defined overall sonic identity and production framework.",
+              "Directed arrangement flow and emotional pacing.",
+              "Oversaw performance capture and refinement.",
+              "Led mix decisions for clarity, weight, and cohesion.",
             ]}
-            processText={project.narrative[0] ?? "Short process overview placeholder."}
+            processText="Brief description of production approach, tools used, and session philosophy."
             processImage={
               <div className="mx-auto h-[clamp(180px,30vw,320px)] w-full max-w-3xl border border-black/10 bg-white" />
             }
             credits={{
-              artist: indexItem?.artist ?? project.title,
-              producer: project.role,
-              writers: project.credits[0] ?? "—",
-              engineer: project.credits[1] ?? "—",
-              year: project.year,
+              artist: "Primary Artist",
+              producer: "Your Name",
+              writers: "Writer Names",
+              engineer: "Engineer Name",
+              year: "Year" as unknown as number,
             }}
             tags={project.tags}
-            blurb={project.blurb}
+            blurb="Defined overall sonic identity and production framework."
             subtitle={subtitleLabel}
             prevProject={prevProject}
             nextProject={nextProject}
@@ -270,7 +260,7 @@ function ProjectTemplate({
 }: {
   title: string;
   artist: React.ReactNode;
-  year: number;
+  year: number | string;
   roles: string;
   audioEmbed: React.ReactNode;
   creativeDirection: string[];
@@ -281,7 +271,7 @@ function ProjectTemplate({
     producer: string;
     writers: string;
     engineer: string;
-    year: number;
+    year: number | string;
   };
   tags: string[];
   blurb: string;
@@ -291,7 +281,7 @@ function ProjectTemplate({
 }) {
   return (
     <div className="flex flex-col gap-24">
-      {/* HERO FRAME (Human Person-inspired) */}
+      {/* HERO SECTION */}
       <section aria-label="Project hero" className="fade-section" data-fade-section>
         <div className="w-full border-y border-black/10 bg-white">
           <div className="mx-auto flex min-h-[min(720px,calc(100svh-240px))] w-full max-w-5xl items-center justify-center px-6 pb-16 pt-20 text-center sm:px-8 lg:px-10 xl:px-12">
@@ -301,13 +291,14 @@ function ProjectTemplate({
                 {title}
               </h1>
               <div className="text-[clamp(14px,2.1vw,24px)] uppercase tracking-[0.18em] text-black/70">{artist}</div>
-              <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Role · {roles}</div>
+              <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">{roles}</div>
               <div className="text-[11px] uppercase tracking-[0.28em] text-black/50">{subtitle}</div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* AUDIO SECTION */}
       <section aria-label="Audio" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-5xl space-y-5 py-20 text-center">
           <div className="h-px w-full bg-black/10" />
@@ -318,6 +309,7 @@ function ProjectTemplate({
         </div>
       </section>
 
+      {/* CREATIVE DIRECTION SECTION */}
       <section aria-label="Creative direction" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
           <div className="h-px w-full bg-black/10" />
@@ -338,6 +330,7 @@ function ProjectTemplate({
         </div>
       </section>
 
+      {/* PROCESS SECTION */}
       <section aria-label="Process" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-20">
           <div className="h-px w-full bg-black/10" />
@@ -351,6 +344,7 @@ function ProjectTemplate({
         </div>
       </section>
 
+      {/* CREDITS SECTION */}
       <section aria-label="Credits" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-20">
           <div className="h-px w-full bg-black/10" />
@@ -374,20 +368,8 @@ function ProjectTemplate({
         <div className="mx-auto w-full max-w-4xl pt-8">
           <div className="h-px w-full bg-black/10" />
           <div className="mt-6 flex items-center justify-between gap-6 py-6 text-[12px] tracking-[0.2em] text-black/50">
-          {prevProject ? (
-            <Link className="transition-all duration-200 ease-out hover:underline hover:underline-offset-4 hover:text-black" href={`/projects/${prevProject.slug}`}>
-              ← Previous Project
-            </Link>
-          ) : (
             <span className="text-black/30">← Previous Project</span>
-          )}
-          {nextProject ? (
-            <Link className="transition-all duration-200 ease-out hover:underline hover:underline-offset-4 hover:text-black" href={`/projects/${nextProject.slug}`}>
-              Next Project →
-            </Link>
-          ) : (
             <span className="text-black/30">Next Project →</span>
-          )}
           </div>
         </div>
       </section>
