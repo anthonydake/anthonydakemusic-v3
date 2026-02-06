@@ -1,0 +1,30 @@
+{
+  "slug": "glasshouse-sessions",
+  "title": "Glasshouse Sessions",
+  "subtitle": "Live performance film for emerging R&B artist",
+  "year": 2024,
+  "role": "Producer / Drums / Mix",
+  "tags": ["Live session", "R&B", "Film"],
+  "blurb": "One-take performance capture with cinematic drums and vocal-forward mix built for film.",
+  "tone": ["#0b1224", "#2b3a55"],
+  "deliverables": ["Arrangement + MD", "Session drums", "Live mix + stems", "Playback rig"],
+  "credits": ["Director: Caleb Lawson", "FOH: Maria Jensen", "Guitars: Chris Vale", "Keys: Lena Ortiz"],
+  "narrative": [
+    "Built a three-song medley that could survive one take with cameras everywhere. Led rehearsals, defined transitions, and prepped stems for the film crew and FOH.",
+    "Stacked analog drum layers with close room mics to keep the performance raw but controlled. Mixed around the lead vocal so every hit supports the phrasing."
+  ],
+  "links": [
+    { "label": "Watch the film", "href": "https://youtu.be/dQw4w9WgXcQ" },
+    { "label": "Session notes", "href": "https://www.dropbox.com/" }
+  ],
+  "media": [
+    { "kind": "video", "provider": "youtube", "id": "dQw4w9WgXcQ", "title": "Excerpt" },
+    {
+      "kind": "audio",
+      "provider": "spotify",
+      "url": "https://open.spotify.com/embed/track/11dFghVXANMlKmJXsNCbNl?utm_source=generator",
+      "title": "Reference: drum tone palette"
+    }
+  ]
+}
+

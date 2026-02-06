@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Lenis from "lenis";
+import { usePathname } from "next/navigation";
 import { useTransition } from "./TransitionProvider";
 
 type MediaQueryListLegacy = MediaQueryList & {
@@ -11,12 +12,14 @@ type MediaQueryListLegacy = MediaQueryList & {
 
 export default function LenisProvider({ children }: { children: React.ReactNode }) {
   const { isTransitioning } = useTransition();
+  const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)") as MediaQueryListLegacy;
+    const disableLenis = pathname.includes("/projects/");
 
     const destroy = () => {
       if (rafRef.current) {
@@ -30,15 +33,16 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
     };
 
     const setup = () => {
-      if (mq.matches) {
+      if (mq.matches || disableLenis) {
         destroy();
         return;
       }
       if (lenisRef.current) return;
       const lenis = new Lenis({
-        duration: 1.45,
-        easing: (t: number) => 1 - Math.pow(1 - t, 3),
+        duration: 0.8,
+        easing: (t: number) => t,
         smoothWheel: true,
+        wheelMultiplier: 0.9,
       });
       lenisRef.current = lenis;
       const raf = (time: number) => {
@@ -57,7 +61,7 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
       mq.removeListener?.(setup);
       destroy();
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     const lenis = lenisRef.current;

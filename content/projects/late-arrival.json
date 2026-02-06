@@ -1,0 +1,30 @@
+{
+  "slug": "late-arrival",
+  "title": "Late Arrival",
+  "subtitle": "Studio single for indie pop trio",
+  "year": 2023,
+  "role": "Producer / Drums",
+  "tags": ["Indie pop", "Studio", "Production"],
+  "blurb": "Analog drums, warm synths, and wide vocal stacks with air for sync placements.",
+  "tone": ["#111827", "#3f4c6b"],
+  "deliverables": ["Pre-production", "Programming", "Drum tracking", "Mix prep"],
+  "credits": ["Artist: Late Arrival", "Mix: Sound + Salt", "Master: Jett Audio"],
+  "narrative": [
+    "Began with phone demos, re-harmonized the chorus to open up room for counter-melodies.",
+    "Tracked drums in a dry room with ribbon overheads, layered Juno pads, and kept bass minimal to let the vocal narrative breathe."
+  ],
+  "links": [
+    { "label": "Stream the single", "href": "https://open.spotify.com/" },
+    { "label": "Process deck", "href": "https://www.notion.so/" }
+  ],
+  "media": [
+    {
+      "kind": "audio",
+      "provider": "soundcloud",
+      "url": "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/forss/flickermood",
+      "title": "Rough mix print"
+    },
+    { "kind": "image", "src": "/projects/late-arrival.svg", "alt": "Studio drums and synths" }
+  ]
+}
+
