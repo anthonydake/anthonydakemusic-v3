@@ -39,7 +39,6 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
         duration: 1.45,
         easing: (t: number) => 1 - Math.pow(1 - t, 3),
         smoothWheel: true,
-        smoothTouch: false,
       });
       lenisRef.current = lenis;
       const raf = (time: number) => {
