@@ -36,8 +36,8 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
       }
       if (lenisRef.current) return;
       const lenis = new Lenis({
-        duration: 1.3,
-        easing: (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+        duration: 1.45,
+        easing: (t: number) => 1 - Math.pow(1 - t, 3),
         smoothWheel: true,
         smoothTouch: false,
       });
