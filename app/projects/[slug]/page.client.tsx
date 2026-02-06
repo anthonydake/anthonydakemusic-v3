@@ -317,9 +317,9 @@ function ProjectTemplate({
 
       <section aria-label="Creative direction" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-6">
-          <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Creative Direction</h2>
+          <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Creative Direction</h2>
           <p className="text-[15px] leading-relaxed text-black/70">{blurb}</p>
-          <ul className="mx-auto w-full max-w-3xl list-disc space-y-2 text-[13px] leading-relaxed text-black/60">
+          <ul className="mx-auto w-full max-w-3xl list-disc list-inside space-y-2 text-center text-[13px] leading-relaxed text-black/60">
             {creativeDirection.map((line) => (
               <li key={line}>{line}</li>
             ))}
@@ -335,8 +335,8 @@ function ProjectTemplate({
       </section>
 
       <section aria-label="Process" className="fade-section" data-fade-section>
-        <div className="mx-auto w-full max-w-4xl space-y-6 text-center">
-          <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Process</h2>
+        <div className="mx-auto w-full max-w-4xl space-y-6">
+          <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Process</h2>
           <p className="mx-auto w-full max-w-3xl text-[14px] leading-relaxed text-black/60">{processText}</p>
           {processImage}
         </div>
@@ -344,7 +344,7 @@ function ProjectTemplate({
 
       <section aria-label="Credits" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-6">
-          <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Credits</h2>
+          <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Credits</h2>
           <div className="grid gap-x-10 gap-y-3 text-[12px] text-black/65 sm:grid-cols-[140px_minmax(0,1fr)]">
             <div className="uppercase tracking-[0.22em] text-black/45">Artist</div>
             <div>{credits.artist}</div>
