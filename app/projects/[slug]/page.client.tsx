@@ -167,42 +167,31 @@ export default function ProjectDetailClient() {
           <div className="flex flex-col gap-24">
             {/* HERO FRAME (Human Person-inspired) */}
             <section aria-label="Project hero">
-              <div className="grid gap-8 lg:grid-cols-[clamp(48px,6vw,140px)_minmax(0,1fr)_clamp(48px,6vw,140px)] lg:gap-0">
-                {/* Left gutter (reserved spacing) */}
-                <div className="hidden lg:block lg:py-10 lg:pr-6" />
-
-                {/* Blueprint canvas + bottom image strip */}
-                <div className="border border-black/10 bg-white">
-                  <div className="flex min-h-[min(760px,calc(100svh-240px))] flex-col">
-                    <div className="relative flex-1 overflow-hidden">
-                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center">
-                        <div className="text-[11px] uppercase tracking-[0.28em] text-black/60">( {contextLabel} )</div>
-
-                        <h1
-                          className="mt-8 max-w-[14ch] text-balance text-[clamp(16px,2.5vw,45px)] font-normal uppercase leading-[0.9] tracking-[0.02em] text-black"
-                          onMouseEnter={() => setTitleRun((n) => n + 1)}
-                          onMouseLeave={() => setTitleRun((n) => n + 1)}
-                        >
-                          <TextScramble
-                            key={`${project.slug}-hero-${titleRun}`}
-                            text={artistLabel}
-                            duration={500}
-                            charset="#%&$@+|"
-                            scrambleFraction={0.35}
-                            trigger={titleRun}
-                          />
-                        </h1>
-
-                        <div className="mt-10 text-[11px] uppercase tracking-[0.28em] text-black/55">{subtitleLabel}</div>
-                      </div>
+              <div className="w-full border-y border-black/10 bg-white">
+                <div className="mx-auto flex min-h-[min(720px,calc(100svh-240px))] w-full max-w-5xl items-center justify-center px-6 py-24 text-center sm:px-8 lg:px-10 xl:px-12">
+                  <div className="space-y-6">
+                    <div className="text-[11px] uppercase tracking-[0.28em] text-black/45">{project.year}</div>
+                    <h1
+                      className="text-balance text-[clamp(28px,4.5vw,64px)] font-semibold uppercase leading-[0.98] tracking-[0.02em] text-black"
+                      onMouseEnter={() => setTitleRun((n) => n + 1)}
+                      onMouseLeave={() => setTitleRun((n) => n + 1)}
+                    >
+                      {project.title}
+                    </h1>
+                    <div className="text-[clamp(14px,2.1vw,24px)] uppercase tracking-[0.18em] text-black/70">
+                      <TextScramble
+                        key={`${project.slug}-hero-${titleRun}`}
+                        text={artistLabel}
+                        duration={500}
+                        charset="#%&$@+|"
+                        scrambleFraction={0.35}
+                        trigger={titleRun}
+                      />
                     </div>
+                    <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Role · {project.role}</div>
+                    <div className="text-[11px] uppercase tracking-[0.28em] text-black/50">{subtitleLabel}</div>
                   </div>
                 </div>
-
-                {/* Right gutter (reserved spacing) */}
-                <div className="hidden lg:block lg:py-10 lg:pl-6" />
-
-                {/* Mobile: no footer labels */}
               </div>
             </section>
 
