@@ -284,7 +284,7 @@ function ProjectTemplate({
       {/* HERO SECTION */}
       <section aria-label="Project hero" className="fade-section" data-fade-section>
         <div className="w-full border-y border-black/10 bg-white">
-          <div className="mx-auto flex min-h-[min(720px,calc(100svh-240px))] w-full max-w-5xl items-center justify-center px-6 pb-16 pt-20 text-center sm:px-8 lg:px-10 xl:px-12">
+          <div className="mx-auto flex min-h-[min(720px,calc(100svh-240px))] w-full max-w-5xl items-center justify-center px-6 pb-20 pt-28 text-center sm:px-8 lg:px-10 xl:px-12">
             <div className="space-y-6">
               <div className="text-[11px] uppercase tracking-[0.28em] text-black/45">{year}</div>
               <h1 className="text-balance text-[clamp(28px,4.5vw,64px)] font-semibold uppercase leading-[0.98] tracking-[0.02em] text-black">
@@ -300,8 +300,8 @@ function ProjectTemplate({
 
       {/* AUDIO SECTION */}
       <section aria-label="Audio" className="fade-section" data-fade-section>
-        <div className="mx-auto w-full max-w-5xl space-y-5 py-20 text-center">
-          <div className="h-px w-full bg-black/10" />
+        <div className="mx-auto w-full max-w-5xl space-y-5 py-16 text-center">
+          <div className="h-px w-full bg-black/10 mb-8 mt-16" />
           <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">The Record</h2>
           <div className="mx-auto w-full max-w-4xl bg-black/[0.04] p-6">
             {audioEmbed}
@@ -312,7 +312,7 @@ function ProjectTemplate({
       {/* CREATIVE DIRECTION SECTION */}
       <section aria-label="Creative direction" className="fade-section" data-fade-section>
         <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
-          <div className="h-px w-full bg-black/10" />
+          <div className="h-px w-full bg-black/10 mb-8 mt-16" />
           <h2 className="text-[11px] uppercase tracking-[0.28em] text-black/60">Creative Direction</h2>
           <p className="text-[15px] leading-relaxed text-black/70">{blurb}</p>
           <ul className="mx-auto w-full max-w-3xl list-disc space-y-2 text-[13px] leading-relaxed text-black/60">
@@ -332,8 +332,8 @@ function ProjectTemplate({
 
       {/* PROCESS SECTION */}
       <section aria-label="Process" className="fade-section" data-fade-section>
-        <div className="mx-auto w-full max-w-4xl space-y-5 py-20">
-          <div className="h-px w-full bg-black/10" />
+        <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
+          <div className="h-px w-full bg-black/10 mb-8 mt-16" />
           <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Process</h2>
           <p className="mx-auto w-full max-w-3xl text-[14px] leading-relaxed text-black/60">{processText}</p>
           <div className="pt-4">
@@ -346,8 +346,8 @@ function ProjectTemplate({
 
       {/* CREDITS SECTION */}
       <section aria-label="Credits" className="fade-section" data-fade-section>
-        <div className="mx-auto w-full max-w-4xl space-y-5 py-20">
-          <div className="h-px w-full bg-black/10" />
+        <div className="mx-auto w-full max-w-4xl space-y-5 py-16">
+          <div className="h-px w-full bg-black/10 mb-8 mt-16" />
           <h2 className="text-center text-[11px] uppercase tracking-[0.28em] text-black/60">Credits</h2>
           <div className="mx-auto grid gap-x-10 gap-y-3 text-[12px] text-black/65 sm:grid-cols-[140px_minmax(0,1fr)]">
             <div className="uppercase tracking-[0.22em] text-black/35">Artist</div>
@@ -365,9 +365,9 @@ function ProjectTemplate({
       </section>
 
       <section aria-label="Previous and next" className="fade-section" data-fade-section>
-        <div className="mx-auto w-full max-w-4xl pt-8">
-          <div className="h-px w-full bg-black/10" />
-          <div className="mt-6 flex items-center justify-between gap-6 py-6 text-[12px] tracking-[0.2em] text-black/50">
+        <div className="mx-auto w-full max-w-4xl">
+          <div className="h-px w-full bg-black/10 mb-8 mt-16" />
+          <div className="flex items-center justify-between gap-6 py-14 text-[12px] tracking-[0.2em] text-black/50">
             <span className="text-black/30">← Previous Project</span>
             <span className="text-black/30">Next Project →</span>
           </div>
