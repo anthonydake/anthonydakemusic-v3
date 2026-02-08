@@ -160,7 +160,7 @@ export default function ProjectsIndexClient() {
   };
 
   return (
-    <div className="relative min-h-screen bg-white text-black lg:h-screen lg:overflow-hidden">
+    <div className="relative min-h-screen bg-white text-black">
       {/* Vertical hairline gridlines (desktop only) */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
         <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
@@ -216,17 +216,14 @@ export default function ProjectsIndexClient() {
         </div>
       </div>
 
-      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:h-full lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem]">
+      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem]">
         <div
           className={[
             hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
           ].join(" ")}
           style={frameStyle}
         >
-          <section
-            aria-label="Project index"
-            className="lg:max-h-[calc(100vh-246px)] lg:overflow-y-auto lg:pb-24"
-          >
+          <section aria-label="Project index">
             <YearGroups
               items={items}
               revealCount={revealCount}
@@ -242,10 +239,10 @@ export default function ProjectsIndexClient() {
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
           {hoverCapable && (
             <aside
-              className="hidden lg:fixed lg:right-[calc(-1*var(--preview-bleed))] lg:top-0 lg:z-[20] lg:flex lg:h-screen lg:w-[var(--preview)] lg:items-center lg:justify-end"
+              className="hidden lg:flex lg:items-center lg:justify-end lg:mr-[calc(-1*var(--preview-bleed))]"
               aria-label="Project preview"
             >
-              <div className="flex h-full w-full items-center justify-end pr-0 -mt-[200px]">
+              <div className="flex min-h-screen w-full items-center justify-end pr-0 -mt-[200px]">
                 <div className="w-full">
                   <PreviewPanel
                     current={previewCurrent}
