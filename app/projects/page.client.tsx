@@ -351,9 +351,7 @@ function PreviewPanel({
       </div>
 
       {/* Subtle Caption */}
-      <div className="mt-8 text-left text-[9px] uppercase tracking-[0.45em] text-black/35">
-        Preview Frame
-      </div>
+      {/* Preview caption removed */}
     </div>
   );
 }
