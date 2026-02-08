@@ -215,7 +215,7 @@ export default function ProjectsIndexClient() {
         </div>
       </div>
 
-      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-40 sm:px-8 lg:px-10 xl:px-12">
+      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[246px] sm:px-8 lg:px-10 xl:px-12">
         <div
           className={[hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10"].join(
             " "
