@@ -1,3 +1,15 @@
+.projects-row {
+  color: var(--text-primary);
+}
+
+.projects-row .projects-row-muted {
+  color: var(--text-subtle);
+}
+
+.projects-row .projects-row-italic {
+  color: var(--text-muted);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .projects-row:hover {
     background: #000;
