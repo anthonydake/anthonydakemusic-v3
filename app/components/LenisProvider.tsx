@@ -42,10 +42,9 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
       }
       if (lenisRef.current) return;
       const lenis = new Lenis({
-        duration: 2.2,
-        easing: (t: number) => 1 - Math.pow(1 - t, 2),
+        lerp: 0.06,
+        wheelMultiplier: 0.55,
         smoothWheel: true,
-        wheelMultiplier: 0.7,
       });
       lenisRef.current = lenis;
       const raf = (time: number) => {
