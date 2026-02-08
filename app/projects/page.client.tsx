@@ -134,7 +134,7 @@ export default function ProjectsIndexClient() {
       // Tuned to match the reference "index table" proportions without introducing new fonts.
       ["--col1"]: "clamp(220px, 18vw, 300px)",
       ["--col2"]: "clamp(260px, 28vw, 520px)",
-      ["--preview"]: "clamp(520px, 36vw, 920px)",
+      ["--preview"]: "clamp(390px, 27vw, 690px)",
       ["--preview-bleed"]: "calc((100vw - min(1600px, 100vw) + 2 * var(--page-pad)) / 2)",
     } as React.CSSProperties;
   }, []);
@@ -167,9 +167,7 @@ export default function ProjectsIndexClient() {
           <div className="relative h-full" style={frameStyle}>
             <div className="absolute inset-y-0 left-[var(--col1)] w-px bg-black/10" />
             <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2))] w-px bg-black/10" />
-            {hoverCapable && (
-              <div className="absolute inset-y-0 left-[calc(100%-var(--preview)-var(--preview-bleed))] w-px bg-black/10" />
-            )}
+            {hoverCapable && <div className="absolute inset-y-0 left-[calc(100%-var(--preview))] w-px bg-black/10" />}
           </div>
         </div>
       </div>
@@ -221,9 +219,7 @@ export default function ProjectsIndexClient() {
       <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem]">
         <div
           className={[
-            hoverCapable
-              ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_calc(var(--preview)+var(--preview-bleed))] lg:gap-0"
-              : "grid gap-10",
+            hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
           ].join(" ")}
           style={frameStyle}
         >
@@ -242,7 +238,10 @@ export default function ProjectsIndexClient() {
 
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
           {hoverCapable && (
-            <aside className="hidden lg:flex lg:items-center lg:justify-end" aria-label="Project preview">
+            <aside
+              className="hidden lg:flex lg:items-center lg:justify-end lg:mr-[calc(-1*var(--preview-bleed))]"
+              aria-label="Project preview"
+            >
               <div className="flex min-h-screen w-full items-center justify-end pr-0 -mt-[200px]">
                 <div className="w-full">
                   <PreviewPanel
