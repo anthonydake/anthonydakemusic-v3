@@ -3,7 +3,6 @@ import "./globals.css";
 import CustomCursor from "./components/CustomCursor";
 import JsonLd from "./components/JsonLd";
 import TransitionProvider from "./components/TransitionProvider";
-import LenisProvider from "./components/LenisProvider";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
 
@@ -71,9 +70,7 @@ export default function RootLayout({
           }}
         />
         <TransitionProvider>
-          <LenisProvider>
-            <main className="min-h-screen">{children}</main>
-          </LenisProvider>
+          <main className="min-h-screen">{children}</main>
         </TransitionProvider>
       </body>
     </html>
