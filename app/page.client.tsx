@@ -54,7 +54,7 @@ function HomeInner() {
   useEffect(() => {
     const t = window.setTimeout(() => {
       readyRef.current = true;
-    }, 500);
+    }, 800);
     return () => window.clearTimeout(t);
   }, []);
 
@@ -63,6 +63,7 @@ function HomeInner() {
     if (isTransitioning) return;
 
     const handleWheel = (e: WheelEvent) => {
+      if (window.scrollY !== 0) return;
       if (!readyRef.current) return;
       if (triggeredRef.current) return;
       const delta = e.deltaY;
@@ -73,7 +74,7 @@ function HomeInner() {
       }
       e.preventDefault();
       accumRef.current += delta;
-      if (accumRef.current > 300) {
+      if (accumRef.current > 400) {
         triggeredRef.current = true;
         window.removeEventListener("wheel", handleWheel);
         triggerTransition(projectsHref);
