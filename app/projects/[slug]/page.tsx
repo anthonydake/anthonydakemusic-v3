@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
 import JsonLd from "@/app/components/JsonLd";
 import ProjectDetailClient from "./page.client";
+import { projects, type ProjectMedia } from "@/lib/projects";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+function pickOgImage(media: ProjectMedia[]) {
+  const img = media.find((m) => m.kind === "image");
+  if (img && img.kind === "image") return img.src;
+  return "/hero.jpg";
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const title = "PROJECT TITLE";
-  const description = "Project detail.";
-  const image = "/hero.jpg";
+  const project = projects.find((p) => p.slug === slug);
+  const title = project ? `${project.title}` : "Project";
+  const description = project?.blurb ?? "Project detail.";
+  const image = project ? pickOgImage(project.media) : "/hero.jpg";
 
   return {
     title,
@@ -32,21 +40,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function Page({ params }: PageProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
   const { slug } = await params;
+  const project = projects.find((p) => p.slug === slug) || null;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    "@id": `${siteUrl}/projects/${slug}#creativework`,
-    name: "PROJECT TITLE",
-    description: "Project detail.",
-    url: `${siteUrl}/projects/${slug}`,
-    creator: { "@id": `${siteUrl}/#person` },
-  };
+  const jsonLd = project
+    ? {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "@id": `${siteUrl}/projects/${project.slug}#creativework`,
+        name: project.title,
+        description: project.blurb,
+        url: `${siteUrl}/projects/${project.slug}`,
+        datePublished: `${project.year}-01-01`,
+        creator: { "@id": `${siteUrl}/#person` },
+      }
+    : null;
 
   return (
     <>
-      <JsonLd data={jsonLd} />
+      {jsonLd ? <JsonLd data={jsonLd} /> : null}
       <ProjectDetailClient />
     </>
   );
 }
+
