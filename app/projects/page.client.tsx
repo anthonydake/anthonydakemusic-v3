@@ -237,8 +237,8 @@ export default function ProjectsIndexClient() {
 
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
           {hoverCapable && (
-            <aside className="hidden lg:flex lg:justify-end" aria-label="Project preview">
-              <div className="flex min-h-screen w-full items-start justify-end pt-[14vh] pr-0">
+            <aside className="hidden lg:flex lg:items-center lg:justify-end" aria-label="Project preview">
+              <div className="flex min-h-screen w-full items-center justify-end pr-0">
                 <div className="w-full max-w-[820px]">
                   <PreviewPanel
                     current={previewCurrent}
