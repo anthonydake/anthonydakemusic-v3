@@ -134,7 +134,7 @@ export default function ProjectsIndexClient() {
       // Tuned to match the reference "index table" proportions without introducing new fonts.
       ["--col1"]: "clamp(220px, 18vw, 300px)",
       ["--col2"]: "clamp(260px, 28vw, 520px)",
-      ["--preview"]: "clamp(620px, 42vw, 1100px)",
+      ["--preview"]: "clamp(520px, 36vw, 920px)",
     } as React.CSSProperties;
   }, []);
 
@@ -238,13 +238,15 @@ export default function ProjectsIndexClient() {
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
           {hoverCapable && (
             <aside className="hidden lg:flex lg:items-center lg:justify-end" aria-label="Project preview">
-              <div className="flex min-h-screen w-full items-center justify-end pr-0">
-                <PreviewPanel
-                  current={previewCurrent}
-                  next={previewNext}
-                  nextVisible={previewNextVisible}
-                  onNextReady={onNextReady}
-                />
+              <div className="flex min-h-screen w-full items-center justify-end pr-0 -mt-[200px]">
+                <div className="w-full">
+                  <PreviewPanel
+                    current={previewCurrent}
+                    next={previewNext}
+                    nextVisible={previewNextVisible}
+                    onNextReady={onNextReady}
+                  />
+                </div>
               </div>
             </aside>
           )}
