@@ -237,9 +237,9 @@ export default function ProjectsIndexClient() {
 
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
           {hoverCapable && (
-            <aside className="hidden lg:block lg:pl-10" aria-label="Project preview">
-              <div className="relative flex min-h-[calc(100vh-56px)] items-center justify-center pt-14">
-                <div className="w-full max-w-[920px] aspect-[16/9]">
+            <aside className="hidden lg:block lg:pl-12" aria-label="Project preview">
+              <div className="relative flex h-screen items-center justify-center">
+                <div className="w-full max-w-[1100px]">
                   <PreviewPanel
                     current={previewCurrent}
                     next={previewNext}
@@ -330,18 +330,30 @@ function PreviewPanel({
   onNextReady: () => void;
 }) {
   return (
-    <div className="space-y-3">
-      <div className="relative h-full w-full overflow-hidden bg-black shadow-[0_40px_120px_rgba(0,0,0,0.6)]">
-        {current ? <PreviewMedia preview={current} /> : <div className="absolute inset-0 bg-black/5" />}
+    <div className="w-full">
+      {/* Cinematic Frame */}
+      <div className="relative w-full aspect-[21/9] overflow-hidden bg-black shadow-[0_80px_200px_rgba(0,0,0,0.7)]">
+        {current ? (
+          <PreviewMedia preview={current} />
+        ) : (
+          <div className="absolute inset-0 bg-black/5" />
+        )}
 
         {next && (
-          <div className={`absolute inset-0 transition-opacity duration-200 ${nextVisible ? "opacity-100" : "opacity-0"}`}>
+          <div
+            className={`absolute inset-0 transition-opacity duration-400 ${
+              nextVisible ? "opacity-100" : "opacity-0"
+            }`}
+          >
             <PreviewMedia preview={next} onReady={onNextReady} />
           </div>
         )}
       </div>
 
-      <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Preview</div>
+      {/* Subtle Caption */}
+      <div className="mt-8 text-left text-[9px] uppercase tracking-[0.45em] text-black/35">
+        Preview Frame
+      </div>
     </div>
   );
 }
