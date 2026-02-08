@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 const ROOT = process.cwd();
-const CONTENT_DIR = path.join(ROOT, "content", "projects");
+const CONTENT_FILE = path.join(ROOT, "content", "projects.json");
 const OUT_FILE = path.join(ROOT, "lib", "projects.generated.ts");
 
 function fail(msg) {
@@ -84,62 +84,56 @@ function normalizeProject(p) {
 }
 
 async function main() {
-  const entries = await fs.readdir(CONTENT_DIR, { withFileTypes: true });
-  const jsonFiles = entries
-    .filter((e) => e.isFile() && e.name.endsWith(".json"))
-    .map((e) => e.name)
-    .sort((a, b) => a.localeCompare(b));
+  const raw = await fs.readFile(CONTENT_FILE, "utf8");
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch (err) {
+    fail(`projects.json: invalid JSON (${err?.message || err})`);
+  }
 
-  assert(jsonFiles.length > 0, `No JSON files found in ${CONTENT_DIR}`);
+  assert(Array.isArray(data), "projects.json: root must be an array");
+  assert(data.length > 0, "projects.json: must contain at least one project");
 
   const seenSlugs = new Set();
   const projects = [];
 
-  for (const filename of jsonFiles) {
-    const filePath = path.join(CONTENT_DIR, filename);
-    const raw = await fs.readFile(filePath, "utf8");
+  data.forEach((project, idx) => {
+    const ctx = `projects[${idx}]`;
+    assert(isObject(project), `${ctx}: must be an object`);
+    assert(isNonEmptyString(project.slug), `${ctx}: slug must be a non-empty string`);
+    assert(!seenSlugs.has(project.slug), `${ctx}: duplicate slug "${project.slug}"`);
+    seenSlugs.add(project.slug);
 
-    let data;
-    try {
-      data = JSON.parse(raw);
-    } catch (err) {
-      fail(`${filename}: invalid JSON (${err?.message || err})`);
-    }
+    assert(isNonEmptyString(project.title), `${ctx}: title must be a non-empty string`);
+    assert(isNonEmptyString(project.subtitle), `${ctx}: subtitle must be a non-empty string`);
+    assert(isNumber(project.year), `${ctx}: year must be a number`);
+    assert(isNonEmptyString(project.role), `${ctx}: role must be a non-empty string`);
 
-    assert(isObject(data), `${filename}: root must be an object`);
+    assert(isStringArray(project.tags), `${ctx}: tags must be a non-empty string[]`);
+    assert(isNonEmptyString(project.blurb), `${ctx}: blurb must be a non-empty string`);
 
-    const base = path.basename(filename, ".json");
-    assert(data.slug === base, `${filename}: slug must match filename (${base})`);
-    assert(isNonEmptyString(data.slug), `${filename}: slug must be a non-empty string`);
-    assert(!seenSlugs.has(data.slug), `${filename}: duplicate slug "${data.slug}"`);
-    seenSlugs.add(data.slug);
+    assert(
+      Array.isArray(project.tone) && project.tone.length === 2 && project.tone.every(isNonEmptyString),
+      `${ctx}: tone must be [string, string]`
+    );
+    assert(isStringArray(project.deliverables), `${ctx}: deliverables must be a non-empty string[]`);
+    assert(isStringArray(project.credits), `${ctx}: credits must be a non-empty string[]`);
+    assert(isStringArray(project.narrative), `${ctx}: narrative must be a non-empty string[]`);
 
-    assert(isNonEmptyString(data.title), `${filename}: title must be a non-empty string`);
-    assert(isNonEmptyString(data.subtitle), `${filename}: subtitle must be a non-empty string`);
-    assert(isNumber(data.year), `${filename}: year must be a number`);
-    assert(isNonEmptyString(data.role), `${filename}: role must be a non-empty string`);
-
-    assert(isStringArray(data.tags), `${filename}: tags must be a non-empty string[]`);
-    assert(isNonEmptyString(data.blurb), `${filename}: blurb must be a non-empty string`);
-
-    assert(Array.isArray(data.tone) && data.tone.length === 2 && data.tone.every(isNonEmptyString), `${filename}: tone must be [string, string]`);
-    assert(isStringArray(data.deliverables), `${filename}: deliverables must be a non-empty string[]`);
-    assert(isStringArray(data.credits), `${filename}: credits must be a non-empty string[]`);
-    assert(isStringArray(data.narrative), `${filename}: narrative must be a non-empty string[]`);
-
-    assert(Array.isArray(data.links) && data.links.length > 0, `${filename}: links must be a non-empty array`);
-    data.links.forEach((l, idx) => {
-      const ctx = `${filename}: links[${idx}]`;
-      assert(isObject(l), `${ctx} must be an object`);
-      assert(isNonEmptyString(l.label), `${ctx}.label must be a non-empty string`);
-      assert(isNonEmptyString(l.href), `${ctx}.href must be a non-empty string`);
+    assert(Array.isArray(project.links) && project.links.length > 0, `${ctx}: links must be a non-empty array`);
+    project.links.forEach((l, linkIdx) => {
+      const linkCtx = `${ctx}: links[${linkIdx}]`;
+      assert(isObject(l), `${linkCtx} must be an object`);
+      assert(isNonEmptyString(l.label), `${linkCtx}.label must be a non-empty string`);
+      assert(isNonEmptyString(l.href), `${linkCtx}.href must be a non-empty string`);
     });
 
-    assert(Array.isArray(data.media), `${filename}: media must be an array`);
-    data.media.forEach((m, idx) => validateMedia(m, `${filename}: media[${idx}]`));
+    assert(Array.isArray(project.media), `${ctx}: media must be an array`);
+    project.media.forEach((m, mediaIdx) => validateMedia(m, `${ctx}: media[${mediaIdx}]`));
 
-    projects.push(normalizeProject(data));
-  }
+    projects.push(normalizeProject(project));
+  });
 
   projects.sort((a, b) => (b.year - a.year) || String(a.title).localeCompare(String(b.title)));
 
