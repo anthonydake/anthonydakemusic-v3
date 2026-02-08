@@ -37,6 +37,7 @@ function HomeInner() {
   const [initialTime] = useState(() => formatColumbusTime(new Date()));
   const accumRef = useRef(0);
   const triggeredRef = useRef(false);
+  const readyRef = useRef(false);
 
   useEffect(() => {
     const tick = () => setNow(new Date());
@@ -51,20 +52,28 @@ function HomeInner() {
   }, []);
 
   useEffect(() => {
+    const t = window.setTimeout(() => {
+      readyRef.current = true;
+    }, 500);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
     if (isMobileFallback) return;
     if (isTransitioning) return;
 
     const handleWheel = (e: WheelEvent) => {
+      if (!readyRef.current) return;
       if (triggeredRef.current) return;
       const delta = e.deltaY;
       if (Math.abs(delta) < 6) return;
       if (delta <= 0) {
-        accumRef.current = Math.max(0, accumRef.current + delta);
+        accumRef.current = 0;
         return;
       }
       e.preventDefault();
       accumRef.current += delta;
-      if (accumRef.current > 150) {
+      if (accumRef.current > 300) {
         triggeredRef.current = true;
         window.removeEventListener("wheel", handleWheel);
         triggerTransition(projectsHref);
