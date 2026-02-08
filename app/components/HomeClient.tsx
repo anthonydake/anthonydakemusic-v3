@@ -129,17 +129,6 @@ export default function HomeClient({
     };
   }, [snapAnimating]);
 
-  useEffect(() => {
-    if (!syncRoute) return;
-    if (snapAnimating) return;
-
-    const desired = activeId === "projects" ? "/projects" : "/";
-    if (pathname !== desired) {
-      const q = searchParams.toString();
-      router.replace(q ? `${desired}?${q}` : desired, { scroll: false });
-    }
-  }, [activeId, pathname, router, searchParams, snapAnimating, syncRoute]);
-
   return (
     <div
       ref={containerRef}
