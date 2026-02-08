@@ -115,7 +115,7 @@ export const projects: Project[] = [
     ]
   },
   {
-    "slug": "missin-u",
+    "slug": "template",
     "title": "Class Loser",
     "subtitle": "Missin U (track 9)",
     "year": 2022,
@@ -158,7 +158,7 @@ export const projects: Project[] = [
     "media": [
       {
         "kind": "image",
-        "src": "/projects/missin-u/Missin U.jpg",
+        "src": "/projects/template/Missin U.jpg",
         "alt": "Studio session photo",
         "title": "Missin U"
       },

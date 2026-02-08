@@ -32,7 +32,7 @@ export const projectIndex: ProjectIndexItem[] = [
     artist: "KJ The Cool Nerd, AR!YAH",
     workTags: ["PRODUCTION/SONGWRITING"],
     title: "CLASS LOSER",
-    slug: "missin-u",
-    preview: { type: "image", src: "/projects/missin-u/Missin U.jpg" },
+    slug: "template",
+    preview: { type: "image", src: "/projects/template/Missin U.jpg" },
   },
 ];

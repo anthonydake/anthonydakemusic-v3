@@ -1,5 +1,5 @@
 {
-  "slug": "missin-u",
+  "slug": "template",
   "title": "Class Loser",
   "subtitle": "Missin U (track 9)",
   "year": 2022,
@@ -16,7 +16,7 @@
     { "label": "Apple Music", "href": "https://music.apple.com/us/song/missin-u-feat-riyah/1607007135" }
   ],
   "media": [
-    { "kind": "image", "src": "/projects/missin-u/Missin U.jpg", "alt": "Studio session photo", "title": "Missin U" },
+    { "kind": "image", "src": "/projects/template/Missin U.jpg", "alt": "Studio session photo", "title": "Missin U" },
     {
       "kind": "audio",
       "provider": "spotify",
