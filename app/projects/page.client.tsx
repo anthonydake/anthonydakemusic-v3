@@ -239,7 +239,7 @@ export default function ProjectsIndexClient() {
           {hoverCapable && (
             <aside className="hidden lg:flex lg:items-center lg:justify-end" aria-label="Project preview">
               <div className="flex min-h-screen w-full items-center justify-end pr-0 -mt-[200px]">
-                <div className="w-full">
+                <div className="w-full mr-[calc(50%-50vw)]">
                   <PreviewPanel
                     current={previewCurrent}
                     next={previewNext}
