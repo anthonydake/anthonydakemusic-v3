@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Lenis from "lenis";
+import { usePathname } from "next/navigation";
 import { useTransition } from "./TransitionProvider";
 
 type MediaQueryListLegacy = MediaQueryList & {
@@ -11,6 +12,7 @@ type MediaQueryListLegacy = MediaQueryList & {
 
 export default function LenisProvider({ children }: { children: React.ReactNode }) {
   const { isTransitioning } = useTransition();
+  const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
   const rafRef = useRef<number | null>(null);
 
@@ -30,6 +32,10 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
     };
 
     const setup = () => {
+      if (pathname !== "/") {
+        destroy();
+        return;
+      }
       if (mq.matches) {
         destroy();
         return;
@@ -48,16 +54,20 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
       rafRef.current = window.requestAnimationFrame(raf);
     };
 
-    setup();
-    mq.addEventListener?.("change", setup);
-    mq.addListener?.(setup);
+    if (pathname === "/") {
+      setup();
+      mq.addEventListener?.("change", setup);
+      mq.addListener?.(setup);
+    } else {
+      destroy();
+    }
 
     return () => {
       mq.removeEventListener?.("change", setup);
       mq.removeListener?.(setup);
       destroy();
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     const lenis = lenisRef.current;
