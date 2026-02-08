@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 export default function TextScramble({
   text,
   className = "",
+  style,
   duration = 700,
   charset = "abcdefghijklmnopqrstuvwxyz",
   scrambleFraction = 0.35,
@@ -13,6 +14,7 @@ export default function TextScramble({
 }: {
   text: string;
   className?: string;
+  style?: React.CSSProperties;
   duration?: number;
   charset?: string;
   scrambleFraction?: number; // 0–1
@@ -80,5 +82,9 @@ export default function TextScramble({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, duration, charset, scrambleFraction, trigger]);
 
-  return <span className={className}>{display}</span>;
+  return (
+    <span className={className} style={style}>
+      {display}
+    </span>
+  );
 }

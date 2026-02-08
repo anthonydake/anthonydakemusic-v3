@@ -3,6 +3,118 @@ import type { Project } from "./projects";
 
 export const projects: Project[] = [
   {
+    "slug": "glasshouse-sessions",
+    "title": "Glasshouse Sessions",
+    "subtitle": "Live performance film for emerging R&B artist",
+    "year": 2024,
+    "role": "Producer / Drums / Mix",
+    "tags": [
+      "Film",
+      "Live session",
+      "R&B"
+    ],
+    "blurb": "One-take performance capture with cinematic drums and vocal-forward mix built for film.",
+    "tone": [
+      "#0b1224",
+      "#2b3a55"
+    ],
+    "deliverables": [
+      "Arrangement + MD",
+      "Session drums",
+      "Live mix + stems",
+      "Playback rig"
+    ],
+    "credits": [
+      "Director: Caleb Lawson",
+      "FOH: Maria Jensen",
+      "Guitars: Chris Vale",
+      "Keys: Lena Ortiz"
+    ],
+    "narrative": [
+      "Built a three-song medley that could survive one take with cameras everywhere. Led rehearsals, defined transitions, and prepped stems for the film crew and FOH.",
+      "Stacked analog drum layers with close room mics to keep the performance raw but controlled. Mixed around the lead vocal so every hit supports the phrasing."
+    ],
+    "links": [
+      {
+        "label": "Watch the film",
+        "href": "https://youtu.be/dQw4w9WgXcQ"
+      },
+      {
+        "label": "Session notes",
+        "href": "https://www.dropbox.com/"
+      }
+    ],
+    "media": [
+      {
+        "kind": "video",
+        "provider": "youtube",
+        "id": "dQw4w9WgXcQ",
+        "title": "Excerpt"
+      },
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/11dFghVXANMlKmJXsNCbNl?utm_source=generator",
+        "title": "Reference: drum tone palette"
+      }
+    ]
+  },
+  {
+    "slug": "late-arrival",
+    "title": "Late Arrival",
+    "subtitle": "Studio single for indie pop trio",
+    "year": 2023,
+    "role": "Producer / Drums",
+    "tags": [
+      "Indie pop",
+      "Production",
+      "Studio"
+    ],
+    "blurb": "Analog drums, warm synths, and wide vocal stacks with air for sync placements.",
+    "tone": [
+      "#111827",
+      "#3f4c6b"
+    ],
+    "deliverables": [
+      "Pre-production",
+      "Programming",
+      "Drum tracking",
+      "Mix prep"
+    ],
+    "credits": [
+      "Artist: Late Arrival",
+      "Mix: Sound + Salt",
+      "Master: Jett Audio"
+    ],
+    "narrative": [
+      "Began with phone demos, re-harmonized the chorus to open up room for counter-melodies.",
+      "Tracked drums in a dry room with ribbon overheads, layered Juno pads, and kept bass minimal to let the vocal narrative breathe."
+    ],
+    "links": [
+      {
+        "label": "Stream the single",
+        "href": "https://open.spotify.com/"
+      },
+      {
+        "label": "Process deck",
+        "href": "https://www.notion.so/"
+      }
+    ],
+    "media": [
+      {
+        "kind": "audio",
+        "provider": "soundcloud",
+        "url": "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/forss/flickermood",
+        "title": "Rough mix print"
+      },
+      {
+        "kind": "image",
+        "src": "/projects/late-arrival.svg",
+        "alt": "Studio drums and synths"
+      }
+    ]
+  },
+  {
     "slug": "missin-u",
     "title": "Class Loser",
     "subtitle": "Missin U (track 9)",
@@ -69,6 +181,61 @@ export const projects: Project[] = [
         "provider": "youtube",
         "id": "Sqxoyx_LDYw",
         "title": "YouTube"
+      }
+    ]
+  },
+  {
+    "slug": "neon-skyline-tour",
+    "title": "Neon Skyline Tour",
+    "subtitle": "Festival run playback + drum design",
+    "year": 2022,
+    "role": "Music Director / Drums",
+    "tags": [
+      "Hybrid drums",
+      "Playback",
+      "Touring"
+    ],
+    "blurb": "Built a resilient playback + drums rig for a month of festivals and late-night TV.",
+    "tone": [
+      "#0f141a",
+      "#2b5c5c"
+    ],
+    "deliverables": [
+      "Show file",
+      "Drum sample curation",
+      "Click/MD cues",
+      "Backline spec"
+    ],
+    "credits": [
+      "Artist: Neon Skyline",
+      "Playback tech: Vic Tran",
+      "Lighting: Harper Lo"
+    ],
+    "narrative": [
+      "Designed the Ableton show file with redundant playback and per-song automation for lighting cues.",
+      "Hybrid drum kit: acoustic shells, electronic triggers, and hand-built sample palette to keep every venue consistent."
+    ],
+    "links": [
+      {
+        "label": "Tour reel",
+        "href": "https://vimeo.com/76979871"
+      },
+      {
+        "label": "Rig diagram",
+        "href": "https://www.figma.com/"
+      }
+    ],
+    "media": [
+      {
+        "kind": "video",
+        "provider": "vimeo",
+        "id": "76979871",
+        "title": "Tour recap"
+      },
+      {
+        "kind": "image",
+        "src": "/projects/neon-skyline.svg",
+        "alt": "Playback rig on stage"
       }
     ]
   }
