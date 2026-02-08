@@ -135,6 +135,7 @@ export default function ProjectsIndexClient() {
       ["--col1"]: "clamp(220px, 18vw, 300px)",
       ["--col2"]: "clamp(260px, 28vw, 520px)",
       ["--preview"]: "clamp(520px, 36vw, 920px)",
+      ["--preview-bleed"]: "calc(50vw - 50%)",
     } as React.CSSProperties;
   }, []);
 
@@ -166,7 +167,9 @@ export default function ProjectsIndexClient() {
           <div className="relative h-full" style={frameStyle}>
             <div className="absolute inset-y-0 left-[var(--col1)] w-px bg-black/10" />
             <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2))] w-px bg-black/10" />
-            {hoverCapable && <div className="absolute inset-y-0 left-[calc(100%-var(--preview))] w-px bg-black/10" />}
+            {hoverCapable && (
+              <div className="absolute inset-y-0 left-[calc(100%-var(--preview)-var(--preview-bleed))] w-px bg-black/10" />
+            )}
           </div>
         </div>
       </div>
@@ -217,9 +220,11 @@ export default function ProjectsIndexClient() {
 
       <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[246px] sm:px-8 lg:px-10 xl:px-12">
         <div
-          className={[hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10"].join(
-            " "
-          )}
+          className={[
+            hoverCapable
+              ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_calc(var(--preview)+var(--preview-bleed))] lg:gap-0"
+              : "grid gap-10",
+          ].join(" ")}
           style={frameStyle}
         >
           <section aria-label="Project index">
@@ -239,7 +244,7 @@ export default function ProjectsIndexClient() {
           {hoverCapable && (
             <aside className="hidden lg:flex lg:items-center lg:justify-end" aria-label="Project preview">
               <div className="flex min-h-screen w-full items-center justify-end pr-0 -mt-[200px]">
-                <div className="w-full mr-[calc(50%-50vw)]">
+                <div className="w-full">
                   <PreviewPanel
                     current={previewCurrent}
                     next={previewNext}
