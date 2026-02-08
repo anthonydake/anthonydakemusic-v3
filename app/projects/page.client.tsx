@@ -241,8 +241,8 @@ export default function ProjectsIndexClient() {
               className="hidden lg:block"
               aria-label="Project preview"
             >
-              <div className="fixed right-0 top-0 flex h-screen items-center justify-end">
-                <div className="w-[48vw] max-w-[880px]">
+              <div className="fixed right-0 top-1/2 -translate-y-1/2 pointer-events-none pr-20">
+                <div className="w-[720px] max-w-[40vw]">
                   <PreviewPanel
                     current={previewCurrent}
                     next={previewNext}
