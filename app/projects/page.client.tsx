@@ -237,8 +237,11 @@ export default function ProjectsIndexClient() {
 
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
           {hoverCapable && (
-            <aside className="hidden lg:block" aria-label="Project preview">
-              <div className="fixed right-0 top-0 flex h-[100svh] w-[50vw] items-center justify-end pr-12">
+            <aside
+              className="hidden lg:flex lg:items-center lg:justify-end"
+              aria-label="Project preview"
+            >
+              <div className="flex min-h-screen w-full items-center justify-end pr-12">
                 <div className="w-full max-w-[960px]">
                   <PreviewPanel
                     current={previewCurrent}
@@ -333,11 +336,7 @@ function PreviewPanel({
     <div className="w-full">
       {/* Cinematic Frame */}
       <div className="relative w-full aspect-[16/9] overflow-hidden">
-        {current ? (
-          <PreviewMedia preview={current} />
-        ) : (
-          <div className="absolute inset-0 bg-black/5" />
-        )}
+        {current ? <PreviewMedia preview={current} /> : null}
 
         {next && (
           <div
