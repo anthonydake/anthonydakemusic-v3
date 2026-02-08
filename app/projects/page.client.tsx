@@ -2,7 +2,6 @@
 
 import "./projects-index.css";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { projectIndex, type ProjectIndexItem, type ProjectPreview } from "@/data/projects.data";
@@ -239,14 +238,15 @@ export default function ProjectsIndexClient() {
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
           {hoverCapable && (
             <aside className="hidden lg:block lg:pl-10" aria-label="Project preview">
-              {/* Center within the visible page area (account for the 56px fixed header). */}
-              <div className="sticky top-1/2 -translate-y-1/2">
-                <PreviewPanel
-                  current={previewCurrent}
-                  next={previewNext}
-                  nextVisible={previewNextVisible}
-                  onNextReady={onNextReady}
-                />
+              <div className="relative flex min-h-[calc(100vh-56px)] items-center justify-center pt-14">
+                <div className="w-full max-w-[920px] aspect-[16/9]">
+                  <PreviewPanel
+                    current={previewCurrent}
+                    next={previewNext}
+                    nextVisible={previewNextVisible}
+                    onNextReady={onNextReady}
+                  />
+                </div>
               </div>
             </aside>
           )}
@@ -331,16 +331,14 @@ function PreviewPanel({
 }) {
   return (
     <div className="space-y-3">
-      <div className="relative overflow-hidden border border-black/10 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.10)]">
-        <div className="relative aspect-[3/2]">
-          {current ? <PreviewMedia preview={current} /> : <div className="absolute inset-0 bg-black/5" />}
+      <div className="relative h-full w-full overflow-hidden bg-black shadow-[0_40px_120px_rgba(0,0,0,0.6)]">
+        {current ? <PreviewMedia preview={current} /> : <div className="absolute inset-0 bg-black/5" />}
 
-          {next && (
-            <div className={`absolute inset-0 transition-opacity duration-200 ${nextVisible ? "opacity-100" : "opacity-0"}`}>
-              <PreviewMedia preview={next} onReady={onNextReady} />
-            </div>
-          )}
-        </div>
+        {next && (
+          <div className={`absolute inset-0 transition-opacity duration-200 ${nextVisible ? "opacity-100" : "opacity-0"}`}>
+            <PreviewMedia preview={next} onReady={onNextReady} />
+          </div>
+        )}
       </div>
 
       <div className="text-[11px] uppercase tracking-[0.28em] text-black/55">Preview</div>
@@ -352,7 +350,7 @@ function PreviewMedia({ preview, onReady }: { preview: ProjectPreview; onReady?:
   if (preview.type === "video") {
     return (
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="h-full w-full object-cover"
         src={preview.src}
         poster={preview.poster}
         muted
@@ -365,13 +363,6 @@ function PreviewMedia({ preview, onReady }: { preview: ProjectPreview; onReady?:
   }
 
   return (
-    <Image
-      src={preview.src}
-      alt=""
-      fill
-      className="object-cover"
-      sizes="(min-width: 1024px) 680px, 100vw"
-      onLoadingComplete={() => onReady?.()}
-    />
+    <img src={preview.src} alt="" className="h-full w-full object-cover" onLoad={() => onReady?.()} />
   );
 }
