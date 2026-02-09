@@ -1,41 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import TextScramble from "../components/TextScramble";
+import { FormEvent, useState } from "react";
+import ColumbusTime from "../components/ColumbusTime";
 import site from "@/content/site";
-
-function formatColumbusTime(d: Date) {
-  const fmt = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-  return fmt.format(d);
-}
 
 export default function ContactPageClient() {
   const [status, setStatus] = useState<string>("");
   const services = site.contact.services;
   const [service, setService] = useState<string>(services[0] ?? "Other");
-  const [now, setNow] = useState<Date>(() => new Date());
-  const [showLiveTime, setShowLiveTime] = useState(false);
-  const [initialTime] = useState(() => formatColumbusTime(new Date()));
-
-  useEffect(() => {
-    const tick = () => setNow(new Date());
-    tick();
-    const id = window.setInterval(tick, 1000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    const t = window.setTimeout(() => setShowLiveTime(true), 650);
-    return () => window.clearTimeout(t);
-  }, []);
-
-  const timeLabel = useMemo(() => formatColumbusTime(now), [now]);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -82,19 +55,7 @@ export default function ContactPageClient() {
           <div className="justify-self-start">
             <span>Columbus, (OH)</span>
             <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
-            <span>
-              {showLiveTime ? (
-                timeLabel
-              ) : (
-                <TextScramble
-                  text={initialTime}
-                  duration={500}
-                  charset="#%&$@+|"
-                  scrambleFraction={0.35}
-                  leftToRight
-                />
-              )}
-            </span>
+            <ColumbusTime />
           </div>
           <Link
             href="/"

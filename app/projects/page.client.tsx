@@ -5,22 +5,12 @@ import "./projects-index.css";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { projectIndex, type ProjectIndexItem, type ProjectPreview } from "@/data/projects.data";
-import TextScramble from "@/app/components/TextScramble";
+import ColumbusTime from "@/app/components/ColumbusTime";
 
 type MediaQueryListLegacy = MediaQueryList & {
   addListener?: (listener: (event: MediaQueryListEvent) => void) => void;
   removeListener?: (listener: (event: MediaQueryListEvent) => void) => void;
 };
-
-function formatColumbusTime(d: Date) {
-  const fmt = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-  return fmt.format(d);
-}
 
 function parseSortKeyMMDDYYYY(date: string) {
   // "MM/DD/YYYY" -> YYYYMMDD (number)
@@ -49,10 +39,6 @@ export default function ProjectsIndexClient() {
     if (typeof window === "undefined" || !("matchMedia" in window)) return false;
     return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   });
-  const [now, setNow] = useState<Date>(() => new Date());
-  const [showLiveTime, setShowLiveTime] = useState(false);
-  const [initialTime] = useState(() => formatColumbusTime(new Date()));
-
   const [previewCurrent, setPreviewCurrent] = useState<ProjectPreview | null>(
     () => items.find((p) => p.preview)?.preview ?? null
   );
@@ -108,25 +94,12 @@ export default function ProjectsIndexClient() {
     };
   }, [items.length]);
 
-  useEffect(() => {
-    const tick = () => setNow(new Date());
-    tick();
-    const id = window.setInterval(tick, 1000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    const t = window.setTimeout(() => setShowLiveTime(true), 650);
-    return () => window.clearTimeout(t);
-  }, []);
 
   useEffect(() => {
     return () => {
       if (previewCommitRef.current) window.clearTimeout(previewCommitRef.current);
     };
   }, []);
-
-  const timeLabel = useMemo(() => formatColumbusTime(now), [now]);
 
   // Desktop/table column sizing (used by row grid + background hairlines).
   const frameStyle = useMemo(() => {
@@ -178,19 +151,7 @@ export default function ProjectsIndexClient() {
           <div className="justify-self-start">
             <span>Columbus, (OH)</span>
             <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
-            <span>
-              {showLiveTime ? (
-                <span suppressHydrationWarning>{timeLabel}</span>
-              ) : (
-                <TextScramble
-                  text={initialTime}
-                  duration={500}
-                  charset="#%&$@+|"
-                  scrambleFraction={0.35}
-                  leftToRight
-                />
-              )}
-            </span>
+            <ColumbusTime />
           </div>
 
           <Link

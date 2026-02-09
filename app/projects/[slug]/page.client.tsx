@@ -1,45 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import TextScramble from "@/app/components/TextScramble";
+import { useEffect, useState } from "react";
+import ColumbusTime from "@/app/components/ColumbusTime";
 import { projectIndex } from "@/data/projects.data";
 
-function formatColumbusTime(d: Date) {
-  const fmt = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-  return fmt.format(d);
-}
-
 export default function ProjectDetailClient() {
-  const [now, setNow] = useState<Date>(() => new Date());
-  const [showLiveTime, setShowLiveTime] = useState(false);
-  const [initialTime] = useState(() => formatColumbusTime(new Date()));
   const [currentSlug, setCurrentSlug] = useState<string | null>(null);
-
-  useEffect(() => {
-    const tick = () => setNow(new Date());
-    tick();
-    const id = window.setInterval(tick, 1000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    const t = window.setTimeout(() => setShowLiveTime(true), 650);
-    return () => window.clearTimeout(t);
-  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const fromPath = window.location.pathname.split("/").filter(Boolean).pop() || null;
     setCurrentSlug(fromPath);
   }, []);
-
-  const timeLabel = useMemo(() => formatColumbusTime(now), [now]);
 
   const artistLabel = "PRIMARY ARTIST";
   const subtitleLabel = "Optional subtitle or track reference";
@@ -55,22 +28,10 @@ export default function ProjectDetailClient() {
         <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
           <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
             <div className="justify-self-start">
-              <span>Columbus, (OH)</span>
-              <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
-              <span>
-                {showLiveTime ? (
-                  timeLabel
-                ) : (
-                  <TextScramble
-                    text={initialTime}
-                    duration={500}
-                    charset="#%&$@+|"
-                    scrambleFraction={0.35}
-                    leftToRight
-                  />
-                )}
-              </span>
-            </div>
+            <span>Columbus, (OH)</span>
+            <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
+            <ColumbusTime />
+          </div>
 
             <Link
               href="/"
