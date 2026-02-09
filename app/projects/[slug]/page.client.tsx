@@ -99,33 +99,33 @@ export default function ProjectDetailClient() {
           </div>
         </div>
 
-        <main className="relative z-[10] mx-auto max-w-6xl px-6 pb-0 pt-24 sm:px-8 lg:px-10 xl:px-12">
-          <div className="flex h-[calc(100svh-96px)] flex-col items-center justify-center gap-10 overflow-y-auto sm:overflow-hidden">
-            <section aria-label="Project hero" className="w-full border-y border-black/10 bg-white">
-              <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center px-6 py-8 text-center sm:py-10">
-                <div className="space-y-4">
-                  <div className="text-[9px] uppercase tracking-[0.28em] text-black/35">YEAR</div>
-                  <h1 className="text-balance text-[clamp(22px,3.2vw,46px)] font-medium uppercase leading-[1] tracking-[0.02em] text-black">
+        <main className="relative z-[10] mx-auto max-w-6xl px-6 pb-0 pt-16 sm:px-8 lg:px-10 xl:px-12">
+          <div className="flex h-[calc(100svh-64px)] -translate-y-8 flex-col items-center justify-center gap-20 overflow-y-auto sm:-translate-y-10 sm:overflow-hidden">
+            <section aria-label="Project hero" className="w-full translate-y-[3vh] border-y border-black/10 bg-white">
+              <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center px-6 py-7 text-center sm:py-8">
+                <div className="space-y-6">
+                  <div className="text-[8px] uppercase tracking-[0.28em] text-black/35">YEAR</div>
+                  <h1 className="text-balance text-[clamp(20px,3vw,42px)] font-medium uppercase leading-[1] tracking-[0.02em] text-black">
                     PROJECT TITLE
                   </h1>
-                  <div className="text-[clamp(11px,1.5vw,18px)] uppercase tracking-[0.18em] text-black/70">
+                  <div className="text-[clamp(10px,1.3vw,16px)] uppercase tracking-[0.18em] text-black/70">
                     {artistLabel}
                   </div>
-                  <div className="text-[9px] uppercase tracking-[0.28em] text-black/45">ROLE · ROLE · ROLE</div>
-                  <div className="text-[9px] uppercase tracking-[0.28em] text-black/40">{subtitleLabel}</div>
+                  <div className="text-[8px] uppercase tracking-[0.28em] text-black/45">ROLE · ROLE · ROLE</div>
+                  <div className="text-[8px] uppercase tracking-[0.28em] text-black/40">{subtitleLabel}</div>
                 </div>
               </div>
             </section>
 
             <section aria-label="Audio" className="w-full text-center">
-              <div className="mx-auto w-full max-w-4xl space-y-4">
-                <h2 className="text-[10px] uppercase tracking-[0.28em] text-black/50">The Record</h2>
-                <div className="mx-auto w-full max-w-3xl bg-black/[0.04] p-4">
-                  <div className="space-y-4">
+              <div className="mx-auto w-full max-w-4xl space-y-6">
+                <h2 className="text-[9px] uppercase tracking-[0.28em] text-black/50">The Record</h2>
+                <div className="mx-auto w-full max-w-3xl bg-black/[0.04] p-5">
+                  <div className="space-y-6">
                     {[0, 1].map((idx) => (
                       <div key={`streaming-${idx}`} className="border border-black/10 bg-white p-4">
-                        <div className="text-[11px] uppercase tracking-[0.24em] text-black/70">Streaming Service</div>
-                        <div className="mt-2 text-[11px] text-black/60">
+                        <div className="text-[10px] uppercase tracking-[0.24em] text-black/70">Streaming Service</div>
+                        <div className="mt-1.5 text-[10px] text-black/60">
                           <a className="hover:text-black" href="https://example.com" target="_blank" rel="noreferrer">
                             Open Link
                           </a>
@@ -140,7 +140,7 @@ export default function ProjectDetailClient() {
         </main>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-6 z-[5]">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-[10px] uppercase tracking-[0.28em] text-black/50 sm:px-8 lg:px-10 xl:px-12">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-[9px] uppercase tracking-[0.28em] text-black/50 sm:px-8 lg:px-10 xl:px-12">
             {prevProject ? (
               <Link className="pointer-events-auto hover:text-black" href={`/projects/${prevProject.slug}`}>
                 ← Previous Project
