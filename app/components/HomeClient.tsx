@@ -153,11 +153,7 @@ export default function HomeClient({
             </Link>
           </div>
         </div>
-        <div className="pointer-events-none absolute inset-x-0 bottom-8 flex justify-center">
-          <span className="text-[11px] uppercase tracking-[0.28em] text-black/70 animate-scrollFlash">
-            (scroll)
-          </span>
-        </div>
+        {/* Scroll indicator handled globally on the home page */}
       </section>
 
       <section
