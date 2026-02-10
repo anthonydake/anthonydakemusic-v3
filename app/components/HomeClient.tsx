@@ -141,15 +141,17 @@ export default function HomeClient({
         data-id="hero"
         data-snap-section
       >
-        <div
-          className={[
-            "select-none transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-            visible.hero ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
-          ].join(" ")}
-        >
-          <Link href="/about" aria-label="Go to Info">
-            <LogoArchitectOfSound />
-          </Link>
+        <div className="-translate-y-[17px]">
+          <div
+            className={[
+              "select-none transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+              visible.hero ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
+            ].join(" ")}
+          >
+            <Link href="/about" aria-label="Go to Info">
+              <LogoArchitectOfSound />
+            </Link>
+          </div>
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-8 flex justify-center">
           <span className="text-[11px] uppercase tracking-[0.28em] text-black/70 animate-scrollFlash">
