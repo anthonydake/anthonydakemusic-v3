@@ -25,6 +25,7 @@ function HomeInner() {
   const accumRef = useRef(0);
   const triggeredRef = useRef(false);
   const readyRef = useRef(false);
+  const lastWheelRef = useRef<number | null>(null);
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -41,15 +42,24 @@ function HomeInner() {
       if (window.scrollY !== 0) return;
       if (!readyRef.current) return;
       if (triggeredRef.current) return;
+      const now = performance.now();
       const delta = e.deltaY;
-      if (Math.abs(delta) < 6) return;
+      const minDelta = 35;
+      const triggerThreshold = 140;
+      const windowMs = 200;
+      if (Math.abs(delta) < minDelta) return;
       if (delta <= 0) {
         accumRef.current = 0;
+        lastWheelRef.current = null;
         return;
       }
+      if (lastWheelRef.current === null || now - lastWheelRef.current > windowMs) {
+        accumRef.current = 0;
+      }
+      lastWheelRef.current = now;
       e.preventDefault();
       accumRef.current += delta;
-      if (accumRef.current > 400) {
+      if (accumRef.current >= triggerThreshold) {
         triggeredRef.current = true;
         window.removeEventListener("wheel", handleWheel);
         triggerTransition(projectsHref);
