@@ -148,8 +148,11 @@ export default function HomeClient({
               visible.hero ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
             ].join(" ")}
           >
-            <div className="mb-4 text-center text-[11px] uppercase tracking-[0.28em] text-black/55 sm:text-[12px]">
-              📍 Columbus, Ohio • 🎵 Producer/Drummer • 💼 Book: adakemusic@gmail.com • 📲 @anthony_dake
+            <div className="mb-4 space-y-1 text-center text-[11px] uppercase tracking-[0.28em] text-black/55 sm:text-[12px]">
+              <div>📍 Columbus, Ohio</div>
+              <div>🎵 Producer/Drummer</div>
+              <div>💼 Book: adakemusic@gmail.com</div>
+              <div>📲 Follow: @anthony_dake</div>
             </div>
             <Link href="/socials" aria-label="Go to Socials">
               <LogoArchitectOfSound />
