@@ -94,6 +94,15 @@ export default function ProjectsIndexClient() {
     };
   }, [items.length]);
 
+  useEffect(() => {
+    const { style } = document.body;
+    const prev = style.overflow;
+    style.overflow = "hidden";
+    return () => {
+      style.overflow = prev;
+    };
+  }, []);
+
 
   useEffect(() => {
     return () => {
@@ -133,7 +142,7 @@ export default function ProjectsIndexClient() {
   };
 
   return (
-    <div className="relative min-h-screen bg-white text-black">
+    <div className="relative h-screen overflow-hidden bg-white text-black">
       {/* Vertical hairline gridlines (desktop only) */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
         <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
@@ -177,7 +186,7 @@ export default function ProjectsIndexClient() {
         </div>
       </div>
 
-      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem]">
+      <main className="relative z-[10] mx-auto h-[calc(100svh-56px)] max-w-[1600px] overflow-hidden px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem]">
         <div
           className={[
             hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
