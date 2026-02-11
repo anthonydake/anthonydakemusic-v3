@@ -254,7 +254,7 @@ function YearGroups({
           <div key={year} className="space-y-2">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-black/10" />
-              <div className="text-[10px] uppercase tracking-[0.28em] text-black/50">{year}</div>
+              <div className="text-[10px] uppercase tracking-[0.28em] text-black/50">YYYY</div>
             </div>
 
             <div className="space-y-0.5">
