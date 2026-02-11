@@ -53,8 +53,8 @@ export default function ProjectDetailClient() {
               <Link className="hover:text-black" href="/performance">
                 Performance
               </Link>
-              <Link className="hover:text-black" href="/about">
-                About
+              <Link className="hover:text-black" href="/socials">
+                Socials
               </Link>
             </nav>
           </div>

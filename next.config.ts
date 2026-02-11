@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         destination: "/performance",
         permanent: true,
       },
+      {
+        source: "/about",
+        destination: "/socials",
+        permanent: true,
+      },
     ];
   },
 };
