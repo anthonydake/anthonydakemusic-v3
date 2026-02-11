@@ -128,7 +128,7 @@ function HomeInner() {
           }
         }
         .home-scroll-indicator {
-          animation: homeScrollPulse 1.5s ease-in-out infinite;
+          animation: homeScrollPulse 2s ease-in-out infinite;
         }
         @media (prefers-reduced-motion: reduce) {
           .home-scroll-indicator {
