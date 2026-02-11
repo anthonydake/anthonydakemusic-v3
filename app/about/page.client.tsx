@@ -39,12 +39,13 @@ export default function AboutPageClient() {
         </div>
       </div>
       <main className="min-h-screen bg-white px-6 pb-20 pt-24 text-black">
-        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-10 text-center">
+        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-12 text-center min-h-[calc(100svh-96px)]">
           <div className="space-y-2 text-[12px] uppercase tracking-[0.28em] text-black/60">
-            <div>📍 Columbus, Ohio</div>
-            <div>🎵 New content weekly</div>
-            <div>💼 Book a session: adakemusic@gmail.com</div>
-            <div>📲 Follow: @anthony_dake</div>
+            <div>📍 Columbus, Ohio — Anthony Dake</div>
+            <div>🎵 Music producer • drummer • music director</div>
+            <div>💼 Book: adakemusic@gmail.com</div>
+            <div>📲 Follow @anthony_dake</div>
+            <div>🎬 New content weekly</div>
           </div>
           <div className="flex items-center gap-8 sm:gap-10">
             <a
