@@ -148,9 +148,64 @@ export default function HomeClient({
               visible.hero ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
             ].join(" ")}
           >
-            <Link href="/about" aria-label="Go to Info">
+            <div className="mb-4 text-center text-[11px] uppercase tracking-[0.28em] text-black/55 sm:text-[12px]">
+              📍 Columbus, Ohio • 🎵 Producer/Drummer • 💼 Book: adakemusic@gmail.com • 📲 @anthony_dake
+            </div>
+            <Link href="/socials" aria-label="Go to Socials">
               <LogoArchitectOfSound />
             </Link>
+            <div className="mt-4 flex items-center justify-center gap-6">
+              <a
+                className="group inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                href="https://www.instagram.com/anthony_dake/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4 text-black/65 transition group-hover:text-black">
+                  <rect x="4" y="4" width="16" height="16" rx="4" ry="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                  <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                  <circle cx="17" cy="7" r="1" fill="currentColor" />
+                </svg>
+              </a>
+              <a
+                className="group inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                href="https://www.youtube.com/@anthony_dake"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="YouTube"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4 text-black/65 transition group-hover:text-black">
+                  <rect x="3.5" y="7" width="17" height="10" rx="3" ry="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                  <polygon points="11,9.5 15,12 11,14.5" fill="currentColor" />
+                </svg>
+              </a>
+              <a
+                className="group inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                href="https://www.tiktok.com/@anthony_dake"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="TikTok"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4 text-black/65 transition group-hover:text-black">
+                  <path
+                    d="M14 5v8.2a3.2 3.2 0 1 1-2-3V7.2c0-.5.4-.9.9-.9h1.1z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M14 6.2c.9 1.2 2.1 1.9 3.6 2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
         {/* Scroll indicator handled globally on the home page */}
