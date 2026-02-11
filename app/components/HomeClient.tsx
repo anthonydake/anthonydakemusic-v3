@@ -132,7 +132,7 @@ export default function HomeClient({
   return (
     <div
       ref={containerRef}
-      className="site-bg min-h-screen snap-y snap-mandatory overflow-y-scroll bg-white scrollbar-hide"
+      className="site-bg min-h-screen snap-y snap-mandatory overflow-y-hidden bg-white scrollbar-hide"
       style={{ scrollBehavior: "smooth" }}
     >
       <section
