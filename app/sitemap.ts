@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${siteUrl}/projects`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${siteUrl}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${siteUrl}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${siteUrl}/performance`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
   ];
 
   const projectRoutes: MetadataRoute.Sitemap = projects.map((p) => ({
@@ -21,4 +21,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [...staticRoutes, ...projectRoutes];
 }
-

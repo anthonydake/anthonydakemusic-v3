@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         destination: "/projects/template",
         permanent: true,
       },
+      {
+        source: "/contact",
+        destination: "/performance",
+        permanent: true,
+      },
     ];
   },
 };

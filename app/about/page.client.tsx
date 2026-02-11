@@ -30,8 +30,8 @@ export default function AboutPageClient() {
             <Link className="hover:text-black" href="/projects">
               Projects
             </Link>
-            <Link className="hover:text-black" href={site.hero.cta.href}>
-              {site.hero.cta.label}
+            <Link className="hover:text-black" href="/performance">
+              Performance
             </Link>
             <Link className="hover:text-black" href="/about">
               About

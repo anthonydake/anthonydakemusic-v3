@@ -50,8 +50,8 @@ export default function ProjectDetailClient() {
               <Link className="hover:text-black" href="/projects">
                 Projects
               </Link>
-              <Link className="hover:text-black" href="/contact">
-                Contact
+              <Link className="hover:text-black" href="/performance">
+                Performance
               </Link>
               <Link className="hover:text-black" href="/about">
                 About

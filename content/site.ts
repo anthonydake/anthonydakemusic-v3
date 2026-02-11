@@ -89,7 +89,7 @@ export const site: SiteContent = {
   hero: {
     headline: "Anthony Dake — Architect of Sound",
     subheadline: "Production, drums, and music direction with a systems-first mindset that still feels human.",
-    cta: { label: "Contact", href: "/contact" },
+    cta: { label: "Performance", href: "/performance" },
   },
 
   reels: [],
