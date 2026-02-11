@@ -118,17 +118,17 @@ function HomeInner() {
       <style jsx global>{`
         @keyframes homeScrollPulse {
           0% {
-            opacity: 0.35;
+            opacity: 0;
           }
           50% {
-            opacity: 0.9;
+            opacity: 1;
           }
           100% {
-            opacity: 0.35;
+            opacity: 0;
           }
         }
         .home-scroll-indicator {
-          animation: homeScrollPulse 2s ease-in-out infinite;
+          animation: homeScrollPulse 1.5s ease-in-out infinite;
         }
         @media (prefers-reduced-motion: reduce) {
           .home-scroll-indicator {
