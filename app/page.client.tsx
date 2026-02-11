@@ -44,9 +44,9 @@ function HomeInner() {
       if (triggeredRef.current) return;
       const now = performance.now();
       const delta = e.deltaY;
-      const minDelta = 35;
-      const triggerThreshold = 140;
-      const windowMs = 200;
+      const minDelta = 45;
+      const triggerThreshold = 110;
+      const windowMs = 160;
       if (Math.abs(delta) < minDelta) return;
       if (delta <= 0) {
         accumRef.current = 0;

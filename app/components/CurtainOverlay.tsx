@@ -33,8 +33,8 @@ export default function CurtainOverlay({
 
   const transition =
     mode === "curtain"
-      ? { duration: 1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
-      : { duration: 0.45, ease: "easeInOut" as const };
+      ? { duration: 0.8, ease: [0.19, 1, 0.22, 1] as [number, number, number, number] }
+      : { duration: 0.4, ease: "easeInOut" as const };
 
   return (
     <AnimatePresence>
@@ -43,7 +43,8 @@ export default function CurtainOverlay({
           key="curtain-overlay"
           className="fixed inset-0 z-[10000]"
           style={{
-            background: "linear-gradient(to top, #000000 0%, #050505 60%, #0A0A0A 100%)",
+            background:
+              "radial-gradient(120% 140% at 50% 120%, rgba(14,14,14,0.9) 0%, rgba(6,6,6,0.96) 45%, #000 100%), linear-gradient(to top, #000000 0%, #050505 60%, #0A0A0A 100%)",
           }}
           initial="initial"
           animate={phase}
