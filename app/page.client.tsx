@@ -45,9 +45,9 @@ function HomeInner() {
       e.preventDefault();
       const now = performance.now();
       const delta = e.deltaY;
-      const minDelta = 45;
-      const triggerThreshold = 110;
-      const windowMs = 160;
+      const minDelta = 35;
+      const triggerThreshold = 140;
+      const windowMs = 220;
       if (Math.abs(delta) < minDelta) return;
       if (delta <= 0) {
         accumRef.current = 0;
@@ -98,9 +98,6 @@ function HomeInner() {
             </Link>
             <Link className="hover:text-black" href="/performance">
               Performance
-            </Link>
-            <Link className="hover:text-black" href="/socials">
-              Socials
             </Link>
           </nav>
         </div>
