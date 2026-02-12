@@ -129,6 +129,16 @@ export default function HomeClient({
     };
   }, [snapAnimating]);
 
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.classList.add("no-scroll");
+    document.body.classList.add("no-scroll");
+    return () => {
+      document.documentElement.classList.remove("no-scroll");
+      document.body.classList.remove("no-scroll");
+    };
+  }, []);
+
   return (
     <div
       ref={containerRef}
@@ -149,9 +159,12 @@ export default function HomeClient({
             ].join(" ")}
           >
             <div className="mb-5 text-center text-[12px] uppercase tracking-[0.26em] text-black/60 sm:text-[13px]" />
-            <Link href="/socials" aria-label="Go to Socials">
+            <Link href="/" aria-label="Go to Home">
               <LogoArchitectOfSound />
             </Link>
+            <div className="mt-3 text-center text-[11px] uppercase tracking-[0.24em] text-black/55">
+              Producer • Drummer • Music Director
+            </div>
             <div className="mt-4 flex items-center justify-center gap-8">
               <a
                 className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
@@ -179,7 +192,7 @@ export default function HomeClient({
                 className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 href="https://www.instagram.com/anthony_dake/"
                 target="_blank"
-                rel="noreferrer"
+                rel="noreferrer me"
                 aria-label="Instagram"
               >
                 <svg viewBox="0 0 24 24" className="h-6 w-6 text-black/65 transition group-hover:text-black">
@@ -192,7 +205,7 @@ export default function HomeClient({
                 className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 href="https://www.youtube.com/@anthony_dake"
                 target="_blank"
-                rel="noreferrer"
+                rel="noreferrer me"
                 aria-label="YouTube"
               >
                 <svg viewBox="0 0 24 24" className="h-6 w-6 text-black/65 transition group-hover:text-black">
@@ -204,7 +217,7 @@ export default function HomeClient({
                 className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 href="https://www.tiktok.com/@anthony_dake"
                 target="_blank"
-                rel="noreferrer"
+                rel="noreferrer me"
                 aria-label="TikTok"
               >
                 <svg viewBox="0 0 24 24" className="h-6 w-6 text-black/65 transition group-hover:text-black">

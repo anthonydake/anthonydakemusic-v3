@@ -6,6 +6,9 @@ import { projectIndex } from "@/data/projects.data";
 export const metadata: Metadata = {
   title: "Projects — Anthony Dake",
   description: "Project index — production, drums, and musical direction credits and work.",
+  alternates: {
+    canonical: "/projects",
+  },
   openGraph: {
     title: "Projects — Anthony Dake",
     description: "Project index — production, drums, and musical direction credits and work.",

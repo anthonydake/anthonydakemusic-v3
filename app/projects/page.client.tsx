@@ -179,9 +179,6 @@ export default function ProjectsIndexClient() {
             <Link className="hover:text-black" href="/performance">
               Performance
             </Link>
-            <Link className="hover:text-black" href="/socials">
-              Socials
-            </Link>
           </nav>
         </div>
       </div>

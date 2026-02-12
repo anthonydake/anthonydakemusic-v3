@@ -76,8 +76,8 @@ export default function ContactPageClient() {
             <Link className="hover:text-black" href="/contact">
               Contact
             </Link>
-            <Link className="hover:text-black" href="/socials">
-              Socials
+            <Link className="hover:text-black" href="/performance">
+              Performance
             </Link>
           </nav>
         </div>

@@ -32,6 +32,12 @@ body {
   color: var(--text-primary);
 }
 
+html.no-scroll,
+body.no-scroll {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 .site-bg {
   position: relative;
   background: var(--bg-primary);
@@ -112,5 +118,15 @@ img {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+@media (pointer: coarse) {
+  :root {
+    cursor: auto;
+  }
+
+  * {
+    cursor: auto !important;
   }
 }

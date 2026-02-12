@@ -4,6 +4,9 @@ import HomePageClient from "./page.client";
 export const metadata: Metadata = {
   title: "Anthony Dake — Architect of Sound",
   description: "Producer / Drummer / Music Director.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Anthony Dake — Architect of Sound",
     description: "Producer / Drummer / Music Director.",

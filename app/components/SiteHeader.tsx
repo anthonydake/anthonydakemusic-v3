@@ -25,9 +25,6 @@ export default function SiteHeader() {
           <Link className="hover:text-black" href="/performance">
             Performance
           </Link>
-          <Link className="hover:text-black" href="/socials">
-            Socials
-          </Link>
         </nav>
       </div>
     </header>

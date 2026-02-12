@@ -23,6 +23,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
+    alternates: {
+      canonical: `/projects/${slug}`,
+    },
     openGraph: {
       title: `${title} — Anthony Dake`,
       description,
@@ -54,12 +57,32 @@ export default async function Page({ params }: PageProps) {
         creator: { "@id": `${siteUrl}/#person` },
       }
     : null;
+  const breadcrumbLd = project
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Projects",
+            item: `${siteUrl}/projects`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: project.title,
+            item: `${siteUrl}/projects/${project.slug}`,
+          },
+        ],
+      }
+    : null;
 
   return (
     <>
+      {breadcrumbLd ? <JsonLd data={breadcrumbLd} /> : null}
       {jsonLd ? <JsonLd data={jsonLd} /> : null}
       <ProjectDetailClient />
     </>
   );
 }
-

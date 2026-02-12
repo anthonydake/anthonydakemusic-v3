@@ -6,6 +6,7 @@ const CLICKABLE_SELECTOR =
   'a, button, [role="button"], [data-clickable="true"], input, textarea, select, option, [tabindex]:not([tabindex="-1"])';
 
 export default function CustomCursor() {
+  const [enabled, setEnabled] = useState(true);
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const lastPos = useRef({ x: 0, y: 0 });
   const frame = useRef<number | null>(null);
@@ -17,6 +18,17 @@ export default function CustomCursor() {
   const [clickPulse, setClickPulse] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const coarse = window.matchMedia("(pointer: coarse)");
+      const updateEnabled = () => setEnabled(!coarse.matches);
+      updateEnabled();
+      coarse.addEventListener("change", updateEnabled);
+      return () => coarse.removeEventListener("change", updateEnabled);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
     const updateTransform = () => {
       if (cursorRef.current) {
         const { x, y } = lastPos.current;
@@ -60,9 +72,11 @@ export default function CustomCursor() {
       window.removeEventListener("mouseleave", onLeave);
       window.removeEventListener("mousedown", onDown);
     };
-  }, [visible]);
+  }, [enabled, visible]);
 
   const size = 16;
+
+  if (!enabled) return null;
 
   return (
     <div

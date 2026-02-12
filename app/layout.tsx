@@ -51,13 +51,34 @@ export default function RootLayout({
                 name: "Anthony Dake",
                 url: siteUrl,
                 jobTitle: "Producer / Drummer / Music Director",
+                description: "Music producer, drummer, and music director based in Columbus, Ohio.",
+                knowsAbout: ["Music Production", "Drumming", "Music Direction", "Playback Systems"],
+                areaServed: "Columbus, Ohio",
+                sameAs: [
+                  "https://www.instagram.com/anthony_dake/",
+                  "https://www.tiktok.com/@anthony_dake",
+                  "https://www.youtube.com/@anthony_dake",
+                ],
               },
               {
                 "@type": "Organization",
                 "@id": `${siteUrl}/#organization`,
                 name: "Anthony Dake",
                 url: siteUrl,
-                email: "booking@anthonydakemusic.com",
+                email: "adakemusic@gmail.com",
+                contactPoint: [
+                  {
+                    "@type": "ContactPoint",
+                    contactType: "booking",
+                    email: "adakemusic@gmail.com",
+                    availableLanguage: ["English"],
+                  },
+                ],
+                sameAs: [
+                  "https://www.instagram.com/anthony_dake/",
+                  "https://www.tiktok.com/@anthony_dake",
+                  "https://www.youtube.com/@anthony_dake",
+                ],
               },
               {
                 "@type": "WebSite",
