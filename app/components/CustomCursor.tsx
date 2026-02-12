@@ -62,7 +62,7 @@ export default function CustomCursor() {
     };
   }, [visible]);
 
-  const size = 8;
+  const size = 16;
 
   return (
     <div
@@ -80,10 +80,17 @@ export default function CustomCursor() {
         } ${clickPulse ? "scale-[0.84]" : ""}`}
         style={{ width: size, height: size }}
       >
-        <span
-          className="absolute inset-0 rounded-full bg-white"
-          style={{ boxShadow: "0 0 8px rgba(255, 255, 255, 0.6)" }}
-        />
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          className="h-full w-full text-white"
+          style={{ filter: "drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))" }}
+        >
+          <path
+            d="M16 3v10.6a3.3 3.3 0 1 1-2-3.1V6.2c0-.4.3-.7.7-.8l3.3-.7z"
+            fill="currentColor"
+          />
+        </svg>
       </div>
     </div>
   );
