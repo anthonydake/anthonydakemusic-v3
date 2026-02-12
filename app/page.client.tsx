@@ -42,6 +42,7 @@ function HomeInner() {
       if (window.scrollY !== 0) return;
       if (!readyRef.current) return;
       if (triggeredRef.current) return;
+      e.preventDefault();
       const now = performance.now();
       const delta = e.deltaY;
       const minDelta = 45;
