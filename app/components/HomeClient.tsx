@@ -148,15 +148,33 @@ export default function HomeClient({
               visible.hero ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
             ].join(" ")}
           >
-            <div className="mb-5 text-center text-[12px] uppercase tracking-[0.26em] text-black/60 sm:text-[13px]">
-              <a className="hover:text-black" href="mailto:adakemusic@gmail.com">
-                Book: adakemusic@gmail.com
-              </a>
-            </div>
+            <div className="mb-5 text-center text-[12px] uppercase tracking-[0.26em] text-black/60 sm:text-[13px]" />
             <Link href="/socials" aria-label="Go to Socials">
               <LogoArchitectOfSound />
             </Link>
             <div className="mt-4 flex items-center justify-center gap-8">
+              <a
+                className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                href="mailto:adakemusic@gmail.com"
+                aria-label="Email"
+              >
+                <svg viewBox="0 0 24 24" className="h-6 w-6 text-black/65 transition group-hover:text-black">
+                  <path
+                    d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M22 8 12 13 2 8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </a>
               <a
                 className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 href="https://www.instagram.com/anthony_dake/"
