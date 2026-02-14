@@ -9,7 +9,6 @@ body {
 }
 
 :root {
-  cursor: none;
   color-scheme: dark;
   --bg-primary: #111113;
   --bg-secondary: #141414;
@@ -19,7 +18,6 @@ body {
 }
 
 * {
-  cursor: none !important;
   scrollbar-width: none;
 }
 
@@ -118,15 +116,5 @@ img {
     opacity: 1;
     transform: none;
     transition: none;
-  }
-}
-
-@media (pointer: coarse) {
-  :root {
-    cursor: auto;
-  }
-
-  * {
-    cursor: auto !important;
   }
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import CustomCursor from "./components/CustomCursor";
 import JsonLd from "./components/JsonLd";
 import TransitionProvider from "./components/TransitionProvider";
 
@@ -40,7 +39,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-white">
       <body className="antialiased bg-white text-black">
-        <CustomCursor />
         <JsonLd
           data={{
             "@context": "https://schema.org",

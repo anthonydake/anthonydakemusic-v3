@@ -171,18 +171,25 @@ export default function HomeClient({
                 href="mailto:adakemusic@gmail.com"
                 aria-label="Email"
               >
-                <svg viewBox="0 0 24 24" className="h-6 w-6 text-black/65 transition group-hover:text-black">
+                <svg viewBox="0 0 24 24" className="h-6 w-6 transition group-hover:brightness-110">
+                  <defs>
+                    <linearGradient id="socialGradientEmail" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#3B82F6" />
+                      <stop offset="60%" stopColor="#8EC5FF" />
+                      <stop offset="100%" stopColor="#FFFFFF" />
+                    </linearGradient>
+                  </defs>
                   <path
                     d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
                     fill="none"
-                    stroke="currentColor"
+                    stroke="url(#socialGradientEmail)"
                     strokeWidth="1.5"
                     strokeLinejoin="round"
                   />
                   <path
                     d="M22 8 12 13 2 8"
                     fill="none"
-                    stroke="currentColor"
+                    stroke="url(#socialGradientEmail)"
                     strokeWidth="1.5"
                     strokeLinejoin="round"
                   />
@@ -195,10 +202,27 @@ export default function HomeClient({
                 rel="noreferrer me"
                 aria-label="Instagram"
               >
-                <svg viewBox="0 0 24 24" className="h-6 w-6 text-black/65 transition group-hover:text-black">
-                  <rect x="4" y="4" width="16" height="16" rx="4" ry="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                  <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                  <circle cx="17" cy="7" r="1" fill="currentColor" />
+                <svg viewBox="0 0 24 24" className="h-6 w-6 transition group-hover:brightness-110">
+                  <defs>
+                    <linearGradient id="socialGradientInstagram" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#3B82F6" />
+                      <stop offset="60%" stopColor="#8EC5FF" />
+                      <stop offset="100%" stopColor="#FFFFFF" />
+                    </linearGradient>
+                  </defs>
+                  <rect
+                    x="4"
+                    y="4"
+                    width="16"
+                    height="16"
+                    rx="4"
+                    ry="4"
+                    fill="none"
+                    stroke="url(#socialGradientInstagram)"
+                    strokeWidth="1.5"
+                  />
+                  <circle cx="12" cy="12" r="4" fill="none" stroke="url(#socialGradientInstagram)" strokeWidth="1.5" />
+                  <circle cx="17" cy="7" r="1" fill="url(#socialGradientInstagram)" />
                 </svg>
               </a>
               <a
@@ -208,9 +232,26 @@ export default function HomeClient({
                 rel="noreferrer me"
                 aria-label="YouTube"
               >
-                <svg viewBox="0 0 24 24" className="h-6 w-6 text-black/65 transition group-hover:text-black">
-                  <rect x="3.5" y="7" width="17" height="10" rx="3" ry="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                  <polygon points="11,9.5 15,12 11,14.5" fill="currentColor" />
+                <svg viewBox="0 0 24 24" className="h-6 w-6 transition group-hover:brightness-110">
+                  <defs>
+                    <linearGradient id="socialGradientYouTube" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#3B82F6" />
+                      <stop offset="60%" stopColor="#8EC5FF" />
+                      <stop offset="100%" stopColor="#FFFFFF" />
+                    </linearGradient>
+                  </defs>
+                  <rect
+                    x="3.5"
+                    y="7"
+                    width="17"
+                    height="10"
+                    rx="3"
+                    ry="3"
+                    fill="none"
+                    stroke="url(#socialGradientYouTube)"
+                    strokeWidth="1.5"
+                  />
+                  <polygon points="11,9.5 15,12 11,14.5" fill="url(#socialGradientYouTube)" />
                 </svg>
               </a>
               <a
@@ -220,21 +261,21 @@ export default function HomeClient({
                 rel="noreferrer me"
                 aria-label="TikTok"
               >
-                <svg viewBox="0 0 24 24" className="h-6 w-6 text-black/65 transition group-hover:text-black">
+                <svg viewBox="0 0 24 24" className="h-6 w-6 transition group-hover:brightness-110">
+                  <defs>
+                    <linearGradient id="socialGradientTikTok" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#3B82F6" />
+                      <stop offset="60%" stopColor="#8EC5FF" />
+                      <stop offset="100%" stopColor="#FFFFFF" />
+                    </linearGradient>
+                  </defs>
                   <path
-                    d="M14 5v8.2a3.2 3.2 0 1 1-2-3V7.2c0-.5.4-.9.9-.9h1.1z"
+                    d="M15 4v8.6a3.5 3.5 0 1 1-2.3-3.3V7.1c0-.5.3-.9.8-1l4.2-1v2.4l-2.7.6v2.1c1 .9 2.2 1.6 3.6 1.8V9.6c-1.5-.2-2.7-.8-3.6-1.7V4h-2z"
                     fill="none"
-                    stroke="currentColor"
+                    stroke="url(#socialGradientTikTok)"
                     strokeWidth="1.6"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                  />
-                  <path
-                    d="M14 6.2c.9 1.2 2.1 1.9 3.6 2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
                   />
                 </svg>
               </a>
