@@ -155,7 +155,7 @@ export default function ProjectsIndexClient() {
         </div>
       </div>
 
-      {/* Header (match home/about/contact spacing) */}
+      {/* Header (match home spacing) */}
       <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
         <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
           <div className="justify-self-start">

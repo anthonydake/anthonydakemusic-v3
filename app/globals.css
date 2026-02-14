@@ -124,6 +124,12 @@ svg * {
   -webkit-text-fill-color: currentColor !important;
 }
 
+.bg-black\/10 {
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+
 @keyframes scrollFlash {
   0%, 60% { opacity: 0.2; }
   50% { opacity: 1; }
