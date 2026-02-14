@@ -120,12 +120,28 @@ export default function AboutPageClient() {
                   </linearGradient>
                 </defs>
                 <path
-                  d="M15 4v8.6a3.5 3.5 0 1 1-2.3-3.3V7.1c0-.5.3-.9.8-1l4.2-1v2.4l-2.7.6v2.1c1 .9 2.2 1.6 3.6 1.8V9.6c-1.5-.2-2.7-.8-3.6-1.7V4h-2z"
+                  d="M12.3 5.1v7.7l-1.6 1"
                   fill="none"
                   stroke="url(#socialGradientTikTok)"
-                  strokeWidth="1.6"
+                  strokeWidth="1.7"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                />
+                <path
+                  d="M12.3 6.2c1.1 1.5 2.6 2.3 4.6 2.5"
+                  fill="none"
+                  stroke="url(#socialGradientTikTok)"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <circle
+                  cx="9.6"
+                  cy="16"
+                  r="2.9"
+                  fill="none"
+                  stroke="url(#socialGradientTikTok)"
+                  strokeWidth="1.7"
                 />
               </svg>
             </a>
