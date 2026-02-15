@@ -100,24 +100,4 @@ export const performanceIndex: PerformanceItem[] = [
     ],
     photoUrls: ["/performance/vhs-live-cincinnati-2026/01.jpg", "/performance/vhs-live-cincinnati-2026/02.JPG", "/performance/vhs-live-cincinnati-2026/03.JPG"],
   },
-  {
-    slug: "template-2",
-    title: "SHOW TITLE",
-    primaryArtist: "PRIMARY ARTIST",
-    dateDisplay: "Mar 2022",
-    venue: "Bluestone",
-    city: "Columbus",
-    state: "OH",
-    roles: ["Drums", "Playback"],
-    responsibilities: [
-      "Kept the show tight with clean cues and consistent tempo maps.",
-      "Supported the artist with steady dynamics and punchy transitions.",
-      "Managed quick changeovers while keeping playback stable.",
-    ],
-    photoUrls: [
-      "/projects/template/Missin U.jpg",
-      "/projects/template/Missin U.jpg",
-      "/projects/template/Missin U.jpg",
-    ],
-  },
 ];
