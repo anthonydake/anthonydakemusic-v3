@@ -18,6 +18,20 @@ export type PerformanceItem = {
 
 export const performanceIndex: PerformanceItem[] = [
   {
+    slug: "main-street-music-festival-2022-05-10",
+    title: "Main Street Music Festival",
+    primaryArtist: "KJ The Cool Nerd",
+    dateDisplay: "May 10 2022",
+    venue: "Yochum Hall, 2315 E. Mound St.",
+    city: "Columbus",
+    state: "OH",
+    roles: ["Drums"],
+    artistUrl: "https://youtube.com/@kjthecoolnerd614?si=45vbhjhTGCZ1TQ1E",
+    heroVideoUrl: "https://www.youtube.com/watch?v=3LGtry8famg&t=135s",
+    responsibilities: ["Drums"],
+    photoUrls: ["/performance/main-street-music-festival-2022-05-10/01.jpg"],
+  },
+  {
     slug: "whitehall-food-truck-festival-2025-07-26",
     title: "Whitehall Food Truck Festival",
     primaryArtist: "KJ The Cool Nerd & WANYEH",
