@@ -12,7 +12,7 @@ export default function HomeMark({ className }: HomeMarkProps) {
           <stop offset="100%" stopColor="#FFFFFF" />
         </linearGradient>
       </defs>
-      <g transform="translate(-0.4 0)">
+      <g transform="translate(-0.6 0)">
         <rect
           x="5.6"
           y="4.2"
