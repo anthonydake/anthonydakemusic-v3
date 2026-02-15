@@ -12,38 +12,40 @@ export default function HomeMark({ className }: HomeMarkProps) {
           <stop offset="100%" stopColor="#FFFFFF" />
         </linearGradient>
       </defs>
-      <rect
-        x="5.6"
-        y="4.2"
-        width="4.8"
-        height="15.6"
-        rx="1.4"
-        ry="1.4"
-        fill="none"
-        stroke="url(#homeMarkGradient)"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M12.2 7.2h5.6"
-        fill="none"
-        stroke="url(#homeMarkGradient)"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12.2 12h7"
-        fill="none"
-        stroke="url(#homeMarkGradient)"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12.2 16.8h4"
-        fill="none"
-        stroke="url(#homeMarkGradient)"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
+      <g transform="translate(-0.4 0)">
+        <rect
+          x="5.6"
+          y="4.2"
+          width="4.8"
+          height="15.6"
+          rx="1.4"
+          ry="1.4"
+          fill="none"
+          stroke="url(#homeMarkGradient)"
+          strokeWidth="1.6"
+        />
+        <path
+          d="M12.2 7.2h5.6"
+          fill="none"
+          stroke="url(#homeMarkGradient)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+        <path
+          d="M12.2 12h7"
+          fill="none"
+          stroke="url(#homeMarkGradient)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+        <path
+          d="M12.2 16.8h4"
+          fill="none"
+          stroke="url(#homeMarkGradient)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+      </g>
     </svg>
   );
 }
