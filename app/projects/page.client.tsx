@@ -115,8 +115,9 @@ export default function ProjectsIndexClient() {
   const frameStyle = useMemo(() => {
     return {
       // Tuned to match the reference "index table" proportions without introducing new fonts.
-      ["--col1"]: "clamp(220px, 18vw, 300px)",
-      ["--col2"]: "clamp(260px, 28vw, 520px)",
+      ["--col1"]: "clamp(110px, 10vw, 150px)",
+      ["--col2"]: "clamp(170px, 16vw, 260px)",
+      ["--col3"]: "clamp(180px, 20vw, 300px)",
       ["--preview"]: "clamp(390px, 27vw, 690px)",
       ["--preview-bleed"]: "calc((100vw - min(1600px, 100vw) + 2 * var(--page-pad)) / 2)",
     } as React.CSSProperties;
@@ -150,6 +151,7 @@ export default function ProjectsIndexClient() {
           <div className="relative h-full" style={frameStyle}>
             <div className="absolute inset-y-0 left-[var(--col1)] w-px bg-black/10" />
             <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2))] w-px bg-black/10" />
+            <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2)+var(--col3))] w-px bg-black/10" />
             {hoverCapable && <div className="absolute inset-y-0 left-[calc(100%-var(--preview))] w-px bg-black/10" />}
           </div>
         </div>
@@ -250,32 +252,34 @@ function YearGroups({
           <div key={year} className="space-y-2">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-black/10" />
-              <div className="text-[10px] uppercase tracking-[0.28em] text-black/50">YYYY</div>
+              <div className="text-[10px] uppercase tracking-[0.28em] text-black/50">{year}</div>
             </div>
 
-            <div className="space-y-0.5">
+            <div className="space-y-0">
               {yearVisible.map((p) => (
                 <Link
                   key={p.id}
                   href={`/projects/${p.slug}`}
-                  className="projects-row projects-row-enter group block py-1 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-6 lg:py-0 lg:pr-10"
+                  className="projects-row projects-row-enter group block py-1 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-5 lg:py-0"
                   onMouseEnter={() => onRowHover(p.id)}
                 >
-                  <div className="min-w-0 flex flex-col gap-0.5 leading-none lg:grid lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_minmax(0,1fr)] lg:items-baseline lg:gap-x-8">
-                    {/* Line 1 (mobile): date + artist | Column 1 (desktop) */}
-                    <div className="flex min-w-0 items-baseline gap-2 text-[9px] uppercase tracking-[0.22em]">
-                      <span className="tabular-nums shrink-0">MM/DD/YYYY</span>
-                      <span className="projects-row-muted truncate text-black/55">ARTIST</span>
+                  <div className="min-w-0 grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-4 leading-none lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_var(--col3)_minmax(0,1fr)] lg:items-center lg:gap-x-8">
+                    {/* Column 1: date */}
+                    <div className="tabular-nums text-[9px] uppercase tracking-[0.2em]">{p.date}</div>
+
+                    {/* Column 2: artist */}
+                    <div className="projects-row-muted truncate text-[9px] uppercase tracking-[0.2em] text-black/55">
+                      {p.artist}
                     </div>
 
-                    {/* Line 2 (mobile): title | Column 3 (desktop) */}
-                    <div className="order-2 truncate text-[9px] uppercase tracking-[0.22em] lg:order-none lg:col-start-3">
-                      <span className="truncate">PROJECT</span>
+                    {/* Column 3: roles (desktop only) */}
+                    <div className="projects-row-muted hidden truncate text-[9px] uppercase tracking-[0.2em] text-black/55 lg:block">
+                      {p.workTags.join(" / ")}
                     </div>
 
-                    {/* Line 3 (mobile): work tags | Column 2 (desktop) */}
-                    <div className="projects-row-muted projects-row-italic order-3 truncate text-[9px] tracking-[0.22em] italic lg:order-none lg:col-start-2 lg:not-italic">
-                      <span className="truncate">ROLE</span>
+                    {/* Column 4: title (desktop only) */}
+                    <div className="hidden truncate text-[9px] uppercase tracking-[0.2em] lg:block">
+                      <span className="truncate">{p.title}</span>
                     </div>
                   </div>
                 </Link>

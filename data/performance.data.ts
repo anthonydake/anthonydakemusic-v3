@@ -27,6 +27,7 @@ export const performanceIndex: PerformanceItem[] = [
     roles: ["Drums", "Playback"],
     artistUrl: "https://youtube.com/@valerielighthart723?si=zmoSJTS9P9QLlgT-",
     heroVideoUrl: "https://youtu.be/B2GC9OtUeaU",
+    photoUrls: ["/performance/valerie-lighthart-spacebar-2026-01-29/01.jpg"],
   },
   {
     slug: "vhs-live-cincinnati-2026",

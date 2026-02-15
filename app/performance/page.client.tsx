@@ -295,9 +295,6 @@ function YearGroups({
                       {/* Column 4: title (desktop only) */}
                       <div className="hidden truncate text-[9px] uppercase tracking-[0.2em] lg:block">
                         <span className="truncate">{p.title}</span>
-                        {p.heroVideoUrl ? (
-                          <span className="ml-2 text-[8px] uppercase tracking-[0.22em] text-black/50">Video</span>
-                        ) : null}
                       </div>
                     </div>
                   </Link>
