@@ -26,9 +26,9 @@ export default function Page() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
   const items = [...performanceIndex].map((p) => ({
     "@type": "CreativeWork",
-    name: `${p.artist} — ${p.title}`,
+    name: `${p.primaryArtist} — ${p.title}`,
     url: `${siteUrl}/performance/${p.slug}`,
-    datePublished: `${p.year}-01-01`,
+    datePublished: p.dateDisplay,
   }));
 
   return (

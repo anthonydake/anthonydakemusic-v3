@@ -4,7 +4,7 @@ import "../projects/projects-index.css";
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { performanceIndex, type ProjectIndexItem, type ProjectPreview } from "@/data/performance.data";
+import { performanceIndex, type PerformanceItem } from "@/data/performance.data";
 import ColumbusTime from "@/app/components/ColumbusTime";
 import HomeMark from "@/app/components/HomeMark";
 
@@ -13,26 +13,42 @@ type MediaQueryListLegacy = MediaQueryList & {
   removeListener?: (listener: (event: MediaQueryListEvent) => void) => void;
 };
 
-function parseSortKeyMMDDYYYY(date: string) {
-  // "MM/DD/YYYY" -> YYYYMMDD (number)
-  const m = Number(date.slice(0, 2));
-  const d = Number(date.slice(3, 5));
-  const y = Number(date.slice(6, 10));
-  if (!Number.isFinite(m) || !Number.isFinite(d) || !Number.isFinite(y)) return 0;
-  return y * 10000 + m * 100 + d;
+type PerformancePreview = { type: "image"; src: string };
+
+function parseSortKey(dateDisplay: string) {
+  const parsed = Date.parse(dateDisplay);
+  if (!Number.isNaN(parsed)) return parsed;
+  const yearMatch = dateDisplay.match(/\b(19|20)\d{2}\b/);
+  if (yearMatch) return Number(yearMatch[0]) * 10000;
+  return 0;
 }
 
-function samePreview(a: ProjectPreview | null, b: ProjectPreview | null) {
+function extractYear(dateDisplay: string) {
+  const yearMatch = dateDisplay.match(/\b(19|20)\d{2}\b/);
+  return yearMatch ? Number(yearMatch[0]) : 0;
+}
+
+function samePreview(a: PerformancePreview | null, b: PerformancePreview | null) {
   if (!a || !b) return false;
-  if (a.type !== b.type) return false;
-  if (a.src !== b.src) return false;
-  if (a.type === "video" && b.type === "video") return a.poster === b.poster;
-  return true;
+  return a.type === b.type && a.src === b.src;
+}
+
+function getPreview(item: PerformanceItem): PerformancePreview | null {
+  const src = item.photoUrls?.[0];
+  return src ? { type: "image", src } : null;
+}
+
+function formatLocationLine(item: PerformanceItem) {
+  const parts: string[] = [];
+  if (item.venue) parts.push(item.venue);
+  const cityState = [item.city, item.state].filter(Boolean).join(", ");
+  if (cityState) parts.push(cityState);
+  return parts.join(" • ");
 }
 
 export default function PerformanceIndexClient() {
   const items = useMemo(() => {
-    return [...performanceIndex].sort((a, b) => parseSortKeyMMDDYYYY(b.date) - parseSortKeyMMDDYYYY(a.date));
+    return [...performanceIndex].sort((a, b) => parseSortKey(b.dateDisplay) - parseSortKey(a.dateDisplay));
   }, []);
 
   const [revealCount, setRevealCount] = useState(0);
@@ -40,16 +56,20 @@ export default function PerformanceIndexClient() {
     if (typeof window === "undefined" || !("matchMedia" in window)) return false;
     return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   });
-  const [previewCurrent, setPreviewCurrent] = useState<ProjectPreview | null>(
-    () => items.find((p) => p.preview)?.preview ?? null
-  );
-  const [previewNext, setPreviewNext] = useState<ProjectPreview | null>(null);
+  const [previewCurrent, setPreviewCurrent] = useState<PerformancePreview | null>(() => {
+    for (const item of items) {
+      const preview = getPreview(item);
+      if (preview) return preview;
+    }
+    return null;
+  });
+  const [previewNext, setPreviewNext] = useState<PerformancePreview | null>(null);
   const [previewNextVisible, setPreviewNextVisible] = useState(false);
   const previewCommitRef = useRef<number | null>(null);
 
-  const revealIndexById = useMemo(() => {
+  const revealIndexBySlug = useMemo(() => {
     const map = new Map<string, number>();
-    items.forEach((p, idx) => map.set(p.id, idx));
+    items.forEach((p, idx) => map.set(p.slug, idx));
     return map;
   }, [items]);
 
@@ -104,7 +124,6 @@ export default function PerformanceIndexClient() {
     };
   }, []);
 
-
   useEffect(() => {
     return () => {
       if (previewCommitRef.current) window.clearTimeout(previewCommitRef.current);
@@ -122,7 +141,7 @@ export default function PerformanceIndexClient() {
     } as React.CSSProperties;
   }, []);
 
-  const queuePreview = (next: ProjectPreview | null) => {
+  const queuePreview = (next: PerformancePreview | null) => {
     if (!next) return;
     if (samePreview(previewCurrent, next)) return;
     if (previewCommitRef.current) window.clearTimeout(previewCommitRef.current);
@@ -193,17 +212,17 @@ export default function PerformanceIndexClient() {
             <YearGroups
               items={items}
               revealCount={revealCount}
-              revealIndexById={revealIndexById}
-              onRowHover={(id) => {
+              revealIndexBySlug={revealIndexBySlug}
+              onRowHover={(slug) => {
                 if (!hoverCapable) return;
-                const item = items.find((p) => p.id === id);
-                queuePreview(item?.preview ?? null);
+                const item = items.find((p) => p.slug === slug);
+                queuePreview(item ? getPreview(item) : null);
               }}
             />
           </section>
 
           {/* Desktop sticky preview (no preview on touch / hover:none) */}
-          {hoverCapable && (
+          {hoverCapable && previewCurrent && (
             <aside
               className="hidden lg:flex lg:items-center lg:justify-end lg:mr-[calc(-1*var(--preview-bleed))]"
               aria-label="Performance preview"
@@ -229,57 +248,73 @@ export default function PerformanceIndexClient() {
 function YearGroups({
   items,
   revealCount,
-  revealIndexById,
+  revealIndexBySlug,
   onRowHover,
 }: {
-  items: ProjectIndexItem[];
+  items: PerformanceItem[];
   revealCount: number;
-  revealIndexById: Map<string, number>;
-  onRowHover: (id: string) => void;
+  revealIndexBySlug: Map<string, number>;
+  onRowHover: (slug: string) => void;
 }) {
-  const years = Array.from(new Set(items.map((p) => p.year))).sort((a, b) => b - a);
+  const years = Array.from(new Set(items.map((p) => extractYear(p.dateDisplay)).filter((y) => y > 0))).sort(
+    (a, b) => b - a
+  );
 
   return (
     <div className="space-y-5">
       {years.map((year) => {
-        const yearItems = items.filter((p) => p.year === year);
-        const yearVisible = yearItems.filter((p) => (revealIndexById.get(p.id) ?? Number.POSITIVE_INFINITY) < revealCount);
+        const yearItems = items.filter((p) => extractYear(p.dateDisplay) === year);
+        const yearVisible = yearItems.filter((p) => (revealIndexBySlug.get(p.slug) ?? Number.POSITIVE_INFINITY) < revealCount);
         if (yearVisible.length === 0) return null;
 
         return (
           <div key={year} className="space-y-2">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-black/10" />
-              <div className="text-[10px] uppercase tracking-[0.28em] text-black/50">YYYY</div>
+              <div className="text-[10px] uppercase tracking-[0.28em] text-black/50">{year}</div>
             </div>
 
             <div className="space-y-0.5">
-              {yearVisible.map((p) => (
-                <Link
-                  key={p.id}
-                  href={`/performance/${p.slug}`}
-                  className="projects-row projects-row-enter group block py-1 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-6 lg:py-0 lg:pr-10"
-                  onMouseEnter={() => onRowHover(p.id)}
-                >
-                  <div className="min-w-0 flex flex-col gap-0.5 leading-none lg:grid lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_minmax(0,1fr)] lg:items-baseline lg:gap-x-8">
-                    {/* Line 1 (mobile): date + artist | Column 1 (desktop) */}
-                    <div className="flex min-w-0 items-baseline gap-2 text-[9px] uppercase tracking-[0.22em]">
-                      <span className="tabular-nums shrink-0">MM/DD/YYYY</span>
-                      <span className="projects-row-muted truncate text-black/55">ARTIST</span>
-                    </div>
+              {yearVisible.map((p) => {
+                const locationLine = formatLocationLine(p);
+                const rolesLine = p.roles.join(" / ");
+                return (
+                  <Link
+                    key={p.slug}
+                    href={`/performance/${p.slug}`}
+                    className="projects-row projects-row-enter group block py-1 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-6 lg:py-0 lg:pr-10"
+                    onMouseEnter={() => onRowHover(p.slug)}
+                  >
+                    <div className="min-w-0 flex flex-col gap-0.5 leading-none lg:grid lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_minmax(0,1fr)] lg:items-baseline lg:gap-x-8">
+                      {/* Line 1 (mobile): date + artist | Column 1 (desktop) */}
+                      <div className="flex min-w-0 flex-col gap-0.5">
+                        <div className="flex min-w-0 items-baseline gap-2 text-[9px] uppercase tracking-[0.22em]">
+                          <span className="tabular-nums shrink-0">{p.dateDisplay}</span>
+                          <span className="projects-row-muted truncate text-black/55">{p.primaryArtist}</span>
+                        </div>
+                        {locationLine ? (
+                          <div className="projects-row-muted truncate text-[8px] uppercase tracking-[0.22em] text-black/45">
+                            {locationLine}
+                          </div>
+                        ) : null}
+                      </div>
 
-                    {/* Line 2 (mobile): title | Column 3 (desktop) */}
-                    <div className="order-2 truncate text-[9px] uppercase tracking-[0.22em] lg:order-none lg:col-start-3">
-                      <span className="truncate">SHOW</span>
-                    </div>
+                      {/* Line 2 (mobile): title | Column 3 (desktop) */}
+                      <div className="order-2 truncate text-[9px] uppercase tracking-[0.22em] lg:order-none lg:col-start-3">
+                        <span className="truncate">{p.title}</span>
+                        {p.heroVideoUrl ? (
+                          <span className="ml-2 text-[8px] uppercase tracking-[0.24em] text-black/50">Video</span>
+                        ) : null}
+                      </div>
 
-                    {/* Line 3 (mobile): work tags | Column 2 (desktop) */}
-                    <div className="projects-row-muted projects-row-italic order-3 truncate text-[9px] tracking-[0.22em] italic lg:order-none lg:col-start-2 lg:not-italic">
-                      <span className="truncate">ROLE</span>
+                      {/* Line 3 (mobile): roles | Column 2 (desktop) */}
+                      <div className="projects-row-muted projects-row-italic order-3 truncate text-[9px] tracking-[0.22em] italic lg:order-none lg:col-start-2 lg:not-italic">
+                        <span className="truncate">{rolesLine}</span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         );
@@ -294,8 +329,8 @@ function PreviewPanel({
   nextVisible,
   onNextReady,
 }: {
-  current: ProjectPreview | null;
-  next: ProjectPreview | null;
+  current: PerformancePreview;
+  next: PerformancePreview | null;
   nextVisible: boolean;
   onNextReady: () => void;
 }) {
@@ -303,7 +338,7 @@ function PreviewPanel({
     <div className="w-full">
       {/* Cinematic Frame */}
       <div className="relative w-full aspect-[16/9] overflow-hidden">
-        {current ? <PreviewMedia preview={current} /> : null}
+        <PreviewMedia preview={current} />
 
         {next && (
           <div
@@ -322,23 +357,13 @@ function PreviewPanel({
   );
 }
 
-function PreviewMedia({ preview, onReady }: { preview: ProjectPreview; onReady?: () => void }) {
-  if (preview.type === "video") {
-    return (
-      <video
-        className="h-full w-full object-cover"
-        src={preview.src}
-        poster={preview.poster}
-        muted
-        loop
-        playsInline
-        autoPlay
-        onCanPlay={() => onReady?.()}
-      />
-    );
-  }
-
+function PreviewMedia({ preview, onReady }: { preview: PerformancePreview; onReady?: () => void }) {
   return (
-    <img src={preview.src} alt="" className="h-full w-full object-cover" onLoad={() => onReady?.()} />
+    <img
+      className="h-full w-full object-cover"
+      src={preview.src}
+      alt="Performance preview"
+      onLoad={() => onReady?.()}
+    />
   );
 }

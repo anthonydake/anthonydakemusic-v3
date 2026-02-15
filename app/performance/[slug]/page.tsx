@@ -10,9 +10,11 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const item = performanceIndex.find((p) => p.slug === slug);
-  const title = item ? `${item.artist} — ${item.title}` : "Performance";
-  const description = item ? `Performance detail for ${item.artist} — ${item.title}.` : "Performance detail.";
-  const image = item?.preview?.type === "image" ? item.preview.src : "/hero.jpg";
+  const title = item ? item.title : "Performance";
+  const description = item
+    ? `${item.primaryArtist} — ${item.title}. Roles: ${item.roles.join(" / ")}.`
+    : "Performance detail.";
+  const image = item?.photoUrls?.[0] ?? "/hero.jpg";
 
   return {
     title,
@@ -45,9 +47,9 @@ export default async function Page({ params }: PageProps) {
         "@type": "CreativeWork",
         "@id": `${siteUrl}/performance/${item.slug}#creativework`,
         name: item.title,
-        description: `Performance detail for ${item.artist} — ${item.title}.`,
+        description: `${item.primaryArtist} — ${item.title}. Roles: ${item.roles.join(" / ")}.`,
         url: `${siteUrl}/performance/${item.slug}`,
-        datePublished: `${item.year}-01-01`,
+        datePublished: `${item.dateDisplay}`,
         creator: { "@id": `${siteUrl}/#person` },
       }
     : null;
