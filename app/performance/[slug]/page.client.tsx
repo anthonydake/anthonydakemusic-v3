@@ -220,8 +220,15 @@ export default function PerformanceDetailClient() {
               <h1 className="text-balance text-[clamp(16px,2.6vw,28px)] font-medium uppercase leading-[1.05] tracking-[0.02em] text-black">
                 {performance.title}
               </h1>
-              <div className="text-[clamp(10px,1.4vw,14px)] uppercase tracking-[0.18em] text-black/70">
-                {performance.primaryArtist}
+              <div className="flex items-center justify-center">
+                <a
+                  className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
+                  href="https://youtube.com/@kjthecoolnerd614?si=45vbhjhTGCZ1TQ1E"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {performance.primaryArtist}
+                </a>
               </div>
               {performance.venue || locationLine ? (
                 <div className="flex items-center justify-center">
@@ -246,7 +253,7 @@ export default function PerformanceDetailClient() {
           <section aria-label="Show content" className="grid min-h-0 gap-6">
             <div className="flex min-h-0 flex-col">
               {embedUrl ? (
-                <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/[0.04]">
+                <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/[0.04]">
                   <iframe
                     className="h-full w-full"
                     src={embedUrl}
@@ -256,7 +263,7 @@ export default function PerformanceDetailClient() {
                   />
                 </div>
               ) : (
-                <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-black/10 bg-white px-4 py-4 text-center text-[9px] uppercase tracking-[0.28em] text-black/55">
+                <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/10 bg-white px-4 py-4 text-center text-[9px] uppercase tracking-[0.28em] text-black/55">
                   <div className="flex h-full w-full items-center justify-center">
                     <div>
                       Video available on request.{" "}
@@ -270,14 +277,7 @@ export default function PerformanceDetailClient() {
             </div>
           </section>
 
-          <div className="flex justify-center">
-            <Link
-              href={contactHref}
-              className="inline-flex h-10 items-center justify-center rounded-full bg-black px-6 text-[10px] uppercase tracking-[0.28em] text-white transition hover:-translate-y-0.5 hover:shadow-lg"
-            >
-              Book / Contact
-            </Link>
-          </div>
+          <div className="h-2" aria-hidden="true" />
         </div>
       </main>
 
