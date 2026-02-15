@@ -180,8 +180,6 @@ export default function PerformanceDetailClient() {
   }
 
   const locationLine = formatLocation(performance);
-  const photosAll = (performance.photoUrls ?? []).filter(Boolean);
-  const detailPhotos = photosAll.length > 1 ? photosAll.slice(1, 3) : photosAll;
   const embedUrl = performance.heroVideoUrl ? getEmbedUrl(performance.heroVideoUrl) : null;
   const cityState = [performance.city, performance.state].filter(Boolean).join(", ");
 
@@ -225,27 +223,30 @@ export default function PerformanceDetailClient() {
               <div className="text-[clamp(10px,1.4vw,14px)] uppercase tracking-[0.18em] text-black/70">
                 {performance.primaryArtist}
               </div>
-              {performance.venue ? (
-                <div className="text-[9px] uppercase tracking-[0.22em] text-black/55">
+              {performance.venue || locationLine ? (
+                <div className="flex items-center justify-center">
                   {mapHref ? (
-                    <a className="transition hover:text-black" href={mapHref} target="_blank" rel="noreferrer">
-                      {performance.venue}
+                    <a
+                      className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[9px] uppercase tracking-[0.22em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
+                      href={mapHref}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <span>{performance.venue ?? locationLine}</span>
+                      {cityState && performance.venue ? <span className="text-black/45">• {cityState}</span> : null}
                     </a>
                   ) : (
-                    performance.venue
+                    <div className="text-[9px] uppercase tracking-[0.22em] text-black/55">{locationLine}</div>
                   )}
-                  {cityState ? <span className="text-black/45">{" • "}{cityState}</span> : null}
                 </div>
-              ) : locationLine ? (
-                <div className="text-[9px] uppercase tracking-[0.22em] text-black/55">{locationLine}</div>
               ) : null}
             </div>
           </section>
 
-          <section aria-label="Show content" className="grid min-h-0 gap-6 lg:grid-cols-2 lg:gap-8">
+          <section aria-label="Show content" className="grid min-h-0 gap-6">
             <div className="flex min-h-0 flex-col">
               {embedUrl ? (
-                <div className="aspect-[5/4] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/[0.04]">
+                <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/[0.04]">
                   <iframe
                     className="h-full w-full"
                     src={embedUrl}
@@ -255,7 +256,7 @@ export default function PerformanceDetailClient() {
                   />
                 </div>
               ) : (
-                <div className="aspect-[5/4] w-full overflow-hidden rounded-2xl border border-black/10 bg-white px-4 py-4 text-center text-[9px] uppercase tracking-[0.28em] text-black/55">
+                <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-black/10 bg-white px-4 py-4 text-center text-[9px] uppercase tracking-[0.28em] text-black/55">
                   <div className="flex h-full w-full items-center justify-center">
                     <div>
                       Video available on request.{" "}
@@ -266,25 +267,6 @@ export default function PerformanceDetailClient() {
                   </div>
                 </div>
               )}
-            </div>
-
-            <div className="flex min-h-0 flex-col">
-              {detailPhotos.length > 0 ? (
-                <div className="aspect-[5/4] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/[0.04]">
-                  <div className="flex h-full w-full items-end justify-center gap-4 px-4 py-4">
-                    {detailPhotos[0] ? (
-                      <div className="h-full aspect-[9/16] overflow-hidden rounded-2xl border border-black/10 bg-black/[0.04]">
-                        <img className="h-full w-full object-cover" src={detailPhotos[0]} alt={performance.title} />
-                      </div>
-                    ) : null}
-                    {detailPhotos[1] ? (
-                      <div className="aspect-[9/16] h-[70%] overflow-hidden rounded-2xl border border-black/10 bg-black/[0.04]">
-                        <img className="h-full w-full object-cover" src={detailPhotos[1]} alt={performance.title} />
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              ) : null}
             </div>
           </section>
 

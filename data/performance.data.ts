@@ -25,7 +25,7 @@ export const performanceIndex: PerformanceItem[] = [
     state: "OH",
     roles: ["Drums", "Playback"],
     subtitle: "Drums + playback for KJ The Cool Nerd — opening set at Fuel Lounge OTR.",
-    heroVideoUrl: "https://www.youtube.com/watch?v=Om7g2U6bd8Q&t=1500",
+    heroVideoUrl: "https://www.youtube.com/watch?v=Om7g2U6bd8Q&t=744",
     responsibilities: [
       "Ran playback while performing drums, maintaining tight transitions and consistent tempo.",
       "Prepared and organized playback sessions for reliable live execution.",
