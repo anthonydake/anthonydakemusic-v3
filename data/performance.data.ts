@@ -9,6 +9,7 @@ export type PerformanceItem = {
   roles: string[];
   subtitle?: string;
   artistUrl?: string;
+  artistLinks?: { label: string; url: string }[];
   heroVideoUrl?: string;
   responsibilities?: string[];
   listenLinks?: { label: string; url: string }[];
@@ -16,6 +17,29 @@ export type PerformanceItem = {
 };
 
 export const performanceIndex: PerformanceItem[] = [
+  {
+    slug: "whitehall-food-truck-festival-2025-07-26",
+    title: "Whitehall Food Truck Festival",
+    primaryArtist: "KJ The Cool Nerd & WANYEH",
+    dateDisplay: "Jul 26 2025",
+    venue: "John Bishop Park, 4815 Etna Rd.",
+    city: "Whitehall",
+    state: "OH",
+    roles: ["Drums"],
+    artistLinks: [
+      {
+        label: "KJ The Cool Nerd",
+        url: "https://youtube.com/@kjthecoolnerd614?si=45vbhjhTGCZ1TQ1E",
+      },
+      {
+        label: "WANYEH",
+        url: "https://www.instagram.com/wanyeh_003/",
+      },
+    ],
+    heroVideoUrl: "https://www.youtube.com/watch?v=lhji4B7krzU&t=1321s",
+    responsibilities: ["Drums"],
+    photoUrls: ["/performance/whitehall-food-truck-festival-2025-07-26/01.png"],
+  },
   {
     slug: "valerie-lighthart-spacebar-2026-01-29",
     title: "Live at The Spacebar",

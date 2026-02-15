@@ -221,7 +221,21 @@ export default function PerformanceDetailClient() {
                 {performance.title}
               </h1>
               <div className="flex items-center justify-center">
-                {performance.artistUrl ? (
+                {performance.artistLinks?.length ? (
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    {performance.artistLinks.map((link) => (
+                      <a
+                        key={link.url}
+                        className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
+                        href={link.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : performance.artistUrl ? (
                   <a
                     className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
                     href={performance.artistUrl}
