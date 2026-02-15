@@ -93,6 +93,7 @@ function getEmbedUrl(url: string) {
 
 export default function PerformanceDetailClient() {
   const [currentSlug, setCurrentSlug] = useState<string | null>(null);
+  const [mapHref, setMapHref] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -162,15 +163,18 @@ export default function PerformanceDetailClient() {
   const detailPhotos = photosAll.length > 1 ? photosAll.slice(1, 3) : photosAll;
   const embedUrl = performance.heroVideoUrl ? getEmbedUrl(performance.heroVideoUrl) : null;
   const cityState = [performance.city, performance.state].filter(Boolean).join(", ");
-  const mapHref = useMemo(() => {
+
+  useEffect(() => {
     const query = [performance.venue, performance.city, performance.state].filter(Boolean).join(", ");
-    if (!query) return null;
+    if (!query) {
+      setMapHref(null);
+      return;
+    }
     const encoded = encodeURIComponent(query);
     const apple = `https://maps.apple.com/?q=${encoded}`;
     const google = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
-    if (typeof navigator === "undefined") return google;
     const isApple = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
-    return isApple ? apple : google;
+    setMapHref(isApple ? apple : google);
   }, [performance.venue, performance.city, performance.state]);
 
   return (
