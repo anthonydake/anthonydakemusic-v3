@@ -221,14 +221,20 @@ export default function PerformanceDetailClient() {
                 {performance.title}
               </h1>
               <div className="flex items-center justify-center">
-                <a
-                  className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
-                  href="https://youtube.com/@kjthecoolnerd614?si=45vbhjhTGCZ1TQ1E"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {performance.primaryArtist}
-                </a>
+                {performance.artistUrl ? (
+                  <a
+                    className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
+                    href={performance.artistUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {performance.primaryArtist}
+                  </a>
+                ) : (
+                  <div className="text-[clamp(10px,1.4vw,14px)] uppercase tracking-[0.18em] text-black/70">
+                    {performance.primaryArtist}
+                  </div>
+                )}
               </div>
               {performance.venue || locationLine ? (
                 <div className="flex items-center justify-center">

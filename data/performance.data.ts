@@ -8,6 +8,7 @@ export type PerformanceItem = {
   state?: string;
   roles: string[];
   subtitle?: string;
+  artistUrl?: string;
   heroVideoUrl?: string;
   responsibilities?: string[];
   listenLinks?: { label: string; url: string }[];
@@ -15,6 +16,18 @@ export type PerformanceItem = {
 };
 
 export const performanceIndex: PerformanceItem[] = [
+  {
+    slug: "valerie-lighthart-spacebar-2026-01-29",
+    title: "Live at The Spacebar",
+    primaryArtist: "Valerie Lighthart",
+    dateDisplay: "Jan 29 2026",
+    venue: "The Spacebar",
+    city: "Columbus",
+    state: "OH",
+    roles: ["Drums", "Playback"],
+    artistUrl: "https://youtube.com/@valerielighthart723?si=zmoSJTS9P9QLlgT-",
+    heroVideoUrl: "https://youtu.be/B2GC9OtUeaU",
+  },
   {
     slug: "vhs-live-cincinnati-2026",
     title: "VHS Live — Cincinnati",
@@ -24,7 +37,7 @@ export const performanceIndex: PerformanceItem[] = [
     city: "Cincinnati",
     state: "OH",
     roles: ["Drums", "Playback"],
-    subtitle: "Drums + playback for KJ The Cool Nerd — opening set at Fuel Lounge OTR.",
+    artistUrl: "https://youtube.com/@kjthecoolnerd614?si=45vbhjhTGCZ1TQ1E",
     heroVideoUrl: "https://www.youtube.com/watch?v=Om7g2U6bd8Q&t=744",
     responsibilities: [
       "Ran playback while performing drums, maintaining tight transitions and consistent tempo.",
@@ -32,11 +45,7 @@ export const performanceIndex: PerformanceItem[] = [
       "Rehearsed and locked arrangements with the artist to translate the record accurately to the stage.",
       "Coordinated setup and soundcheck efficiently for a smooth changeover.",
     ],
-    photoUrls: [
-      "/performance/vhs-live-cincinnati-2026/01.jpg",
-      "/performance/vhs-live-cincinnati-2026/02.JPG",
-      "/performance/vhs-live-cincinnati-2026/03.JPG",
-    ],
+    photoUrls: ["/performance/vhs-live-cincinnati-2026/01.jpg", "/performance/vhs-live-cincinnati-2026/02.JPG", "/performance/vhs-live-cincinnati-2026/03.JPG"],
   },
   {
     slug: "template-2",
