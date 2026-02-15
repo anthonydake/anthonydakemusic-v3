@@ -1,26 +1,61 @@
-import type { ProjectIndexItem } from "./projects.data";
+export type PerformanceItem = {
+  slug: string;
+  title: string;
+  primaryArtist: string;
+  dateDisplay: string;
+  venue?: string;
+  city?: string;
+  state?: string;
+  roles: string[];
+  subtitle?: string;
+  heroVideoUrl?: string;
+  responsibilities?: string[];
+  listenLinks?: { label: string; url: string }[];
+  photoUrls?: string[];
+};
 
-export type { ProjectIndexItem, ProjectPreview } from "./projects.data";
-
-export const performanceIndex: ProjectIndexItem[] = [
+export const performanceIndex: PerformanceItem[] = [
   {
-    id: "P01",
-    date: "02/25/2022",
-    year: 2022,
-    artist: "KJ The Cool Nerd, AR!YAH",
-    workTags: ["PRODUCTION/SONGWRITING"],
-    title: "CLASS LOSER",
-    slug: "template",
-    preview: { type: "image", src: "/projects/template/Missin U.jpg" },
+    slug: "vhs-live-cincinnati-2026",
+    title: "VHS Live — Cincinnati",
+    primaryArtist: "KJ The Cool Nerd",
+    dateDisplay: "Feb 12 2026",
+    venue: "Fuel Lounge OTR",
+    city: "Cincinnati",
+    state: "OH",
+    roles: ["Drums", "Playback"],
+    subtitle: "Drums + playback for KJ The Cool Nerd — opening set at Fuel Lounge OTR.",
+    heroVideoUrl: "https://www.youtube.com/watch?v=Om7g2U6bd8Q&t=1500",
+    responsibilities: [
+      "Ran playback while performing drums, maintaining tight transitions and consistent tempo.",
+      "Prepared and organized playback sessions for reliable live execution.",
+      "Rehearsed and locked arrangements with the artist to translate the record accurately to the stage.",
+      "Coordinated setup and soundcheck efficiently for a smooth changeover.",
+    ],
+    photoUrls: [
+      "/performance/vhs-live-cincinnati-2026/01.jpg",
+      "/performance/vhs-live-cincinnati-2026/02.JPG",
+      "/performance/vhs-live-cincinnati-2026/03.JPG",
+    ],
   },
   {
-    id: "P02",
-    date: "02/25/2022",
-    year: 2022,
-    artist: "KJ The Cool Nerd, AR!YAH",
-    workTags: ["PRODUCTION/SONGWRITING"],
-    title: "CLASS LOSER",
     slug: "template-2",
-    preview: { type: "image", src: "/projects/template/Missin U.jpg" },
+    title: "SHOW TITLE",
+    primaryArtist: "PRIMARY ARTIST",
+    dateDisplay: "Mar 2022",
+    venue: "Bluestone",
+    city: "Columbus",
+    state: "OH",
+    roles: ["Drums", "Playback"],
+    responsibilities: [
+      "Kept the show tight with clean cues and consistent tempo maps.",
+      "Supported the artist with steady dynamics and punchy transitions.",
+      "Managed quick changeovers while keeping playback stable.",
+    ],
+    photoUrls: [
+      "/projects/template/Missin U.jpg",
+      "/projects/template/Missin U.jpg",
+      "/projects/template/Missin U.jpg",
+    ],
   },
 ];
