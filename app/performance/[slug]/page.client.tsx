@@ -217,7 +217,7 @@ export default function PerformanceDetailClient() {
           <section aria-label="Show hero" className="w-full border-y border-black/10 bg-white px-6 py-5 text-center sm:py-6">
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-2">
               <div className="text-[9px] uppercase tracking-[0.28em] text-black/50">{performance.dateDisplay}</div>
-              <h1 className="text-balance text-[clamp(16px,2.6vw,28px)] font-medium uppercase leading-[1.05] tracking-[0.02em] text-black">
+              <h1 className="text-balance text-[clamp(14px,2.2vw,24px)] font-medium uppercase leading-[1.05] tracking-[0.02em] text-black">
                 {performance.title}
               </h1>
               <div className="flex items-center justify-center">
