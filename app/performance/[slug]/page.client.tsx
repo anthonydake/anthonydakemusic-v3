@@ -110,6 +110,27 @@ export default function PerformanceDetailClient() {
   const nextPerformance =
     currentIndex >= 0 && currentIndex < performanceIndex.length - 1 ? performanceIndex[currentIndex + 1] : null;
 
+  const venue = performance?.venue;
+  const city = performance?.city;
+  const state = performance?.state;
+
+  useEffect(() => {
+    if (!performance) {
+      setMapHref(null);
+      return;
+    }
+    const query = [venue, city, state].filter(Boolean).join(", ");
+    if (!query) {
+      setMapHref(null);
+      return;
+    }
+    const encoded = encodeURIComponent(query);
+    const apple = `https://maps.apple.com/?q=${encoded}`;
+    const google = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
+    const isApple = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
+    setMapHref(isApple ? apple : google);
+  }, [performance, venue, city, state]);
+
   if (!performance) {
     return (
       <div className="relative min-h-screen bg-white text-black">
@@ -163,27 +184,6 @@ export default function PerformanceDetailClient() {
   const detailPhotos = photosAll.length > 1 ? photosAll.slice(1, 3) : photosAll;
   const embedUrl = performance.heroVideoUrl ? getEmbedUrl(performance.heroVideoUrl) : null;
   const cityState = [performance.city, performance.state].filter(Boolean).join(", ");
-
-  const venue = performance?.venue;
-  const city = performance?.city;
-  const state = performance?.state;
-
-  useEffect(() => {
-    if (!performance) {
-      setMapHref(null);
-      return;
-    }
-    const query = [venue, city, state].filter(Boolean).join(", ");
-    if (!query) {
-      setMapHref(null);
-      return;
-    }
-    const encoded = encodeURIComponent(query);
-    const apple = `https://maps.apple.com/?q=${encoded}`;
-    const google = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
-    const isApple = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
-    setMapHref(isApple ? apple : google);
-  }, [performance, venue, city, state]);
 
   return (
     <div className="relative min-h-screen bg-white text-black">
