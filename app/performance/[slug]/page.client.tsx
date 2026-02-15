@@ -164,8 +164,16 @@ export default function PerformanceDetailClient() {
   const embedUrl = performance.heroVideoUrl ? getEmbedUrl(performance.heroVideoUrl) : null;
   const cityState = [performance.city, performance.state].filter(Boolean).join(", ");
 
+  const venue = performance?.venue;
+  const city = performance?.city;
+  const state = performance?.state;
+
   useEffect(() => {
-    const query = [performance.venue, performance.city, performance.state].filter(Boolean).join(", ");
+    if (!performance) {
+      setMapHref(null);
+      return;
+    }
+    const query = [venue, city, state].filter(Boolean).join(", ");
     if (!query) {
       setMapHref(null);
       return;
@@ -175,7 +183,7 @@ export default function PerformanceDetailClient() {
     const google = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
     const isApple = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
     setMapHref(isApple ? apple : google);
-  }, [performance.venue, performance.city, performance.state]);
+  }, [performance, venue, city, state]);
 
   return (
     <div className="relative min-h-screen bg-white text-black">
