@@ -19,7 +19,7 @@ export type PerformanceItem = {
 export const performanceIndex: PerformanceItem[] = [
   {
     slug: "bobby-floyd-trio-anthony-dake-sits-in-2022-06-26",
-    title: "Bobby Floyd Trio | Anthony Dake Sits In",
+    title: "Bobby Floyd Trio | Natalie's Grandview",
     primaryArtist: "Bobby Floyd Trio",
     dateDisplay: "Jun 26 2022",
     venue: "Natalie's Grandview, 945 King Ave",
