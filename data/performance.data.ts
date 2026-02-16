@@ -18,6 +18,20 @@ export type PerformanceItem = {
 
 export const performanceIndex: PerformanceItem[] = [
   {
+    slug: "bobby-floyd-trio-anthony-dake-sits-in-2022-06-26",
+    title: "Bobby Floyd Trio | Anthony Dake Sits In",
+    primaryArtist: "Bobby Floyd Trio",
+    dateDisplay: "Jun 26 2022",
+    venue: "Natalie's Grandview, 945 King Ave",
+    city: "Columbus",
+    state: "OH",
+    roles: ["Drums"],
+    artistUrl: "https://www.jazzartsgroup.org/hire-a-band/artist-directory/bobby-floyd/",
+    heroVideoUrl: "https://www.youtube.com/watch?v=5H5tw_vdkg4&t=272s",
+    responsibilities: ["Drums"],
+    photoUrls: ["/performance/bobby-floyd-trio-anthony-dake-sits-in-2022-06-26/01.png"],
+  },
+  {
     slug: "duality-2022-10-08",
     title: "D . U . A . L . I . T . Y .",
     primaryArtist: "Anthony Dake",
