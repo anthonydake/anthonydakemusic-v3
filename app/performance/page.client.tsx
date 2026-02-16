@@ -327,7 +327,7 @@ function PreviewPanel({
   current: PerformancePreview;
   next: PerformancePreview | null;
   nextVisible: boolean;
-  onNextReady: () => void;
+  onNextReady: (src: string) => void;
 }) {
   return (
     <div className="w-full">
@@ -341,7 +341,7 @@ function PreviewPanel({
               nextVisible ? "opacity-100" : "opacity-0"
             }`}
           >
-            <PreviewMedia preview={next} onReady={onNextReady} />
+            <PreviewMedia preview={next} onReady={() => onNextReady(next.src)} />
           </div>
         )}
       </div>
