@@ -272,6 +272,26 @@ export default function ProjectsIndexClient() {
         </div>
       )}
       <style jsx global>{`
+        @media (min-width: 1920px) {
+          .projects-index-frame {
+            --frame-max: 2000px;
+            --col1: clamp(150px, 12vw, 220px);
+            --col2: clamp(220px, 18vw, 340px);
+            --col3: clamp(240px, 20vw, 380px);
+            --preview: clamp(520px, 32vw, 820px);
+          }
+        }
+
+        @media (min-width: 2400px) {
+          .projects-index-frame {
+            --frame-max: 2400px;
+            --col1: clamp(180px, 12vw, 260px);
+            --col2: clamp(260px, 18vw, 420px);
+            --col3: clamp(300px, 20vw, 460px);
+            --preview: clamp(620px, 32vw, 980px);
+          }
+        }
+
         @keyframes homeScrollPulse {
           0% {
             opacity: 0;
@@ -293,27 +313,6 @@ export default function ProjectsIndexClient() {
         }
       `}</style>
     </div>
-    <style jsx global>{`
-      @media (min-width: 1920px) {
-        .projects-index-frame {
-          --frame-max: 2000px;
-          --col1: clamp(150px, 12vw, 220px);
-          --col2: clamp(220px, 18vw, 340px);
-          --col3: clamp(240px, 20vw, 380px);
-          --preview: clamp(520px, 32vw, 820px);
-        }
-      }
-
-      @media (min-width: 2400px) {
-        .projects-index-frame {
-          --frame-max: 2400px;
-          --col1: clamp(180px, 12vw, 260px);
-          --col2: clamp(260px, 18vw, 420px);
-          --col3: clamp(300px, 20vw, 460px);
-          --preview: clamp(620px, 32vw, 980px);
-        }
-      }
-    `}</style>
   );
 }
 
