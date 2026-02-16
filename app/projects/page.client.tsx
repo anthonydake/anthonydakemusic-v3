@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { projectIndex, type ProjectIndexItem, type ProjectPreview } from "@/data/projects.data";
 import ColumbusTime from "@/app/components/ColumbusTime";
 import HomeMark from "@/app/components/HomeMark";
+import { useTransition } from "@/app/components/TransitionProvider";
 
 type MediaQueryListLegacy = MediaQueryList & {
   addListener?: (listener: (event: MediaQueryListEvent) => void) => void;
@@ -31,6 +32,7 @@ function samePreview(a: ProjectPreview | null, b: ProjectPreview | null) {
 }
 
 export default function ProjectsIndexClient() {
+  const { triggerTransition, isTransitioning, isMobileFallback } = useTransition();
   const items = useMemo(() => {
     return [...projectIndex].sort((a, b) => parseSortKeyMMDDYYYY(b.date) - parseSortKeyMMDDYYYY(a.date));
   }, []);
@@ -46,6 +48,9 @@ export default function ProjectsIndexClient() {
   const [previewNext, setPreviewNext] = useState<ProjectPreview | null>(null);
   const [previewNextVisible, setPreviewNextVisible] = useState(false);
   const previewCommitRef = useRef<number | null>(null);
+  const accumRef = useRef(0);
+  const triggeredRef = useRef(false);
+  const lastWheelRef = useRef<number | null>(null);
 
   const revealIndexById = useMemo(() => {
     const map = new Map<string, number>();
@@ -103,6 +108,40 @@ export default function ProjectsIndexClient() {
       style.overflow = prev;
     };
   }, []);
+
+  useEffect(() => {
+    if (isMobileFallback) return;
+    if (isTransitioning) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (triggeredRef.current) return;
+      e.preventDefault();
+      const now = performance.now();
+      const delta = e.deltaY;
+      const minDelta = 35;
+      const triggerThreshold = 140;
+      const windowMs = 220;
+      if (Math.abs(delta) < minDelta) return;
+      if (delta <= 0) {
+        accumRef.current = 0;
+        lastWheelRef.current = null;
+        return;
+      }
+      if (lastWheelRef.current === null || now - lastWheelRef.current > windowMs) {
+        accumRef.current = 0;
+      }
+      lastWheelRef.current = now;
+      accumRef.current += delta;
+      if (accumRef.current >= triggerThreshold) {
+        triggeredRef.current = true;
+        window.removeEventListener("wheel", handleWheel);
+        triggerTransition("/performance");
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [isMobileFallback, isTransitioning, triggerTransition]);
 
 
   useEffect(() => {
@@ -224,6 +263,35 @@ export default function ProjectsIndexClient() {
           )}
         </div>
       </main>
+
+      {!isMobileFallback && (
+        <div className="pointer-events-none fixed inset-x-0 bottom-[12px] z-[20] flex justify-center">
+          <span className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-black" style={{ opacity: 0.35 }}>
+            (scroll)
+          </span>
+        </div>
+      )}
+      <style jsx global>{`
+        @keyframes homeScrollPulse {
+          0% {
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+        .home-scroll-indicator {
+          animation: homeScrollPulse 2s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .home-scroll-indicator {
+            animation: none;
+          }
+        }
+      `}</style>
     </div>
   );
 }
