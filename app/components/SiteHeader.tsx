@@ -7,10 +7,10 @@ import HomeMark from "./HomeMark";
 export default function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
-      <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
+      <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[13.75px] uppercase tracking-[0.28em] text-black/65">
         <div className="justify-self-start">
           <span>Columbus, (OH)</span>
-          <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
+          <span className="mx-2 inline-block align-middle text-[17.5px] font-semibold leading-none">•</span>
           <ColumbusTime />
         </div>
         <Link

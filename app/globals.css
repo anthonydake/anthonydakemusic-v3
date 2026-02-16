@@ -3,6 +3,7 @@
 /* Global reset-ish */
 html,
 body {
+  font-size: 125%;
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;

@@ -158,11 +158,11 @@ export default function HomeClient({
               visible.hero ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
             ].join(" ")}
           >
-            <div className="mb-5 text-center text-[12px] uppercase tracking-[0.26em] text-black/60 sm:text-[13px]" />
+            <div className="mb-5 text-center text-[15px] uppercase tracking-[0.26em] text-black/60 sm:text-[16.25px]" />
             <Link href="/" aria-label="Go to Home">
               <LogoArchitectOfSound />
             </Link>
-            <div className="mt-3 text-center text-[11px] uppercase tracking-[0.24em] text-black/55">
+            <div className="mt-3 text-center text-[13.75px] uppercase tracking-[0.24em] text-black/55">
               Producer • Drummer • Music Director
             </div>
             <div className="mt-4 flex items-center justify-center gap-8">

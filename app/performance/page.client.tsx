@@ -170,10 +170,10 @@ export default function PerformanceIndexClient() {
 
       {/* Header (match home spacing) */}
       <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
-        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
+        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[13.75px] uppercase tracking-[0.28em] text-black/65">
           <div className="justify-self-start">
             <span>Columbus, (OH)</span>
-            <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
+            <span className="mx-2 inline-block align-middle text-[17.5px] font-semibold leading-none">•</span>
             <ColumbusTime />
           </div>
 
@@ -265,7 +265,7 @@ function YearGroups({
           <div key={year} className="space-y-2">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-black/10" />
-              <div className="text-[10px] uppercase tracking-[0.28em] text-black/50">{year}</div>
+              <div className="text-[12.5px] uppercase tracking-[0.28em] text-black/50">{year}</div>
             </div>
 
             <div className="space-y-0">
@@ -280,20 +280,20 @@ function YearGroups({
                   >
                     <div className="min-w-0 grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-4 leading-none lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_var(--col3)_minmax(0,1fr)] lg:items-center lg:gap-x-8">
                       {/* Column 1: date */}
-                      <div className="tabular-nums text-[9px] uppercase tracking-[0.2em]">{p.dateDisplay}</div>
+                      <div className="tabular-nums text-[11.25px] uppercase tracking-[0.2em]">{p.dateDisplay}</div>
 
                       {/* Column 2: artist */}
-                      <div className="projects-row-muted truncate text-[9px] uppercase tracking-[0.2em] text-black/55">
+                      <div className="projects-row-muted truncate text-[11.25px] uppercase tracking-[0.2em] text-black/55">
                         {p.primaryArtist}
                       </div>
 
                       {/* Column 3: roles (desktop only) */}
-                      <div className="projects-row-muted hidden truncate text-[9px] uppercase tracking-[0.2em] text-black/55 lg:block">
+                      <div className="projects-row-muted hidden truncate text-[11.25px] uppercase tracking-[0.2em] text-black/55 lg:block">
                         {rolesLine}
                       </div>
 
                       {/* Column 4: title (desktop only) */}
-                      <div className="hidden truncate text-[9px] uppercase tracking-[0.2em] lg:block">
+                      <div className="hidden truncate text-[11.25px] uppercase tracking-[0.2em] lg:block">
                         <span className="truncate">{p.title}</span>
                       </div>
                     </div>
