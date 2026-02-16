@@ -156,7 +156,7 @@ export default function HomeClient({
         <button
           type="button"
           aria-label="Easter egg"
-          className="group absolute right-[12%] top-[22%] flex h-10 w-10 items-center justify-center rounded-md border border-black/10 bg-white/80 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40"
+          className="group absolute right-[12%] top-[22%] flex h-10 w-10 items-center justify-center rounded-md bg-white/80 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40"
           onMouseEnter={() => setShowEasterEgg(true)}
           onMouseLeave={() => setShowEasterEgg(false)}
           onFocus={() => setShowEasterEgg(true)}
@@ -165,7 +165,7 @@ export default function HomeClient({
         >
           <svg
             viewBox="0 0 64 64"
-            className="h-6 w-6 transition group-hover:scale-[1.05]"
+            className="h-[18px] w-[18px] rotate-90 transition group-hover:scale-[1.05]"
             aria-hidden="true"
           >
             <defs>
@@ -175,9 +175,8 @@ export default function HomeClient({
                 <stop offset="100%" stopColor="#FFFFFF" />
               </linearGradient>
             </defs>
-            <rect x="8" y="8" width="48" height="48" fill="none" stroke="url(#crosshairGradient)" strokeWidth="2" />
-            <path d="M32 12v12M32 40v12M12 32h12M40 32h12" stroke="url(#crosshairGradient)" strokeWidth="2" />
-            <path d="M22 22l20 20M42 22L22 42" stroke="url(#crosshairGradient)" strokeWidth="2" />
+            <rect x="10" y="10" width="44" height="44" fill="none" stroke="url(#crosshairGradient)" strokeWidth="2" />
+            <path d="M32 16v8M32 40v8M16 32h8M40 32h8" stroke="url(#crosshairGradient)" strokeWidth="2" />
           </svg>
         </button>
         <div className="-translate-y-[60px]">
