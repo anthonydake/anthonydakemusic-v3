@@ -10,10 +10,15 @@ const contactHref = "mailto:adakemusic@gmail.com";
 
 function formatLocation(item: PerformanceItem) {
   const parts: string[] = [];
-  if (item.venue) parts.push(item.venue);
+  if (item.venue) parts.push(formatVenueLabel(item.venue));
   const cityState = [item.city, item.state].filter(Boolean).join(", ");
   if (cityState) parts.push(cityState);
   return parts.join(" • ");
+}
+
+function formatVenueLabel(venue: string) {
+  const [label] = venue.split(",");
+  return label.trim();
 }
 
 function getYouTubeId(url: string) {
@@ -180,6 +185,7 @@ export default function PerformanceDetailClient() {
   }
 
   const locationLine = formatLocation(performance);
+  const venueLabel = performance.venue ? formatVenueLabel(performance.venue) : null;
   const embedUrl = performance.heroVideoUrl ? getEmbedUrl(performance.heroVideoUrl) : null;
   const embedIsImage = embedUrl ? /\.(gif|png|jpe?g|webp)(\?.*)?$/i.test(embedUrl) : false;
   const cityState = [performance.city, performance.state].filter(Boolean).join(", ");
@@ -260,8 +266,8 @@ export default function PerformanceDetailClient() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <span>{performance.venue ?? locationLine}</span>
-                      {cityState && performance.venue ? <span className="text-black/45">• {cityState}</span> : null}
+                      <span>{venueLabel ?? locationLine}</span>
+                      {cityState && venueLabel ? <span className="text-black/45">• {cityState}</span> : null}
                     </a>
                   ) : (
                     <div className="text-[9px] uppercase tracking-[0.22em] text-black/55">{locationLine}</div>
