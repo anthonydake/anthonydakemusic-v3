@@ -140,10 +140,10 @@ export default function PerformanceDetailClient() {
     return (
       <div className="relative min-h-screen bg-white text-black">
         <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
-          <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[13.75px] uppercase tracking-[0.28em] text-black/65">
+          <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
             <div className="justify-self-start">
               <span>Columbus, (OH)</span>
-              <span className="mx-2 inline-block align-middle text-[17.5px] font-semibold leading-none">•</span>
+              <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
               <ColumbusTime />
             </div>
 
@@ -167,14 +167,14 @@ export default function PerformanceDetailClient() {
 
         <main className="relative z-[10] mx-auto max-w-5xl px-6 pb-24 pt-24 text-center sm:px-8 lg:px-10 xl:px-12">
           <div className="space-y-6">
-            <div className="text-[12.5px] uppercase tracking-[0.28em] text-black/45">Performance</div>
-            <h1 className="text-balance text-[clamp(30px,3.4vw,57.5px)] font-medium uppercase tracking-[0.02em] text-black">
+            <div className="text-[10px] uppercase tracking-[0.28em] text-black/45">Performance</div>
+            <h1 className="text-balance text-[clamp(24px,3.4vw,46px)] font-medium uppercase tracking-[0.02em] text-black">
               Performance Unavailable
             </h1>
             <p className="text-sm text-black/60">This performance detail isn&apos;t live yet.</p>
             <Link
               href={contactHref}
-              className="inline-flex h-11 items-center justify-center rounded-full bg-black px-6 text-[13.75px] uppercase tracking-[0.28em] text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+              className="inline-flex h-11 items-center justify-center rounded-full bg-black px-6 text-[11px] uppercase tracking-[0.28em] text-white transition hover:-translate-y-0.5 hover:shadow-lg"
             >
               Book / Contact
             </Link>
@@ -194,10 +194,10 @@ export default function PerformanceDetailClient() {
     <div className="relative min-h-screen bg-white text-black">
       {/* Header (match home) */}
       <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
-        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[13.75px] uppercase tracking-[0.28em] text-black/65">
+        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
           <div className="justify-self-start">
             <span>Columbus, (OH)</span>
-            <span className="mx-2 inline-block align-middle text-[17.5px] font-semibold leading-none">•</span>
+            <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
             <ColumbusTime />
           </div>
 
@@ -223,8 +223,8 @@ export default function PerformanceDetailClient() {
         <div className="grid h-full grid-rows-[auto_minmax(0,1fr)_auto] gap-6 lg:gap-8">
           <section aria-label="Show hero" className="w-full border-y border-black/10 bg-white px-6 py-5 text-center sm:py-6">
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-2">
-              <div className="text-[11.25px] uppercase tracking-[0.28em] text-black/50">{performance.dateDisplay}</div>
-              <h1 className="text-balance text-[clamp(17.5px,2.2vw,30px)] font-medium uppercase leading-[1.05] tracking-[0.02em] text-black">
+              <div className="text-[9px] uppercase tracking-[0.28em] text-black/50">{performance.dateDisplay}</div>
+              <h1 className="text-balance text-[clamp(14px,2.2vw,24px)] font-medium uppercase leading-[1.05] tracking-[0.02em] text-black">
                 {performance.title}
               </h1>
               <div className="flex items-center justify-center">
@@ -233,7 +233,7 @@ export default function PerformanceDetailClient() {
                     {performance.artistLinks.map((link) => (
                       <a
                         key={link.url}
-                        className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[12.5px] uppercase tracking-[0.24em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
+                        className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
                         href={link.url}
                         target="_blank"
                         rel="noreferrer"
@@ -244,7 +244,7 @@ export default function PerformanceDetailClient() {
                   </div>
                 ) : performance.artistUrl ? (
                   <a
-                    className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[12.5px] uppercase tracking-[0.24em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
                     href={performance.artistUrl}
                     target="_blank"
                     rel="noreferrer"
@@ -252,7 +252,7 @@ export default function PerformanceDetailClient() {
                     {performance.primaryArtist}
                   </a>
                 ) : (
-                  <div className="text-[clamp(12.5px,1.4vw,17.5px)] uppercase tracking-[0.18em] text-black/70">
+                  <div className="text-[clamp(10px,1.4vw,14px)] uppercase tracking-[0.18em] text-black/70">
                     {performance.primaryArtist}
                   </div>
                 )}
@@ -261,7 +261,7 @@ export default function PerformanceDetailClient() {
                 <div className="flex items-center justify-center">
                   {mapHref ? (
                     <a
-                      className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[11.25px] uppercase tracking-[0.22em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
+                      className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-[9px] uppercase tracking-[0.22em] text-black/70 transition hover:-translate-y-0.5 hover:shadow-md"
                       href={mapHref}
                       target="_blank"
                       rel="noreferrer"
@@ -270,7 +270,7 @@ export default function PerformanceDetailClient() {
                       {cityState && venueLabel ? <span className="text-black/45">• {cityState}</span> : null}
                     </a>
                   ) : (
-                    <div className="text-[11.25px] uppercase tracking-[0.22em] text-black/55">{locationLine}</div>
+                    <div className="text-[9px] uppercase tracking-[0.22em] text-black/55">{locationLine}</div>
                   )}
                 </div>
               ) : null}
@@ -298,7 +298,7 @@ export default function PerformanceDetailClient() {
                   )}
                 </div>
               ) : (
-                <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/10 bg-white px-4 py-4 text-center text-[11.25px] uppercase tracking-[0.28em] text-black/55">
+                <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/10 bg-white px-4 py-4 text-center text-[9px] uppercase tracking-[0.28em] text-black/55">
                   <div className="flex h-full w-full items-center justify-center">
                     <div>
                       Video available on request.{" "}
@@ -317,7 +317,7 @@ export default function PerformanceDetailClient() {
       </main>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-6 z-[5]">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-[11.25px] uppercase tracking-[0.28em] text-black/50 sm:px-8 lg:px-10 xl:px-12">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-[9px] uppercase tracking-[0.28em] text-black/50 sm:px-8 lg:px-10 xl:px-12">
           {prevPerformance ? (
             <Link className="pointer-events-auto hover:text-black" href={`/performance/${prevPerformance.slug}`}>
               ← Previous Performance

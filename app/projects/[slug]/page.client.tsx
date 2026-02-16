@@ -27,10 +27,10 @@ export default function ProjectDetailClient() {
       <div className="relative min-h-screen bg-white text-black">
         {/* Header (match home) */}
         <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
-          <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[13.75px] uppercase tracking-[0.28em] text-black/65">
+          <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
             <div className="justify-self-start">
             <span>Columbus, (OH)</span>
-            <span className="mx-2 inline-block align-middle text-[17.5px] font-semibold leading-none">•</span>
+            <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
             <ColumbusTime />
           </div>
 
@@ -57,28 +57,28 @@ export default function ProjectDetailClient() {
             <section aria-label="Project hero" className="w-full translate-y-[3vh] border-y border-black/10 bg-white">
               <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center px-6 py-7 text-center sm:py-8">
                 <div className="space-y-6">
-                  <div className="text-[10px] uppercase tracking-[0.28em] text-black/35">YEAR</div>
-                  <h1 className="text-balance text-[clamp(25px,3vw,52.5px)] font-medium uppercase leading-[1] tracking-[0.02em] text-black">
+                  <div className="text-[8px] uppercase tracking-[0.28em] text-black/35">YEAR</div>
+                  <h1 className="text-balance text-[clamp(20px,3vw,42px)] font-medium uppercase leading-[1] tracking-[0.02em] text-black">
                     PROJECT TITLE
                   </h1>
-                  <div className="text-[clamp(12.5px,1.3vw,20px)] uppercase tracking-[0.18em] text-black/70">
+                  <div className="text-[clamp(10px,1.3vw,16px)] uppercase tracking-[0.18em] text-black/70">
                     {artistLabel}
                   </div>
-                  <div className="text-[10px] uppercase tracking-[0.28em] text-black/45">ROLE · ROLE · ROLE</div>
-                  <div className="text-[10px] uppercase tracking-[0.28em] text-black/40">{subtitleLabel}</div>
+                  <div className="text-[8px] uppercase tracking-[0.28em] text-black/45">ROLE · ROLE · ROLE</div>
+                  <div className="text-[8px] uppercase tracking-[0.28em] text-black/40">{subtitleLabel}</div>
                 </div>
               </div>
             </section>
 
             <section aria-label="Audio" className="w-full text-center">
               <div className="mx-auto w-full max-w-4xl space-y-6">
-                <h2 className="text-[11.25px] uppercase tracking-[0.28em] text-black/50">The Record</h2>
+                <h2 className="text-[9px] uppercase tracking-[0.28em] text-black/50">The Record</h2>
                 <div className="mx-auto w-full max-w-3xl bg-black/[0.04] p-5">
                   <div className="space-y-6">
                     {[0, 1].map((idx) => (
                       <div key={`streaming-${idx}`} className="border border-black/10 bg-white p-4">
-                        <div className="text-[12.5px] uppercase tracking-[0.24em] text-black/70">Streaming Service</div>
-                        <div className="mt-1.5 text-[12.5px] text-black/60">
+                        <div className="text-[10px] uppercase tracking-[0.24em] text-black/70">Streaming Service</div>
+                        <div className="mt-1.5 text-[10px] text-black/60">
                           <a className="hover:text-black" href="https://example.com" target="_blank" rel="noreferrer">
                             Open Link
                           </a>
@@ -93,7 +93,7 @@ export default function ProjectDetailClient() {
         </main>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-6 z-[5]">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-[11.25px] uppercase tracking-[0.28em] text-black/50 sm:px-8 lg:px-10 xl:px-12">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-[9px] uppercase tracking-[0.28em] text-black/50 sm:px-8 lg:px-10 xl:px-12">
             {prevProject ? (
               <Link className="pointer-events-auto hover:text-black" href={`/projects/${prevProject.slug}`}>
                 ← Previous Project
