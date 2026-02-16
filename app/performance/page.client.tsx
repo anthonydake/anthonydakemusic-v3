@@ -177,6 +177,7 @@ export default function PerformanceIndexClient() {
       ["--col3"]: "clamp(180px, 20vw, 300px)",
       ["--preview"]: "clamp(390px, 27vw, 690px)",
       ["--preview-bleed"]: "calc((100vw - min(1600px, 100vw) + 2 * var(--page-pad)) / 2)",
+      ["--frame-max"]: "1600px",
     } as React.CSSProperties;
   }, []);
 
@@ -209,11 +210,11 @@ export default function PerformanceIndexClient() {
   };
 
   return (
-    <div className="relative h-screen overflow-hidden bg-white text-black">
+    <div className="performance-index-frame relative h-screen overflow-hidden bg-white text-black" style={frameStyle}>
       {/* Vertical hairline gridlines (desktop only) */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
-        <div className="mx-auto h-full max-w-[1600px] px-6 sm:px-8 lg:px-10 xl:px-12">
-          <div className="relative h-full" style={frameStyle}>
+        <div className="mx-auto h-full max-w-[var(--frame-max)] px-6 sm:px-8 lg:px-10 xl:px-12 2xl:px-16">
+          <div className="relative h-full">
             <div className="absolute inset-y-0 left-[var(--col1)] w-px bg-black/10" />
             <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2))] w-px bg-black/10" />
             <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2)+var(--col3))] w-px bg-black/10" />
@@ -249,12 +250,11 @@ export default function PerformanceIndexClient() {
         </div>
       </div>
 
-      <main className="relative z-[10] mx-auto h-[calc(100svh-56px)] max-w-[1600px] overflow-hidden px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem]">
+      <main className="relative z-[10] mx-auto h-[calc(100svh-56px)] max-w-[var(--frame-max)] overflow-hidden px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem] 2xl:px-16 2xl:[--page-pad:4rem]">
         <div
           className={[
             hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
           ].join(" ")}
-          style={frameStyle}
         >
           <section aria-label="Performance index">
             <YearGroups
@@ -298,6 +298,26 @@ export default function PerformanceIndexClient() {
         </div>
       )}
       <style jsx global>{`
+        @media (min-width: 1920px) {
+          .performance-index-frame {
+            --frame-max: 2000px;
+            --col1: clamp(150px, 12vw, 220px);
+            --col2: clamp(220px, 18vw, 340px);
+            --col3: clamp(240px, 20vw, 380px);
+            --preview: clamp(520px, 32vw, 820px);
+          }
+        }
+
+        @media (min-width: 2400px) {
+          .performance-index-frame {
+            --frame-max: 2400px;
+            --col1: clamp(180px, 12vw, 260px);
+            --col2: clamp(260px, 18vw, 420px);
+            --col3: clamp(300px, 20vw, 460px);
+            --preview: clamp(620px, 32vw, 980px);
+          }
+        }
+
         @keyframes homeScrollPulse {
           0% {
             opacity: 0;
