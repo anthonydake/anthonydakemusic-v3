@@ -75,10 +75,10 @@ function HomeInner() {
   return (
     <>
       <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
-        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11px] uppercase tracking-[0.28em] text-black/65">
+        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11.6875px] uppercase tracking-[0.28em] text-black/65">
           <div className="justify-self-start">
             <span>Columbus, (OH)</span>
-            <span className="mx-2 inline-block align-middle text-[14px] font-semibold leading-none">•</span>
+            <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
             <ColumbusTime />
           </div>
           <Link
@@ -102,7 +102,7 @@ function HomeInner() {
       </div>
       <div className="pointer-events-none fixed inset-x-0 bottom-[12px] z-[20] flex justify-center">
         <span
-          className="home-scroll-indicator text-[11px] lowercase tracking-[0.28em] text-black"
+          className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-black"
           style={{ opacity: 0.35 }}
         >
           (scroll)
