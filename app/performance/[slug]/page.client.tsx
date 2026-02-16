@@ -181,6 +181,7 @@ export default function PerformanceDetailClient() {
 
   const locationLine = formatLocation(performance);
   const embedUrl = performance.heroVideoUrl ? getEmbedUrl(performance.heroVideoUrl) : null;
+  const embedIsImage = embedUrl ? /\.(gif|png|jpe?g|webp)(\?.*)?$/i.test(embedUrl) : false;
   const cityState = [performance.city, performance.state].filter(Boolean).join(", ");
 
   return (
@@ -274,13 +275,21 @@ export default function PerformanceDetailClient() {
             <div className="flex min-h-0 flex-col">
               {embedUrl ? (
                 <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/[0.04]">
-                  <iframe
-                    className="h-full w-full"
-                    src={embedUrl}
-                    title={`${performance.title} video`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
+                  {embedIsImage ? (
+                    <img
+                      className="h-full w-full object-cover"
+                      src={embedUrl}
+                      alt={`${performance.title} preview`}
+                    />
+                  ) : (
+                    <iframe
+                      className="h-full w-full"
+                      src={embedUrl}
+                      title={`${performance.title} video`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  )}
                 </div>
               ) : (
                 <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/10 bg-white px-4 py-4 text-center text-[9px] uppercase tracking-[0.28em] text-black/55">

@@ -18,6 +18,20 @@ export type PerformanceItem = {
 
 export const performanceIndex: PerformanceItem[] = [
   {
+    slug: "duality-2022-10-08",
+    title: "D . U . A . L . I . T . Y .",
+    primaryArtist: "Anthony Dake",
+    dateDisplay: "Oct 8 2022",
+    venue: "Mees Hall, 2199 E. Main St.",
+    city: "Columbus",
+    state: "OH",
+    roles: ["Drums", "Percussion", "MD"],
+    artistUrl: "https://youtube.com/@anthony_dake?si=JXmVpa0e1XbzeH9s",
+    heroVideoUrl: "/performance/duality-2022-10-08/pink-rhino.gif",
+    responsibilities: ["Drums", "Percussion", "MD"],
+    photoUrls: ["/performance/duality-2022-10-08/01.jpg"],
+  },
+  {
     slug: "main-street-music-festival-2022-05-10",
     title: "Main Street Music Festival",
     primaryArtist: "KJ The Cool Nerd",
