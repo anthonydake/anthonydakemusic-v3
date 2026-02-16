@@ -58,6 +58,8 @@ export default function PerformanceIndexClient() {
   const [previewNext, setPreviewNext] = useState<PerformancePreview | null>(null);
   const [previewNextVisible, setPreviewNextVisible] = useState(false);
   const previewCommitRef = useRef<number | null>(null);
+  const previewPendingSrcRef = useRef<string | null>(null);
+  const previewPreloadRef = useRef<HTMLImageElement | null>(null);
 
   const revealIndexBySlug = useMemo(() => {
     const map = new Map<string, number>();
@@ -140,11 +142,19 @@ export default function PerformanceIndexClient() {
     if (previewCommitRef.current) window.clearTimeout(previewCommitRef.current);
     setPreviewNextVisible(false);
     setPreviewNext(next);
+    previewPendingSrcRef.current = next.src;
+    const img = new Image();
+    previewPreloadRef.current = img;
+    img.onload = () => onNextReady(next.src);
+    img.onerror = () => onNextReady(next.src);
+    img.src = next.src;
   };
 
-  const onNextReady = () => {
+  const onNextReady = (src: string) => {
+    if (previewPendingSrcRef.current !== src) return;
     const commit = previewNext;
     if (!commit) return;
+    if (commit.src !== src) return;
     setPreviewNextVisible(true);
     if (previewCommitRef.current) window.clearTimeout(previewCommitRef.current);
     previewCommitRef.current = window.setTimeout(() => {
