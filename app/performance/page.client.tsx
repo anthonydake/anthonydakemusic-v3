@@ -19,6 +19,11 @@ type PerformancePreview = { type: "image"; src: string };
 function parseSortKey(dateDisplay: string) {
   const parsed = Date.parse(dateDisplay);
   if (!Number.isNaN(parsed)) return parsed;
+  const rangeMatch = dateDisplay.match(/([A-Za-z]{3,9}\s+\d{1,2}\s+\d{4})/);
+  if (rangeMatch) {
+    const rangeParsed = Date.parse(rangeMatch[1]);
+    if (!Number.isNaN(rangeParsed)) return rangeParsed;
+  }
   const yearMatch = dateDisplay.match(/\b(19|20)\d{2}\b/);
   if (yearMatch) return Number(yearMatch[0]) * 10000;
   return 0;
