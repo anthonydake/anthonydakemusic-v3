@@ -60,6 +60,18 @@ export const performanceIndex: PerformanceItem[] = [
     photoUrls: ["/performance/main-street-music-festival-2022-05-10/01.jpg"],
   },
   {
+    slug: "ccc-spring-concert-2023-04-23",
+    title: "CCC | Spring Concert",
+    primaryArtist: "Columbus Children's Choir",
+    dateDisplay: "Apr 23 2023",
+    venue: "Broad Street Congregational Church, 444 E. Broad Street",
+    city: "Columbus",
+    state: "OH",
+    roles: ["Percussion"],
+    heroVideoUrl: "https://youtu.be/4iqsBxyk5Kc",
+    photoUrls: ["/performance/ccc-spring-concert-2023-04-23/01.png"],
+  },
+  {
     slug: "rock-of-ages-short-north-stage-2022-07-21",
     title: "Rock of Ages",
     primaryArtist: "Short North Stage",
