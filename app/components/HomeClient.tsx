@@ -179,7 +179,7 @@ export default function HomeClient({
             <path d="M32 16v8M32 40v8M16 32h8M40 32h8" stroke="url(#crosshairGradient)" strokeWidth="2" />
           </svg>
         </button>
-        <div className="-translate-y-[60px]">
+        <div className="-translate-y-[90px]">
           <div
             className={[
               "select-none transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
