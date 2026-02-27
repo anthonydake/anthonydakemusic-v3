@@ -3,6 +3,62 @@ import type { Project } from "./projects";
 
 export const projects: Project[] = [
   {
+    "slug": "lazy-days",
+    "title": "Lazy Days",
+    "subtitle": "Track 1 | Finn and Jake",
+    "year": 2023,
+    "role": "Engineer",
+    "tags": [
+      "Bitty",
+      "Boom-bap",
+      "Hip-hop",
+      "KJ The Cool Nerd",
+      "Rap",
+      "Trap",
+      "WANYEH"
+    ],
+    "blurb": "The start of the Columbus sound — built around the energy of the University District shows at Juniors Bar & Grill.",
+    "tone": [
+      "#141516",
+      "#3b2c24"
+    ],
+    "deliverables": [
+      "Engineering"
+    ],
+    "credits": [
+      "Bitty — Artist",
+      "WANYEH — Artist",
+      "Anthony Dake — Engineer",
+      "KJ The Cool Nerd — Producer"
+    ],
+    "narrative": [
+      "Produced, tracked, mixed, and mastered on Ableton Live, inspired by classic hip-hop.",
+      "Captured the early momentum of the scene with a boom-bap foundation and live-show energy."
+    ],
+    "links": [
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/song/lazy-days/1720656018"
+      },
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/2c4QYczlcjVqyim1P8kw3s"
+      },
+      {
+        "label": "YouTube",
+        "href": "https://www.youtube.com/watch?v=9IDW7HOz1sc"
+      }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/small-business.jpg",
+        "alt": "Finn and Jake cover art",
+        "title": "Lazy Days"
+      }
+    ]
+  },
+  {
     "slug": "repercussions",
     "title": "Repercussions",
     "subtitle": "Single | Bitty",
