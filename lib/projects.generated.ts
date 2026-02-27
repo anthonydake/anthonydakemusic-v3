@@ -3,43 +3,81 @@ import type { Project } from "./projects";
 
 export const projects: Project[] = [
   {
-    "slug": "template",
-    "title": "Template Placement",
-    "subtitle": "Placeholder project description",
-    "year": 2026,
-    "role": "PRODUCTION/SONGWRITING",
+    "slug": "missin-u",
+    "title": "Missin U (feat. Riyah)",
+    "subtitle": "Track 9 | Class Loser",
+    "year": 2022,
+    "role": "Producer, Writer, Engineer, Mixing/Mastering Engineer",
     "tags": [
-      "Placeholder"
+      "Hip-hop",
+      "KJ The Cool Nerd",
+      "Neo-soul",
+      "R&B",
+      "Rap",
+      "Riyah"
     ],
-    "blurb": "Placeholder summary for a placement. Replace with real context, roles, and outcomes.",
+    "blurb": "One of the first tracks produced for KJ The Cool Nerd.",
     "tone": [
-      "#0f172a",
+      "#0b0b0b",
       "#1f2937"
     ],
     "deliverables": [
-      "Placeholder deliverable",
-      "Second deliverable"
+      "Full instrumental production",
+      "Drum programming",
+      "Arrangement",
+      "Final mix"
     ],
     "credits": [
-      "Artist: Placeholder",
-      "Role: Production/ Songwriting"
+      "KJ The Cool Nerd — Artist",
+      "Riyah — Artist",
+      "Anthony Dake — Production/Writing",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
     ],
     "narrative": [
-      "Placeholder narrative point about the scope and creative approach.",
-      "Placeholder narrative point about tools, timeline, and results."
+      "One of the sessions leading up to KJ The Cool Nerd’s album \"Class Loser\" (released February 24, 2022).",
+      "Inspired by YouTube beats and young energy, produced, mixed, and mastered in Pro Tools at Studio F, Capital University."
     ],
     "links": [
       {
-        "label": "Reference link",
-        "href": "https://example.com"
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/song/missin-u-feat-riyah/1607007135"
+      },
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/71yLH6PBReEAahASoGQnD5"
+      },
+      {
+        "label": "YouTube",
+        "href": "https://www.youtube.com/watch?v=Sqxoyx_LDYw"
       }
     ],
     "media": [
       {
         "kind": "image",
-        "src": "/placements/template/placeholder.jpg",
-        "alt": "Placeholder studio session",
-        "title": "Template Image"
+        "src": "/placements/missin-u.jpg",
+        "alt": "Studio session photo for Missin U",
+        "title": "Missin U session"
+      },
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/71yLH6PBReEAahASoGQnD5",
+        "title": "Spotify",
+        "height": 152
+      },
+      {
+        "kind": "audio",
+        "provider": "apple_music",
+        "url": "https://embed.music.apple.com/us/song/missin-u-feat-riyah/1607007135",
+        "title": "Apple Music",
+        "height": 175
+      },
+      {
+        "kind": "video",
+        "provider": "youtube",
+        "id": "Sqxoyx_LDYw",
+        "title": "YouTube"
       }
     ]
   }

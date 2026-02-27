@@ -27,12 +27,12 @@ export type ProjectIndexItem = {
 export const projectIndex: ProjectIndexItem[] = [
   {
     id: "P01",
-    date: "01/15/2026",
-    year: 2026,
-    artist: "Placeholder Artist",
-    workTags: ["PRODUCTION/SONGWRITING"],
-    title: "Template Placement",
-    slug: "template",
-    preview: { type: "image", src: "/placements/template/placeholder.jpg" },
+    date: "02/24/2022",
+    year: 2022,
+    artist: "KJ The Cool Nerd feat. Riyah",
+    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
+    title: "Missin U (feat. Riyah)",
+    slug: "missin-u",
+    preview: { type: "image", src: "/placements/missin-u.jpg" },
   },
 ];

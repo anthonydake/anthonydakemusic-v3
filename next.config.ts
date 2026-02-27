@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/projects/missin-u",
-        destination: "/placements/template",
+        destination: "/placements/missin-u",
         permanent: true,
       },
       {
