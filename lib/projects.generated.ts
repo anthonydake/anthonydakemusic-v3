@@ -117,6 +117,65 @@ export const projects: Project[] = [
     ]
   },
   {
+    "slug": "bring-me-more",
+    "title": "Bring Me More",
+    "subtitle": "Single | BittyOTW",
+    "year": 2024,
+    "role": "Producer, Songwriter, Mixing Engineer, Mastering Engineer",
+    "tags": [
+      "Banger",
+      "Bitty",
+      "BittyOTW",
+      "Detroit style rap",
+      "Rap",
+      "Synths"
+    ],
+    "blurb": "First of a couple singles with Bitty, cut across a few sessions at Otterbein University.",
+    "tone": [
+      "#101014",
+      "#2f2a3a"
+    ],
+    "deliverables": [
+      "Full instrumental production",
+      "Programming",
+      "Arrangement",
+      "Engineering",
+      "Final mix and master"
+    ],
+    "credits": [
+      "Bitty — Artist",
+      "Anthony Dake — Producer, Songwriter",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
+    ],
+    "narrative": [
+      "Produced, tracked, mixed, and mastered in Logic Pro X with Detroit-style energy.",
+      "BittyOTW and I kept it loose and fun in the studio to capture the bounce."
+    ],
+    "links": [
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/song/bring-me-more/1779621390"
+      },
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/2HvdOPUNTtj78tgSXV07N8"
+      },
+      {
+        "label": "YouTube",
+        "href": "https://www.youtube.com/watch?v=l_4vjdxqgDU"
+      }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/bring-me-more.jpg",
+        "alt": "Bring Me More cover art",
+        "title": "Bring Me More"
+      }
+    ]
+  },
+  {
     "slug": "cruisin",
     "title": "Cruisin",
     "subtitle": "Track 2 | Eight Track (Side A)",
