@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const adminCookie = cookieStore.get("archive_admin")?.value;
   if (!adminCookie) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
