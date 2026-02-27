@@ -3,6 +3,64 @@ import type { Project } from "./projects";
 
 export const projects: Project[] = [
   {
+    "slug": "bitts-and-pieces",
+    "title": "Bitts and Pieces",
+    "subtitle": "Track 1 | Bitts and Pieces",
+    "year": 2024,
+    "role": "Producer, Engineer, Mixing Engineer, Mastering Engineer",
+    "tags": [
+      "Bitty",
+      "Detroit",
+      "Hip-hop",
+      "Rap",
+      "Trap",
+      "WANYEH"
+    ],
+    "blurb": "Detroit-style club banger with heavy low-end and sharp drum programming.",
+    "tone": [
+      "#0f0f12",
+      "#3b2d2a"
+    ],
+    "deliverables": [
+      "Full instrumental production",
+      "Arrangement",
+      "Final mix and master"
+    ],
+    "credits": [
+      "Bitty — Artist",
+      "WANYEH — Artist",
+      "Anthony Dake — Producer/Engineer",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
+    ],
+    "narrative": [
+      "Produced, tracked, mixed, and mastered in Logic Pro X, inspired by Detroit-style beats.",
+      "Built for club systems with a punchy kick and a tight, forward vocal pocket."
+    ],
+    "links": [
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/song/bitts-and-pieces-feat-wanyeh/1745381882"
+      },
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/1IsudjdAu9xKZObUgRIR0R"
+      },
+      {
+        "label": "YouTube",
+        "href": "https://www.youtube.com/watch?v=c_5nM0kKoig"
+      }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/bitts-and-pieces.jpg",
+        "alt": "Bitts and Pieces cover art",
+        "title": "Bitts and Pieces"
+      }
+    ]
+  },
+  {
     "slug": "lazy-days",
     "title": "Lazy Days",
     "subtitle": "Track 1 | Finn and Jake",
