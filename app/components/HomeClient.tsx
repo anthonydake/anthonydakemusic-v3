@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import ArchiveModal from "./ArchiveModal";
+import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
   initialSection?: "hero" | "projects";
@@ -21,6 +22,7 @@ export default function HomeClient({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { isTransitioning } = useTransition();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -32,6 +34,8 @@ export default function HomeClient({
   const [activeId, setActiveId] = useState<"hero" | "projects">(initialSection);
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const [archiveModalOpen, setArchiveModalOpen] = useState(false);
+  const [pillReady, setPillReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const projectsRef = useRef<HTMLElement | null>(null);
   const easterClickRef = useRef<number[]>([]);
@@ -143,6 +147,11 @@ export default function HomeClient({
     };
   }, []);
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => setPillReady(true), 6000);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   const handleEasterEggClick = () => {
     const now = Date.now();
     const next = [...easterClickRef.current.filter((time) => now - time < 900), now];
@@ -160,7 +169,17 @@ export default function HomeClient({
       className="site-bg min-h-screen snap-y snap-mandatory overflow-y-hidden bg-white scrollbar-hide"
       style={{ scrollBehavior: "smooth" }}
     >
-      <ArchiveModal />
+      <ArchiveModal onOpenChange={setArchiveModalOpen} />
+      {pillReady && !archiveModalOpen && !isTransitioning ? (
+        <a
+          href="https://www.beatstars.com/anthonydake"
+          target="_blank"
+          rel="noreferrer"
+          className="archive-pill fixed bottom-6 right-6 z-[9990] inline-flex items-center justify-center rounded-full px-5 py-2 text-[12px] lowercase tracking-[0.2em]"
+        >
+          archive
+        </a>
+      ) : null}
       <section
         ref={heroRef}
         className="relative grid h-screen place-items-center snap-start bg-[#111113]"

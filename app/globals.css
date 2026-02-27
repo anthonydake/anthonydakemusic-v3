@@ -202,6 +202,24 @@ svg * {
   -webkit-text-fill-color: rgba(210, 210, 210, 0.6) !important;
 }
 
+.archive-pill {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(20, 20, 20, 0.18) !important;
+  color: #111111 !important;
+  -webkit-text-fill-color: #111111 !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.archive-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.25);
+  border-color: rgba(20, 20, 20, 0.28) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .archive-fade {
     animation: none;

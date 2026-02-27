@@ -6,7 +6,11 @@ const LAST_SHOWN_KEY = "archiveModalLastShownAt";
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 const SHOW_DELAY_MS = 18_000;
 
-export default function ArchiveModal() {
+type ArchiveModalProps = {
+  onOpenChange?: (isOpen: boolean) => void;
+};
+
+export default function ArchiveModal({ onOpenChange }: ArchiveModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -27,6 +31,10 @@ export default function ArchiveModal() {
 
     return () => window.clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    onOpenChange?.(isOpen);
+  }, [isOpen, onOpenChange]);
 
   useEffect(() => {
     if (!isOpen) return;
