@@ -5,7 +5,7 @@
     "subtitle": "Single | BittyOTW",
     "year": 2024,
     "role": "Producer, Songwriter, Mixing Engineer, Mastering Engineer",
-    "tags": ["Rap", "BittyOTW", "Bitty", "Synths", "Detroit style rap", "Banger"],
+    "tags": ["Rap", "Detroit", "BittyOTW", "Synths"],
     "blurb": "First of a couple singles with Bitty, cut across a few sessions at Otterbein University.",
     "tone": ["#101014", "#2f2a3a"],
     "deliverables": [
@@ -23,7 +23,7 @@
     ],
     "narrative": [
       "Produced, tracked, mixed, and mastered in Logic Pro X with Detroit-style energy.",
-      "BittyOTW and I kept it loose and fun in the studio to capture the bounce."
+      "BittyOTW and I kept the session playful to capture the bounce."
     ],
     "links": [
       { "label": "Apple Music", "href": "https://music.apple.com/us/song/bring-me-more/1779621390" },
@@ -45,7 +45,7 @@
     "subtitle": "Track 1 | Back & Forth",
     "year": 2024,
     "role": "Producer, Writer, Drums, Engineer, Mixing/Mastering",
-    "tags": ["Singer-songwriter", "Indie", "Pop", "Acoustic"],
+    "tags": ["Singer-songwriter", "Indie pop", "Acoustic", "Madelyn Leona"],
     "blurb": "Indie pop record by Madelyn Leona built around live drums and acoustic detail.",
     "tone": ["#14161f", "#2d3a45"],
     "deliverables": [
@@ -84,10 +84,10 @@
     "subtitle": "Track 1 | Love Eternal",
     "year": 2024,
     "role": "Drums, Engineer",
-    "tags": ["Hip-hop", "Rap", "Trap", "KJ The Cool Nerd", "Funk"],
-    "blurb": "Funky soul track built on live drums and a warm pocket.",
+    "tags": ["Hip-hop", "Funk", "KJ The Cool Nerd"],
+    "blurb": "Funky soul-leaning cut anchored by live drums and a warm pocket.",
     "tone": ["#0f172a", "#2a3c34"],
-    "deliverables": ["Drums"],
+    "deliverables": ["Drums", "Engineering"],
     "credits": [
       "KJ The Cool Nerd — Artist",
       "Anthony Dake — Drummer/Engineer",
@@ -95,8 +95,8 @@
       "Mastered by KJ The Cool Nerd"
     ],
     "narrative": [
-      "Produced, tracked, mixed, and mastered on Ableton Live, inspired by funk and soul.",
-      "Focused on a tight groove and live-feel drum tones to keep the record warm and forward."
+      "Engineered the drum sessions in Ableton Live with a tight, funk-informed groove.",
+      "Focused on live-feel tones and dynamics to keep the track warm and forward."
     ],
     "links": [
       { "label": "Apple Music", "href": "https://music.apple.com/us/song/wake-up/1735579051" },
@@ -195,7 +195,7 @@
     "subtitle": "Track 1 | Bitts and Pieces",
     "year": 2024,
     "role": "Producer, Engineer, Mixing Engineer, Mastering Engineer",
-    "tags": ["Hip-hop", "Rap", "Trap", "Bitty", "WANYEH", "Detroit"],
+    "tags": ["Hip-hop", "Rap", "Detroit", "Bitty", "WANYEH"],
     "blurb": "Detroit-style club banger with heavy low-end and sharp drum programming.",
     "tone": ["#0f0f12", "#3b2d2a"],
     "deliverables": [
@@ -233,20 +233,20 @@
     "title": "Lazy Days",
     "subtitle": "Track 1 | Finn and Jake",
     "year": 2023,
-    "role": "Engineer",
-    "tags": ["Hip-hop", "Rap", "Trap", "Bitty", "WANYEH", "KJ The Cool Nerd", "Boom-bap"],
-    "blurb": "The start of the Columbus sound — built around the energy of the University District shows at Juniors Bar & Grill.",
+    "role": "Tracking Engineer",
+    "tags": ["Hip-hop", "Rap", "Boom-bap", "Bitty", "WANYEH"],
+    "blurb": "Early Columbus sound built around the energy of University District shows at Juniors Bar & Grill.",
     "tone": ["#141516", "#3b2c24"],
-    "deliverables": ["Engineering"],
+    "deliverables": ["Tracking engineering"],
     "credits": [
       "Bitty — Artist",
       "WANYEH — Artist",
-      "Anthony Dake — Engineer",
+      "Anthony Dake — Tracking Engineer",
       "KJ The Cool Nerd — Producer"
     ],
     "narrative": [
-      "Produced, tracked, mixed, and mastered on Ableton Live, inspired by classic hip-hop.",
-      "Captured the early momentum of the scene with a boom-bap foundation and live-show energy."
+      "Tracked the sessions as the recording engineer, keeping the energy of the room intact.",
+      "Focused on clean capture and punchy performance dynamics to support the boom-bap foundation."
     ],
     "links": [
       { "label": "Apple Music", "href": "https://music.apple.com/us/song/lazy-days/1720656018" },
@@ -268,7 +268,7 @@
     "subtitle": "Track 2 | Finn and Jake",
     "year": 2023,
     "role": "Producer, Engineer, Mixing Engineer, Mastering Engineer",
-    "tags": ["Hip-hop", "Rap", "Trap", "Bitty", "WANYEH", "KJ The Cool Nerd", "Club"],
+    "tags": ["Hip-hop", "Rap", "Trap", "Bitty", "WANYEH"],
     "blurb": "\"I've been up three days making plays\" — a snapshot of the University District shows at Juniors Bar & Grill.",
     "tone": ["#141516", "#3b2c24"],
     "deliverables": [
@@ -308,7 +308,7 @@
     "subtitle": "Single | Bitty",
     "year": 2023,
     "role": "Producer, Songwriter, Mixing Engineer, Mastering Engineer",
-    "tags": ["R&B", "Rap", "BittyOTW", "Bitty", "Synths", "Intimate", "Chill"],
+    "tags": ["R&B", "Rap", "Bitty", "Synths", "Chill"],
     "blurb": "First of a couple singles with Bitty, built across a few sessions at Otterbein University.",
     "tone": ["#5a3a1f", "#a06f3a"],
     "deliverables": [
@@ -347,14 +347,14 @@
     "subtitle": "Track 9 | Class Loser",
     "year": 2022,
     "role": "Producer, Writer, Engineer, Mixing/Mastering Engineer",
-    "tags": ["Neo-soul", "R&B", "Rap", "Hip-hop", "KJ The Cool Nerd", "Riyah"],
+    "tags": ["Neo-soul", "R&B", "Rap", "KJ The Cool Nerd", "Riyah"],
     "blurb": "One of the first tracks produced for KJ The Cool Nerd.",
     "tone": ["#0b0b0b", "#1f2937"],
     "deliverables": [
       "Full instrumental production",
       "Drum programming",
       "Arrangement",
-      "Final mix"
+      "Final mix and master"
     ],
     "credits": [
       "KJ The Cool Nerd — Artist",

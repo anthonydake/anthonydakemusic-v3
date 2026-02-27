@@ -10,8 +10,8 @@ export const projects: Project[] = [
     "role": "Producer, Writer, Drums, Engineer, Mixing/Mastering",
     "tags": [
       "Acoustic",
-      "Indie",
-      "Pop",
+      "Indie pop",
+      "Madelyn Leona",
       "Singer-songwriter"
     ],
     "blurb": "Indie pop record by Madelyn Leona built around live drums and acoustic detail.",
@@ -69,7 +69,6 @@ export const projects: Project[] = [
       "Detroit",
       "Hip-hop",
       "Rap",
-      "Trap",
       "WANYEH"
     ],
     "blurb": "Detroit-style club banger with heavy low-end and sharp drum programming.",
@@ -123,10 +122,8 @@ export const projects: Project[] = [
     "year": 2024,
     "role": "Producer, Songwriter, Mixing Engineer, Mastering Engineer",
     "tags": [
-      "Banger",
-      "Bitty",
       "BittyOTW",
-      "Detroit style rap",
+      "Detroit",
       "Rap",
       "Synths"
     ],
@@ -150,7 +147,7 @@ export const projects: Project[] = [
     ],
     "narrative": [
       "Produced, tracked, mixed, and mastered in Logic Pro X with Detroit-style energy.",
-      "BittyOTW and I kept it loose and fun in the studio to capture the bounce."
+      "BittyOTW and I kept the session playful to capture the bounce."
     ],
     "links": [
       {
@@ -296,17 +293,16 @@ export const projects: Project[] = [
     "tags": [
       "Funk",
       "Hip-hop",
-      "KJ The Cool Nerd",
-      "Rap",
-      "Trap"
+      "KJ The Cool Nerd"
     ],
-    "blurb": "Funky soul track built on live drums and a warm pocket.",
+    "blurb": "Funky soul-leaning cut anchored by live drums and a warm pocket.",
     "tone": [
       "#0f172a",
       "#2a3c34"
     ],
     "deliverables": [
-      "Drums"
+      "Drums",
+      "Engineering"
     ],
     "credits": [
       "KJ The Cool Nerd — Artist",
@@ -315,8 +311,8 @@ export const projects: Project[] = [
       "Mastered by KJ The Cool Nerd"
     ],
     "narrative": [
-      "Produced, tracked, mixed, and mastered on Ableton Live, inspired by funk and soul.",
-      "Focused on a tight groove and live-feel drum tones to keep the record warm and forward."
+      "Engineered the drum sessions in Ableton Live with a tight, funk-informed groove.",
+      "Focused on live-feel tones and dynamics to keep the track warm and forward."
     ],
     "links": [
       {
@@ -346,33 +342,31 @@ export const projects: Project[] = [
     "title": "Lazy Days",
     "subtitle": "Track 1 | Finn and Jake",
     "year": 2023,
-    "role": "Engineer",
+    "role": "Tracking Engineer",
     "tags": [
       "Bitty",
       "Boom-bap",
       "Hip-hop",
-      "KJ The Cool Nerd",
       "Rap",
-      "Trap",
       "WANYEH"
     ],
-    "blurb": "The start of the Columbus sound — built around the energy of the University District shows at Juniors Bar & Grill.",
+    "blurb": "Early Columbus sound built around the energy of University District shows at Juniors Bar & Grill.",
     "tone": [
       "#141516",
       "#3b2c24"
     ],
     "deliverables": [
-      "Engineering"
+      "Tracking engineering"
     ],
     "credits": [
       "Bitty — Artist",
       "WANYEH — Artist",
-      "Anthony Dake — Engineer",
+      "Anthony Dake — Tracking Engineer",
       "KJ The Cool Nerd — Producer"
     ],
     "narrative": [
-      "Produced, tracked, mixed, and mastered on Ableton Live, inspired by classic hip-hop.",
-      "Captured the early momentum of the scene with a boom-bap foundation and live-show energy."
+      "Tracked the sessions as the recording engineer, keeping the energy of the room intact.",
+      "Focused on clean capture and punchy performance dynamics to support the boom-bap foundation."
     ],
     "links": [
       {
@@ -405,9 +399,7 @@ export const projects: Project[] = [
     "role": "Producer, Songwriter, Mixing Engineer, Mastering Engineer",
     "tags": [
       "Bitty",
-      "BittyOTW",
       "Chill",
-      "Intimate",
       "R&B",
       "Rap",
       "Synths"
@@ -461,9 +453,7 @@ export const projects: Project[] = [
     "role": "Producer, Engineer, Mixing Engineer, Mastering Engineer",
     "tags": [
       "Bitty",
-      "Club",
       "Hip-hop",
-      "KJ The Cool Nerd",
       "Rap",
       "Trap",
       "WANYEH"
@@ -520,7 +510,6 @@ export const projects: Project[] = [
     "year": 2022,
     "role": "Producer, Writer, Engineer, Mixing/Mastering Engineer",
     "tags": [
-      "Hip-hop",
       "KJ The Cool Nerd",
       "Neo-soul",
       "R&B",
@@ -536,7 +525,7 @@ export const projects: Project[] = [
       "Full instrumental production",
       "Drum programming",
       "Arrangement",
-      "Final mix"
+      "Final mix and master"
     ],
     "credits": [
       "KJ The Cool Nerd — Artist",

@@ -2,6 +2,7 @@ export const WORK_TAGS = [
   "PRODUCTION/SONGWRITING",
   "MIXING/MASTERING",
   "DRUMS",
+  "ENGINEERING",
   "MUSICAL DIRECTION",
 ] as const;
 
@@ -50,7 +51,7 @@ export const projectIndex: ProjectIndexItem[] = [
     date: "03/27/2024",
     year: 2024,
     artist: "KJ The Cool Nerd",
-    workTags: ["DRUMS", "MIXING/MASTERING"],
+    workTags: ["DRUMS", "ENGINEERING"],
     title: "Wake Up",
     slug: "wake-up",
     preview: { type: "image", src: "/placements/wake-up.jpg" },
@@ -90,7 +91,7 @@ export const projectIndex: ProjectIndexItem[] = [
     date: "12/15/2023",
     year: 2023,
     artist: "Bitty & WANYEH",
-    workTags: ["MIXING/MASTERING"],
+    workTags: ["ENGINEERING"],
     title: "Lazy Days",
     slug: "lazy-days",
     preview: { type: "image", src: "/placements/small-business.jpg" },
