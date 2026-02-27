@@ -1,5 +1,44 @@
 [
   {
+    "slug": "dark-knight",
+    "title": "Dark Knight",
+    "subtitle": "Track 3 | Eight Track (Side A)",
+    "year": 2024,
+    "role": "Producer, Engineer, Mixing Engineer, Mastering Engineer",
+    "tags": ["Hip-hop", "Rap", "Trap", "WANYEH", "KJ The Cool Nerd"],
+    "blurb": "Dark trap banger with heavy 808s and sharp, minimal synth lines.",
+    "tone": ["#0b0b0f", "#24232c"],
+    "deliverables": [
+      "Full instrumental production",
+      "Arrangement",
+      "Final mix and master"
+    ],
+    "credits": [
+      "KJ The Cool Nerd — Artist",
+      "WANYEH — Artist",
+      "Anthony Dake — Producer/Engineer",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
+    ],
+    "narrative": [
+      "Produced, tracked, mixed, and mastered in Logic Pro X, inspired by dark trap textures.",
+      "Built around a heavy low-end and tense atmosphere to keep the track aggressive and focused."
+    ],
+    "links": [
+      { "label": "Apple Music", "href": "https://music.apple.com/us/song/dark-knight-feat-wanyeh/1768645696" },
+      { "label": "Spotify", "href": "https://open.spotify.com/track/1GLe4jR0vEucIYPiYLXnu4" },
+      { "label": "YouTube", "href": "https://www.youtube.com/watch?v=_QfPY7PeSbQ" }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/dark-knight.jpg",
+        "alt": "Dark Knight cover art",
+        "title": "Dark Knight"
+      }
+    ]
+  },
+  {
     "slug": "bitts-and-pieces",
     "title": "Bitts and Pieces",
     "subtitle": "Track 1 | Bitts and Pieces",

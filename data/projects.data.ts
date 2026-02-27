@@ -26,6 +26,16 @@ export type ProjectIndexItem = {
 // Placeholder data (swap for real projects any time; UI is wired to this file only).
 export const projectIndex: ProjectIndexItem[] = [
   {
+    id: "P06",
+    date: "09/27/2024",
+    year: 2024,
+    artist: "KJ The Cool Nerd & WANYEH",
+    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
+    title: "Dark Knight",
+    slug: "dark-knight",
+    preview: { type: "image", src: "/placements/dark-knight.jpg" },
+  },
+  {
     id: "P05",
     date: "05/19/2024",
     year: 2024,
