@@ -3,6 +3,62 @@ import type { Project } from "./projects";
 
 export const projects: Project[] = [
   {
+    "slug": "repercussions",
+    "title": "Repercussions",
+    "subtitle": "Single | Bitty",
+    "year": 2023,
+    "role": "Producer, Songwriter, Mixing Engineer, Mastering Engineer",
+    "tags": [
+      "Bitty",
+      "BittyOTW",
+      "Chill",
+      "Intimate",
+      "R&B",
+      "Rap",
+      "Synths"
+    ],
+    "blurb": "First of a couple singles with Bitty, built across a few sessions at Otterbein University.",
+    "tone": [
+      "#5a3a1f",
+      "#a06f3a"
+    ],
+    "deliverables": [
+      "Full instrumental production",
+      "Programming",
+      "Arrangement",
+      "Tracking",
+      "Final mix and master"
+    ],
+    "credits": [
+      "Bitty — Artist",
+      "Anthony Dake — Producer, Songwriter",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
+    ],
+    "narrative": [
+      "Developed over a handful of sessions at Otterbein University, tracked and finished in Logic Pro X.",
+      "Long talks with Judy about topline melodic writing helped frame the record so it held momentum and the right emotional feel."
+    ],
+    "links": [
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/4fxUvrFR0yJSXg5CuJpb6Z"
+      },
+      {
+        "label": "YouTube",
+        "href": "https://www.youtube.com/watch?v=MUdrD0wVsJ8"
+      }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/repercussions.jpg",
+        "alt": "Repercussions single cover art",
+        "title": "Repercussions"
+      }
+    ]
+  },
+  {
     "slug": "missin-u",
     "title": "Missin U (feat. Riyah)",
     "subtitle": "Track 9 | Class Loser",
