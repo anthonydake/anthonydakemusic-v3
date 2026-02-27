@@ -1,5 +1,43 @@
 [
   {
+    "slug": "cruisin",
+    "title": "Cruisin",
+    "subtitle": "Track 2 | Eight Track (Side A)",
+    "year": 2024,
+    "role": "Producer, Engineer, Mixing Engineer, Mastering Engineer",
+    "tags": ["Hip-hop", "Rap", "Trap", "KJ The Cool Nerd"],
+    "blurb": "Dark trap banger with a driving low end and focused vocal pocket.",
+    "tone": ["#0b0b0f", "#24232c"],
+    "deliverables": [
+      "Full instrumental production",
+      "Arrangement",
+      "Final mix and master"
+    ],
+    "credits": [
+      "KJ The Cool Nerd — Artist",
+      "Anthony Dake — Producer/Engineer",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
+    ],
+    "narrative": [
+      "Produced, tracked, mixed, and mastered in Logic Pro X, inspired by dark trap textures.",
+      "Built around a steady groove and restrained synths to keep the track moody and cinematic."
+    ],
+    "links": [
+      { "label": "Apple Music", "href": "https://music.apple.com/us/song/crusin/1768645695" },
+      { "label": "Spotify", "href": "https://open.spotify.com/track/5K3R4JMGVFi5JgsmGJy475" },
+      { "label": "YouTube", "href": "https://www.youtube.com/watch?v=8Bd6yGuyaRQ" }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/cruisin.jpg",
+        "alt": "Cruisin cover art",
+        "title": "Cruisin"
+      }
+    ]
+  },
+  {
     "slug": "dark-knight",
     "title": "Dark Knight",
     "subtitle": "Track 3 | Eight Track (Side A)",
