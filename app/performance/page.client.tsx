@@ -1,6 +1,6 @@
 "use client";
 
-import "../projects/projects-index.css";
+import "../placements/projects-index.css";
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -240,8 +240,8 @@ export default function PerformanceIndexClient() {
           </Link>
 
           <nav className="flex items-center justify-self-end gap-6">
-            <Link className="hover:text-black" href="/projects">
-              Projects
+            <Link className="hover:text-black" href="/placements">
+              Placements
             </Link>
             <Link className="hover:text-black" href="/performance">
               Performance

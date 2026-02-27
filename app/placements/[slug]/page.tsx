@@ -24,12 +24,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: {
-      canonical: `/projects/${slug}`,
+      canonical: `/placements/${slug}`,
     },
     openGraph: {
       title: `${title} — Anthony Dake`,
       description,
-      url: `/projects/${slug}`,
+      url: `/placements/${slug}`,
       images: [{ url: image, alt: title }],
     },
     twitter: {
@@ -49,10 +49,10 @@ export default async function Page({ params }: PageProps) {
     ? {
         "@context": "https://schema.org",
         "@type": "CreativeWork",
-        "@id": `${siteUrl}/projects/${project.slug}#creativework`,
+        "@id": `${siteUrl}/placements/${project.slug}#creativework`,
         name: project.title,
         description: project.blurb,
-        url: `${siteUrl}/projects/${project.slug}`,
+        url: `${siteUrl}/placements/${project.slug}`,
         datePublished: `${project.year}-01-01`,
         creator: { "@id": `${siteUrl}/#person` },
       }
@@ -65,14 +65,14 @@ export default async function Page({ params }: PageProps) {
           {
             "@type": "ListItem",
             position: 1,
-            name: "Projects",
-            item: `${siteUrl}/projects`,
+            name: "Placements",
+            item: `${siteUrl}/placements`,
           },
           {
             "@type": "ListItem",
             position: 2,
             name: project.title,
-            item: `${siteUrl}/projects/${project.slug}`,
+            item: `${siteUrl}/placements/${project.slug}`,
           },
         ],
       }

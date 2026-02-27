@@ -7,7 +7,7 @@ export type Reel = {
 };
 
 export type FeaturedWork = {
-  slug: string; // should match /projects/[slug]
+  slug: string; // should match /placements/[slug]
   title: string;
   client: string;
   year: number;

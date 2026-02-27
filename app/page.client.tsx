@@ -22,7 +22,7 @@ function HomeInner() {
   const searchParams = useSearchParams();
   const q = searchParams.toString();
   const homeHref = q ? `/?${q}` : "/";
-  const projectsHref = q ? `/projects?${q}` : "/projects";
+  const projectsHref = q ? `/placements?${q}` : "/placements";
   const accumRef = useRef(0);
   const triggeredRef = useRef(false);
   const readyRef = useRef(false);
@@ -89,7 +89,7 @@ function HomeInner() {
           </Link>
           <nav className="flex items-center justify-self-end gap-6">
             <Link className="hover:text-black" href={projectsHref}>
-              Projects
+              Placements
             </Link>
             <Link className="hover:text-black" href="/performance">
               Performance

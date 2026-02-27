@@ -20,8 +20,8 @@ export default function SiteHeader() {
           <HomeMark className="h-[18px] w-[18px] transition group-hover:scale-[1.04] group-hover:brightness-110" />
         </Link>
         <nav className="flex items-center justify-self-end gap-6">
-          <Link className="hover:text-black" href="/projects">
-            Projects
+          <Link className="hover:text-black" href="/placements">
+            Placements
           </Link>
           <Link className="hover:text-black" href="/performance">
             Performance

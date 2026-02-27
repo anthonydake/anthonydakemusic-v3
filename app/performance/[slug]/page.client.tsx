@@ -155,8 +155,8 @@ export default function PerformanceDetailClient() {
             </Link>
 
             <nav className="flex items-center justify-self-end gap-6">
-              <Link className="hover:text-black" href="/projects">
-                Projects
+              <Link className="hover:text-black" href="/placements">
+                Placements
               </Link>
               <Link className="hover:text-black" href="/performance">
                 Performance
@@ -209,8 +209,8 @@ export default function PerformanceDetailClient() {
           </Link>
 
           <nav className="flex items-center justify-self-end gap-6">
-            <Link className="hover:text-black" href="/projects">
-              Projects
+            <Link className="hover:text-black" href="/placements">
+              Placements
             </Link>
             <Link className="hover:text-black" href="/performance">
               Performance

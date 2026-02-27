@@ -42,9 +42,9 @@ export default function ProjectDetailClient() {
             </Link>
 
             <nav className="flex items-center justify-self-end gap-6">
-              <Link className="hover:text-black" href="/projects">
-                Projects
-              </Link>
+            <Link className="hover:text-black" href="/placements">
+              Placements
+            </Link>
               <Link className="hover:text-black" href="/performance">
                 Performance
               </Link>
@@ -95,14 +95,14 @@ export default function ProjectDetailClient() {
         <div className="pointer-events-none absolute inset-x-0 bottom-6 z-[5]">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 text-[9.5625px] uppercase tracking-[0.28em] text-black/50 sm:px-8 lg:px-10 xl:px-12">
             {prevProject ? (
-              <Link className="pointer-events-auto hover:text-black" href={`/projects/${prevProject.slug}`}>
+              <Link className="pointer-events-auto hover:text-black" href={`/placements/${prevProject.slug}`}>
                 ← Previous Project
               </Link>
             ) : (
               <span className="text-black/30">← Previous Project</span>
             )}
             {nextProject ? (
-              <Link className="pointer-events-auto hover:text-black" href={`/projects/${nextProject.slug}`}>
+              <Link className="pointer-events-auto hover:text-black" href={`/placements/${nextProject.slug}`}>
                 Next Project →
               </Link>
             ) : (

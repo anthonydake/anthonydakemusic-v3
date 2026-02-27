@@ -7,12 +7,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${siteUrl}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
-    { url: `${siteUrl}/projects`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${siteUrl}/placements`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${siteUrl}/performance`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
   ];
 
   const projectRoutes: MetadataRoute.Sitemap = projects.map((p) => ({
-    url: `${siteUrl}/projects/${p.slug}`,
+    url: `${siteUrl}/placements/${p.slug}`,
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.8,

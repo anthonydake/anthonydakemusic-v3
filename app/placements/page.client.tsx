@@ -214,8 +214,8 @@ export default function ProjectsIndexClient() {
           </Link>
 
           <nav className="flex items-center justify-self-end gap-6">
-            <Link className="hover:text-black" href="/projects">
-              Projects
+            <Link className="hover:text-black" href="/placements">
+              Placements
             </Link>
             <Link className="hover:text-black" href="/performance">
               Performance
@@ -230,7 +230,7 @@ export default function ProjectsIndexClient() {
             hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
           ].join(" ")}
         >
-          <section aria-label="Project index">
+          <section aria-label="Placements index">
             <YearGroups
               items={items}
               revealCount={revealCount}
@@ -347,7 +347,7 @@ function YearGroups({
               {yearVisible.map((p) => (
                 <Link
                   key={p.id}
-                  href={`/projects/${p.slug}`}
+                  href={`/placements/${p.slug}`}
                   className="projects-row projects-row-enter group block py-1 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-5 lg:py-0"
                   onMouseEnter={() => onRowHover(p.id)}
                 >

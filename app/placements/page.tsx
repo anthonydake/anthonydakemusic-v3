@@ -4,20 +4,20 @@ import ProjectsIndexClient from "./page.client";
 import { projectIndex } from "@/data/projects.data";
 
 export const metadata: Metadata = {
-  title: "Projects — Anthony Dake",
-  description: "Project index — production, drums, and musical direction credits and work.",
+  title: "Placements — Anthony Dake",
+  description: "Placements index — production, drums, and musical direction credits and work.",
   alternates: {
-    canonical: "/projects",
+    canonical: "/placements",
   },
   openGraph: {
-    title: "Projects — Anthony Dake",
-    description: "Project index — production, drums, and musical direction credits and work.",
-    url: "/projects",
+    title: "Placements — Anthony Dake",
+    description: "Placements index — production, drums, and musical direction credits and work.",
+    url: "/placements",
     images: [{ url: "/hero.jpg", width: 1536, height: 1024, alt: "Anthony Dake" }],
   },
   twitter: {
-    title: "Projects — Anthony Dake",
-    description: "Project index — production, drums, and musical direction credits and work.",
+    title: "Placements — Anthony Dake",
+    description: "Placements index — production, drums, and musical direction credits and work.",
     images: ["/hero.jpg"],
   },
 };
@@ -27,7 +27,7 @@ export default function Page() {
   const items = [...projectIndex].map((p) => ({
     "@type": "CreativeWork",
     name: `${p.artist} — ${p.title}`,
-    url: `${siteUrl}/projects/${p.slug}`,
+    url: `${siteUrl}/placements/${p.slug}`,
     datePublished: `${p.year}-01-01`,
   }));
 
@@ -37,7 +37,7 @@ export default function Page() {
         data={{
           "@context": "https://schema.org",
           "@type": "ItemList",
-          name: "Project Index",
+          name: "Placements Index",
           itemListElement: items.map((item, idx) => ({
             "@type": "ListItem",
             position: idx + 1,
