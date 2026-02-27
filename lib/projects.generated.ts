@@ -173,6 +173,60 @@ export const projects: Project[] = [
     ]
   },
   {
+    "slug": "wake-up",
+    "title": "Wake Up",
+    "subtitle": "Track 1 | Love Eternal",
+    "year": 2024,
+    "role": "Drums, Engineer",
+    "tags": [
+      "Funk",
+      "Hip-hop",
+      "KJ The Cool Nerd",
+      "Rap",
+      "Trap"
+    ],
+    "blurb": "Funky soul track built on live drums and a warm pocket.",
+    "tone": [
+      "#0f172a",
+      "#2a3c34"
+    ],
+    "deliverables": [
+      "Drums"
+    ],
+    "credits": [
+      "KJ The Cool Nerd — Artist",
+      "Anthony Dake — Drummer/Engineer",
+      "Mixed by KJ The Cool Nerd",
+      "Mastered by KJ The Cool Nerd"
+    ],
+    "narrative": [
+      "Produced, tracked, mixed, and mastered on Ableton Live, inspired by funk and soul.",
+      "Focused on a tight groove and live-feel drum tones to keep the record warm and forward."
+    ],
+    "links": [
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/song/wake-up/1735579051"
+      },
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/5YnjhGfVtZo908Z4ERYsAl"
+      },
+      {
+        "label": "YouTube",
+        "href": "https://www.youtube.com/watch?v=LvyKSaTLo-Y"
+      }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/wake-up.jpg",
+        "alt": "Wake Up cover art",
+        "title": "Wake Up"
+      }
+    ]
+  },
+  {
     "slug": "lazy-days",
     "title": "Lazy Days",
     "subtitle": "Track 1 | Finn and Jake",
