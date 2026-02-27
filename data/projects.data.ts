@@ -26,6 +26,16 @@ export type ProjectIndexItem = {
 // Placeholder data (swap for real projects any time; UI is wired to this file only).
 export const projectIndex: ProjectIndexItem[] = [
   {
+    id: "P09",
+    date: "05/24/2024",
+    year: 2024,
+    artist: "Madelyn Leona",
+    workTags: ["PRODUCTION/SONGWRITING", "DRUMS", "MIXING/MASTERING"],
+    title: "Back & Forth",
+    slug: "back-and-forth",
+    preview: { type: "image", src: "/placements/back-and-forth.jpg" },
+  },
+  {
     id: "P08",
     date: "03/27/2024",
     year: 2024,

@@ -1,5 +1,44 @@
 [
   {
+    "slug": "back-and-forth",
+    "title": "Back & Forth",
+    "subtitle": "Track 1 | Back & Forth",
+    "year": 2024,
+    "role": "Producer, Writer, Drums, Engineer, Mixing/Mastering",
+    "tags": ["Singer-songwriter", "Indie", "Pop", "Acoustic"],
+    "blurb": "Indie pop record by Madelyn Leona built around live drums and acoustic detail.",
+    "tone": ["#14161f", "#2d3a45"],
+    "deliverables": [
+      "Drums",
+      "Full instrumental production",
+      "Arrangement",
+      "Final mix and master"
+    ],
+    "credits": [
+      "Madelyn Leona — Artist",
+      "Anthony Dake — Producer/Engineer",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
+    ],
+    "narrative": [
+      "Produced, tracked, mixed, and mastered in Pro Tools, inspired by indie pop songwriting.",
+      "Focused on a warm acoustic palette with punchy drums to keep the song intimate but driving."
+    ],
+    "links": [
+      { "label": "Apple Music", "href": "https://music.apple.com/us/song/back-forth/1747423456" },
+      { "label": "Spotify", "href": "https://open.spotify.com/track/2gbTyBk3cyCsOkRj4zy9dL" },
+      { "label": "YouTube", "href": "https://www.youtube.com/watch?v=6qLMNYQLHkw" }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/back-and-forth.jpg",
+        "alt": "Back & Forth cover art",
+        "title": "Back & Forth"
+      }
+    ]
+  },
+  {
     "slug": "wake-up",
     "title": "Wake Up",
     "subtitle": "Track 1 | Love Eternal",
