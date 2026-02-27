@@ -59,6 +59,66 @@ export const projects: Project[] = [
     ]
   },
   {
+    "slug": "small-business",
+    "title": "Small Business",
+    "subtitle": "Track 2 | Finn and Jake",
+    "year": 2023,
+    "role": "Producer, Engineer, Mixing Engineer, Mastering Engineer",
+    "tags": [
+      "Bitty",
+      "Club",
+      "Hip-hop",
+      "KJ The Cool Nerd",
+      "Rap",
+      "Trap",
+      "WANYEH"
+    ],
+    "blurb": "\"I've been up three days making plays\" — a snapshot of the University District shows at Juniors Bar & Grill.",
+    "tone": [
+      "#141516",
+      "#3b2c24"
+    ],
+    "deliverables": [
+      "Full instrumental production",
+      "Drum programming",
+      "Arrangement",
+      "Final mix and master"
+    ],
+    "credits": [
+      "Bitty — Artist",
+      "WANYEH — Artist",
+      "Anthony Dake — Producer/Engineer",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
+    ],
+    "narrative": [
+      "Produced, tracked, mixed, and mastered in Logic Pro X, leaning into classic hip-hop energy.",
+      "Captured the momentum and memory of those University District shows while keeping the record club-ready."
+    ],
+    "links": [
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/song/small-business/1720656019"
+      },
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/7DGF2H2TtDbDeniGV1wRLk"
+      },
+      {
+        "label": "YouTube",
+        "href": "https://www.youtube.com/watch?v=SQU4NuenSCo"
+      }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/small-business.jpg",
+        "alt": "Finn and Jake cover art",
+        "title": "Small Business"
+      }
+    ]
+  },
+  {
     "slug": "missin-u",
     "title": "Missin U (feat. Riyah)",
     "subtitle": "Track 9 | Class Loser",
