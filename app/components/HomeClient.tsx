@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
+import ArchiveModal from "./ArchiveModal";
 
 type HomeClientProps = {
   initialSection?: "hero" | "projects";
@@ -33,6 +34,7 @@ export default function HomeClient({
   const [showEasterEgg, setShowEasterEgg] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const projectsRef = useRef<HTMLElement | null>(null);
+  const easterClickRef = useRef<number[]>([]);
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
@@ -141,12 +143,24 @@ export default function HomeClient({
     };
   }, []);
 
+  const handleEasterEggClick = () => {
+    const now = Date.now();
+    const next = [...easterClickRef.current.filter((time) => now - time < 900), now];
+    easterClickRef.current = next;
+    if (next.length >= 3) {
+      router.push("/admin/archive");
+      easterClickRef.current = [];
+    }
+    setShowEasterEgg((prev) => !prev);
+  };
+
   return (
     <div
       ref={containerRef}
       className="site-bg min-h-screen snap-y snap-mandatory overflow-y-hidden bg-white scrollbar-hide"
       style={{ scrollBehavior: "smooth" }}
     >
+      <ArchiveModal />
       <section
         ref={heroRef}
         className="relative grid h-screen place-items-center snap-start bg-[#111113]"
@@ -161,7 +175,7 @@ export default function HomeClient({
           onMouseLeave={() => setShowEasterEgg(false)}
           onFocus={() => setShowEasterEgg(true)}
           onBlur={() => setShowEasterEgg(false)}
-          onClick={() => setShowEasterEgg((prev) => !prev)}
+          onClick={handleEasterEggClick}
         >
           <svg
             viewBox="0 0 64 64"

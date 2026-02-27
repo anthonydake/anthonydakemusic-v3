@@ -151,6 +151,63 @@ svg * {
   transform: translateY(0);
 }
 
+@keyframes archiveFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.archive-fade {
+  animation: archiveFadeIn 1.2s ease forwards;
+}
+
+.archive-modal-plain,
+.archive-modal-plain * {
+  color: #e2e2e2 !important;
+  -webkit-text-fill-color: #e2e2e2 !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+
+.archive-modal-surface {
+  background-color: #0f0f11 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background-image: none !important;
+}
+
+.archive-title {
+  color: #f2f2f2 !important;
+  -webkit-text-fill-color: #f2f2f2 !important;
+}
+
+.archive-close {
+  color: rgba(255, 255, 255, 0.7) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.7) !important;
+  background-image: none !important;
+}
+
+.archive-close:hover {
+  color: rgba(255, 255, 255, 0.95) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.archive-modal-input::placeholder {
+  color: rgba(210, 210, 210, 0.6) !important;
+  -webkit-text-fill-color: rgba(210, 210, 210, 0.6) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-fade {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fade-section {
     opacity: 1;
