@@ -27,7 +27,7 @@ export type ProjectIndexItem = {
 export const projectIndex: ProjectIndexItem[] = [
   {
     id: "P02",
-    date: "06/15/2023",
+    date: "09/22/2023",
     year: 2023,
     artist: "Bitty",
     workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
