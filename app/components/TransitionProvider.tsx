@@ -67,7 +67,7 @@ export default function TransitionProvider({ children }: { children: React.React
     (href: string) => {
       if (!href) return;
       if (phase !== "idle") return;
-      const nextMode: TransitionMode = prefersReducedMotion || isMobileFallback ? "fade" : "curtain";
+      const nextMode: TransitionMode = prefersReducedMotion ? "fade" : "curtain";
       setMode(nextMode);
       setTarget(href);
       navCommittedRef.current = false;

@@ -1,16 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import ArchiveModal from "./ArchiveModal";
 import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
-  initialSection?: "hero" | "projects";
+  initialSection?: "hero" | "archive" | "projects";
   syncRoute?: boolean;
+  nextHref?: string;
 };
 
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -18,34 +18,37 @@ const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : use
 export default function HomeClient({
   initialSection = "hero",
   syncRoute = true,
+  nextHref,
 }: HomeClientProps) {
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { isTransitioning } = useTransition();
+  const { isTransitioning, isMobileFallback, triggerTransition } = useTransition();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     []
   );
-  const [visible, setVisible] = useState<{ hero: boolean; projects: boolean }>(() =>
-    reduceMotion ? { hero: true, projects: true } : { hero: false, projects: false }
+  const [visible, setVisible] = useState<{ hero: boolean; archive: boolean; projects: boolean }>(() =>
+    reduceMotion ? { hero: true, archive: true, projects: true } : { hero: false, archive: false, projects: false }
   );
-  const [activeId, setActiveId] = useState<"hero" | "projects">(initialSection);
+  const [activeId, setActiveId] = useState<"hero" | "archive" | "projects">(initialSection);
   const [snapAnimating, setSnapAnimating] = useState(false);
-  const [showEasterEgg, setShowEasterEgg] = useState(false);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [pillReady, setPillReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
+  const archiveRef = useRef<HTMLElement | null>(null);
   const projectsRef = useRef<HTMLElement | null>(null);
-  const easterClickRef = useRef<number[]>([]);
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     // Ensure route entry points match the intended section without visible jump.
-    const target = initialSection === "projects" ? projectsRef.current?.offsetTop ?? 0 : 0;
+    const target =
+      initialSection === "projects"
+        ? projectsRef.current?.offsetTop ?? 0
+        : initialSection === "archive"
+          ? archiveRef.current?.offsetTop ?? 0
+          : 0;
     const prev = container.style.scrollBehavior;
     container.style.scrollBehavior = "auto";
     container.scrollTop = target;
@@ -65,8 +68,12 @@ export default function HomeClient({
           const id = entry.target.getAttribute("data-id");
           if (!id) return;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
-            setActiveId(id as "hero" | "projects");
-            setVisible((prev) => (prev[id as "hero" | "projects"] ? prev : { ...prev, [id as "hero" | "projects"]: true }));
+            setActiveId(id as "hero" | "archive" | "projects");
+            setVisible((prev) =>
+              prev[id as "hero" | "archive" | "projects"]
+                ? prev
+                : { ...prev, [id as "hero" | "archive" | "projects"]: true }
+            );
           }
         });
       },
@@ -82,8 +89,9 @@ export default function HomeClient({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    if (isMobileFallback) return;
 
-    const sections = [heroRef.current, projectsRef.current].filter(Boolean) as HTMLElement[];
+    const sections = [heroRef.current, archiveRef.current, projectsRef.current].filter(Boolean) as HTMLElement[];
 
     const animateTo = (target: number) => {
       if (snapAnimating) return;
@@ -135,38 +143,69 @@ export default function HomeClient({
       container.removeEventListener("touchstart", handleTouchStart);
       container.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [snapAnimating]);
+  }, [isMobileFallback, snapAnimating]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    if (!isMobileFallback) return;
+    if (!nextHref) return;
+    if (isTransitioning) return;
+
+    let raf = 0;
+    const hasUserScrolledRef = { current: false };
+    const triggeredRef = { current: false };
+
+    const checkBottom = () => {
+      raf = 0;
+      if (triggeredRef.current) return;
+      if (!hasUserScrolledRef.current) return;
+      const threshold = 36;
+      const atBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - threshold;
+      if (atBottom) {
+        triggeredRef.current = true;
+        triggerTransition(nextHref);
+      }
+    };
+
+    const handleScroll = () => {
+      if (!hasUserScrolledRef.current && container.scrollTop > 10) {
+        hasUserScrolledRef.current = true;
+      }
+      if (raf) return;
+      raf = window.requestAnimationFrame(checkBottom);
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [isMobileFallback, isTransitioning, nextHref, triggerTransition]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
+    if (isMobileFallback) return;
     document.documentElement.classList.add("no-scroll");
     document.body.classList.add("no-scroll");
     return () => {
       document.documentElement.classList.remove("no-scroll");
       document.body.classList.remove("no-scroll");
     };
-  }, []);
+  }, [isMobileFallback]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setPillReady(true), 6000);
     return () => window.clearTimeout(timer);
   }, []);
 
-  const handleEasterEggClick = () => {
-    const now = Date.now();
-    const next = [...easterClickRef.current.filter((time) => now - time < 900), now];
-    easterClickRef.current = next;
-    if (next.length >= 3) {
-      router.push("/admin/archive");
-      easterClickRef.current = [];
-    }
-    setShowEasterEgg((prev) => !prev);
-  };
-
   return (
     <div
       ref={containerRef}
-      className="site-bg min-h-screen snap-y snap-mandatory overflow-y-hidden bg-white scrollbar-hide"
+      className={[
+        "site-bg min-h-screen bg-white scrollbar-hide",
+        isMobileFallback ? "overflow-y-auto" : "snap-y snap-mandatory overflow-y-hidden",
+      ].join(" ")}
       style={{ scrollBehavior: "smooth" }}
     >
       <ArchiveModal onOpenChange={setArchiveModalOpen} />
@@ -186,32 +225,6 @@ export default function HomeClient({
         data-id="hero"
         data-snap-section
       >
-        <button
-          type="button"
-          aria-label="Easter egg"
-          className="group absolute right-[12%] top-[22%] flex h-10 w-10 items-center justify-center rounded-md bg-white/80 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40"
-          onMouseEnter={() => setShowEasterEgg(true)}
-          onMouseLeave={() => setShowEasterEgg(false)}
-          onFocus={() => setShowEasterEgg(true)}
-          onBlur={() => setShowEasterEgg(false)}
-          onClick={handleEasterEggClick}
-        >
-          <svg
-            viewBox="0 0 64 64"
-            className="h-[18px] w-[18px] rotate-90 transition group-hover:scale-[1.05]"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="crosshairGradient" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#3B82F6" />
-                <stop offset="60%" stopColor="#8EC5FF" />
-                <stop offset="100%" stopColor="#FFFFFF" />
-              </linearGradient>
-            </defs>
-            <rect x="10" y="10" width="44" height="44" fill="none" stroke="url(#crosshairGradient)" strokeWidth="2" />
-            <path d="M32 16v8M32 40v8M16 32h8M40 32h8" stroke="url(#crosshairGradient)" strokeWidth="2" />
-          </svg>
-        </button>
         <div className="-translate-y-[90px]">
           <div
             className={[
@@ -220,12 +233,7 @@ export default function HomeClient({
             ].join(" ")}
           >
             <div className="relative inline-block">
-              <div
-                className={[
-                  "transition-[opacity,transform] duration-300 ease-out",
-                  showEasterEgg ? "pointer-events-none opacity-0 scale-[0.98]" : "opacity-100",
-                ].join(" ")}
-              >
+              <div className="transition-[opacity,transform] duration-300 ease-out">
                 <div className="mb-5 text-center text-[12px] uppercase tracking-[0.26em] text-black/60 sm:text-[13px]" />
                 <Link href="/" aria-label="Go to Home">
                   <LogoArchitectOfSound />
@@ -365,28 +373,50 @@ export default function HomeClient({
                   </a>
                 </div>
               </div>
-              <div
-                className={[
-                  "pointer-events-none absolute inset-0 flex items-center justify-center transition-[opacity,transform] duration-300 ease-out",
-                  showEasterEgg ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]",
-                ].join(" ")}
-                aria-hidden={!showEasterEgg}
-              >
-                <div className="relative h-full w-full overflow-hidden rounded-[22px] border border-white/15 shadow-[0_25px_60px_rgba(0,0,0,0.45)]">
-                  <Image
-                    src="/easter-egg/anthony-dake-drums.jpg"
-                    alt="Anthony Dake behind a drum kit"
-                    fill
-                    sizes="(max-width: 640px) 90vw, 520px"
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </div>
         {/* Scroll indicator handled globally on the home page */}
+      </section>
+
+      <section
+        ref={archiveRef}
+        data-id="archive"
+        data-snap-section
+        className="snap-start min-h-screen bg-white"
+      >
+        <div
+          className={[
+            "mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center gap-10 px-6 py-20 transition-[opacity,transform]",
+            "duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+            visible.archive ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
+          ].join(" ")}
+        >
+          <div className="space-y-6">
+            <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">Archive Notes</p>
+            <h2 className="text-3xl tracking-[0.08em] text-black sm:text-4xl">Architecture Over Algorithms</h2>
+            <p className="max-w-xl whitespace-pre-line text-[15px] leading-7 text-black/70">
+              I don’t produce for trends.
+              {"\n"}I build frameworks for records.
+              {"\n\n"}Rhythm as foundation.
+              {"\n"}Space as intention.
+              {"\n"}Emotion engineered.
+            </p>
+            <div>
+              <a
+                href="https://www.beatstars.com/anthonydake"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white/70 px-6 py-3 text-[11px] uppercase tracking-[0.35em] text-black transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                Explore the Archive
+              </a>
+            </div>
+          </div>
+          <div className="space-y-6">
+            {/* TODO: Embed 3 BeatStars preview players when track URLs are provided. */}
+          </div>
+        </div>
       </section>
 
       <section

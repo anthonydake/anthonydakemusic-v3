@@ -101,13 +101,14 @@ export default function ProjectsIndexClient() {
   }, [items.length]);
 
   useEffect(() => {
+    if (isMobileFallback) return;
     const { style } = document.body;
     const prev = style.overflow;
     style.overflow = "hidden";
     return () => {
       style.overflow = prev;
     };
-  }, []);
+  }, [isMobileFallback]);
 
   useEffect(() => {
     if (isMobileFallback) return;
@@ -141,6 +142,39 @@ export default function ProjectsIndexClient() {
 
     window.addEventListener("wheel", handleWheel, { passive: false });
     return () => window.removeEventListener("wheel", handleWheel);
+  }, [isMobileFallback, isTransitioning, triggerTransition]);
+
+  useEffect(() => {
+    if (!isMobileFallback) return;
+    if (isTransitioning) return;
+
+    let raf = 0;
+    let hasUserScrolled = false;
+    let triggered = false;
+    const checkBottom = () => {
+      raf = 0;
+      if (triggered || !hasUserScrolled) return;
+      const threshold = 36;
+      const scrollBottom = window.scrollY + window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      if (scrollBottom >= docHeight - threshold) {
+        triggered = true;
+        triggerTransition("/performance");
+      }
+    };
+    const handleScroll = () => {
+      if (!hasUserScrolled && window.scrollY > 10) {
+        hasUserScrolled = true;
+      }
+      if (raf) return;
+      raf = window.requestAnimationFrame(checkBottom);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [isMobileFallback, isTransitioning, triggerTransition]);
 
 
@@ -183,8 +217,17 @@ export default function ProjectsIndexClient() {
     }, 220);
   };
 
+  const frameClass = [
+    "projects-index-frame relative bg-white text-black",
+    isMobileFallback ? "min-h-screen" : "h-screen overflow-hidden",
+  ].join(" ");
+  const mainClass = [
+    "relative z-[10] mx-auto max-w-[var(--frame-max)] px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem] 2xl:px-16 2xl:[--page-pad:4rem]",
+    isMobileFallback ? "min-h-[calc(100svh-56px)] overflow-visible" : "h-[calc(100svh-56px)] overflow-hidden",
+  ].join(" ");
+
   return (
-    <div className="projects-index-frame relative h-screen overflow-hidden bg-white text-black" style={frameStyle}>
+    <div className={frameClass} style={frameStyle}>
       {/* Vertical hairline gridlines (desktop only) */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">
         <div className="mx-auto h-full max-w-[var(--frame-max)] px-6 sm:px-8 lg:px-10 xl:px-12 2xl:px-16">
@@ -201,9 +244,14 @@ export default function ProjectsIndexClient() {
       <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
         <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11.6875px] uppercase tracking-[0.28em] text-black/65">
           <div className="justify-self-start">
-            <span>Columbus, (OH)</span>
-            <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
-            <ColumbusTime />
+            <Link className="md:hidden hover:text-black" href="/placements">
+              Placements
+            </Link>
+            <div className="hidden items-center md:flex">
+              <span>Columbus, (OH)</span>
+              <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
+              <ColumbusTime />
+            </div>
           </div>
 
           <Link
@@ -213,18 +261,23 @@ export default function ProjectsIndexClient() {
             <HomeMark className="h-[18px] w-[18px] transition group-hover:scale-[1.04] group-hover:brightness-110" />
           </Link>
 
-          <nav className="flex items-center justify-self-end gap-6">
-            <Link className="hover:text-black" href="/placements">
-              Placements
-            </Link>
-            <Link className="hover:text-black" href="/performance">
+          <div className="justify-self-end">
+            <Link className="md:hidden hover:text-black" href="/performance">
               Performance
             </Link>
-          </nav>
+            <nav className="hidden items-center gap-6 md:flex">
+              <Link className="hover:text-black" href="/placements">
+                Placements
+              </Link>
+              <Link className="hover:text-black" href="/performance">
+                Performance
+              </Link>
+            </nav>
+          </div>
         </div>
       </div>
 
-      <main className="relative z-[10] mx-auto h-[calc(100svh-56px)] max-w-[var(--frame-max)] overflow-hidden px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem] 2xl:px-16 2xl:[--page-pad:4rem]">
+      <main className={mainClass}>
         <div
           className={[
             hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
