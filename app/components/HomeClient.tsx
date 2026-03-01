@@ -152,47 +152,47 @@ export default function HomeClient({
     if (!nextHref) return;
     if (isTransitioning) return;
 
-    let raf = 0;
-    const hasUserScrolledRef = { current: false };
-    const triggeredRef = { current: false };
+    let touchStart = 0;
+    let triggered = false;
+    const swipeThreshold = 42;
 
-    const checkBottom = () => {
-      raf = 0;
-      if (triggeredRef.current) return;
-      if (!hasUserScrolledRef.current) return;
-      const threshold = 36;
-      const atBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - threshold;
-      if (atBottom) {
-        triggeredRef.current = true;
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStart = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (triggered) return;
+      e.preventDefault();
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (triggered) return;
+      const dy = e.changedTouches[0].clientY - touchStart;
+      if (dy < -swipeThreshold) {
+        triggered = true;
         triggerTransition(nextHref);
       }
     };
 
-    const handleScroll = () => {
-      if (!hasUserScrolledRef.current && container.scrollTop > 10) {
-        hasUserScrolledRef.current = true;
-      }
-      if (raf) return;
-      raf = window.requestAnimationFrame(checkBottom);
-    };
-
-    container.addEventListener("scroll", handleScroll, { passive: true });
+    container.addEventListener("touchstart", handleTouchStart, { passive: true });
+    container.addEventListener("touchmove", handleTouchMove, { passive: false });
+    container.addEventListener("touchend", handleTouchEnd, { passive: true });
     return () => {
-      if (raf) window.cancelAnimationFrame(raf);
-      container.removeEventListener("scroll", handleScroll);
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handleTouchEnd);
     };
   }, [isMobileFallback, isTransitioning, nextHref, triggerTransition]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
-    if (isMobileFallback) return;
     document.documentElement.classList.add("no-scroll");
     document.body.classList.add("no-scroll");
     return () => {
       document.documentElement.classList.remove("no-scroll");
       document.body.classList.remove("no-scroll");
     };
-  }, [isMobileFallback]);
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setPillReady(true), 6000);
@@ -204,7 +204,8 @@ export default function HomeClient({
       ref={containerRef}
       className={[
         "site-bg min-h-screen bg-white scrollbar-hide",
-        isMobileFallback ? "overflow-y-auto" : "snap-y snap-mandatory overflow-y-hidden",
+        "overflow-y-hidden",
+        isMobileFallback ? "" : "snap-y snap-mandatory",
       ].join(" ")}
       style={{ scrollBehavior: "smooth" }}
     >
