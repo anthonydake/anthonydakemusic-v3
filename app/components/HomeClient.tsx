@@ -240,42 +240,9 @@ export default function HomeClient({
                   <LogoArchitectOfSound />
                 </Link>
                 <div className="mt-3 text-center text-[11px] uppercase tracking-[0.24em] text-black/55">
-                  free beats · free feedback · first in line
+                  Producer • Drummer • Music Director
                 </div>
-                <form
-                  className="mt-5 flex w-full max-w-[520px] flex-col items-center justify-center gap-3 sm:flex-row"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const form = e.currentTarget;
-                    const data = new FormData(form);
-                    const email = String(data.get("email") || "").trim();
-                    if (!email) return;
-                    const subject = encodeURIComponent("Archive Signup");
-                    const body = encodeURIComponent(`Email: ${email}`);
-                    window.location.href = `mailto:adakemusic@gmail.com?subject=${subject}&body=${body}`;
-                    form.reset();
-                  }}
-                >
-                  <label className="sr-only" htmlFor="archive-email">
-                    Email address
-                  </label>
-                  <input
-                    id="archive-email"
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    placeholder="Enter your email"
-                    className="w-full flex-1 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-center text-[12px] tracking-[0.14em] text-black/70 outline-none transition focus:border-white/40 sm:text-left"
-                  />
-                  <button
-                    type="submit"
-                    className="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/10 px-6 py-3 text-[11px] uppercase tracking-[0.32em] text-black/80 transition hover:-translate-y-0.5 hover:shadow-md sm:w-auto"
-                  >
-                    Join the Archive
-                  </button>
-                </form>
-                <div className="mt-5 flex items-center justify-center gap-8">
+                <div className="mt-4 flex items-center justify-center gap-8">
                   <a
                     className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="mailto:adakemusic@gmail.com"
