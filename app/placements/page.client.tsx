@@ -48,6 +48,7 @@ export default function ProjectsIndexClient() {
   );
   const [previewNext, setPreviewNext] = useState<ProjectPreview | null>(null);
   const [previewNextVisible, setPreviewNextVisible] = useState(false);
+  const rowsRef = useRef<HTMLDivElement | null>(null);
   const previewCommitRef = useRef<number | null>(null);
   const accumRef = useRef(0);
   const triggeredRef = useRef(false);
@@ -102,29 +103,40 @@ export default function ProjectsIndexClient() {
   }, [items.length]);
 
   useEffect(() => {
-    if (isMobileFallback) return;
     const { style } = document.body;
     const prev = style.overflow;
     style.overflow = "hidden";
     return () => {
       style.overflow = prev;
     };
-  }, [isMobileFallback]);
+  }, []);
 
   useEffect(() => {
-    if (isMobileFallback) return;
     if (isTransitioning) return;
+    const rows = rowsRef.current;
+    if (!rows) return;
 
     const handleWheel = (e: WheelEvent) => {
       if (triggeredRef.current) return;
       e.preventDefault();
       const now = performance.now();
       const delta = e.deltaY;
+      const slowFactor = 0.35;
       const minDelta = 35;
       const triggerThreshold = 140;
       const windowMs = 220;
+      if (Math.abs(delta) < 1) return;
+
+      rows.scrollTop += delta * slowFactor;
+
       if (Math.abs(delta) < minDelta) return;
       if (delta <= 0) {
+        accumRef.current = 0;
+        lastWheelRef.current = null;
+        return;
+      }
+      const atBottom = rows.scrollTop + rows.clientHeight >= rows.scrollHeight - 2;
+      if (!atBottom) {
         accumRef.current = 0;
         lastWheelRef.current = null;
         return;
@@ -136,47 +148,20 @@ export default function ProjectsIndexClient() {
       accumRef.current += delta;
       if (accumRef.current >= triggerThreshold) {
         triggeredRef.current = true;
-        window.removeEventListener("wheel", handleWheel);
+        rows.removeEventListener("wheel", handleWheel);
         triggerTransition("/performance");
       }
     };
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, [isMobileFallback, isTransitioning, triggerTransition]);
+    rows.addEventListener("wheel", handleWheel, { passive: false });
+    return () => rows.removeEventListener("wheel", handleWheel);
+  }, [isTransitioning, triggerTransition]);
 
   useEffect(() => {
-    if (!isMobileFallback) return;
-    if (isTransitioning) return;
-
-    let raf = 0;
-    let hasUserScrolled = false;
-    let triggered = false;
-    const checkBottom = () => {
-      raf = 0;
-      if (triggered || !hasUserScrolled) return;
-      const threshold = 36;
-      const scrollBottom = window.scrollY + window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight;
-      if (scrollBottom >= docHeight - threshold) {
-        triggered = true;
-        triggerTransition("/performance");
-      }
-    };
-    const handleScroll = () => {
-      if (!hasUserScrolled && window.scrollY > 10) {
-        hasUserScrolled = true;
-      }
-      if (raf) return;
-      raf = window.requestAnimationFrame(checkBottom);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      if (raf) window.cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [isMobileFallback, isTransitioning, triggerTransition]);
+    const rows = rowsRef.current;
+    if (!rows) return;
+    rows.scrollTop = 0;
+  }, []);
 
 
   useEffect(() => {
@@ -218,13 +203,10 @@ export default function ProjectsIndexClient() {
     }, 220);
   };
 
-  const frameClass = [
-    "projects-index-frame relative bg-white text-black",
-    isMobileFallback ? "min-h-screen" : "h-screen overflow-hidden",
-  ].join(" ");
+  const frameClass = ["projects-index-frame relative bg-white text-black", "h-screen overflow-hidden"].join(" ");
   const mainClass = [
     "relative z-[10] mx-auto max-w-[var(--frame-max)] px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem] 2xl:px-16 2xl:[--page-pad:4rem]",
-    isMobileFallback ? "min-h-[calc(100svh-56px)] overflow-visible" : "h-[calc(100svh-56px)] overflow-hidden",
+    "h-[calc(100svh-56px)] overflow-hidden",
   ].join(" ");
 
   return (
@@ -284,7 +266,11 @@ export default function ProjectsIndexClient() {
             hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
           ].join(" ")}
         >
-          <section aria-label="Placements index">
+          <section
+            aria-label="Placements index"
+            ref={rowsRef}
+            className="rows-scroll max-h-[calc(100svh-398px)] overflow-y-auto overscroll-contain pr-2"
+          >
             <YearGroups
               items={items}
               revealCount={revealCount}
@@ -364,6 +350,15 @@ export default function ProjectsIndexClient() {
           .home-scroll-indicator {
             animation: none;
           }
+        }
+        .rows-scroll {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          -webkit-overflow-scrolling: touch;
+        }
+        .rows-scroll::-webkit-scrollbar {
+          width: 0;
+          height: 0;
         }
       `}</style>
     </div>
