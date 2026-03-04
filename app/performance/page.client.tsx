@@ -2,7 +2,7 @@
 
 import "../placements/projects-index.css";
 
-import Image from "next/image";
+import NextImage from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { performanceIndex, type PerformanceItem } from "@/data/performance.data";
@@ -223,7 +223,7 @@ export default function PerformanceIndexClient() {
     setPreviewNextVisible(false);
     setPreviewNext(next);
     previewPendingSrcRef.current = next.src;
-    const img = new Image();
+    const img = new window.Image();
     previewPreloadRef.current = img;
     img.onload = () => onNextReady(next.src);
     img.onerror = () => onNextReady(next.src);
@@ -501,7 +501,7 @@ function PreviewPanel({
 
 function PreviewMedia({ preview, onReady }: { preview: PerformancePreview; onReady?: () => void }) {
   return (
-    <Image
+    <NextImage
       className="object-cover"
       src={preview.src}
       alt="Performance preview"
