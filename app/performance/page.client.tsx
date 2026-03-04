@@ -289,13 +289,14 @@ export default function PerformanceIndexClient() {
       <main className={mainClass}>
         <div
           className={[
+            "h-full",
             hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
           ].join(" ")}
         >
           <section
             aria-label="Performance index"
             ref={rowsRef}
-            className="rows-scroll max-h-[calc(100svh-398px)] overflow-y-auto overscroll-contain pr-2"
+            className="rows-scroll min-h-0 overflow-y-auto overscroll-contain pr-2"
           >
             <YearGroups
               items={items}
