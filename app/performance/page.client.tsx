@@ -432,26 +432,26 @@ function YearGroups({
                   <Link
                     key={p.slug}
                     href={`/performance/${p.slug}`}
-                    className="projects-row projects-row-enter group block py-1 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:h-5 lg:py-0"
+                    className="projects-row projects-row-enter group block py-2 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:py-2"
                     onMouseEnter={() => onRowHover(p.slug)}
                   >
-                    <div className="min-w-0 grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-4 leading-none lg:h-full lg:grid-cols-[var(--col1)_var(--col2)_var(--col3)_minmax(0,1fr)] lg:items-center lg:gap-x-8">
+                    <div className="min-w-0 grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-4 gap-y-1 leading-tight lg:grid-cols-[var(--col1)_var(--col2)_var(--col3)_minmax(0,1fr)] lg:items-start lg:gap-x-8">
                       {/* Column 1: date */}
                       <div className="tabular-nums text-[9.5625px] uppercase tracking-[0.2em]">{p.dateDisplay}</div>
 
                       {/* Column 2: artist */}
-                      <div className="projects-row-muted truncate text-[9.5625px] uppercase tracking-[0.2em] text-black/55">
+                      <div className="projects-row-muted text-[9.5625px] uppercase tracking-[0.2em] text-black/55 whitespace-normal">
                         {p.primaryArtist}
                       </div>
 
                       {/* Column 3: roles (desktop only) */}
-                      <div className="projects-row-muted hidden truncate text-[9.5625px] uppercase tracking-[0.2em] text-black/55 lg:block">
+                      <div className="projects-row-muted hidden text-[9.5625px] uppercase tracking-[0.2em] text-black/55 lg:block whitespace-normal">
                         {rolesLine}
                       </div>
 
                       {/* Column 4: title (desktop only) */}
-                      <div className="hidden truncate text-[9.5625px] uppercase tracking-[0.2em] lg:block">
-                        <span className="truncate">{p.title}</span>
+                      <div className="hidden text-[9.5625px] uppercase tracking-[0.2em] lg:block whitespace-normal">
+                        <span>{p.title}</span>
                       </div>
                     </div>
                   </Link>
