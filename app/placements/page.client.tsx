@@ -93,7 +93,7 @@ export default function ProjectsIndexClient() {
         count += 1;
         setRevealCount(count);
         if (count >= items.length && interval) window.clearInterval(interval);
-      }, 250);
+      }, 125);
     }, 0);
 
     return () => {
@@ -205,7 +205,7 @@ export default function ProjectsIndexClient() {
 
   const frameClass = ["projects-index-frame relative bg-white text-black", "h-screen overflow-hidden"].join(" ");
   const mainClass = [
-    "relative z-[10] mx-auto max-w-[var(--frame-max)] px-6 pb-24 pt-[246px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem] 2xl:px-16 2xl:[--page-pad:4rem]",
+    "relative z-[10] mx-auto max-w-[var(--frame-max)] px-6 pb-24 pt-[200px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem] 2xl:px-16 2xl:[--page-pad:4rem]",
     "h-[calc(100svh-56px)] overflow-hidden",
   ].join(" ");
 
