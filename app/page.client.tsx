@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import HomeClient from "./components/HomeClient";
 import ColumbusTime from "./components/ColumbusTime";
 import HomeMark from "./components/HomeMark";
-import site from "@/content/site";
 import { useTransition } from "./components/TransitionProvider";
 
 export default function HomePageClient() {

@@ -73,7 +73,7 @@ export default function TransitionProvider({ children }: { children: React.React
       navCommittedRef.current = false;
       setPhase("covering");
     },
-    [phase, prefersReducedMotion, isMobileFallback]
+    [phase, prefersReducedMotion]
   );
 
   useEffect(() => {
@@ -97,9 +97,9 @@ export default function TransitionProvider({ children }: { children: React.React
   }, [phase]);
 
   useEffect(() => {
-    if (phase === "covering" && target && pathname === target) {
-      setPhase("revealing");
-    }
+    if (phase !== "covering" || !target || pathname !== target) return;
+    const t = window.setTimeout(() => setPhase("revealing"), 0);
+    return () => window.clearTimeout(t);
   }, [phase, target, pathname]);
 
   const handleCoverComplete = useCallback(() => {

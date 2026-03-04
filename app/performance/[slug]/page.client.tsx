@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
+import { usePathname } from "next/navigation";
 import ColumbusTime from "@/app/components/ColumbusTime";
 import HomeMark from "@/app/components/HomeMark";
 import { performanceIndex, type PerformanceItem } from "@/data/performance.data";
@@ -97,14 +99,8 @@ function getEmbedUrl(url: string) {
 }
 
 export default function PerformanceDetailClient() {
-  const [currentSlug, setCurrentSlug] = useState<string | null>(null);
-  const [mapHref, setMapHref] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const fromPath = window.location.pathname.split("/").filter(Boolean).pop() || null;
-    setCurrentSlug(fromPath);
-  }, []);
+  const pathname = usePathname();
+  const currentSlug = useMemo(() => pathname?.split("/").filter(Boolean).pop() || null, [pathname]);
 
   const performance = useMemo(() => {
     return performanceIndex.find((p) => p.slug === currentSlug) || null;
@@ -119,21 +115,16 @@ export default function PerformanceDetailClient() {
   const city = performance?.city;
   const state = performance?.state;
 
-  useEffect(() => {
-    if (!performance) {
-      setMapHref(null);
-      return;
-    }
+  const mapHref = useMemo(() => {
+    if (!performance) return null;
     const query = [venue, city, state].filter(Boolean).join(", ");
-    if (!query) {
-      setMapHref(null);
-      return;
-    }
+    if (!query) return null;
     const encoded = encodeURIComponent(query);
     const apple = `https://maps.apple.com/?q=${encoded}`;
     const google = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
+    if (typeof window === "undefined") return google;
     const isApple = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
-    setMapHref(isApple ? apple : google);
+    return isApple ? apple : google;
   }, [performance, venue, city, state]);
 
   if (!performance) {
@@ -302,10 +293,12 @@ export default function PerformanceDetailClient() {
               {embedUrl ? (
                 <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/[0.04]">
                   {embedIsImage ? (
-                    <img
-                      className="h-full w-full object-cover"
+                    <Image
                       src={embedUrl}
                       alt={`${performance.title} preview`}
+                      fill
+                      sizes="(min-width: 1024px) 60vw, 100vw"
+                      className="object-cover"
                     />
                   ) : (
                     <iframe

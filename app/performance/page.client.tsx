@@ -2,6 +2,7 @@
 
 import "../placements/projects-index.css";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { performanceIndex, type PerformanceItem } from "@/data/performance.data";
@@ -500,10 +501,12 @@ function PreviewPanel({
 
 function PreviewMedia({ preview, onReady }: { preview: PerformancePreview; onReady?: () => void }) {
   return (
-    <img
-      className="h-full w-full object-cover"
+    <Image
+      className="object-cover"
       src={preview.src}
       alt="Performance preview"
+      fill
+      sizes="(min-width: 1024px) 50vw, 100vw"
       onLoad={() => onReady?.()}
     />
   );

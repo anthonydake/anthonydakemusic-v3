@@ -2,6 +2,7 @@
 
 import "./projects-index.css";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { projectIndex, type ProjectIndexItem, type ProjectPreview } from "@/data/projects.data";
@@ -484,6 +485,13 @@ function PreviewMedia({ preview, onReady }: { preview: ProjectPreview; onReady?:
   }
 
   return (
-    <img src={preview.src} alt="" className="h-full w-full object-cover" onLoad={() => onReady?.()} />
+    <Image
+      src={preview.src}
+      alt=""
+      fill
+      sizes="(min-width: 1024px) 50vw, 100vw"
+      className="object-cover"
+      onLoad={() => onReady?.()}
+    />
   );
 }

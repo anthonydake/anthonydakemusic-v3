@@ -13,8 +13,6 @@ export default function ArchiveAdminPage() {
   const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
 
-  const [isUnlocked, setIsUnlocked] = useState(false);
-
   useEffect(() => {
     const load = async () => {
       setStatus("loading");
@@ -48,7 +46,6 @@ export default function ArchiveAdminPage() {
       if (!response.ok) {
         throw new Error("Unauthorized");
       }
-      setIsUnlocked(true);
       setPassword("");
       const listResponse = await fetch("/api/archive/list", { cache: "no-store" });
       if (!listResponse.ok) throw new Error("Unable to load");

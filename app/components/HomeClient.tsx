@@ -2,14 +2,12 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import ArchiveModal from "./ArchiveModal";
 import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
   initialSection?: "hero" | "archive" | "projects";
-  syncRoute?: boolean;
   nextHref?: string;
 };
 
@@ -17,10 +15,8 @@ const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : use
 
 export default function HomeClient({
   initialSection = "hero",
-  syncRoute = true,
   nextHref,
 }: HomeClientProps) {
-  const searchParams = useSearchParams();
   const { isTransitioning, isMobileFallback, triggerTransition } = useTransition();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useMemo(
@@ -30,7 +26,6 @@ export default function HomeClient({
   const [visible, setVisible] = useState<{ hero: boolean; archive: boolean; projects: boolean }>(() =>
     reduceMotion ? { hero: true, archive: true, projects: true } : { hero: false, archive: false, projects: false }
   );
-  const [activeId, setActiveId] = useState<"hero" | "archive" | "projects">(initialSection);
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [pillReady, setPillReady] = useState(false);
@@ -68,7 +63,6 @@ export default function HomeClient({
           const id = entry.target.getAttribute("data-id");
           if (!id) return;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
-            setActiveId(id as "hero" | "archive" | "projects");
             setVisible((prev) =>
               prev[id as "hero" | "archive" | "projects"]
                 ? prev
