@@ -9,6 +9,14 @@ import HomeMark from "@/app/components/HomeMark";
 import { projectIndex } from "@/data/projects.data";
 import { projects, type ProjectMedia } from "@/lib/projects";
 
+function parseSortKeyMMDDYYYY(date: string) {
+  const m = Number(date.slice(0, 2));
+  const d = Number(date.slice(3, 5));
+  const y = Number(date.slice(6, 10));
+  if (!Number.isFinite(m) || !Number.isFinite(d) || !Number.isFinite(y)) return 0;
+  return y * 10000 + m * 100 + d;
+}
+
 function getVideoEmbedUrl(media: Extract<ProjectMedia, { kind: "video" }>) {
   if (media.provider === "youtube") return `https://www.youtube.com/embed/${media.id}`;
   return `https://player.vimeo.com/video/${media.id}`;
@@ -19,10 +27,14 @@ export default function ProjectDetailClient() {
   const currentSlug = useMemo(() => pathname?.split("/").filter(Boolean).pop() || null, [pathname]);
   const project = useMemo(() => projects.find((p) => p.slug === currentSlug) || null, [currentSlug]);
 
-  const currentIndex = currentSlug ? projectIndex.findIndex((p) => p.slug === currentSlug) : -1;
-  const prevProject = currentIndex > 0 ? projectIndex[currentIndex - 1] : null;
+  const orderedIndex = useMemo(
+    () => [...projectIndex].sort((a, b) => parseSortKeyMMDDYYYY(b.date) - parseSortKeyMMDDYYYY(a.date)),
+    []
+  );
+  const currentIndex = currentSlug ? orderedIndex.findIndex((p) => p.slug === currentSlug) : -1;
+  const prevProject = currentIndex > 0 ? orderedIndex[currentIndex - 1] : null;
   const nextProject =
-    currentIndex >= 0 && currentIndex < projectIndex.length - 1 ? projectIndex[currentIndex + 1] : null;
+    currentIndex >= 0 && currentIndex < orderedIndex.length - 1 ? orderedIndex[currentIndex + 1] : null;
 
   if (!project) {
     return (
