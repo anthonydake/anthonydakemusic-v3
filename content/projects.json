@@ -1,5 +1,52 @@
 [
   {
+    "slug": "aura",
+    "title": "Aura",
+    "subtitle": "Single | AR!YAH",
+    "year": 2025,
+    "role": "Production/Songwriting, Mixing/Mastering",
+    "tags": [
+      "R&B",
+      "Neo-Soul",
+      "Soul",
+      "Independent Artist"
+    ],
+    "blurb": "Artist No. 1 on my #100artist Series.",
+    "tone": [
+      "#d7a97f",
+      "#f1c89b"
+    ],
+    "deliverables": [
+      "Full instrumental production",
+      "Programming",
+      "Arrangement",
+      "Engineering",
+      "Final mix and master"
+    ],
+    "credits": [
+      "AR!YAH — Artist, Songwriter",
+      "Anthony Dake — Producer, Songwriter",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
+    ],
+    "narrative": [
+      "\"never should've let you in my Aura\" is a song on boundaries and finding peace."
+    ],
+    "links": [
+      { "label": "YouTube", "href": "https://www.youtube.com/watch?v=rygn058o5OM" },
+      { "label": "Apple Music", "href": "https://music.apple.com/us/song/aura/1841980694" },
+      { "label": "Spotify", "href": "https://open.spotify.com/track/0VofpwrHBIk9RwYKOp4ufu?si=9ffe4b1135774121" }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/aura.jpg",
+        "alt": "Aura cover art",
+        "title": "Aura"
+      }
+    ]
+  },
+  {
     "slug": "get-down",
     "title": "Get Down",
     "subtitle": "Track 2 | 333",
