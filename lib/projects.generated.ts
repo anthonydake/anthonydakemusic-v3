@@ -3,6 +3,73 @@ import type { Project } from "./projects";
 
 export const projects: Project[] = [
   {
+    "slug": "get-down",
+    "title": "Get Down",
+    "subtitle": "Track 2 | 333",
+    "year": 2025,
+    "role": "Production/Songwriting, Mixing/Mastering",
+    "tags": [
+      "333",
+      "Beatmaker",
+      "Beats",
+      "Drums",
+      "Engineer",
+      "EP",
+      "Hip-hop",
+      "Jae Esquire",
+      "Music Columbus",
+      "Producer",
+      "Rap",
+      "Single",
+      "Songwriter"
+    ],
+    "blurb": "Artist No. 5 on my #100artist Series.",
+    "tone": [
+      "#c97a6f",
+      "#f2c37a"
+    ],
+    "deliverables": [
+      "Full instrumental production",
+      "Programming",
+      "Arrangement",
+      "Engineering",
+      "Final mix and master"
+    ],
+    "credits": [
+      "Jae Esquire — Artist, Songwriter",
+      "Anthony Dake — Producer, Songwriter",
+      "Mixed by Anthony Dake",
+      "Mastered by Anthony Dake"
+    ],
+    "narrative": [
+      "We finished this in a single session in about an hour and a half, start to finish.",
+      "I did a touch-up mix after the session, and Jae performed the song live the night it dropped.",
+      "Loved every second of the process and working with Jae."
+    ],
+    "links": [
+      {
+        "label": "YouTube",
+        "href": "https://www.youtube.com/watch?v=PdBcj7DCSJA&list=RDPdBcj7DCSJA&start_radio=1"
+      },
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/5qxulwC2FywjOhdZqybS4u?si=5b03b6c7677c42f4"
+      },
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/song/get-down/1860453843"
+      }
+    ],
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/get-down.jpg",
+        "alt": "Get Down cover art",
+        "title": "Get Down"
+      }
+    ]
+  },
+  {
     "slug": "back-and-forth",
     "title": "Back & Forth",
     "subtitle": "Track 1 | Back & Forth",
