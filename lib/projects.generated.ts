@@ -126,6 +126,49 @@ export const projects: Project[] = [
     ]
   },
   {
+    "slug": "morning-coffee",
+    "title": "Morning Coffee",
+    "subtitle": "EP | BittyOTW",
+    "year": 2025,
+    "role": "Recording Engineer, Mixing Engineer, Mastering Engineer",
+    "tags": [
+      "BittyOTW",
+      "Boom-Bap",
+      "EP",
+      "Hip-Hop",
+      "Rap"
+    ],
+    "blurb": "Full engineering, mix, and master on BittyOTW's Morning Coffee EP.",
+    "tone": [
+      "#3a2a1a",
+      "#7a5c3a"
+    ],
+    "deliverables": [
+      "Recording engineering",
+      "Mixing",
+      "Mastering"
+    ],
+    "credits": [
+      "BittyOTW — Artist, Songwriter",
+      "Anthony Dake — Recording Engineer, Mixing Engineer, Mastering Engineer"
+    ],
+    "narrative": [
+      "Engineered, mixed, and mastered the full Morning Coffee EP.",
+      "Bitty brought the vision — laid-back boom-bap energy with sharp bars. My job was to keep it warm, punchy, and streaming-ready."
+    ],
+    "links": [
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/album/0Jax69wzCxIKrdoED51uw7"
+      },
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/album/morning-coffee-ep/1791771047"
+      }
+    ],
+    "media": []
+  },
+  {
     "slug": "back-and-forth",
     "title": "Back & Forth",
     "subtitle": "Track 1 | Back & Forth",
@@ -461,6 +504,52 @@ export const projects: Project[] = [
     ]
   },
   {
+    "slug": "infinities-project-88",
+    "title": "Infinities (Project 88)",
+    "subtitle": "Album | Riyah",
+    "year": 2023,
+    "role": "Producer, Songwriter, Recording Engineer, Mixing Engineer, Mastering Engineer",
+    "tags": [
+      "Album",
+      "Neo-Soul",
+      "R&B",
+      "Riyah",
+      "Soul"
+    ],
+    "blurb": "Production, writing, and full engineering across Riyah's album. Featured on \"Infinity Interlude.\"",
+    "tone": [
+      "#6b4f8a",
+      "#b088c4"
+    ],
+    "deliverables": [
+      "Production on select tracks",
+      "Songwriting",
+      "Recording engineering",
+      "Mixing",
+      "Mastering"
+    ],
+    "credits": [
+      "Riyah — Artist, Songwriter",
+      "Anthony Dake — Producer, Songwriter, Recording Engineer, Mixing Engineer, Mastering Engineer",
+      "Anthony Dake — Featured Artist (Infinity Interlude)"
+    ],
+    "narrative": [
+      "Produced, co-wrote, engineered, mixed, and mastered across the album.",
+      "Also featured on \"Infinity Interlude\" — one of the few times stepping in front of the mic on someone else's project."
+    ],
+    "links": [
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/track/5FHssPl684ozoDDELF4JHy"
+      },
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/artist/riyah/669561530"
+      }
+    ],
+    "media": []
+  },
+  {
     "slug": "lazy-days",
     "title": "Lazy Days",
     "subtitle": "Track 1 | Finn and Jake",
@@ -569,6 +658,48 @@ export const projects: Project[] = [
     ]
   },
   {
+    "slug": "roadtrixtape",
+    "title": "RoadTrixtape",
+    "subtitle": "Mixtape | WANYEH",
+    "year": 2023,
+    "role": "Mixing Engineer, Mastering Engineer",
+    "tags": [
+      "Columbus",
+      "Hip-Hop",
+      "Mixtape",
+      "Rap",
+      "WANYEH"
+    ],
+    "blurb": "Mixed and mastered WANYEH's RoadTrixtape from front to back.",
+    "tone": [
+      "#2a1f14",
+      "#5c4a3a"
+    ],
+    "deliverables": [
+      "Mixing",
+      "Mastering"
+    ],
+    "credits": [
+      "WANYEH — Artist, Songwriter",
+      "Anthony Dake — Mixing Engineer, Mastering Engineer"
+    ],
+    "narrative": [
+      "Mixed and mastered every track on the RoadTrixtape.",
+      "WANYEH brought the sessions ready — my job was to balance the vocals, clean up the low end, and get it loud and clear for streaming."
+    ],
+    "links": [
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/album/6gOkakGJvP8A66hRWJza81"
+      },
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/album/roadtrixtape/1696406265"
+      }
+    ],
+    "media": []
+  },
+  {
     "slug": "small-business",
     "title": "Small Business",
     "subtitle": "Track 2 | Finn and Jake",
@@ -625,6 +756,89 @@ export const projects: Project[] = [
         "title": "Small Business"
       }
     ]
+  },
+  {
+    "slug": "class-loser",
+    "title": "Class Loser",
+    "subtitle": "Album | KJ The Cool Nerd",
+    "year": 2022,
+    "role": "Drums",
+    "tags": [
+      "Hip-Hop",
+      "KJ The Cool Nerd",
+      "Live Drums",
+      "Neo-Soul",
+      "Rap"
+    ],
+    "blurb": "Live drums on select tracks from KJ The Cool Nerd's debut album.",
+    "tone": [
+      "#0b0b0b",
+      "#1f2937"
+    ],
+    "deliverables": [
+      "Live drums on Heartbreaker, Falisity, East Side Chick"
+    ],
+    "credits": [
+      "KJ The Cool Nerd — Artist, Songwriter",
+      "Anthony Dake — Drums (Heartbreaker, Falisity, East Side Chick)"
+    ],
+    "narrative": [
+      "Played live drums on three tracks from KJ's debut album \"Class Loser.\"",
+      "Heartbreaker, Falisity, and East Side Chick each called for a different pocket — funk, boom-bap, and soul — all tracked to tape feel."
+    ],
+    "links": [
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/album/4wYIucBqSEJKyOGlDKMWk0"
+      },
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/album/class-loser/1607007125"
+      }
+    ],
+    "media": []
+  },
+  {
+    "slug": "flora-2",
+    "title": "FLORA 2",
+    "subtitle": "Album | WANYEH",
+    "year": 2022,
+    "role": "Recording Engineer, Mixing Engineer, Mastering Engineer",
+    "tags": [
+      "Columbus",
+      "Hip-Hop",
+      "Rap",
+      "WANYEH"
+    ],
+    "blurb": "Full engineering, mix, and master on WANYEH's FLORA 2 project.",
+    "tone": [
+      "#1a2e1a",
+      "#3d5c3a"
+    ],
+    "deliverables": [
+      "Recording engineering",
+      "Mixing",
+      "Mastering"
+    ],
+    "credits": [
+      "WANYEH — Artist, Songwriter",
+      "Anthony Dake — Recording Engineer, Mixing Engineer, Mastering Engineer"
+    ],
+    "narrative": [
+      "Engineered, mixed, and mastered every track on FLORA 2.",
+      "Focused on keeping WANYEH's delivery front and center with clean low-end and open vocal space."
+    ],
+    "links": [
+      {
+        "label": "Spotify",
+        "href": "https://open.spotify.com/album/1BRs00cvEQfizkqfI9Pk5T"
+      },
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/album/flora-2/1637236795"
+      }
+    ],
+    "media": []
   },
   {
     "slug": "missin-u",
@@ -703,5 +917,45 @@ export const projects: Project[] = [
         "title": "YouTube"
       }
     ]
+  },
+  {
+    "slug": "sundown",
+    "title": "Sundown",
+    "subtitle": "Single | Riyah",
+    "year": 2022,
+    "role": "Producer, Songwriter, Drums, Recording Engineer, Mixing Engineer, Mastering Engineer",
+    "tags": [
+      "Live Drums",
+      "Neo-Soul",
+      "R&B",
+      "Riyah"
+    ],
+    "blurb": "Full production, live drums, and engineering on Riyah's single.",
+    "tone": [
+      "#d4956b",
+      "#f0c28a"
+    ],
+    "deliverables": [
+      "Full instrumental production",
+      "Live drums",
+      "Recording engineering",
+      "Mixing",
+      "Mastering"
+    ],
+    "credits": [
+      "Riyah — Artist, Songwriter",
+      "Anthony Dake — Producer, Songwriter, Drums, Recording Engineer, Mixing Engineer, Mastering Engineer"
+    ],
+    "narrative": [
+      "Built from scratch with live drums and layered production.",
+      "One of the earliest full-scope projects — wrote, produced, played, tracked, mixed, and mastered the whole record."
+    ],
+    "links": [
+      {
+        "label": "Apple Music",
+        "href": "https://music.apple.com/us/artist/riyah/669561530"
+      }
+    ],
+    "media": []
   }
 ];
