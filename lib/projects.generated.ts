@@ -166,7 +166,14 @@ export const projects: Project[] = [
         "href": "https://music.apple.com/us/album/morning-coffee-ep/1791771047"
       }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/morning-coffee.jpg",
+        "alt": "Morning Coffee EP cover art",
+        "title": "Morning Coffee"
+      }
+    ]
   },
   {
     "slug": "back-and-forth",
@@ -697,7 +704,14 @@ export const projects: Project[] = [
         "href": "https://music.apple.com/us/album/roadtrixtape/1696406265"
       }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/roadtrixtape.jpg",
+        "alt": "RoadTrixtape cover art",
+        "title": "RoadTrixtape"
+      }
+    ]
   },
   {
     "slug": "small-business",
@@ -788,15 +802,18 @@ export const projects: Project[] = [
     ],
     "links": [
       {
-        "label": "Spotify",
-        "href": "https://open.spotify.com/album/4wYIucBqSEJKyOGlDKMWk0"
-      },
-      {
         "label": "Apple Music",
-        "href": "https://music.apple.com/us/album/class-loser/1607007125"
+        "href": "https://music.apple.com/us/album/class-loser/1607007028"
       }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/class-loser.jpg",
+        "alt": "Class Loser cover art",
+        "title": "Class Loser"
+      }
+    ]
   },
   {
     "slug": "flora-2",
@@ -838,7 +855,14 @@ export const projects: Project[] = [
         "href": "https://music.apple.com/us/album/flora-2/1637236795"
       }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/flora-2.jpg",
+        "alt": "FLORA 2 cover art",
+        "title": "FLORA 2"
+      }
+    ]
   },
   {
     "slug": "missin-u",
@@ -956,6 +980,13 @@ export const projects: Project[] = [
         "href": "https://music.apple.com/us/artist/riyah/669561530"
       }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/infinities-project-88.jpg",
+        "alt": "Infinities (Project 88) cover art",
+        "title": "Infinities (Project 88)"
+      }
+    ]
   }
 ];

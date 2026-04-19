@@ -44,6 +44,7 @@ export const projectIndex: ProjectIndexItem[] = [
     workTags: ["ENGINEERING", "MIXING/MASTERING"],
     title: "Morning Coffee",
     slug: "morning-coffee",
+    preview: { type: "image", src: "/placements/morning-coffee.jpg" },
   },
   {
     id: "P11",
@@ -143,6 +144,7 @@ export const projectIndex: ProjectIndexItem[] = [
     workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
     title: "Infinities (Project 88)",
     slug: "infinities-project-88",
+    preview: { type: "image", src: "/placements/infinities-project-88.jpg" },
   },
   {
     id: "P02",
@@ -162,6 +164,7 @@ export const projectIndex: ProjectIndexItem[] = [
     workTags: ["MIXING/MASTERING"],
     title: "RoadTrixtape",
     slug: "roadtrixtape",
+    preview: { type: "image", src: "/placements/roadtrixtape.jpg" },
   },
   {
     id: "P15",
@@ -180,6 +183,7 @@ export const projectIndex: ProjectIndexItem[] = [
     workTags: ["ENGINEERING", "MIXING/MASTERING"],
     title: "FLORA 2",
     slug: "flora-2",
+    preview: { type: "image", src: "/placements/flora-2.jpg" },
   },
   {
     id: "P01",
@@ -199,5 +203,6 @@ export const projectIndex: ProjectIndexItem[] = [
     workTags: ["DRUMS"],
     title: "Class Loser",
     slug: "class-loser",
+    preview: { type: "image", src: "/placements/class-loser.jpg" },
   },
 ];

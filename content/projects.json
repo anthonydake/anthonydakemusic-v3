@@ -522,10 +522,16 @@
       "Heartbreaker, Falisity, and East Side Chick each called for a different pocket — funk, boom-bap, and soul — all tracked to tape feel."
     ],
     "links": [
-      { "label": "Spotify", "href": "https://open.spotify.com/album/4wYIucBqSEJKyOGlDKMWk0" },
-      { "label": "Apple Music", "href": "https://music.apple.com/us/album/class-loser/1607007125" }
+      { "label": "Apple Music", "href": "https://music.apple.com/us/album/class-loser/1607007028" }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/class-loser.jpg",
+        "alt": "Class Loser cover art",
+        "title": "Class Loser"
+      }
+    ]
   },
   {
     "slug": "flora-2",
@@ -553,7 +559,14 @@
       { "label": "Spotify", "href": "https://open.spotify.com/album/1BRs00cvEQfizkqfI9Pk5T" },
       { "label": "Apple Music", "href": "https://music.apple.com/us/album/flora-2/1637236795" }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/flora-2.jpg",
+        "alt": "FLORA 2 cover art",
+        "title": "FLORA 2"
+      }
+    ]
   },
   {
     "slug": "sundown",
@@ -582,7 +595,14 @@
     "links": [
       { "label": "Apple Music", "href": "https://music.apple.com/us/artist/riyah/669561530" }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/infinities-project-88.jpg",
+        "alt": "Infinities (Project 88) cover art",
+        "title": "Infinities (Project 88)"
+      }
+    ]
   },
   {
     "slug": "roadtrixtape",
@@ -609,7 +629,14 @@
       { "label": "Spotify", "href": "https://open.spotify.com/album/6gOkakGJvP8A66hRWJza81" },
       { "label": "Apple Music", "href": "https://music.apple.com/us/album/roadtrixtape/1696406265" }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/roadtrixtape.jpg",
+        "alt": "RoadTrixtape cover art",
+        "title": "RoadTrixtape"
+      }
+    ]
   },
   {
     "slug": "infinities-project-88",
@@ -668,6 +695,13 @@
       { "label": "Spotify", "href": "https://open.spotify.com/album/0Jax69wzCxIKrdoED51uw7" },
       { "label": "Apple Music", "href": "https://music.apple.com/us/album/morning-coffee-ep/1791771047" }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "image",
+        "src": "/placements/morning-coffee.jpg",
+        "alt": "Morning Coffee EP cover art",
+        "title": "Morning Coffee"
+      }
+    ]
   }
 ]
