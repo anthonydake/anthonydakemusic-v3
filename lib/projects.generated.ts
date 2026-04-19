@@ -51,6 +51,13 @@ export const projects: Project[] = [
     ],
     "media": [
       {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/0VofpwrHBIk9RwYKOp4ufu",
+        "title": "Spotify",
+        "height": 152
+      },
+      {
         "kind": "image",
         "src": "/placements/aura.jpg",
         "alt": "Aura cover art",
@@ -118,6 +125,13 @@ export const projects: Project[] = [
     ],
     "media": [
       {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/5qxulwC2FywjOhdZqybS4u",
+        "title": "Spotify",
+        "height": 152
+      },
+      {
         "kind": "image",
         "src": "/placements/get-down.jpg",
         "alt": "Get Down cover art",
@@ -167,6 +181,13 @@ export const projects: Project[] = [
       }
     ],
     "media": [
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/album/0Jax69wzCxIKrdoED51uw7",
+        "title": "Spotify",
+        "height": 352
+      },
       {
         "kind": "image",
         "src": "/placements/morning-coffee.jpg",
@@ -223,6 +244,13 @@ export const projects: Project[] = [
       }
     ],
     "media": [
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/2gbTyBk3cyCsOkRj4zy9dL",
+        "title": "Spotify",
+        "height": 152
+      },
       {
         "kind": "image",
         "src": "/placements/back-and-forth.jpg",
@@ -281,6 +309,13 @@ export const projects: Project[] = [
     ],
     "media": [
       {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/1IsudjdAu9xKZObUgRIR0R",
+        "title": "Spotify",
+        "height": 152
+      },
+      {
         "kind": "image",
         "src": "/placements/bitts-and-pieces.jpg",
         "alt": "Bitts and Pieces cover art",
@@ -338,6 +373,13 @@ export const projects: Project[] = [
     ],
     "media": [
       {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/2HvdOPUNTtj78tgSXV07N8",
+        "title": "Spotify",
+        "height": 152
+      },
+      {
         "kind": "image",
         "src": "/placements/bring-me-more.jpg",
         "alt": "Bring Me More cover art",
@@ -392,6 +434,13 @@ export const projects: Project[] = [
       }
     ],
     "media": [
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/5K3R4JMGVFi5JgsmGJy475",
+        "title": "Spotify",
+        "height": 152
+      },
       {
         "kind": "image",
         "src": "/placements/cruisin.jpg",
@@ -450,6 +499,13 @@ export const projects: Project[] = [
     ],
     "media": [
       {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/1GLe4jR0vEucIYPiYLXnu4",
+        "title": "Spotify",
+        "height": 152
+      },
+      {
         "kind": "image",
         "src": "/placements/dark-knight.jpg",
         "alt": "Dark Knight cover art",
@@ -503,6 +559,13 @@ export const projects: Project[] = [
     ],
     "media": [
       {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/5YnjhGfVtZo908Z4ERYsAl",
+        "title": "Spotify",
+        "height": 152
+      },
+      {
         "kind": "image",
         "src": "/placements/wake-up.jpg",
         "alt": "Wake Up cover art",
@@ -554,7 +617,15 @@ export const projects: Project[] = [
         "href": "https://music.apple.com/us/artist/riyah/669561530"
       }
     ],
-    "media": []
+    "media": [
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/5FHssPl684ozoDDELF4JHy",
+        "title": "Spotify",
+        "height": 152
+      }
+    ]
   },
   {
     "slug": "lazy-days",
@@ -602,6 +673,13 @@ export const projects: Project[] = [
       }
     ],
     "media": [
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/2c4QYczlcjVqyim1P8kw3s",
+        "title": "Spotify",
+        "height": 152
+      },
       {
         "kind": "image",
         "src": "/placements/small-business.jpg",
@@ -657,6 +735,13 @@ export const projects: Project[] = [
     ],
     "media": [
       {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/4fxUvrFR0yJSXg5CuJpb6Z",
+        "title": "Spotify",
+        "height": 152
+      },
+      {
         "kind": "image",
         "src": "/placements/repercussions.jpg",
         "alt": "Repercussions single cover art",
@@ -705,6 +790,13 @@ export const projects: Project[] = [
       }
     ],
     "media": [
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/album/6gOkakGJvP8A66hRWJza81",
+        "title": "Spotify",
+        "height": 352
+      },
       {
         "kind": "image",
         "src": "/placements/roadtrixtape.jpg",
@@ -763,6 +855,13 @@ export const projects: Project[] = [
       }
     ],
     "media": [
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/track/7DGF2H2TtDbDeniGV1wRLk",
+        "title": "Spotify",
+        "height": 152
+      },
       {
         "kind": "image",
         "src": "/placements/small-business.jpg",
@@ -856,6 +955,13 @@ export const projects: Project[] = [
       }
     ],
     "media": [
+      {
+        "kind": "audio",
+        "provider": "spotify",
+        "url": "https://open.spotify.com/embed/album/1BRs00cvEQfizkqfI9Pk5T",
+        "title": "Spotify",
+        "height": 352
+      },
       {
         "kind": "image",
         "src": "/placements/flora-2.jpg",

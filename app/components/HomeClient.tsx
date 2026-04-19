@@ -4,10 +4,11 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import ArchiveModal from "./ArchiveModal";
+import FloatingCards from "./FloatingCards";
 import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
-  initialSection?: "hero" | "archive" | "projects";
+  initialSection?: "hero" | "book";
   nextHref?: string;
 };
 
@@ -23,15 +24,14 @@ export default function HomeClient({
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     []
   );
-  const [visible, setVisible] = useState<{ hero: boolean; archive: boolean; projects: boolean }>(() =>
-    reduceMotion ? { hero: true, archive: true, projects: true } : { hero: false, archive: false, projects: false }
+  const [visible, setVisible] = useState<{ hero: boolean; book: boolean }>(() =>
+    reduceMotion ? { hero: true, book: true } : { hero: false, book: false }
   );
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [pillReady, setPillReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
-  const archiveRef = useRef<HTMLElement | null>(null);
-  const projectsRef = useRef<HTMLElement | null>(null);
+  const bookRef = useRef<HTMLElement | null>(null);
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
@@ -39,11 +39,9 @@ export default function HomeClient({
 
     // Ensure route entry points match the intended section without visible jump.
     const target =
-      initialSection === "projects"
-        ? projectsRef.current?.offsetTop ?? 0
-        : initialSection === "archive"
-          ? archiveRef.current?.offsetTop ?? 0
-          : 0;
+      initialSection === "book"
+        ? bookRef.current?.offsetTop ?? 0
+        : 0;
     const prev = container.style.scrollBehavior;
     container.style.scrollBehavior = "auto";
     container.scrollTop = target;
@@ -64,9 +62,9 @@ export default function HomeClient({
           if (!id) return;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
             setVisible((prev) =>
-              prev[id as "hero" | "archive" | "projects"]
+              prev[id as "hero" | "book"]
                 ? prev
-                : { ...prev, [id as "hero" | "archive" | "projects"]: true }
+                : { ...prev, [id as "hero" | "book"]: true }
             );
           }
         });
@@ -85,7 +83,7 @@ export default function HomeClient({
     if (!container) return;
     if (isMobileFallback) return;
 
-    const sections = [heroRef.current, archiveRef.current, projectsRef.current].filter(Boolean) as HTMLElement[];
+    const sections = [heroRef.current, bookRef.current].filter(Boolean) as HTMLElement[];
 
     const animateTo = (target: number) => {
       if (snapAnimating) return;
@@ -220,7 +218,8 @@ export default function HomeClient({
         data-id="hero"
         data-snap-section
       >
-        <div className="-translate-y-[90px]">
+        <FloatingCards />
+        <div className="relative z-10 -translate-y-[90px]">
           <div
             className={[
               "select-none transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -371,62 +370,37 @@ export default function HomeClient({
             </div>
           </div>
         </div>
-        {/* Scroll indicator handled globally on the home page */}
       </section>
 
       <section
-        ref={archiveRef}
-        data-id="archive"
+        ref={bookRef}
+        data-id="book"
         data-snap-section
-        className="snap-start min-h-screen bg-white"
+        className="snap-start min-h-screen bg-[#111113]"
       >
         <div
           className={[
-            "mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center gap-10 px-6 py-20 transition-[opacity,transform]",
+            "mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-8 px-6 py-20 text-center transition-[opacity,transform]",
             "duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-            visible.archive ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
+            visible.book ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
           ].join(" ")}
         >
-          <div className="space-y-6">
-            <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">Archive Notes</p>
-            <h2 className="text-3xl tracking-[0.08em] text-black sm:text-4xl">Architecture Over Algorithms</h2>
-            <p className="max-w-xl whitespace-pre-line text-[15px] leading-7 text-black/70">
-              I don’t produce for trends.
-              {"\n"}I build frameworks for records.
-              {"\n\n"}Rhythm as foundation.
-              {"\n"}Space as intention.
-              {"\n"}Emotion engineered.
-            </p>
-            <div>
-              <a
-                href="https://www.beatstars.com/anthonydake"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-black/15 bg-white/70 px-6 py-3 text-[11px] uppercase tracking-[0.35em] text-black transition hover:-translate-y-0.5 hover:shadow-md"
-              >
-                Explore the Archive
-              </a>
-            </div>
-          </div>
-          <div className="space-y-6">
-            {/* TODO: Embed 3 BeatStars preview players when track URLs are provided. */}
-          </div>
+          <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">
+            Work With Me
+          </p>
+          <h2 className="text-3xl tracking-[0.06em] text-black sm:text-4xl md:text-5xl">
+            Let&apos;s build your next record.
+          </h2>
+          <p className="max-w-lg text-[15px] leading-7 text-black/60">
+            From production and songwriting to session drums and full musical direction — I bring the architecture your project needs. Book a free 15-minute discovery call to talk through your vision.
+          </p>
+          <Link
+            href="/book"
+            className="book-session-cta mt-2 inline-flex items-center justify-center rounded-full px-8 py-3.5 text-[11px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          >
+            Book a Session
+          </Link>
         </div>
-      </section>
-
-      <section
-        ref={projectsRef}
-        data-id="projects"
-        data-snap-section
-        className="snap-start min-h-screen bg-white"
-      >
-        <div
-          className={[
-            "mx-auto h-full w-full transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-            visible.projects ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
-          ].join(" ")}
-          aria-hidden="true"
-        />
       </section>
     </div>
   );

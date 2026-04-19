@@ -4,8 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
-import ColumbusTime from "@/app/components/ColumbusTime";
-import HomeMark from "@/app/components/HomeMark";
+import SiteHeader from "@/app/components/SiteHeader";
 import { projectIndex } from "@/data/projects.data";
 import { projects, type ProjectMedia } from "@/lib/projects";
 
@@ -39,41 +38,7 @@ export default function ProjectDetailClient() {
   if (!project) {
     return (
       <div className="relative min-h-screen bg-white text-black">
-        <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
-          <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11.6875px] uppercase tracking-[0.28em] text-black/65">
-            <div className="justify-self-start">
-              <Link className="md:hidden hover:text-black" href="/placements">
-                Placements
-              </Link>
-              <div className="hidden items-center md:flex">
-                <span>Columbus, (OH)</span>
-                <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
-                <ColumbusTime />
-              </div>
-            </div>
-
-            <Link
-              href="/"
-              className="group inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <HomeMark className="h-[18px] w-[18px] transition group-hover:scale-[1.04] group-hover:brightness-110" />
-            </Link>
-
-            <div className="justify-self-end">
-              <Link className="md:hidden hover:text-black" href="/performance">
-                Performance
-              </Link>
-              <nav className="hidden items-center gap-6 md:flex">
-                <Link className="hover:text-black" href="/placements">
-                  Placements
-                </Link>
-                <Link className="hover:text-black" href="/performance">
-                  Performance
-                </Link>
-              </nav>
-            </div>
-          </div>
-        </div>
+        <SiteHeader />
 
         <main className="relative z-[10] mx-auto max-w-5xl px-6 pb-24 pt-24 text-center sm:px-8 lg:px-10 xl:px-12">
           <div className="space-y-6">
@@ -96,41 +61,7 @@ export default function ProjectDetailClient() {
 
   return (
     <div className="relative min-h-screen bg-white text-black">
-      <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
-        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11.6875px] uppercase tracking-[0.28em] text-black/65">
-          <div className="justify-self-start">
-            <Link className="md:hidden hover:text-black" href="/placements">
-              Placements
-            </Link>
-            <div className="hidden items-center md:flex">
-              <span>Columbus, (OH)</span>
-              <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
-              <ColumbusTime />
-            </div>
-          </div>
-
-          <Link
-            href="/"
-            className="group inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <HomeMark className="h-[18px] w-[18px] transition group-hover:scale-[1.04] group-hover:brightness-110" />
-          </Link>
-
-          <div className="justify-self-end">
-            <Link className="md:hidden hover:text-black" href="/performance">
-              Performance
-            </Link>
-            <nav className="hidden items-center gap-6 md:flex">
-              <Link className="hover:text-black" href="/placements">
-                Placements
-              </Link>
-              <Link className="hover:text-black" href="/performance">
-                Performance
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </div>
+      <SiteHeader />
 
       <main className="relative z-[10] mx-auto max-w-6xl px-6 pb-24 pt-16 sm:px-8 lg:px-10 xl:px-12">
         <div className="space-y-16">
