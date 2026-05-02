@@ -8,13 +8,17 @@ export default function HomeMark({ className }: HomeMarkProps) {
       aria-hidden="true"
       className={className}
       style={{
-        lineHeight: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        textDecoration: 'none',
         width: '100%',
         height: '100%',
+        fontSize: '14px',
+        lineHeight: 1,
+        textDecoration: 'none',
+        position: 'relative',
+        top: '0px',
+        left: '0px',
       }}
     >
       🥁
