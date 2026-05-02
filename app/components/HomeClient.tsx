@@ -3,7 +3,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
-import ArchiveModal from "./ArchiveModal";
 import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
@@ -27,7 +26,6 @@ export default function HomeClient({
     reduceMotion ? { hero: true, demoreel: true } : { hero: false, demoreel: false }
   );
   const [snapAnimating, setSnapAnimating] = useState(false);
-  const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [pillReady, setPillReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const demoreelRef = useRef<HTMLElement | null>(null);
@@ -200,8 +198,6 @@ export default function HomeClient({
       ].join(" ")}
       style={{ scrollBehavior: "smooth" }}
     >
-      <ArchiveModal onOpenChange={setArchiveModalOpen} />
-      {/* archive pill removed */}
       <section
         ref={heroRef}
         className="relative grid h-screen place-items-center snap-start bg-[#111113]"
