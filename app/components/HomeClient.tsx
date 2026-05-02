@@ -221,9 +221,7 @@ export default function HomeClient({
                 <Link href="/" aria-label="Go to Home">
                   <LogoArchitectOfSound />
                 </Link>
-                <div className="mt-3 text-center text-[11px] uppercase tracking-[0.24em] text-black/55">
-                  Touring Drummer | Session Drummer
-                </div>
+                
                 <div className="mt-6 flex justify-center">
                   <Link
                     href="/book"
