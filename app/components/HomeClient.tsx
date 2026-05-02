@@ -380,7 +380,7 @@ export default function HomeClient({
             Work With Me
           </p>
           <h2 className="text-3xl tracking-[0.06em] text-black sm:text-4xl md:text-5xl">
-            Let\Let&apos;s build your next record.apos;s make your next show unforgettable.
+            Let\Let\Let&apos;s build your next record.apos;s make your next show unforgettable.apos;s make your next show unforgettable.
           </h2>
           <p className="max-w-lg text-[15px] leading-7 text-black/60">
             Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Book a free 15-minute call to talk through your vision.
