@@ -76,8 +76,8 @@ function HomeInner() {
       <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
         <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11.6875px] uppercase tracking-[0.28em] text-black/65">
           <div className="justify-self-start">
-            <Link className="md:hidden hover:text-black" href="/performance">
-              Performance
+            <Link className="md:hidden hover:text-black" href="/placements">
+              Placements
             </Link>
             <div className="hidden items-center md:flex">
               <span>Nashville, (TN)</span>
@@ -93,10 +93,7 @@ function HomeInner() {
           </Link>
           <div className="justify-self-end">
             <div className="flex items-center gap-4 md:hidden">
-              <Link className="hover:text-black" href="/placements">
-                Placements
-              </Link>
-              <Link className="hover:text-black" href="/performance">
+                <<Link className="hover:text-black" href="/performance">
                 Performance
               </Link>
               
