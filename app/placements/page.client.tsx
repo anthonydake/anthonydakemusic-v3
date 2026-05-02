@@ -362,7 +362,7 @@ function YearGroups({
                 <Link
                   key={p.id}
                   href={`/placements/${p.slug}`}
-                  className="projects-row projects-row-enter group block py-2 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:py-2"
+                  className="projects-row projects-row-enter group block py-2 focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:py-2"
                   onMouseEnter={() => onRowHover(p.id)}
                 >
                   <div className="min-w-0 grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-4 gap-y-1 leading-tight lg:grid-cols-[var(--col1)_var(--col2)_var(--col3)_minmax(0,1fr)] lg:items-start lg:gap-x-8">

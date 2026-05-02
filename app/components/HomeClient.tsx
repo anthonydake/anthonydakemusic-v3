@@ -218,7 +218,7 @@ export default function HomeClient({
                   <LogoArchitectOfSound />
                 </Link>
                 
-                <div className="mt-6 flex justify-center">
+                <div className="mt-3 flex justify-center">
                   <Link
                     href="/demoreel"
                     className="demoreel-cta inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
