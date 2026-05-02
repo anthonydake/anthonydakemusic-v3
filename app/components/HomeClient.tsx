@@ -4,7 +4,6 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import ArchiveModal from "./ArchiveModal";
-import FloatingCards from "./FloatingCards";
 import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
@@ -209,7 +208,6 @@ export default function HomeClient({
         data-id="hero"
         data-snap-section
       >
-        <FloatingCards />
         <div className="relative z-10 -translate-y-[90px]">
           <div
             className={[
@@ -224,15 +222,23 @@ export default function HomeClient({
                   <LogoArchitectOfSound />
                 </Link>
                 <div className="mt-3 text-center text-[11px] uppercase tracking-[0.24em] text-black/55">
-                  Drummer • Music Director
+                  Touring Drummer | Session Drummer
                 </div>
-                <div className="mt-4 flex items-center justify-center gap-8">
+                <div className="mt-6 flex justify-center">
+                  <Link
+                    href="/book"
+                    className="book-session-cta inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    Book a Session
+                  </Link>
+                </div>
+                <div className="mt-6 flex items-center justify-center gap-9">
                   <a
-                    className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="mailto:adakemusic@gmail.com"
                     aria-label="Email"
                   >
-                    <svg viewBox="0 0 24 24" className="h-6 w-6 transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-7 w-7 transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientEmail" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -257,13 +263,13 @@ export default function HomeClient({
                     </svg>
                   </a>
                   <a
-                    className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="https://www.instagram.com/anthony_dake/"
                     target="_blank"
                     rel="noreferrer me"
                     aria-label="Instagram"
                   >
-                    <svg viewBox="0 0 24 24" className="h-6 w-6 transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-7 w-7 transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientInstagram" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -287,13 +293,13 @@ export default function HomeClient({
                     </svg>
                   </a>
                   <a
-                    className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="https://www.youtube.com/@anthony_dake"
                     target="_blank"
                     rel="noreferrer me"
                     aria-label="YouTube"
                   >
-                    <svg viewBox="0 0 24 24" className="h-6 w-6 transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-7 w-7 transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientYouTube" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -316,13 +322,13 @@ export default function HomeClient({
                     </svg>
                   </a>
                   <a
-                    className="group inline-flex h-14 w-14 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="https://www.tiktok.com/@anthony_dake"
                     target="_blank"
                     rel="noreferrer me"
                     aria-label="TikTok"
                   >
-                    <svg viewBox="0 0 24 24" className="h-6 w-6 transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-7 w-7 transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientTikTok" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -380,7 +386,7 @@ export default function HomeClient({
             Work With Me
           </p>
           <h2 className="text-3xl tracking-[0.06em] text-black sm:text-4xl md:text-5xl">
-            Let\Let\Let&apos;s build your next record.apos;s make your next show unforgettable.apos;s make your next show unforgettable.
+            Let\&apos;s make your next show unforgettable.
           </h2>
           <p className="max-w-lg text-[15px] leading-7 text-black/60">
             Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Book a free 15-minute call to talk through your vision.

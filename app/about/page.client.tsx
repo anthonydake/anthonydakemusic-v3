@@ -1,82 +1,47 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+
 import Link from "next/link";
-import { motion } from "framer-motion";
+
 import SiteHeader from "../components/SiteHeader";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: 0.15 + i * 0.12,
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
-    },
-  }),
-};
+
 
 export default function AboutClient() {
-  const [visible, setVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const node = sectionRef.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
+  
 
   return (
     <>
       <SiteHeader />
       <main className="min-h-screen bg-[#111113] pt-14">
-        <div ref={sectionRef} className="mx-auto max-w-3xl px-6 py-20">
+        <div className="mx-auto max-w-3xl px-6 py-20">
           {/* Editorial intro */}
-          <motion.div
-            initial="hidden"
-            animate={visible ? "visible" : "hidden"}
+          <div
             className="space-y-8"
           >
-            <motion.p
-              custom={0}
-              variants={fadeUp}
+            <p
               className="text-[11px] uppercase tracking-[0.35em] text-black/50"
             >
               About
-            </motion.p>
+            </p>
 
-            <motion.h1
-              custom={1}
-              variants={fadeUp}
+            <h1
               className="text-3xl tracking-[0.06em] text-black sm:text-4xl md:text-5xl"
             >
               The sound is the blueprint.
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              custom={2}
-              variants={fadeUp}
+            <p
               className="max-w-2xl text-[17px] leading-8 text-black/65"
             >
-              I&apos;m Anthony Dake — a producer, drummer, and music director
-              based in Columbus, Ohio. I build records from the rhythm up:
-              production, songwriting, session drums, and full musical
-              direction for artists who want architecture in their sound, not
-              just a beat underneath it.
-            </motion.p>
+              I&apos;m Anthony Dake — a touring drummer and session drummer
+              based in Nashville, Tennessee. I build shows and records from
+              the rhythm up: session drums and full musical direction for
+              artists who want their live shows to hit as hard as their
+              records.
+            </p>
 
-            <motion.p
-              custom={3}
-              variants={fadeUp}
+            <p
               className="max-w-2xl text-[17px] leading-8 text-black/65"
             >
               My approach starts at the drums — the foundation of every
@@ -84,17 +49,15 @@ export default function AboutClient() {
               cutting a funk-pop record, or scoring something cinematic, the
               groove is the architecture everything else sits on. Space is
               intentional. Emotion is engineered. Every track has a reason.
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
 
           {/* Hard facts */}
-          <motion.div
-            initial="hidden"
-            animate={visible ? "visible" : "hidden"}
+          <div
             className="mt-20 space-y-16"
           >
             {/* Education & DCI */}
-            <motion.div custom={4} variants={fadeUp} className="space-y-4">
+            <div className="space-y-4">
               <h2 className="text-[11px] uppercase tracking-[0.35em] text-black/50">
                 Education &amp; Marching Arts
               </h2>
@@ -108,24 +71,23 @@ export default function AboutClient() {
                 background built the discipline, ear, and ensemble instinct I
                 carry into every session.
               </p>
-            </motion.div>
+            </div>
 
             {/* Columbus scene */}
-            <motion.div custom={5} variants={fadeUp} className="space-y-4">
+            <div className="space-y-4">
               <h2 className="text-[11px] uppercase tracking-[0.35em] text-black/50">
-                Columbus, Ohio
+                Nashville, Tennessee
               </h2>
               <p className="text-[15px] leading-7 text-black/60">
-                Columbus is home base. I&apos;ve worked with artists across
-                the city&apos;s hip-hop, R&amp;B, and indie scenes — from
-                production and songwriting sessions to live shows at venues
-                across the metro. The Columbus community is where everything
-                started and where I keep building.
+                Nashville is home base. I&apos;ve worked with artists across
+                genres — from hip-hop and R&amp;B to pop and indie — bringing
+                session drums and musical direction to live shows and studio
+                sessions. The Nashville community is where I keep building.
               </p>
-            </motion.div>
+            </div>
 
             {/* Production philosophy */}
-            <motion.div custom={6} variants={fadeUp} className="space-y-4">
+            <div className="space-y-4">
               <h2 className="text-[11px] uppercase tracking-[0.35em] text-black/50">
                 Production Philosophy
               </h2>
@@ -138,10 +100,10 @@ export default function AboutClient() {
                 its own sonic identity; I don&apos;t have a signature sound, I
                 have a signature process.
               </p>
-            </motion.div>
+            </div>
 
             {/* Live performance */}
-            <motion.div custom={7} variants={fadeUp} className="space-y-4">
+            <div className="space-y-4">
               <h2 className="text-[11px] uppercase tracking-[0.35em] text-black/50">
                 Live Performance
               </h2>
@@ -154,22 +116,20 @@ export default function AboutClient() {
                 director and drummer for live artists, building the show from
                 the setlist up.
               </p>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* CTA */}
-          <motion.div
-            initial="hidden"
-            animate={visible ? "visible" : "hidden"}
+          <div
             className="mt-20 border-t border-white/10 pt-12"
           >
-            <motion.div custom={8} variants={fadeUp} className="space-y-6">
+            <div className="space-y-6">
               <h2 className="text-2xl tracking-[0.04em] text-black">
                 Let&apos;s work.
               </h2>
               <p className="text-[15px] leading-7 text-black/60">
-                If you&apos;re looking for a producer, drummer, or music
-                director who builds records with intention — I&apos;d love to
+                If you&apos;re looking for a touring drummer, session drummer, or music
+                director who builds shows and records with intention — I&apos;d love to
                 hear about your project.
               </p>
               <Link
@@ -178,8 +138,8 @@ export default function AboutClient() {
               >
                 Book a Session
               </Link>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </main>
     </>

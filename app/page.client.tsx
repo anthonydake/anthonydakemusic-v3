@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import HomeClient from "./components/HomeClient";
-import ColumbusTime from "./components/ColumbusTime";
+import NashvilleTime from "./components/NashvilleTime";
 import HomeMark from "./components/HomeMark";
 import { useTransition } from "./components/TransitionProvider";
 
@@ -80,9 +80,9 @@ function HomeInner() {
               Performance
             </Link>
             <div className="hidden items-center md:flex">
-              <span>Columbus, (OH)</span>
+              <span>Nashville, (TN)</span>
               <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
-              <ColumbusTime />
+              <NashvilleTime />
             </div>
           </div>
           <Link
@@ -96,12 +96,7 @@ function HomeInner() {
               <Link className="hover:text-black" href="/performance">
                 Performance
               </Link>
-              <Link
-                href="/book"
-                className="book-session-cta inline-flex items-center rounded-full bg-white px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-black shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-              >
-                Book
-              </Link>
+              
             </div>
             <nav className="hidden items-center gap-6 md:flex">
               <Link className="hover:text-black" href={projectsHref}>
@@ -113,12 +108,7 @@ function HomeInner() {
               <Link className="hover:text-black" href="/about">
                 About
               </Link>
-              <Link
-                href="/book"
-                className="book-session-cta inline-flex items-center rounded-full bg-white px-4 py-1.5 text-[10.5px] font-semibold tracking-[0.2em] text-black shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-              >
-                Book a Session
-              </Link>
+              
             </nav>
           </div>
         </div>
