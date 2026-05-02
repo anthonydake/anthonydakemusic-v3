@@ -189,7 +189,6 @@ export default function HomeClient({
   }, []);
 
   return (
-      <div className="edge-glow" />
     <div
       ref={containerRef}
       className={[
