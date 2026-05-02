@@ -87,20 +87,23 @@ function HomeInner() {
           </div>
           <Link
             href={homeHref}
-            className="group inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className="home-nav group inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
             <HomeMark />
           </Link>
           <div className="justify-self-end">
             <div className="flex items-center gap-4 md:hidden">
+              <Link className="hover:text-black" href="/placements">
+                Placements
+              </Link>
               <Link className="hover:text-black" href="/performance">
                 Performance
               </Link>
               
             </div>
             <nav className="hidden items-center gap-6 md:flex">
-              <Link className="hover:text-black" href={projectsHref}>
-                Performance
+              <Link className="hover:text-black" href="/placements">
+                Placements
               </Link>
               <Link className="hover:text-black" href="/performance">
                 Performance

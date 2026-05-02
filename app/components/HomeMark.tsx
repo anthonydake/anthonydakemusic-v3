@@ -7,13 +7,16 @@ export default function HomeMark({ className }: HomeMarkProps) {
     <span
       aria-hidden="true"
       style={{
-        fontSize: '20px',
+        fontSize: '17px',
         lineHeight: '32px',
-        display: 'block',
-        width: '32px',
-        height: '32px',
-        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
         textDecoration: 'none',
+        padding: 0,
+        margin: 0,
       }}
     >
       🥁

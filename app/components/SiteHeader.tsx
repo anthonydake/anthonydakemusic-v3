@@ -20,7 +20,7 @@ export default function SiteHeader() {
         </div>
         <Link
           href="/"
-          className="group inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          className="home-nav group inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
         >
           <HomeMark />
         </Link>

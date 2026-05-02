@@ -57,6 +57,13 @@ a:hover {
   text-decoration-color: rgba(255, 255, 255, 0.8);
 }
 
+.home-nav,
+.home-nav:hover,
+.home-nav:focus,
+.home-nav:active {
+  text-decoration: none !important;
+}
+
 ::selection {
   background: rgba(255, 255, 255, 0.15);
 }
