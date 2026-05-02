@@ -90,13 +90,28 @@ img {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-body,
-body * {
+body {
   color: transparent !important;
   -webkit-text-fill-color: transparent !important;
   background-image: var(--text-gradient);
   -webkit-background-clip: text;
   background-clip: text;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, span, a, li, label, small, strong, em, b, i,
+button, td, th, dt, dd, figcaption, blockquote, cite {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  background-image: var(--text-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+div, section, main, header, footer, nav, article, aside, form, ul, ol, figure, table {
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
 }
 
 input,
