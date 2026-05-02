@@ -23,8 +23,8 @@ export default function HomeClient({
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     []
   );
-  const [visible, setVisible] = useState<{ hero: boolean; book: boolean }>(() =>
-    reduceMotion ? { hero: true, book: true } : { hero: false, book: false }
+  const [visible, setVisible] = useState<{ hero: boolean; demoreel: boolean }>(() =>
+    reduceMotion ? { hero: true, book: true } : { hero: false, demoreel: false }
   );
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
@@ -377,7 +377,7 @@ export default function HomeClient({
           className={[
             "mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-8 px-6 py-20 text-center transition-[opacity,transform]",
             "duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-            visible.book ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
+            visible.demoreel ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
           ].join(" ")}
         >
           <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">
