@@ -133,10 +133,10 @@ export default function AboutClient() {
                 hear about your project.
               </p>
               <Link
-                href="/book"
+                href="/demoreel"
                 className="book-session-cta mt-2 inline-flex items-center justify-center rounded-full px-8 py-3.5 text-[11px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
-                Book a Session
+                Demo Reel
               </Link>
             </div>
           </div>
