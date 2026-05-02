@@ -9,7 +9,7 @@ export default function LogoArchitectOfSound() {
 
   return (
     <div
-      className="relative inline-flex h-[240px] w-full max-w-[640px] flex-col items-center justify-center text-[#F2F2F2]"
+      className="relative inline-flex h-auto min-h-[240px] w-full max-w-[640px] flex-col items-center justify-center text-[#F2F2F2]"
       onMouseEnter={retrigger}
       onMouseLeave={retrigger}
     >
@@ -25,6 +25,13 @@ export default function LogoArchitectOfSound() {
             trigger={run}
           />
         </h1>
+        <div className="mt-6 mb-6">
+          <img
+            src="/anthony-dake-drums.jpg"
+            alt="Anthony Dake drumming at age 5"
+            className="mx-auto h-[180px] w-[180px] rounded-lg object-cover shadow-lg"
+          />
+        </div>
         <div className="mt-4 text-[14px] uppercase tracking-[0.32em] text-[#A1A1A6]">
           <TextScramble
             key={`desc-${run}`}
