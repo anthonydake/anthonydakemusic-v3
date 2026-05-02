@@ -93,7 +93,7 @@ function HomeInner() {
           </Link>
           <div className="justify-self-end">
             <div className="flex items-center gap-4 md:hidden">
-                <<Link className="hover:text-black" href="/performance">
+                <Link className="hover:text-black" href="/performance">
                 Performance
               </Link>
               
