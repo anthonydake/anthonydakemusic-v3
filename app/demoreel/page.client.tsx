@@ -5,6 +5,7 @@ import SiteHeader from "../components/SiteHeader";
 export default function DemoReelClient() {
   return (
     <>
+      <div className="edge-glow" />
       <SiteHeader />
       <main className="flex min-h-screen flex-col items-center justify-center bg-black px-4 pt-20 pb-16">
         <h1 className="mb-8 text-center text-[28px] sm:text-[36px] md:text-[44px] font-light tracking-[-0.02em] text-[#F2F2F2]">
