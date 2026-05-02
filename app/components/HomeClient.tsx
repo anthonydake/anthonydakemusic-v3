@@ -202,16 +202,7 @@ export default function HomeClient({
       style={{ scrollBehavior: "smooth" }}
     >
       <ArchiveModal onOpenChange={setArchiveModalOpen} />
-      {pillReady && !archiveModalOpen && !isTransitioning ? (
-        <a
-          href="https://www.beatstars.com/anthonydake"
-          target="_blank"
-          rel="noreferrer"
-          className="archive-pill fixed bottom-6 right-6 z-[9990] inline-flex items-center justify-center rounded-full px-5 py-2 text-[12px] lowercase tracking-[0.2em]"
-        >
-          archive
-        </a>
-      ) : null}
+      {/* archive pill removed */}
       <section
         ref={heroRef}
         className="relative grid h-screen place-items-center snap-start bg-[#111113]"
@@ -233,7 +224,7 @@ export default function HomeClient({
                   <LogoArchitectOfSound />
                 </Link>
                 <div className="mt-3 text-center text-[11px] uppercase tracking-[0.24em] text-black/55">
-                  Producer • Drummer • Music Director
+                  Drummer • Music Director
                 </div>
                 <div className="mt-4 flex items-center justify-center gap-8">
                   <a
@@ -389,10 +380,10 @@ export default function HomeClient({
             Work With Me
           </p>
           <h2 className="text-3xl tracking-[0.06em] text-black sm:text-4xl md:text-5xl">
-            Let&apos;s build your next record.
+            Let\Let&apos;s build your next record.apos;s make your next show unforgettable.
           </h2>
           <p className="max-w-lg text-[15px] leading-7 text-black/60">
-            From production and songwriting to session drums and full musical direction — I bring the architecture your project needs. Book a free 15-minute discovery call to talk through your vision.
+            Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Book a free 15-minute call to talk through your vision.
           </p>
           <Link
             href="/book"

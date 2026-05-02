@@ -8,10 +8,10 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusi
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Anthony Dake — Architect of Sound",
+    default: "Anthony Dake Music",
     template: "%s",
   },
-  description: "Producer / Drummer / Music Director",
+  description: "Session drummer and music director — live shows, tours, and studio sessions",
   icons: {
     icon: "/favicon.svg",
   },
@@ -19,14 +19,14 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: "Anthony Dake",
-    title: "Anthony Dake — Architect of Sound",
-    description: "Producer / Drummer / Music Director",
+    title: "Anthony Dake Music",
+    description: "Session drummer and music director — live shows, tours, and studio sessions",
     images: [{ url: "/hero.jpg", width: 1536, height: 1024, alt: "Anthony Dake" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anthony Dake — Architect of Sound",
-    description: "Producer / Drummer / Music Director",
+    title: "Anthony Dake Music",
+    description: "Session drummer and music director — live shows, tours, and studio sessions",
     images: ["/hero.jpg"],
   },
 };
@@ -48,9 +48,9 @@ export default function RootLayout({
                 "@id": `${siteUrl}/#person`,
                 name: "Anthony Dake",
                 url: siteUrl,
-                jobTitle: "Producer / Drummer / Music Director",
-                description: "Music producer, drummer, and music director based in Columbus, Ohio.",
-                knowsAbout: ["Music Production", "Drumming", "Music Direction", "Playback Systems"],
+                jobTitle: "Session drummer and music director — live shows, tours, and studio sessions",
+                description: "Session drummer and music director based in Columbus, Ohio.",
+                knowsAbout: ["Session Drumming", "Live Performance", "Music Direction", "Tour Preparation"],
                 areaServed: "Columbus, Ohio",
                 sameAs: [
                   "https://www.instagram.com/anthony_dake/",
