@@ -24,7 +24,7 @@ export default function HomeClient({
     []
   );
   const [visible, setVisible] = useState<{ hero: boolean; demoreel: boolean }>(() =>
-    reduceMotion ? { hero: true, book: true } : { hero: false, demoreel: false }
+    reduceMotion ? { hero: true, demoreel: true } : { hero: false, demoreel: false }
   );
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
@@ -387,7 +387,7 @@ export default function HomeClient({
             Let\&apos;s make your next show unforgettable.
           </h2>
           <p className="max-w-lg text-[15px] leading-7 text-black/60">
-            Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Book a free 15-minute call to talk through your vision.
+            Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Watch the demo reel and get in touch.
           </p>
           <Link
             href="/demoreel"
