@@ -7,7 +7,7 @@ import ArchiveModal from "./ArchiveModal";
 import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
-  initialSection?: "hero" | "book";
+  initialSection?: "hero" | "demoreel";
   nextHref?: string;
 };
 
@@ -30,7 +30,7 @@ export default function HomeClient({
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [pillReady, setPillReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
-  const bookRef = useRef<HTMLElement | null>(null);
+  const demoreelRef = useRef<HTMLElement | null>(null);
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
@@ -38,8 +38,8 @@ export default function HomeClient({
 
     // Ensure route entry points match the intended section without visible jump.
     const target =
-      initialSection === "book"
-        ? bookRef.current?.offsetTop ?? 0
+      initialSection === "demoreel"
+        ? demoreelRef.current?.offsetTop ?? 0
         : 0;
     const prev = container.style.scrollBehavior;
     container.style.scrollBehavior = "auto";
@@ -61,9 +61,9 @@ export default function HomeClient({
           if (!id) return;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
             setVisible((prev) =>
-              prev[id as "hero" | "book"]
+              prev[id as "hero" | "demoreel"]
                 ? prev
-                : { ...prev, [id as "hero" | "book"]: true }
+                : { ...prev, [id as "hero" | "demoreel"]: true }
             );
           }
         });
@@ -82,7 +82,7 @@ export default function HomeClient({
     if (!container) return;
     if (isMobileFallback) return;
 
-    const sections = [heroRef.current, bookRef.current].filter(Boolean) as HTMLElement[];
+    const sections = [heroRef.current, demoreelRef.current].filter(Boolean) as HTMLElement[];
 
     const animateTo = (target: number) => {
       if (snapAnimating) return;
@@ -224,10 +224,10 @@ export default function HomeClient({
                 
                 <div className="mt-6 flex justify-center">
                   <Link
-                    href="/book"
-                    className="book-session-cta inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    href="/demoreel"
+                    className="demoreel-cta inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                   >
-                    Book a Session
+                    Demo Reel | 🥁
                   </Link>
                 </div>
                 <div className="mt-6 flex items-center justify-center gap-9">
@@ -368,8 +368,8 @@ export default function HomeClient({
       </section>
 
       <section
-        ref={bookRef}
-        data-id="book"
+        ref={demoreelRef}
+        data-id="demoreel"
         data-snap-section
         className="snap-start min-h-screen bg-[#111113]"
       >
@@ -390,10 +390,10 @@ export default function HomeClient({
             Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Book a free 15-minute call to talk through your vision.
           </p>
           <Link
-            href="/book"
-            className="book-session-cta mt-2 inline-flex items-center justify-center rounded-full px-8 py-3.5 text-[11px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            href="/demoreel"
+            className="demoreel-cta mt-2 inline-flex items-center justify-center rounded-full px-8 py-3.5 text-[11px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
-            Book a Session
+            Demo Reel | 🥁
           </Link>
         </div>
       </section>
