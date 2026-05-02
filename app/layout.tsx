@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   },
   description: "Session drummer and music director — live shows, tours, and studio sessions",
   icons: {
-    icon: { url: "/favicon.svg", type: "image/svg+xml" },
+    icon: "/favicon.ico",
   },
   openGraph: {
     type: "website",
