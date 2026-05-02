@@ -64,6 +64,15 @@ a:hover {
   text-decoration: none !important;
 }
 
+.home-nav span,
+.home-nav span:hover {
+  color: initial !important;
+  -webkit-text-fill-color: initial !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+
 ::selection {
   background: rgba(255, 255, 255, 0.15);
 }

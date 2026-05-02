@@ -28,7 +28,7 @@ export default function LogoArchitectOfSound() {
         <div className="mt-4 text-[14px] uppercase tracking-[0.32em] text-[#A1A1A6]">
           <TextScramble
             key={`desc-${run}`}
-            text="ARCHITECT OF SOUND"
+            text="LIVE DRUMS | SESSION DRUMS"
             duration={500}
             charset="#%&$@+|"
             scrambleFraction={0.35}

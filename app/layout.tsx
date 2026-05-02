@@ -8,7 +8,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusi
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Anthony Dake Music",
+    default: "Anthony Dake | Drums",
     template: "%s",
   },
   description: "Session drummer and music director — live shows, tours, and studio sessions",
@@ -19,13 +19,13 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: "Anthony Dake",
-    title: "Anthony Dake Music",
+    title: "Anthony Dake | Drums",
     description: "Session drummer and music director — live shows, tours, and studio sessions",
     images: [{ url: "/hero.jpg", width: 1536, height: 1024, alt: "Anthony Dake" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anthony Dake Music",
+    title: "Anthony Dake | Drums",
     description: "Session drummer and music director — live shows, tours, and studio sessions",
     images: ["/hero.jpg"],
   },
