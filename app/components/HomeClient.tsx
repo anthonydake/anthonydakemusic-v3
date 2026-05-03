@@ -226,7 +226,7 @@ export default function HomeClient({
                     Demo Reel | 🥁
                   </Link>
                 </div>
-                <div className="mt-6 flex items-center justify-center gap-9">
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-9">
                   <a
                     className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="mailto:adakemusic@gmail.com"

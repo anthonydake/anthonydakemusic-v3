@@ -124,50 +124,45 @@ function YearGroups({ items, revealCount }: { items: ProjectIndexItem[]; revealC
               <div className="text-[12px] lg:text-[10.625px] uppercase tracking-[0.28em] text-white/50"><span>{year}</span></div>
             </div>
             <div className="space-y-0">
-              {yearVisible.map((p) => (
-                {p.youtubeUrl ? (
-                <a
-                  key={p.id}
-                  href={p.youtubeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="projects-row projects-row-enter py-2 lg:py-2 block transition-opacity hover:opacity-70"
-                >
-                  {/* Mobile: 2-col */}
-                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-0.5 leading-tight lg:hidden">
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.artist}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2"><span>{p.title}</span></div>
+              {yearVisible.map((p) => {
+                const Row = (
+                  <>
+                    {/* Mobile: 2-col */}
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-0.5 leading-tight lg:hidden">
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.artist}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2"><span>{p.title}</span></div>
+                    </div>
+                    {/* Desktop: 4-col */}
+                    <div className="hidden lg:grid lg:grid-cols-4 lg:items-start lg:gap-x-8 leading-tight">
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.artist}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.title}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55"><span>{p.role}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
+                    </div>
+                  </>
+                );
+
+                if (p.youtubeUrl) {
+                  return (
+                    <a
+                      key={p.id}
+                      href={p.youtubeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="projects-row projects-row-enter py-2 lg:py-2 block transition-opacity hover:opacity-70"
+                    >
+                      {Row}
+                    </a>
+                  );
+                }
+
+                return (
+                  <div key={p.id} className="projects-row projects-row-enter py-2 lg:py-2">
+                    {Row}
                   </div>
-                  {/* Desktop: 4-col */}
-                  <div className="hidden lg:grid lg:grid-cols-4 lg:items-start lg:gap-x-8 leading-tight">
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.artist}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.title}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55"><span>{p.role}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
-                  </div>
-                </a>
-                ) : (
-                <div
-                  key={p.id}
-                  className="projects-row projects-row-enter py-2 lg:py-2"
-                >
-                  {/* Mobile: 2-col */}
-                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-0.5 leading-tight lg:hidden">
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.artist}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2"><span>{p.title}</span></div>
-                  </div>
-                  {/* Desktop: 4-col */}
-                  <div className="hidden lg:grid lg:grid-cols-4 lg:items-start lg:gap-x-8 leading-tight">
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.artist}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.title}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55"><span>{p.role}</span></div>
-                    <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
-                  </div>
-                </div>
-                )}
-              ))}
+                );
+              })}
             </div>
           </div>
         );
