@@ -47,6 +47,15 @@ export const performanceIndex: PerformanceItem[] = [
     youtubeUrl: "https://www.youtube.com/watch?v=lhji4B7krzU&t=1321s",
   },
   {
+    id: "L11",
+    year: 2025,
+    primaryArtist: "KJ The Cool Nerd",
+    venue: "Mainstage — ComFest Columbus",
+    city: "Columbus",
+    state: "OH",
+    youtubeUrl: "https://www.youtube.com/watch?v=lZbRkRiV21k&t=334",
+  },
+  {
     id: "L10",
     year: 2024,
     primaryArtist: "EDwen ft. KeezyTheeUnkind",
