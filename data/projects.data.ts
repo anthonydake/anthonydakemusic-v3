@@ -1,208 +1,31 @@
-export const WORK_TAGS = [
-  "PRODUCTION/SONGWRITING",
-  "MIXING/MASTERING",
-  "DRUMS",
-  "ENGINEERING",
-  "MUSICAL DIRECTION",
-] as const;
-
-export type WorkTag = (typeof WORK_TAGS)[number];
-
-export type ProjectPreview =
-  | { type: "image" | "gif"; src: string }
-  | { type: "video"; src: string; poster?: string };
+export type DrumRole = "Drums" | "Drum Programming";
 
 export type ProjectIndexItem = {
   id: string;
-  date: string; // "MM/DD/YYYY"
   year: number;
   artist: string;
-  workTags: WorkTag[];
   title: string;
-  slug: string;
-  preview?: ProjectPreview;
-  featured?: boolean;
+  role: DrumRole;
 };
 
-// Placeholder data (swap for real projects any time; UI is wired to this file only).
+// Sorted newest-first
 export const projectIndex: ProjectIndexItem[] = [
-  {
-    id: "P12",
-    date: "10/08/2025",
-    year: 2025,
-    artist: "AR!YAH",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Aura",
-    slug: "aura",
-    preview: { type: "image", src: "/placements/aura.jpg" },
-  },
-  {
-    id: "P18",
-    date: "02/28/2025",
-    year: 2025,
-    artist: "BittyOTW",
-    workTags: ["ENGINEERING", "MIXING/MASTERING"],
-    title: "Morning Coffee",
-    slug: "morning-coffee",
-    preview: { type: "image", src: "/placements/morning-coffee.jpg" },
-  },
-  {
-    id: "P11",
-    date: "12/10/2025",
-    year: 2025,
-    artist: "Jae Esquire",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Get Down",
-    slug: "get-down",
-    preview: { type: "image", src: "/placements/get-down.jpg" },
-  },
-  {
-    id: "P10",
-    date: "11/18/2024",
-    year: 2024,
-    artist: "Bitty",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Bring Me More",
-    slug: "bring-me-more",
-    preview: { type: "image", src: "/placements/bring-me-more.jpg" },
-  },
-  {
-    id: "P09",
-    date: "05/24/2024",
-    year: 2024,
-    artist: "Madelyn Leona",
-    workTags: ["PRODUCTION/SONGWRITING", "DRUMS", "MIXING/MASTERING"],
-    title: "Back & Forth",
-    slug: "back-and-forth",
-    preview: { type: "image", src: "/placements/back-and-forth.jpg" },
-  },
-  {
-    id: "P08",
-    date: "03/27/2024",
-    year: 2024,
-    artist: "KJ The Cool Nerd",
-    workTags: ["DRUMS", "ENGINEERING"],
-    title: "Wake Up",
-    slug: "wake-up",
-    preview: { type: "image", src: "/placements/wake-up.jpg" },
-  },
-  {
-    id: "P07",
-    date: "09/27/2024",
-    year: 2024,
-    artist: "KJ The Cool Nerd",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Cruisin",
-    slug: "cruisin",
-    preview: { type: "image", src: "/placements/cruisin.jpg" },
-  },
-  {
-    id: "P06",
-    date: "09/27/2024",
-    year: 2024,
-    artist: "KJ The Cool Nerd & WANYEH",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Dark Knight",
-    slug: "dark-knight",
-    preview: { type: "image", src: "/placements/dark-knight.jpg" },
-  },
-  {
-    id: "P05",
-    date: "05/19/2024",
-    year: 2024,
-    artist: "Bitty & WANYEH",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Bitts and Pieces",
-    slug: "bitts-and-pieces",
-    preview: { type: "image", src: "/placements/bitts-and-pieces.jpg" },
-  },
-  {
-    id: "P04",
-    date: "12/15/2023",
-    year: 2023,
-    artist: "Bitty & WANYEH",
-    workTags: ["ENGINEERING"],
-    title: "Lazy Days",
-    slug: "lazy-days",
-    preview: { type: "image", src: "/placements/small-business.jpg" },
-  },
-  {
-    id: "P03",
-    date: "12/15/2023",
-    year: 2023,
-    artist: "Bitty & WANYEH",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Small Business",
-    slug: "small-business",
-    preview: { type: "image", src: "/placements/small-business.jpg" },
-  },
-  {
-    id: "P17",
-    date: "10/08/2023",
-    year: 2023,
-    artist: "Riyah",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Infinities (Project 88)",
-    slug: "infinities-project-88",
-    preview: { type: "image", src: "/placements/infinities-project-88.jpg" },
-  },
-  {
-    id: "P02",
-    date: "09/22/2023",
-    year: 2023,
-    artist: "Bitty",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Repercussions",
-    slug: "repercussions",
-    preview: { type: "image", src: "/placements/repercussions.jpg" },
-  },
-  {
-    id: "P16",
-    date: "07/15/2023",
-    year: 2023,
-    artist: "WANYEH",
-    workTags: ["MIXING/MASTERING"],
-    title: "RoadTrixtape",
-    slug: "roadtrixtape",
-    preview: { type: "image", src: "/placements/roadtrixtape.jpg" },
-  },
-  {
-    id: "P15",
-    date: "10/26/2022",
-    year: 2022,
-    artist: "Riyah",
-    workTags: ["PRODUCTION/SONGWRITING", "DRUMS", "MIXING/MASTERING"],
-    title: "Sundown",
-    slug: "sundown",
-  },
-  {
-    id: "P14",
-    date: "08/07/2022",
-    year: 2022,
-    artist: "WANYEH",
-    workTags: ["ENGINEERING", "MIXING/MASTERING"],
-    title: "FLORA 2",
-    slug: "flora-2",
-    preview: { type: "image", src: "/placements/flora-2.jpg" },
-  },
-  {
-    id: "P01",
-    date: "02/24/2022",
-    year: 2022,
-    artist: "KJ The Cool Nerd feat. Riyah",
-    workTags: ["PRODUCTION/SONGWRITING", "MIXING/MASTERING"],
-    title: "Missin U (feat. Riyah)",
-    slug: "missin-u",
-    preview: { type: "image", src: "/placements/missin-u.jpg" },
-  },
-  {
-    id: "P13",
-    date: "02/25/2022",
-    year: 2022,
-    artist: "KJ The Cool Nerd",
-    workTags: ["DRUMS"],
-    title: "Class Loser",
-    slug: "class-loser",
-    preview: { type: "image", src: "/placements/class-loser.jpg" },
-  },
+  { id: "P12", year: 2025, artist: "AR!YAH", title: "Aura", role: "Drum Programming" },
+  { id: "P18", year: 2025, artist: "BittyOTW", title: "Morning Coffee", role: "Drum Programming" },
+  { id: "P11", year: 2025, artist: "Jae Esquire", title: "Get Down", role: "Drum Programming" },
+  { id: "P10", year: 2024, artist: "Bitty", title: "Bring Me More", role: "Drum Programming" },
+  { id: "P09", year: 2024, artist: "Madelyn Leona", title: "Back & Forth", role: "Drums" },
+  { id: "P08", year: 2024, artist: "KJ The Cool Nerd", title: "Wake Up", role: "Drums" },
+  { id: "P07", year: 2024, artist: "KJ The Cool Nerd", title: "Cruisin", role: "Drum Programming" },
+  { id: "P06", year: 2024, artist: "KJ The Cool Nerd & WANYEH", title: "Dark Knight", role: "Drum Programming" },
+  { id: "P05", year: 2024, artist: "Bitty & WANYEH", title: "Bitts and Pieces", role: "Drum Programming" },
+  { id: "P04", year: 2023, artist: "Bitty & WANYEH", title: "Lazy Days", role: "Drum Programming" },
+  { id: "P03", year: 2023, artist: "Bitty & WANYEH", title: "Small Business", role: "Drum Programming" },
+  { id: "P17", year: 2023, artist: "Riyah", title: "Infinities (Project 88)", role: "Drum Programming" },
+  { id: "P02", year: 2023, artist: "Bitty", title: "Repercussions", role: "Drum Programming" },
+  { id: "P16", year: 2023, artist: "WANYEH", title: "RoadTrixtape", role: "Drum Programming" },
+  { id: "P15", year: 2022, artist: "Riyah", title: "Sundown", role: "Drums" },
+  { id: "P14", year: 2022, artist: "WANYEH", title: "FLORA 2", role: "Drum Programming" },
+  { id: "P01", year: 2022, artist: "KJ The Cool Nerd feat. Riyah", title: "Missin U (feat. Riyah)", role: "Drum Programming" },
+  { id: "P13", year: 2022, artist: "KJ The Cool Nerd", title: "Class Loser", role: "Drums" },
 ];

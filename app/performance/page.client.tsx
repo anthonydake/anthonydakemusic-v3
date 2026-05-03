@@ -2,297 +2,87 @@
 
 import "../placements/projects-index.css";
 
-import NextImage from "next/image";
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { performanceIndex, type PerformanceItem } from "@/data/performance.data";
 import SiteHeader from "@/app/components/SiteHeader";
 import { useTransition } from "@/app/components/TransitionProvider";
 
-type MediaQueryListLegacy = MediaQueryList & {
-  addListener?: (listener: (event: MediaQueryListEvent) => void) => void;
-  removeListener?: (listener: (event: MediaQueryListEvent) => void) => void;
-};
-
-type PerformancePreview = { type: "image"; src: string };
-
-function parseSortKey(dateDisplay: string) {
-  const parsed = Date.parse(dateDisplay);
-  if (!Number.isNaN(parsed)) return parsed;
-  const rangeMatch = dateDisplay.match(/([A-Za-z]{3,9}\s+\d{1,2}\s+\d{4})/);
-  if (rangeMatch) {
-    const rangeParsed = Date.parse(rangeMatch[1]);
-    if (!Number.isNaN(rangeParsed)) return rangeParsed;
-  }
-  const yearMatch = dateDisplay.match(/\b(19|20)\d{2}\b/);
-  if (yearMatch) return Number(yearMatch[0]) * 10000;
-  return 0;
-}
-
-function extractYear(dateDisplay: string) {
-  const yearMatch = dateDisplay.match(/\b(19|20)\d{2}\b/);
-  return yearMatch ? Number(yearMatch[0]) : 0;
-}
-
-function samePreview(a: PerformancePreview | null, b: PerformancePreview | null) {
-  if (!a || !b) return false;
-  return a.type === b.type && a.src === b.src;
-}
-
-function getPreview(item: PerformanceItem): PerformancePreview | null {
-  const src = item.photoUrls?.[0];
-  return src ? { type: "image", src } : null;
-}
-
 export default function PerformanceIndexClient() {
   const { triggerTransition, isTransitioning, isMobileFallback } = useTransition();
-  const items = useMemo(() => {
-    return [...performanceIndex].sort((a, b) => parseSortKey(b.dateDisplay) - parseSortKey(a.dateDisplay));
-  }, []);
+  // Already sorted newest-first in the data file
+  const items = performanceIndex;
 
   const [revealCount, setRevealCount] = useState(0);
-  const [hoverCapable, setHoverCapable] = useState(() => {
-    if (typeof window === "undefined" || !("matchMedia" in window)) return false;
-    return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  });
-  const [previewCurrent, setPreviewCurrent] = useState<PerformancePreview | null>(() => {
-    for (const item of items) {
-      const preview = getPreview(item);
-      if (preview) return preview;
-    }
-    return null;
-  });
-  const [previewNext, setPreviewNext] = useState<PerformancePreview | null>(null);
-  const [previewNextVisible, setPreviewNextVisible] = useState(false);
   const rowsRef = useRef<HTMLDivElement | null>(null);
-  const previewCommitRef = useRef<number | null>(null);
-  const previewPendingSrcRef = useRef<string | null>(null);
-  const previewPreloadRef = useRef<HTMLImageElement | null>(null);
   const accumRef = useRef(0);
   const triggeredRef = useRef(false);
   const lastWheelRef = useRef<number | null>(null);
 
-  const revealIndexBySlug = useMemo(() => {
-    const map = new Map<string, number>();
-    items.forEach((p, idx) => map.set(p.slug, idx));
-    return map;
-  }, [items]);
-
-  useEffect(() => {
-    const query = "(hover: hover) and (pointer: fine)";
-    const mq = window.matchMedia(query) as MediaQueryListLegacy;
-    const update = () => setHoverCapable(mq.matches);
-    mq.addEventListener?.("change", update);
-    mq.addListener?.(update);
-    return () => {
-      mq.removeEventListener?.("change", update);
-      mq.removeListener?.(update);
-    };
-  }, []);
-
   useEffect(() => {
     if (items.length === 0) return;
-
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let interval: number | null = null;
-
-    // Avoid setState directly in the effect body (lint rule); run from a callback.
     const t = window.setTimeout(() => {
-      if (reduced) {
-        setRevealCount(items.length);
-        return;
-      }
-
-      // Reveal from top to bottom, one row every quarter second.
+      if (reduced) { setRevealCount(items.length); return; }
       let count = 1;
       setRevealCount(1);
-
       interval = window.setInterval(() => {
         count += 1;
         setRevealCount(count);
         if (count >= items.length && interval) window.clearInterval(interval);
       }, 125);
     }, 0);
-
-    return () => {
-      window.clearTimeout(t);
-      if (interval) window.clearInterval(interval);
-    };
+    return () => { window.clearTimeout(t); if (interval) window.clearInterval(interval); };
   }, [items.length]);
 
   useEffect(() => {
     const { style } = document.body;
     const prev = style.overflow;
     style.overflow = "hidden";
-    return () => {
-      style.overflow = prev;
-    };
+    return () => { style.overflow = prev; };
   }, []);
 
+  // Scroll-to-home transition
   useEffect(() => {
     if (isTransitioning) return;
     const rows = rowsRef.current;
     if (!rows) return;
-
     const handleWheel = (e: WheelEvent) => {
       if (triggeredRef.current) return;
       e.preventDefault();
       const now = performance.now();
       const delta = e.deltaY;
-      const slowFactor = 0.35;
-      const minDelta = 35;
-      const triggerThreshold = 140;
-      const windowMs = 220;
-      if (Math.abs(delta) < 1) return;
-
-      rows.scrollTop += delta * slowFactor;
-
-      if (Math.abs(delta) < minDelta) return;
-      if (delta <= 0) {
-        accumRef.current = 0;
-        lastWheelRef.current = null;
-        return;
-      }
+      rows.scrollTop += delta * 0.35;
+      if (Math.abs(delta) < 35) return;
+      if (delta <= 0) { accumRef.current = 0; lastWheelRef.current = null; return; }
       const atBottom = rows.scrollTop + rows.clientHeight >= rows.scrollHeight - 2;
-      if (!atBottom) {
-        accumRef.current = 0;
-        lastWheelRef.current = null;
-        return;
-      }
-      if (lastWheelRef.current === null || now - lastWheelRef.current > windowMs) {
-        accumRef.current = 0;
-      }
+      if (!atBottom) { accumRef.current = 0; lastWheelRef.current = null; return; }
+      if (lastWheelRef.current === null || now - lastWheelRef.current > 220) accumRef.current = 0;
       lastWheelRef.current = now;
       accumRef.current += delta;
-      if (accumRef.current >= triggerThreshold) {
+      if (accumRef.current >= 140) {
         triggeredRef.current = true;
         rows.removeEventListener("wheel", handleWheel);
         triggerTransition("/");
       }
     };
-
     rows.addEventListener("wheel", handleWheel, { passive: false });
     return () => rows.removeEventListener("wheel", handleWheel);
   }, [isTransitioning, triggerTransition]);
 
-  useEffect(() => {
-    const rows = rowsRef.current;
-    if (!rows) return;
-    rows.scrollTop = 0;
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (previewCommitRef.current) window.clearTimeout(previewCommitRef.current);
-    };
-  }, []);
-
-  // Desktop/table column sizing (used by row grid + background hairlines).
-  const frameStyle = useMemo(() => {
-    return {
-      // Tuned to match the reference "index table" proportions without introducing new fonts.
-      ["--col1"]: "clamp(110px, 10vw, 150px)",
-      ["--col2"]: "clamp(170px, 16vw, 260px)",
-      ["--col3"]: "clamp(180px, 20vw, 300px)",
-      ["--preview"]: "clamp(390px, 27vw, 690px)",
-      ["--preview-bleed"]: "calc((100vw - min(1600px, 100vw) + 2 * var(--page-pad)) / 2)",
-      ["--frame-max"]: "1600px",
-    } as React.CSSProperties;
-  }, []);
-
-  const queuePreview = (next: PerformancePreview | null) => {
-    if (!next) return;
-    if (samePreview(previewCurrent, next)) return;
-    if (previewCommitRef.current) window.clearTimeout(previewCommitRef.current);
-    setPreviewNextVisible(false);
-    setPreviewNext(next);
-    previewPendingSrcRef.current = next.src;
-    const img = new window.Image();
-    previewPreloadRef.current = img;
-    img.onload = () => onNextReady(next.src);
-    img.onerror = () => onNextReady(next.src);
-    img.src = next.src;
-  };
-
-  const onNextReady = (src: string) => {
-    if (previewPendingSrcRef.current !== src) return;
-    const commit = previewNext;
-    if (!commit) return;
-    if (commit.src !== src) return;
-    setPreviewNextVisible(true);
-    if (previewCommitRef.current) window.clearTimeout(previewCommitRef.current);
-    previewCommitRef.current = window.setTimeout(() => {
-      setPreviewCurrent(commit);
-      setPreviewNext(null);
-      setPreviewNextVisible(false);
-    }, 220);
-  };
-
-  const frameClass = ["performance-index-frame relative bg-white text-black", "h-screen overflow-hidden"].join(" ");
-  const mainClass = [
-    "relative z-[10] mx-auto max-w-[var(--frame-max)] px-6 pb-24 pt-[200px] [--page-pad:1.5rem] sm:px-8 sm:[--page-pad:2rem] lg:px-10 lg:[--page-pad:2.5rem] xl:px-12 xl:[--page-pad:3rem] 2xl:px-16 2xl:[--page-pad:4rem]",
-    "h-[calc(100svh-56px)] overflow-hidden",
-  ].join(" ");
+  useEffect(() => { const rows = rowsRef.current; if (rows) rows.scrollTop = 0; }, []);
 
   return (
-    <div className={frameClass} style={frameStyle}>
-      {/* Vertical hairline gridlines (desktop only) */}
-      <div className="pointer-events-none absolute inset-0 hidden lg:block">
-        <div className="mx-auto h-full max-w-[var(--frame-max)] px-6 sm:px-8 lg:px-10 xl:px-12 2xl:px-16">
-          <div className="relative h-full">
-            <div className="absolute inset-y-0 left-[var(--col1)] w-px bg-black/10" />
-            <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2))] w-px bg-black/10" />
-            <div className="absolute inset-y-0 left-[calc(var(--col1)+var(--col2)+var(--col3))] w-px bg-black/10" />
-            {hoverCapable && <div className="absolute inset-y-0 left-[calc(100%-var(--preview))] w-px bg-black/10" />}
-          </div>
-        </div>
-      </div>
-
+    <div className="performance-index-frame relative bg-white text-black h-screen overflow-hidden">
       <SiteHeader />
-
-      <main className={mainClass}>
-        <div
-          className={[
-            "h-full",
-            hoverCapable ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_var(--preview)] lg:gap-0" : "grid gap-10",
-          ].join(" ")}
+      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[200px] sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
+        <section
+          aria-label="Performance index"
+          ref={rowsRef}
+          className="rows-scroll h-full min-h-0 overflow-y-auto overscroll-contain pr-2"
         >
-          <section
-            aria-label="Performance index"
-            ref={rowsRef}
-            className="rows-scroll min-h-0 overflow-y-auto overscroll-contain pr-2"
-          >
-            <YearGroups
-              items={items}
-              revealCount={revealCount}
-              revealIndexBySlug={revealIndexBySlug}
-              onRowHover={(slug) => {
-                if (!hoverCapable) return;
-                const item = items.find((p) => p.slug === slug);
-                queuePreview(item ? getPreview(item) : null);
-              }}
-            />
-          </section>
-
-          {/* Desktop sticky preview (no preview on touch / hover:none) */}
-          {hoverCapable && previewCurrent && (
-            <aside
-              className="hidden lg:flex lg:items-center lg:justify-end lg:mr-[calc(-1*var(--preview-bleed))]"
-              aria-label="Performance preview"
-            >
-              <div className="flex min-h-screen w-full items-center justify-end pr-0 -mt-[200px]">
-                <div className="w-full">
-                  <PreviewPanel
-                    current={previewCurrent}
-                    next={previewNext}
-                    nextVisible={previewNextVisible}
-                    onNextReady={onNextReady}
-                  />
-                </div>
-              </div>
-            </aside>
-          )}
-        </div>
+          <YearGroups items={items} revealCount={revealCount} />
+        </section>
       </main>
 
       {!isMobileFallback && (
@@ -303,79 +93,25 @@ export default function PerformanceIndexClient() {
         </div>
       )}
       <style jsx global>{`
-        @media (min-width: 1920px) {
-          .performance-index-frame {
-            --frame-max: 2000px;
-            --col1: clamp(150px, 12vw, 220px);
-            --col2: clamp(220px, 18vw, 340px);
-            --col3: clamp(240px, 20vw, 380px);
-            --preview: clamp(520px, 32vw, 820px);
-          }
-        }
-
-        @media (min-width: 2400px) {
-          .performance-index-frame {
-            --frame-max: 2400px;
-            --col1: clamp(180px, 12vw, 260px);
-            --col2: clamp(260px, 18vw, 420px);
-            --col3: clamp(300px, 20vw, 460px);
-            --preview: clamp(620px, 32vw, 980px);
-          }
-        }
-
-        @keyframes homeScrollPulse {
-          0% {
-            opacity: 0;
-          }
-          50% {
-            opacity: 1;
-          }
-          100% {
-            opacity: 0;
-          }
-        }
-        .home-scroll-indicator {
-          animation: homeScrollPulse 2s ease-in-out infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .home-scroll-indicator {
-            animation: none;
-          }
-        }
-        .rows-scroll {
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-          -webkit-overflow-scrolling: touch;
-        }
-        .rows-scroll::-webkit-scrollbar {
-          width: 0;
-          height: 0;
-        }
+        @keyframes homeScrollPulse { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+        .home-scroll-indicator { animation: homeScrollPulse 2s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) { .home-scroll-indicator { animation: none; } }
+        .rows-scroll { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
+        .rows-scroll::-webkit-scrollbar { width: 0; height: 0; }
       `}</style>
     </div>
   );
 }
 
-function YearGroups({
-  items,
-  revealCount,
-  revealIndexBySlug,
-  onRowHover,
-}: {
-  items: PerformanceItem[];
-  revealCount: number;
-  revealIndexBySlug: Map<string, number>;
-  onRowHover: (slug: string) => void;
-}) {
-  const years = Array.from(new Set(items.map((p) => extractYear(p.dateDisplay)).filter((y) => y > 0))).sort(
-    (a, b) => b - a
-  );
+function YearGroups({ items, revealCount }: { items: PerformanceItem[]; revealCount: number }) {
+  const years = Array.from(new Set(items.map((p) => p.year))).sort((a, b) => b - a);
 
   return (
     <div className="space-y-5">
       {years.map((year) => {
-        const yearItems = items.filter((p) => extractYear(p.dateDisplay) === year);
-        const yearVisible = yearItems.filter((p) => (revealIndexBySlug.get(p.slug) ?? Number.POSITIVE_INFINITY) < revealCount);
+        const yearItems = items.filter((p) => p.year === year);
+        const idx0 = items.indexOf(yearItems[0]);
+        const yearVisible = yearItems.filter((_, i) => idx0 + i < revealCount);
         if (yearVisible.length === 0) return null;
 
         return (
@@ -384,37 +120,44 @@ function YearGroups({
               <div className="h-px flex-1 bg-black/10" />
               <div className="text-[10.625px] uppercase tracking-[0.28em] text-black/50">{year}</div>
             </div>
-
             <div className="space-y-0">
               {yearVisible.map((p) => {
-                const rolesLine = p.roles.join(" / ");
-                return (
-                  <Link
-                    key={p.slug}
-                    href={`/performance/${p.slug}`}
-                    className="projects-row projects-row-enter group block py-2 focus-visible:outline focus-visible:outline-1 focus-visible:outline-black/60 lg:py-2"
-                    onMouseEnter={() => onRowHover(p.slug)}
-                  >
-                    <div className="min-w-0 grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-4 gap-y-1 leading-tight lg:grid-cols-[var(--col1)_var(--col2)_var(--col3)_minmax(0,1fr)] lg:items-start lg:gap-x-8">
-                      {/* Column 1: date */}
-                      <div className="tabular-nums text-[9.5625px] uppercase tracking-[0.2em]">{p.dateDisplay}</div>
-
-                      {/* Column 2: artist */}
-                      <div className="projects-row-muted text-[9.5625px] uppercase tracking-[0.2em] text-black/55 whitespace-normal">
-                        {p.primaryArtist}
-                      </div>
-
-                      {/* Column 3: roles (desktop only) */}
-                      <div className="projects-row-muted hidden text-[9.5625px] uppercase tracking-[0.2em] text-black/55 lg:block whitespace-normal">
-                        {rolesLine}
-                      </div>
-
-                      {/* Column 4: title (desktop only) */}
-                      <div className="hidden text-[9.5625px] uppercase tracking-[0.2em] lg:block whitespace-normal">
-                        <span>{p.title}</span>
-                      </div>
+                const venueLocation = `${p.venue}, ${p.city}, ${p.state}`;
+                const Row = (
+                  <>
+                    {/* Mobile: 2-col */}
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-0.5 leading-tight lg:hidden">
+                      <div className="text-[9.5625px] uppercase tracking-[0.2em]">{p.primaryArtist}</div>
+                      <div className="text-[9.5625px] uppercase tracking-[0.2em] text-black/50 text-right">{p.year}</div>
+                      <div className="text-[9.5625px] uppercase tracking-[0.2em] text-black/55 col-span-2">{p.venue}</div>
                     </div>
-                  </Link>
+                    {/* Desktop: 3-col */}
+                    <div className="hidden lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-8 leading-tight">
+                      <div className="text-[9.5625px] uppercase tracking-[0.2em]">{p.primaryArtist}</div>
+                      <div className="text-[9.5625px] uppercase tracking-[0.2em]">{venueLocation}</div>
+                      <div className="text-[9.5625px] uppercase tracking-[0.2em] text-black/50 text-right">{p.year}</div>
+                    </div>
+                  </>
+                );
+
+                if (p.youtubeUrl) {
+                  return (
+                    <a
+                      key={p.id}
+                      href={p.youtubeUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="projects-row projects-row-enter group block py-2 lg:py-2 hover:opacity-70 transition-opacity"
+                    >
+                      {Row}
+                    </a>
+                  );
+                }
+
+                return (
+                  <div key={p.id} className="projects-row projects-row-enter py-2 lg:py-2">
+                    {Row}
+                  </div>
                 );
               })}
             </div>
@@ -422,52 +165,5 @@ function YearGroups({
         );
       })}
     </div>
-  );
-}
-
-function PreviewPanel({
-  current,
-  next,
-  nextVisible,
-  onNextReady,
-}: {
-  current: PerformancePreview;
-  next: PerformancePreview | null;
-  nextVisible: boolean;
-  onNextReady: (src: string) => void;
-}) {
-  return (
-    <div className="w-full">
-      {/* Cinematic Frame */}
-      <div className="relative w-full aspect-[16/9] overflow-hidden">
-        <PreviewMedia preview={current} />
-
-        {next && (
-          <div
-            className={`absolute inset-0 transition-opacity duration-400 ${
-              nextVisible ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <PreviewMedia preview={next} onReady={() => onNextReady(next.src)} />
-          </div>
-        )}
-      </div>
-
-      {/* Subtle Caption */}
-      {/* Preview caption removed */}
-    </div>
-  );
-}
-
-function PreviewMedia({ preview, onReady }: { preview: PerformancePreview; onReady?: () => void }) {
-  return (
-    <NextImage
-      className="object-cover"
-      src={preview.src}
-      alt="Performance preview"
-      fill
-      sizes="(min-width: 1024px) 50vw, 100vw"
-      onLoad={() => onReady?.()}
-    />
   );
 }
