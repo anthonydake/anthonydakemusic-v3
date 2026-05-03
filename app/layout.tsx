@@ -1,3 +1,4 @@
+// build-ts: 2026-05-02T23:23:45.831760
 import type { Metadata } from "next";
 import "./globals.css";
 import JsonLd from "./components/JsonLd";
