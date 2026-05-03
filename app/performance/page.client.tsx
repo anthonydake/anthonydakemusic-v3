@@ -75,7 +75,7 @@ export default function PerformanceIndexClient() {
   return (
     <div className="performance-index-frame relative bg-black text-white h-screen overflow-hidden">
       <SiteHeader />
-      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[200px] sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
+      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[120px] sm:pt-[200px] sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
         <section
           aria-label="Performance index"
           ref={rowsRef}
@@ -121,7 +121,7 @@ function YearGroups({ items, revealCount }: { items: PerformanceItem[]; revealCo
           <div key={year} className="space-y-2">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-white/10" />
-              <div className="text-[10.625px] uppercase tracking-[0.28em] text-white/50"><span>{year}</span></div>
+              <div className="text-[12px] lg:text-[10.625px] uppercase tracking-[0.28em] text-white/50"><span>{year}</span></div>
             </div>
             <div className="space-y-0">
               {yearVisible.map((p) => {
@@ -130,15 +130,15 @@ function YearGroups({ items, revealCount }: { items: PerformanceItem[]; revealCo
                   <>
                     {/* Mobile: 2-col */}
                     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-0.5 leading-tight lg:hidden">
-                      <div className="text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
-                      <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
-                      <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2"><span>{p.venue}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2"><span>{p.venue}</span></div>
                     </div>
                     {/* Desktop: 3-col */}
                     <div className="hidden lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-8 leading-tight">
-                      <div className="text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
-                      <div className="text-[9.5625px] uppercase tracking-[0.2em]">{venueLocation}</div>
-                      <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]">{venueLocation}</div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
                     </div>
                   </>
                 );
