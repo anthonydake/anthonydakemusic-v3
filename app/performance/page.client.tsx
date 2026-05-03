@@ -106,12 +106,15 @@ export default function PerformanceIndexClient() {
 function YearGroups({ items, revealCount }: { items: PerformanceItem[]; revealCount: number }) {
   const years = Array.from(new Set(items.map((p) => p.year))).sort((a, b) => b - a);
 
+  // Build a flat index so reveal count works across year groups
+  const indexById = new Map<string, number>();
+  items.forEach((p, i) => indexById.set(p.id, i));
+
   return (
     <div className="space-y-5">
       {years.map((year) => {
         const yearItems = items.filter((p) => p.year === year);
-        const idx0 = items.indexOf(yearItems[0]);
-        const yearVisible = yearItems.filter((_, i) => idx0 + i < revealCount);
+        const yearVisible = yearItems.filter((p) => (indexById.get(p.id) ?? Infinity) < revealCount);
         if (yearVisible.length === 0) return null;
 
         return (
