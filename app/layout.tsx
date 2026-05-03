@@ -8,8 +8,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusi
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "🥁 ANTHONY DAKE | DRUMS",
-    template: "%s",
+    default: "ANTHONY DAKE | DRUMS",
+    template: "ANTHONY DAKE | %s",
   },
   description: "Session drummer and music director — live shows, tours, and studio sessions",
   icons: {
@@ -49,9 +49,9 @@ export default function RootLayout({
                 name: "Anthony Dake",
                 url: siteUrl,
                 jobTitle: "Session drummer and music director — live shows, tours, and studio sessions",
-                description: "Session drummer and music director based in Columbus, Ohio.",
+                description: "Session drummer and music director based in Nashville, TN.",
                 knowsAbout: ["Session Drumming", "Live Performance", "Music Direction", "Tour Preparation"],
-                areaServed: "Columbus, Ohio",
+                areaServed: "Nashville, TN",
                 sameAs: [
                   "https://www.instagram.com/anthony_dake/",
                   "https://www.tiktok.com/@anthony_dake",

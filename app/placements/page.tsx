@@ -4,7 +4,7 @@ import ProjectsIndexClient from "./page.client";
 import { projectIndex } from "@/data/projects.data";
 
 export const metadata: Metadata = {
-  title: "Placements — Anthony Dake",
+  title: "PLACEMENTS",
   description: "Placements index — production, drums, and musical direction credits and work.",
   alternates: {
     canonical: "/placements",

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import DemoReelClient from "./page.client";
 
 export const metadata: Metadata = {
-  title: "Demo Reel — Anthony Dake",
+  title: "DEMO REEL",
   description: "Watch Anthony Dake's drumming demo reel — live performance and session highlights.",
   alternates: { canonical: "/demoreel" },
 };

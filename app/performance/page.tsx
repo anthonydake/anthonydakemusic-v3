@@ -4,7 +4,7 @@ import PerformanceIndexClient from "./page.client";
 import { performanceIndex } from "@/data/performance.data";
 
 export const metadata: Metadata = {
-  title: "Performance — Anthony Dake",
+  title: "PERFORMANCE",
   description: "Performance index — performance, drums, and musical direction credits and work.",
   alternates: {
     canonical: "/performance",
