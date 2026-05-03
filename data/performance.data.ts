@@ -50,7 +50,7 @@ export const performanceIndex: PerformanceItem[] = [
     id: "L10",
     year: 2024,
     primaryArtist: "EDwen ft. KeezyTheeUnkind",
-    venue: "Goodale Park — Columbus Pride Festival",
+    venue: "Main Stage — Columbus Pride Festival",
     city: "Columbus",
     state: "OH",
     youtubeUrl: "https://www.youtube.com/watch?v=B5d8xn_r3CA&t=27",
