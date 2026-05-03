@@ -232,7 +232,7 @@ export default function HomeClient({
                     href="mailto:adakemusic@gmail.com"
                     aria-label="Email"
                   >
-                    <svg viewBox="0 0 24 24" className="h-7 w-7 transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientEmail" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -263,7 +263,7 @@ export default function HomeClient({
                     rel="noreferrer me"
                     aria-label="Instagram"
                   >
-                    <svg viewBox="0 0 24 24" className="h-7 w-7 transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientInstagram" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -293,7 +293,7 @@ export default function HomeClient({
                     rel="noreferrer me"
                     aria-label="YouTube"
                   >
-                    <svg viewBox="0 0 24 24" className="h-7 w-7 transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientYouTube" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -322,7 +322,7 @@ export default function HomeClient({
                     rel="noreferrer me"
                     aria-label="TikTok"
                   >
-                    <svg viewBox="0 0 24 24" className="h-7 w-7 transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientTikTok" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
