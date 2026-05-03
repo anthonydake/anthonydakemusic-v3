@@ -62,7 +62,7 @@ export const performanceIndex: PerformanceItem[] = [
     venue: "Bozo Stage — ComFest Columbus",
     city: "Columbus",
     state: "OH",
-    youtubeUrl: "https://www.youtube.com/watch?v=NLN0DC0CUJs&t=485",
+    youtubeUrl: "https://www.youtube.com/watch?v=NLN0DC0CUJs&t=1136",
   },
   {
     id: "L10",
