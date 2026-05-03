@@ -26,7 +26,7 @@ export const performanceIndex: PerformanceItem[] = [
     venue: "The Spacebar",
     city: "Columbus",
     state: "OH",
-    youtubeUrl: "https://youtu.be/B2GC9OtUeaU?t=187",
+    youtubeUrl: "https://youtu.be/B2GC9OtUeaU?t=223",
   },
   {
     id: "L06",
