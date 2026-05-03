@@ -11,15 +11,6 @@ export type PerformanceItem = {
 // Sorted newest-first
 export const performanceIndex: PerformanceItem[] = [
   {
-    id: "L09",
-    year: 2026,
-    primaryArtist: "KJ The Cool Nerd",
-    venue: "Urban Audio Collective “The Garden”",
-    city: "Columbus",
-    state: "OH",
-    youtubeUrl: "https://www.youtube.com/watch?v=J9zmUzan9xg&t=1110s",
-  },
-  {
     id: "L08",
     year: 2026,
     primaryArtist: "KJ The Cool Nerd",
@@ -89,15 +80,6 @@ export const performanceIndex: PerformanceItem[] = [
     venue: "Mees Hall",
     city: "Columbus",
     state: "OH",
-  },
-  {
-    id: "L02",
-    year: 2022,
-    primaryArtist: "KJ The Cool Nerd",
-    venue: "Yochum Hall",
-    city: "Columbus",
-    state: "OH",
-    youtubeUrl: "https://www.youtube.com/watch?v=3LGtry8famg&t=135s",
   },
   {
     id: "L01",
