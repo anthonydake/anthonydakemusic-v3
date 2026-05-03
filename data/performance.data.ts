@@ -47,6 +47,15 @@ export const performanceIndex: PerformanceItem[] = [
     youtubeUrl: "https://www.youtube.com/watch?v=lhji4B7krzU&t=1321s",
   },
   {
+    id: "L10",
+    year: 2024,
+    primaryArtist: "EDwen ft. KeezyTheeUnkind",
+    venue: "Goodale Park — Columbus Pride Festival",
+    city: "Columbus",
+    state: "OH",
+    youtubeUrl: "https://www.youtube.com/watch?v=B5d8xn_r3CA&t=27",
+  },
+  {
     id: "L05",
     year: 2023,
     primaryArtist: "Columbus Children’s Choir",
