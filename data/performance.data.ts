@@ -26,7 +26,7 @@ export const performanceIndex: PerformanceItem[] = [
     venue: "Fuel Lounge OTR",
     city: "Cincinnati",
     state: "OH",
-    youtubeUrl: "https://www.youtube.com/watch?v=Om7g2U6bd8Q&t=744",
+    youtubeUrl: "https://www.youtube.com/watch?v=Om7g2U6bd8Q&t=810",
   },
   {
     id: "L07",
