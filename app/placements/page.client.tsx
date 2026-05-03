@@ -121,7 +121,7 @@ function YearGroups({ items, revealCount }: { items: ProjectIndexItem[]; revealC
           <div key={year} className="space-y-2">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-white/10" />
-              <div className="text-[10.625px] uppercase tracking-[0.28em] text-white/50">{year}</div>
+              <div className="text-[10.625px] uppercase tracking-[0.28em] text-white/50"><span>{year}</span></div>
             </div>
             <div className="space-y-0">
               {yearVisible.map((p) => (
@@ -131,16 +131,16 @@ function YearGroups({ items, revealCount }: { items: ProjectIndexItem[]; revealC
                 >
                   {/* Mobile: 2-col */}
                   <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-0.5 leading-tight lg:hidden">
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em]">{p.artist}</div>
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right">{p.year}</div>
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2">{p.title}</div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.artist}</span></div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2"><span>{p.title}</span></div>
                   </div>
                   {/* Desktop: 4-col */}
                   <div className="hidden lg:grid lg:grid-cols-4 lg:items-start lg:gap-x-8 leading-tight">
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em]">{p.artist}</div>
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em]">{p.title}</div>
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/55">{p.role}</div>
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right">{p.year}</div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.artist}</span></div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.title}</span></div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/55"><span>{p.role}</span></div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
                   </div>
                 </div>
               ))}

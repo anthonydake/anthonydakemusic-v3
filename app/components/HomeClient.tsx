@@ -200,7 +200,7 @@ export default function HomeClient({
     >
       <section
         ref={heroRef}
-        className="relative grid h-screen place-items-center snap-start bg-[#111113]"
+        className="relative grid h-screen place-items-center snap-start bg-black"
         data-id="hero"
         data-snap-section
       >
@@ -228,7 +228,7 @@ export default function HomeClient({
                 </div>
                 <div className="mt-6 flex items-center justify-center gap-9">
                   <a
-                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="mailto:adakemusic@gmail.com"
                     aria-label="Email"
                   >
@@ -257,7 +257,7 @@ export default function HomeClient({
                     </svg>
                   </a>
                   <a
-                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="https://www.instagram.com/anthony_dake/"
                     target="_blank"
                     rel="noreferrer me"
@@ -287,7 +287,7 @@ export default function HomeClient({
                     </svg>
                   </a>
                   <a
-                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="https://www.youtube.com/@anthony_dake"
                     target="_blank"
                     rel="noreferrer me"
@@ -316,7 +316,7 @@ export default function HomeClient({
                     </svg>
                   </a>
                   <a
-                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="https://www.tiktok.com/@anthony_dake"
                     target="_blank"
                     rel="noreferrer me"
@@ -367,7 +367,7 @@ export default function HomeClient({
         ref={demoreelRef}
         data-id="demoreel"
         data-snap-section
-        className="snap-start min-h-screen bg-[#111113]"
+        className="snap-start min-h-screen bg-black"
       >
         <div
           className={[
