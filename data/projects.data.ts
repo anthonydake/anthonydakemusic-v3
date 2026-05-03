@@ -26,7 +26,6 @@ export const projectIndex: ProjectIndexItem[] = [
   { id: "P17", year: 2023, artist: "Riyah", title: "Infinities (Project 88)", role: "Drum Programming", youtubeUrl: "https://www.youtube.com/watch?v=mViUiY00PoA" },
   { id: "P02", year: 2023, artist: "Bitty", title: "Repercussions", role: "Drum Programming", youtubeUrl: "https://www.youtube.com/watch?v=MUdrD0wVsJ8" },
   { id: "P01", year: 2022, artist: "KJ The Cool Nerd feat. Riyah", title: "Missin U (feat. Riyah)", role: "Drum Programming", youtubeUrl: "https://www.youtube.com/watch?v=Sqxoyx_LDYw" },
-  { id: "P13", year: 2022, artist: "KJ The Cool Nerd", title: "Class Loser", role: "Drums" },
   { id: "P20", year: 2022, artist: "KJ The Cool Nerd", title: "Heartbreaker", role: "Drums", youtubeUrl: "https://www.youtube.com/watch?v=ZUJLR6GrItA" },
   { id: "P21", year: 2022, artist: "KJ The Cool Nerd", title: "Falisity", role: "Drum Programming", youtubeUrl: "https://www.youtube.com/watch?v=4LkvPiSfcv8" },
 ];
