@@ -73,10 +73,11 @@ function HomeInner() {
 
   return (
     <>
-      <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-white/70 backdrop-blur">
-        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11.6875px] uppercase tracking-[0.28em] text-black/65">
+      <div className="edge-glow" />
+      <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-black/70 backdrop-blur">
+        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[11.6875px] uppercase tracking-[0.28em] text-white/65">
           <div className="justify-self-start">
-            <Link className="md:hidden hover:text-black" href="/placements">
+            <Link className="md:hidden hover:text-white" href="/placements">
               Placements
             </Link>
             <div className="hidden items-center md:flex">
@@ -87,25 +88,25 @@ function HomeInner() {
           </div>
           <Link
             href={homeHref}
-            className="home-nav group inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className="home-nav group inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
             <HomeMark />
           </Link>
           <div className="justify-self-end">
             <div className="flex items-center gap-4 md:hidden">
-                <Link className="hover:text-black" href="/performance">
+                <Link className="hover:text-white" href="/performance">
                 Performance
               </Link>
               
             </div>
             <nav className="hidden items-center gap-6 md:flex">
-              <Link className="hover:text-black" href="/placements">
+              <Link className="hover:text-white" href="/placements">
                 Placements
               </Link>
-              <Link className="hover:text-black" href="/performance">
+              <Link className="hover:text-white" href="/performance">
                 Performance
               </Link>
-              <Link className="hover:text-black" href="/about">
+              <Link className="hover:text-white" href="/about">
                 About
               </Link>
               
@@ -118,7 +119,7 @@ function HomeInner() {
       </div>
       <div className="pointer-events-none fixed inset-x-0 bottom-[12px] z-[20] flex justify-center">
         <span
-          className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-black"
+          className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-white"
           style={{ opacity: 0.35 }}
         >
           (scroll)

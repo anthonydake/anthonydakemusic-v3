@@ -73,7 +73,7 @@ export default function ProjectsIndexClient() {
   useEffect(() => { const rows = rowsRef.current; if (rows) rows.scrollTop = 0; }, []);
 
   return (
-    <div className="projects-index-frame relative bg-white text-black h-screen overflow-hidden">
+    <div className="projects-index-frame relative bg-black text-white h-screen overflow-hidden">
       <SiteHeader />
       <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[200px] sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
         <section
@@ -87,7 +87,7 @@ export default function ProjectsIndexClient() {
 
       {!isMobileFallback && (
         <div className="pointer-events-none fixed inset-x-0 bottom-[12px] z-[20] flex justify-center">
-          <span className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-black" style={{ opacity: 0.35 }}>
+          <span className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-white" style={{ opacity: 0.35 }}>
             (scroll)
           </span>
         </div>
@@ -120,8 +120,8 @@ function YearGroups({ items, revealCount }: { items: ProjectIndexItem[]; revealC
         return (
           <div key={year} className="space-y-2">
             <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-black/10" />
-              <div className="text-[10.625px] uppercase tracking-[0.28em] text-black/50">{year}</div>
+              <div className="h-px flex-1 bg-white/10" />
+              <div className="text-[10.625px] uppercase tracking-[0.28em] text-white/50">{year}</div>
             </div>
             <div className="space-y-0">
               {yearVisible.map((p) => (
@@ -132,15 +132,15 @@ function YearGroups({ items, revealCount }: { items: ProjectIndexItem[]; revealC
                   {/* Mobile: 2-col */}
                   <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-0.5 leading-tight lg:hidden">
                     <div className="text-[9.5625px] uppercase tracking-[0.2em]">{p.artist}</div>
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-black/50 text-right">{p.year}</div>
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-black/55 col-span-2">{p.title}</div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right">{p.year}</div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2">{p.title}</div>
                   </div>
                   {/* Desktop: 4-col */}
                   <div className="hidden lg:grid lg:grid-cols-4 lg:items-start lg:gap-x-8 leading-tight">
                     <div className="text-[9.5625px] uppercase tracking-[0.2em]">{p.artist}</div>
                     <div className="text-[9.5625px] uppercase tracking-[0.2em]">{p.title}</div>
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-black/55">{p.role}</div>
-                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-black/50 text-right">{p.year}</div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/55">{p.role}</div>
+                    <div className="text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right">{p.year}</div>
                   </div>
                 </div>
               ))}
