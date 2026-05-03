@@ -47,6 +47,15 @@ export const performanceIndex: PerformanceItem[] = [
     youtubeUrl: "https://www.youtube.com/watch?v=lZbRkRiV21k&t=334",
   },
   {
+    id: "L13",
+    year: 2024,
+    primaryArtist: "Smoothboi.Ty",
+    venue: "Bozo Stage — ComFest Columbus",
+    city: "Columbus",
+    state: "OH",
+    youtubeUrl: "https://www.youtube.com/watch?v=NLN0DC0CUJs&t=838",
+  },
+  {
     id: "L12",
     year: 2024,
     primaryArtist: "KeezyTheeUnkind",
