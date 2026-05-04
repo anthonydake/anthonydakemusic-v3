@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import HomePageClient from "./page.client";
 
 export const metadata: Metadata = {
-  title: "DRUMS",
+  title: { absolute: "ANTHONY DAKE" },
   description: "Session drummer and music director — live shows, tours, and studio sessions.",
   alternates: {
     canonical: "/",

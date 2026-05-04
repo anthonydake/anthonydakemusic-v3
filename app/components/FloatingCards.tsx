@@ -208,7 +208,7 @@ function FloatingCardItem({
       transition={{ type: "tween", duration: 0.25 }}
     >
       <Link
-        href={`/placements/${card.slug}`}
+        href="/placements"
         className="group relative block h-full w-full overflow-hidden rounded-2xl shadow-md transition-opacity duration-300 hover:opacity-100"
         aria-label={`${card.title} by ${card.artist}`}
       >

@@ -111,19 +111,19 @@ function YearGroups({ items, revealCount }: { items: ProjectIndexItem[]; revealC
   items.forEach((p, i) => indexById.set(p.id, i));
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-8">
       {years.map((year) => {
         const yearItems = items.filter((p) => p.year === year);
         const yearVisible = yearItems.filter((p) => (indexById.get(p.id) ?? Infinity) < revealCount);
         if (yearVisible.length === 0) return null;
 
         return (
-          <div key={year} className="space-y-2">
+          <div key={year} className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-white/10" />
               <div className="text-[12px] lg:text-[10.625px] uppercase tracking-[0.28em] text-white/50"><span>{year}</span></div>
             </div>
-            <div className="space-y-0">
+            <div className="space-y-1">
               {yearVisible.map((p) => {
                 const Row = (
                   <>
@@ -150,7 +150,7 @@ function YearGroups({ items, revealCount }: { items: ProjectIndexItem[]; revealC
                       href={p.youtubeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="projects-row projects-row-enter py-2 lg:py-2 block transition-opacity hover:opacity-70"
+                      className="projects-row projects-row-enter py-3 lg:py-5 block transition-opacity hover:opacity-70"
                     >
                       {Row}
                     </a>
@@ -158,7 +158,7 @@ function YearGroups({ items, revealCount }: { items: ProjectIndexItem[]; revealC
                 }
 
                 return (
-                  <div key={p.id} className="projects-row projects-row-enter py-2 lg:py-2">
+                  <div key={p.id} className="projects-row projects-row-enter py-3 lg:py-5">
                     {Row}
                   </div>
                 );
