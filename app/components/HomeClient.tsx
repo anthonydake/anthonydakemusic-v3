@@ -228,10 +228,40 @@ export default function HomeClient({
                 </div>
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-9">
                   <a
-                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group relative inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="mailto:adakemusic@gmail.com"
                     aria-label="Email"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigator.clipboard.writeText("adakemusic@gmail.com").then(() => {
+                        const btn = e.currentTarget;
+                        const tip = btn.querySelector("[data-tooltip]") as HTMLElement;
+                        if (tip) {
+                          tip.style.opacity = "1";
+                          tip.style.transform = "translateX(-50%) translateY(0)";
+                          setTimeout(() => {
+                            tip.style.opacity = "0";
+                            tip.style.transform = "translateX(-50%) translateY(4px)";
+                          }, 1800);
+                        }
+                      }).catch(() => {
+                        window.location.href = "mailto:adakemusic@gmail.com";
+                      });
+                    }}
                   >
+                    <span
+                      data-tooltip
+                      className="pointer-events-none absolute -bottom-8 left-1/2 whitespace-nowrap rounded-md bg-white/90 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-black shadow-md transition-all duration-300"
+                      style={{ opacity: 0, transform: "translateX(-50%) translateY(4px)" }}
+                    >
+                      <span style={{
+                        color: "#111",
+                        WebkitTextFillColor: "#111",
+                        backgroundImage: "none",
+                        WebkitBackgroundClip: "border-box",
+                        backgroundClip: "border-box",
+                      }}>Copied!</span>
+                    </span>
                     <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientEmail" x1="0" y1="0" x2="1" y2="1">
