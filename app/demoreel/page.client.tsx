@@ -12,13 +12,16 @@ export default function DemoReelClient() {
           Demo Reel
         </h1>
 
-        {/* YouTube Embed Placeholder */}
+        {/* YouTube Embed */}
         <div className="w-full max-w-[800px] aspect-video rounded-xl overflow-hidden bg-[#111] border border-white/10 shadow-2xl">
-          <div className="flex h-full w-full flex-col items-center justify-center text-center text-white/40">
-            <span className="text-[48px] mb-4">🥁</span>
-            <p className="text-[14px] uppercase tracking-[0.2em]">Demo Reel Coming Soon</p>
-            <p className="mt-2 text-[12px] text-white/25">YouTube embed will go here</p>
-          </div>
+          <iframe
+            className="h-full w-full"
+            src="https://www.youtube.com/embed/mu4i9_plICo?rel=0&modestbranding=1&color=white"
+            title="Anthony Dake — Demo Reel"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            loading="lazy"
+          />
         </div>
 
         <p className="mt-8 text-center text-[12px] uppercase tracking-[0.2em] text-white/30">
