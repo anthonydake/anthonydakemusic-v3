@@ -18,7 +18,7 @@ export default function EPKClient() {
             >
               <span>Resume</span>
             </a>
-            <p className="mt-2 text-[11px] uppercase tracking-[0.18em] text-white/25">
+            <p className="mt-2 text-[9px] uppercase tracking-[0.14em] text-white/20">
               <span>PDF format &bull; Click to download</span>
             </p>
           </div>
