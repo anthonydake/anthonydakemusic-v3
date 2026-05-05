@@ -6,7 +6,7 @@ import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
-  initialSection?: "hero" | "demoreel";
+  initialSection?: "hero" | "epk";
   nextHref?: string;
 };
 
@@ -22,13 +22,13 @@ export default function HomeClient({
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     []
   );
-  const [visible, setVisible] = useState<{ hero: boolean; demoreel: boolean }>(() =>
-    reduceMotion ? { hero: true, demoreel: true } : { hero: false, demoreel: false }
+  const [visible, setVisible] = useState<{ hero: boolean; epk: boolean }>(() =>
+    reduceMotion ? { hero: true, epk: true } : { hero: false, epk: false }
   );
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [pillReady, setPillReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
-  const demoreelRef = useRef<HTMLElement | null>(null);
+  const epkRef = useRef<HTMLElement | null>(null);
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
@@ -36,8 +36,8 @@ export default function HomeClient({
 
     // Ensure route entry points match the intended section without visible jump.
     const target =
-      initialSection === "demoreel"
-        ? demoreelRef.current?.offsetTop ?? 0
+      initialSection === "epk"
+        ? epkRef.current?.offsetTop ?? 0
         : 0;
     const prev = container.style.scrollBehavior;
     container.style.scrollBehavior = "auto";
@@ -59,9 +59,9 @@ export default function HomeClient({
           if (!id) return;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
             setVisible((prev) =>
-              prev[id as "hero" | "demoreel"]
+              prev[id as "hero" | "epk"]
                 ? prev
-                : { ...prev, [id as "hero" | "demoreel"]: true }
+                : { ...prev, [id as "hero" | "epk"]: true }
             );
           }
         });
@@ -80,7 +80,7 @@ export default function HomeClient({
     if (!container) return;
     if (isMobileFallback) return;
 
-    const sections = [heroRef.current, demoreelRef.current].filter(Boolean) as HTMLElement[];
+    const sections = [heroRef.current, epkRef.current].filter(Boolean) as HTMLElement[];
 
     const animateTo = (target: number) => {
       if (snapAnimating) return;
@@ -220,10 +220,10 @@ export default function HomeClient({
                 
                 <div className="mt-3 flex justify-center">
                   <Link
-                    href="/demoreel"
-                    className="demoreel-cta inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    href="/epk"
+                    className="epk-cta inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                   >
-                    Demo Reel | 🥁
+                    EPK | 🥁
                   </Link>
                 </div>
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-9">
@@ -394,8 +394,8 @@ export default function HomeClient({
       </section>
 
       <section
-        ref={demoreelRef}
-        data-id="demoreel"
+        ref={epkRef}
+        data-id="epk"
         data-snap-section
         className="snap-start min-h-screen bg-black"
       >
@@ -403,7 +403,7 @@ export default function HomeClient({
           className={[
             "mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-8 px-6 py-20 text-center transition-[opacity,transform]",
             "duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-            visible.demoreel ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
+            visible.epk ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
           ].join(" ")}
         >
           <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">
@@ -413,13 +413,13 @@ export default function HomeClient({
             Let\&apos;s make your next show unforgettable.
           </h2>
           <p className="max-w-lg text-[15px] leading-7 text-black/60">
-            Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Watch the demo reel and get in touch.
+            Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Check the EPK and get in touch.
           </p>
           <Link
-            href="/demoreel"
-            className="demoreel-cta mt-2 inline-flex items-center justify-center rounded-full px-8 py-3.5 text-[11px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            href="/epk"
+            className="epk-cta mt-2 inline-flex items-center justify-center rounded-full px-8 py-3.5 text-[11px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
-            Demo Reel | 🥁
+            EPK | 🥁
           </Link>
         </div>
       </section>
