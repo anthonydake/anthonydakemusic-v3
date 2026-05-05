@@ -6,11 +6,11 @@ export default function EPKClient() {
   return (
     <>
       <SiteHeader />
-      <main className="flex min-h-screen flex-col items-center justify-center bg-black px-4 pt-14 pb-8">
+      <main className="flex min-h-screen flex-col items-center justify-start bg-black px-4 pt-20 pb-8">
         <div className="mx-auto w-full max-w-[800px] flex flex-col items-center">
 
           {/* ── Resume Download Button (top) ─────────────────── */}
-          <div className="mb-4 text-center">
+          <div className="mb-3 text-center">
             <a
               href="/Anthony_Dake_Resume.pdf"
               download
