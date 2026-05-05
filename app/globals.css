@@ -316,61 +316,7 @@ svg * {
   }
 }
 
-/* ========================================
-   Blue Edge Glow — ambient stage lighting
-   ======================================== */
-@keyframes edgeGlowPulse {
-  0% {
-    opacity: 0.15;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 0.15;
-  }
-}
 
-@keyframes edgeGlowPulseMobile {
-  0% {
-    opacity: 0.1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-  100% {
-    opacity: 0.1;
-  }
-}
-
-.edge-glow {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 10001;
-  animation: edgeGlowPulse 5s ease-in-out infinite;
-  /* Four-sided glow using box-shadow inset */
-  box-shadow:
-    inset 0 0 100px 20px rgba(56, 120, 220, 0.30),
-    inset 0 0 250px 60px rgba(56, 120, 220, 0.15);
-}
-
-/* Tighter glow on mobile — less spread, more visible */
-@media (max-width: 768px) {
-  .edge-glow {
-    animation: edgeGlowPulseMobile 5s ease-in-out infinite;
-    box-shadow:
-      inset 0 0 60px 15px rgba(56, 120, 220, 0.3),
-      inset 0 0 140px 35px rgba(56, 120, 220, 0.15);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .edge-glow {
-    animation: none;
-    opacity: 0.4;
-  }
-}
 
 
 /* Pulsing blue gradient glow on EPK CTA */

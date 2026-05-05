@@ -5,7 +5,6 @@ import SiteHeader from "../components/SiteHeader";
 export default function EPKClient() {
   return (
     <>
-      <div className="edge-glow" />
       <SiteHeader />
       <main className="flex min-h-screen flex-col items-center justify-center bg-black px-4 pt-14 pb-8">
         <div className="mx-auto w-full max-w-[800px] flex flex-col items-center">
