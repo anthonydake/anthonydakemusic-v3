@@ -6,7 +6,7 @@ export default function EPKClient() {
   return (
     <>
       <SiteHeader />
-      <main className="flex min-h-screen flex-col items-center justify-start bg-black px-4 pt-20 pb-8">
+      <main className="flex min-h-screen flex-col items-center justify-start bg-black px-4 pt-16 sm:pt-20 pb-6 sm:pb-8">
         <div className="mx-auto w-full max-w-[800px] flex flex-col items-center">
 
           {/* ── Resume Download Button (top) ─────────────────── */}
@@ -14,7 +14,7 @@ export default function EPKClient() {
             <a
               href="/Anthony_Dake_Resume.pdf"
               download
-              className="epk-cta inline-flex items-center justify-center rounded-full px-14 py-5 text-[15px] uppercase tracking-[0.3em] font-semibold"
+              className="epk-cta inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold"
             >
               <span>Resume</span>
             </a>
@@ -36,12 +36,12 @@ export default function EPKClient() {
           </div>
 
           {/* ── Connect + Contact (condensed below video) ──── */}
-          <div className="mt-6 flex flex-col items-center gap-4">
+          <div className="mt-4 sm:mt-6 flex flex-col items-center gap-3 sm:gap-4">
             {/* Social icons row */}
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-3 sm:gap-5">
               {/* Instagram */}
               <a
-                className="group inline-flex h-[50px] w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="group inline-flex h-[44px] w-[44px] sm:h-[50px] sm:w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 href="https://www.instagram.com/anthony_dake/"
                 target="_blank"
                 rel="noreferrer me"
@@ -63,7 +63,7 @@ export default function EPKClient() {
 
               {/* YouTube */}
               <a
-                className="group inline-flex h-[50px] w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="group inline-flex h-[44px] w-[44px] sm:h-[50px] sm:w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 href="https://www.youtube.com/@anthony_dake"
                 target="_blank"
                 rel="noreferrer me"
@@ -84,7 +84,7 @@ export default function EPKClient() {
 
               {/* TikTok */}
               <a
-                className="group inline-flex h-[50px] w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="group inline-flex h-[44px] w-[44px] sm:h-[50px] sm:w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 href="https://www.tiktok.com/@anthony_dake"
                 target="_blank"
                 rel="noreferrer me"
@@ -106,7 +106,7 @@ export default function EPKClient() {
 
               {/* Email */}
               <a
-                className="group inline-flex h-[50px] w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="group inline-flex h-[44px] w-[44px] sm:h-[50px] sm:w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 href="mailto:adakemusic@gmail.com"
                 aria-label="Email"
               >
@@ -125,7 +125,7 @@ export default function EPKClient() {
             </div>
 
             {/* Contact line */}
-            <p className="text-[12px] uppercase tracking-[0.2em] text-white/30">
+            <p className="text-[10px] sm:text-[12px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-white/30">
               <span>adakemusic@gmail.com &bull; Columbus, OH</span>
             </p>
           </div>

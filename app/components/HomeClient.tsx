@@ -221,7 +221,7 @@ export default function HomeClient({
                 <div className="mt-3 flex justify-center">
                   <Link
                     href="/epk"
-                    className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-14 py-5 text-[15px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                   >
                     EPK | 🥁
                   </Link>
