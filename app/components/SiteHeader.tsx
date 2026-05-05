@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import NashvilleTime from "./NashvilleTime";
+import ColumbusTime from "./ColumbusTime";
 import HomeMark from "./HomeMark";
 
 export default function SiteHeader() {
@@ -13,9 +13,9 @@ export default function SiteHeader() {
             Placements
           </Link>
           <div className="hidden items-center md:flex">
-            <span>Nashville, (TN)</span>
+            <span>Columbus, (OH)</span>
             <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
-            <NashvilleTime />
+            <ColumbusTime />
           </div>
         </div>
         <Link

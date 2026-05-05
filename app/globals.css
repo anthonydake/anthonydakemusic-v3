@@ -371,3 +371,43 @@ svg * {
     opacity: 0.4;
   }
 }
+
+
+/* Pulsing blue gradient glow on EPK CTA */
+@keyframes epkGlowPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 12px 3px rgba(59, 130, 246, 0.35),
+      0 0 30px 8px rgba(142, 197, 255, 0.15),
+      0 10px 22px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 20px 6px rgba(59, 130, 246, 0.55),
+      0 0 50px 14px rgba(142, 197, 255, 0.25),
+      0 10px 22px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.epk-cta-glow {
+  animation: epkGlowPulse 3s ease-in-out infinite !important;
+  border: 1px solid rgba(142, 197, 255, 0.3) !important;
+}
+
+.epk-cta-glow:hover {
+  animation: none !important;
+  box-shadow:
+    0 0 24px 8px rgba(59, 130, 246, 0.5),
+    0 0 60px 16px rgba(142, 197, 255, 0.2),
+    0 14px 26px rgba(0, 0, 0, 0.25) !important;
+  border-color: rgba(142, 197, 255, 0.5) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .epk-cta-glow {
+    animation: none !important;
+    box-shadow:
+      0 0 16px 4px rgba(59, 130, 246, 0.4),
+      0 10px 22px rgba(0, 0, 0, 0.2) !important;
+  }
+}

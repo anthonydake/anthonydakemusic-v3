@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import TextScramble from "./TextScramble";
 
-function formatNashvilleTime(d: Date) {
+function formatColumbusTime(d: Date) {
   const fmt = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
+    timeZone: "America/New_York",
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
@@ -13,7 +13,7 @@ function formatNashvilleTime(d: Date) {
   return fmt.format(d);
 }
 
-export default function NashvilleTime({
+export default function ColumbusTime({
   className = "",
   duration = 500,
   charset = "#%&$@+|",
@@ -49,7 +49,7 @@ export default function NashvilleTime({
     };
   }, []);
 
-  const timeLabel = useMemo(() => formatNashvilleTime(now), [now]);
+  const timeLabel = useMemo(() => formatColumbusTime(now), [now]);
 
   return (
     <TextScramble
