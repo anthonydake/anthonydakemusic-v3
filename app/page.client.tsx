@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import HomeClient from "./components/HomeClient";
-import NashvilleTime from "./components/NashvilleTime";
+import ColumbusTime from "./components/ColumbusTime";
 import HomeMark from "./components/HomeMark";
 import { useTransition } from "./components/TransitionProvider";
 
@@ -81,9 +81,9 @@ function HomeInner() {
               Placements
             </Link>
             <div className="hidden items-center md:flex">
-              <span>Nashville, (TN)</span>
+              <span>Columbus, (OH)</span>
               <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
-              <NashvilleTime />
+              <ColumbusTime />
             </div>
           </div>
           <Link
