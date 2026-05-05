@@ -16,7 +16,7 @@ export default function DemoReelClient() {
         <div className="w-full max-w-[800px] aspect-video rounded-xl overflow-hidden bg-[#111] border border-white/10 shadow-2xl">
           <iframe
             className="h-full w-full"
-            src="https://www.youtube.com/embed/mu4i9_plICo?rel=0&modestbranding=1&color=white"
+            src="https://www.youtube.com/embed/gwNaFJyhTXo?rel=0&modestbranding=1&color=white"
             title="Anthony Dake — Demo Reel"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
