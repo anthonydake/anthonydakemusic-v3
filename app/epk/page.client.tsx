@@ -14,9 +14,9 @@ export default function EPKClient() {
             <a
               href="/Anthony_Dake_Resume.pdf"
               download
-              className="epk-cta inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold"
+              className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
-              <span>Resume</span>
+              Resume
             </a>
             <p className="mt-2 text-[9px] uppercase tracking-[0.14em] text-white/20">
               <span>PDF format &bull; Click to download</span>
