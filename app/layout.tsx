@@ -93,8 +93,8 @@ export default function RootLayout({
         />
         <TransitionProvider>
           <main className="min-h-screen">{children}</main>
-            <SiteFooter />
-            <Analytics />
+          <SiteFooter />
+          <Analytics />
         </TransitionProvider>
       </body>
     </html>
