@@ -6,6 +6,13 @@ import HomeMark from "./HomeMark";
 
 export default function SiteHeader() {
   return (
+    <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[99999] focus:bg-white focus:text-black focus:px-4 focus:py-2 focus:rounded focus:text-sm"
+      >
+        Skip to content
+      </a>
     <header className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-black/70 backdrop-blur">
       <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[12px] uppercase tracking-[0.28em] text-white/65">
         <div className="justify-self-start">
@@ -46,5 +53,6 @@ export default function SiteHeader() {
         </div>
       </div>
     </header>
+    </>
   );
 }

@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import JsonLd from "./components/JsonLd";
 import TransitionProvider from "./components/TransitionProvider";
+import { SiteFooter } from "./components/SiteFooter";
+import { Analytics } from "@vercel/analytics/react";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
 
@@ -50,9 +52,9 @@ export default function RootLayout({
                 name: "Anthony Dake",
                 url: siteUrl,
                 jobTitle: "Session drummer and music director — live shows, tours, and studio sessions",
-                description: "Session drummer and music director based in Nashville, TN.",
+                description: "Session drummer and music director based in Columbus, OH.",
                 knowsAbout: ["Session Drumming", "Live Performance", "Music Direction", "Tour Preparation"],
-                areaServed: "Nashville, TN",
+                areaServed: "Columbus, OH",
                 sameAs: [
                   "https://www.instagram.com/anthony_dake/",
                   "https://www.tiktok.com/@anthony_dake",
@@ -91,6 +93,8 @@ export default function RootLayout({
         />
         <TransitionProvider>
           <main className="min-h-screen">{children}</main>
+            <SiteFooter />
+            <Analytics />
         </TransitionProvider>
       </body>
     </html>

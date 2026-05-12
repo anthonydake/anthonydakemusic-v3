@@ -2,6 +2,10 @@ import { Metadata } from "next";
 import AboutClient from "./page.client";
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "ANTHONY DAKE | ABOUT",
+    description: "From small-town church drummer to world-class performer. The story of Anthony Dake.",
+  },
   title: "ABOUT",
   description: "From small-town church drummer to world-class performer. The story of Anthony Dake.",
   alternates: { canonical: "/about" },
