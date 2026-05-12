@@ -115,7 +115,7 @@ export default function PracticePageClient() {
           <h1 className="text-[28px] sm:text-[36px] font-light tracking-[0.3em] uppercase mb-2">
             <span>Practice</span>
           </h1>
-          <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.28em] text-white/40 mb-6">
+          <p className="text-[12px] uppercase tracking-[0.28em] text-white/40 mb-6">
             <span>
               Session #{totalSessions} · Daily log since{" "}
               {formatSinceDate(firstSessionDate)}
@@ -129,12 +129,12 @@ export default function PracticePageClient() {
               placeholder="Search sessions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-[12px] tracking-wider text-white/80 placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-[12px] tracking-wider text-white/80 placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 text-[14px]"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 text-[16px] w-11 h-11 flex items-center justify-center"
               >
                 <span>×</span>
               </button>
@@ -173,7 +173,7 @@ export default function PracticePageClient() {
                       <div className="absolute -left-6 w-[15px] h-[15px] rounded-full border-2 border-blue-400/60 bg-black flex items-center justify-center">
                         <div className="w-[5px] h-[5px] rounded-full bg-blue-400" />
                       </div>
-                      <span className="text-[11px] uppercase tracking-[0.28em] text-white/50">
+                      <span className="text-[12px] uppercase tracking-[0.28em] text-white/50">
                         {formatDate(date)}
                       </span>
                     </div>
@@ -189,21 +189,21 @@ export default function PracticePageClient() {
                           >
                             {/* Session number + duration */}
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">
+                              <span className="text-[12px] uppercase tracking-[0.3em] text-white/30">
                                 Session #{entry.sessionNumber}
                               </span>
-                              <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">
+                              <span className="text-[12px] uppercase tracking-[0.3em] text-white/30">
                                 {entry.duration} min
                               </span>
                             </div>
 
                             {/* Title */}
-                            <h3 className="text-[13px] sm:text-[14px] font-medium tracking-wide mb-2 leading-snug">
+                            <h3 className="text-[14px] font-medium tracking-wide mb-2 leading-snug">
                               <span>{entry.title}</span>
                             </h3>
 
                             {/* Description */}
-                            <p className="text-[11.5px] sm:text-[12px] leading-relaxed text-white/50 mb-3">
+                            <p className="text-[12px] leading-relaxed text-white/50 mb-3">
                               <span>{entry.description}</span>
                             </p>
 
@@ -213,7 +213,7 @@ export default function PracticePageClient() {
                                 {entry.contentTypes.map((type) => (
                                   <span
                                     key={type}
-                                    className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] uppercase tracking-wider border ${contentBadgeStyles[type]}`}
+                                    className={`inline-flex items-center px-2.5 py-1 rounded text-[12px] uppercase tracking-wider border ${contentBadgeStyles[type]}`}
                                   >
                                     {contentLabels[type]}
                                   </span>
@@ -231,7 +231,7 @@ export default function PracticePageClient() {
               {/* Timeline end dot */}
               <div className="relative flex items-center">
                 <div className="absolute -left-6 w-[15px] h-[15px] rounded-full border-2 border-white/20 bg-black" />
-                <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">
+                <span className="text-[12px] uppercase tracking-[0.3em] text-white/20">
                   The beginning
                 </span>
               </div>

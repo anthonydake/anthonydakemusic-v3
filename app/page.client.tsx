@@ -102,6 +102,9 @@ function HomeInner() {
                 <Link className="hover:text-white py-3" href="/performance">
                 Performance
               </Link>
+              <Link className="hover:text-white py-3" href="/practice">
+                Practice
+              </Link>
               
             </div>
             <nav className="hidden items-center gap-6 md:flex">
