@@ -111,6 +111,9 @@ function HomeInner() {
               <Link className="hover:text-white py-3" href="/performance">
                 Performance
               </Link>
+              <Link className="hover:text-white py-3" href="/practice">
+                Practice
+              </Link>
               <Link className="hover:text-white py-3" href="/about">
                 About
               </Link>

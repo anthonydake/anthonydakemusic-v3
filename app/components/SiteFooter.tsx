@@ -15,6 +15,9 @@ export function SiteFooter() {
           <Link href="/performance" className="hover:text-white/70 transition-colors">
             <span>Performance</span>
           </Link>
+          <Link href="/practice" className="hover:text-white/70 transition-colors">
+            <span>Practice</span>
+          </Link>
           <Link href="/epk" className="hover:text-white/70 transition-colors">
             <span>EPK</span>
           </Link>
