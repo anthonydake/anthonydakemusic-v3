@@ -5,7 +5,7 @@ export default function NotFound() {
   return (
     <>
       <SiteHeader />
-      <main className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-6">
+      <main id="main-content" className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-6">
         <span className="text-6xl mb-6">🥁</span>
         <h1 className="text-2xl font-light tracking-widest uppercase mb-4">
           <span>Page not found</span>

@@ -6,7 +6,8 @@ export default function EPKClient() {
   return (
     <>
       <SiteHeader />
-      <main className="flex min-h-screen flex-col items-center justify-start bg-black px-4 pt-16 sm:pt-20 pb-6 sm:pb-8">
+      <main id="main-content" className="flex min-h-screen flex-col items-center justify-start bg-black px-4 pt-16 sm:pt-20 pb-6 sm:pb-8">
+        <h1 className="sr-only">Electronic Press Kit</h1>
         <div className="mx-auto w-full max-w-[800px] flex flex-col items-center">
 
           {/* ── Resume Download Button (top) ─────────────────── */}

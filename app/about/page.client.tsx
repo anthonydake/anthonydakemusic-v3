@@ -6,7 +6,7 @@ export default function AboutClient() {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-black px-4 pt-24 pb-20 sm:px-6 md:px-8">
+      <main id="main-content" className="min-h-screen bg-black px-4 pt-24 pb-20 sm:px-6 md:px-8">
         <article className="mx-auto max-w-[680px] text-[#E5E5E5]">
 
           {/* Title */}

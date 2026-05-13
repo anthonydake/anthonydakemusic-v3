@@ -79,18 +79,21 @@ export default function PracticePageClient() {
       return;
     }
     let count = 0;
+    let intervalId: number | null = null;
     setRevealCount(0);
     const t = window.setTimeout(() => {
       count = 1;
       setRevealCount(1);
-      const interval = window.setInterval(() => {
+      intervalId = window.setInterval(() => {
         count += 1;
         setRevealCount(count);
-        if (count >= total) window.clearInterval(interval);
+        if (count >= total && intervalId) window.clearInterval(intervalId);
       }, 100);
-      return () => window.clearInterval(interval);
     }, 100);
-    return () => window.clearTimeout(t);
+    return () => {
+      window.clearTimeout(t);
+      if (intervalId) window.clearInterval(intervalId);
+    };
   }, [filteredEntries.length]);
 
   // Lock body scroll
@@ -129,7 +132,7 @@ export default function PracticePageClient() {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search sessions..."
+              aria-label="Search practice sessions" placeholder="Search sessions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-[12px] tracking-wider text-white/80 placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors"
@@ -137,7 +140,7 @@ export default function PracticePageClient() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 text-[16px] w-11 h-11 flex items-center justify-center"
+                aria-label="Clear search" className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 text-[16px] w-11 h-11 flex items-center justify-center"
               >
                 <span>×</span>
               </button>
@@ -276,6 +279,10 @@ export default function PracticePageClient() {
           className="fixed inset-0 z-[10000] bg-black/95 flex flex-col"
           style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
           onClick={() => setActiveVideo(null)}
+          onKeyDown={(e) => { if (e.key === "Escape") setActiveVideo(null); }}
+          tabIndex={0}
+          role="dialog"
+          aria-label={`Video: ${activeVideo.clip.label}`}
         >
           {/* Close bar */}
           <div className="flex items-center justify-between px-4 py-3 flex-shrink-0">

@@ -105,7 +105,9 @@ function HomeInner() {
               <Link className="hover:text-white py-3" href="/practice">
                 Practice
               </Link>
-              
+              <Link className="hover:text-white py-3" href="/about">
+                About
+              </Link>
             </div>
             <nav className="hidden items-center gap-6 md:flex">
               <Link className="hover:text-white py-3" href="/placements">

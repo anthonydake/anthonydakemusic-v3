@@ -75,7 +75,8 @@ export default function ProjectsIndexClient() {
   return (
     <div className="projects-index-frame relative bg-black text-white h-screen overflow-hidden">
       <SiteHeader />
-      <main className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[120px] sm:pt-[200px] sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
+      <main id="main-content" className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[120px] sm:pt-[200px] sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
+        <h1 className="sr-only">Placements</h1>
         <section
           aria-label="Placements index"
           ref={rowsRef}
