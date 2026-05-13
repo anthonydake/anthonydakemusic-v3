@@ -1,5 +1,5 @@
 // build-ts: 2026-05-02T23:23:45.831760
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import JsonLd from "./components/JsonLd";
 import TransitionProvider from "./components/TransitionProvider";
@@ -32,6 +32,12 @@ export const metadata: Metadata = {
     description: "Session drummer and music director — live shows, tours, and studio sessions",
     images: ["/hero.jpg"],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -92,7 +98,7 @@ export default function RootLayout({
           }}
         />
         <TransitionProvider>
-          <main className="min-h-screen">{children}</main>
+          <div className="min-h-screen">{children}</div>
           <SiteFooter />
           <Analytics />
         </TransitionProvider>

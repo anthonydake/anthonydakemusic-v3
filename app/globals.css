@@ -399,10 +399,5 @@ a[href="#main-content"]:focus {
   text-decoration: none !important;
 }
 
-/* Safe area support for iPhone notch/Dynamic Island */
-@supports (padding: env(safe-area-inset-top)) {
-  .fixed {
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
-}
+/* Safe area support — handled inline on practice page modal and main content.
+   Header already has px-6 which is sufficient. */

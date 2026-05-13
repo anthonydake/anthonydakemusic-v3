@@ -148,7 +148,7 @@ export default function PracticePageClient() {
         {/* Timeline */}
         <div
           ref={scrollRef}
-          className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-2 -webkit-overflow-scrolling-touch"
+          className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-2"
           style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
         >
           {filteredEntries.length === 0 ? (
