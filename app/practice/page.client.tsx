@@ -52,6 +52,7 @@ function groupByDate(entries: PracticeEntry[]): Map<string, PracticeEntry[]> {
 
 export default function PracticePageClient() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeVideo, setActiveVideo] = useState<{ entryId: string; clip: VideoClip } | null>(null);
   const [revealCount, setRevealCount] = useState(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 

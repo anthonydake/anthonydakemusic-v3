@@ -1,71 +1,52 @@
 export type ContentType = "video" | "pdf" | "photos";
 
-export type PracticeEntry = {
+export interface VideoClip {
+  label: string;
+  url: string;
+}
+
+export interface PracticeEntry {
   id: string;
-  date: string; // ISO date string YYYY-MM-DD
+  date: string;
   sessionNumber: number;
   title: string;
   description: string;
-  duration: number; // minutes
+  duration: number;
   contentTypes: ContentType[];
-};
+  videos?: VideoClip[];
+}
 
-// Sorted newest-first
 export const practiceEntries: PracticeEntry[] = [
   {
-    id: "S005",
+    id: "session-002",
     date: "2026-05-12",
-    sessionNumber: 5,
-    title: "Single stroke speed building — 80 to 140bpm",
-    description:
-      "Started at 80bpm with full strokes, moved to 100 with wrist only, pushed to 140 finger control. Focused on evenness between hands — left hand gets lazy around 120. Recorded slow-mo video of stick heights at 130bpm to check consistency.",
-    duration: 45,
-    contentTypes: ["video"],
-  },
-  {
-    id: "S004",
-    date: "2026-05-11",
-    sessionNumber: 4,
-    title: "Ghost note dynamics in a funk groove",
-    description:
-      "Working on the gap between ghost notes and accents — trying to get the ghosts quieter without losing the pocket. Played along to Porcupine Tree 'Sound of Muzak' to test it in context. The backbeat needs to sit further back than I think.",
-    duration: 60,
-    contentTypes: ["video", "pdf"],
-  },
-  {
-    id: "S003",
-    date: "2026-05-10",
-    sessionNumber: 3,
-    title: "Displaced click training — click on beat 4 only",
-    description:
-      "Set the click to quarter notes on beat 4 only at 95bpm. Played simple rock grooves and tried to lock in. First 10 minutes were rough — kept rushing beat 1. By the end of the session the pocket felt solid. Need to try this at slower tempos next.",
-    duration: 30,
-    contentTypes: [],
-  },
-  {
-    id: "S002",
-    date: "2026-05-09",
     sessionNumber: 2,
-    title: "Paradiddle accent patterns around the kit",
-    description:
-      "Took a standard paradiddle (RLRR LRLL) and moved the accent to each beat — accent on 1, then 2, then 3, then 4. Then orchestrated accents on toms, unaccented on snare. The accent-on-3 pattern feels like a great fill vocabulary builder.",
+    title: "Backbeat deep dive — no hi-hat, 50-80bpm",
+    description: "Basic backbeat groove, kick and snare only (no hi-hat) from 50bpm up to 80bpm in 5bpm increments. Then no hi-hat backbeat at 84 and 88bpm with 16th note groove. Goal: discover a deeper pocket and better sense of timing at the micro level. Stripping away the hi-hat forces you to feel the space between kick and snare without a subdivision crutch.",
     duration: 50,
-    contentTypes: ["video", "photos"],
+    contentTypes: ["video"],
+    videos: [
+      { label: "Backbeat 50bpm", url: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/practice/2026-05-12/backbeat%2050-mS9TzP4QmrEm9GogrU6c6D9zIm5qJV.mov" },
+      { label: "Backbeat 55bpm", url: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/practice/2026-05-12/backbeat%2055-nxiyNDu2rwIoP2UtWW3QBZ32pzS6LI.mov" },
+      { label: "Backbeat 60bpm", url: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/practice/2026-05-12/backbeat%2060-u4VAQa6n5uqW3uFQo5FawQCn76vySM.mov" },
+      { label: "Backbeat 65bpm", url: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/practice/2026-05-12/backbeat%2065-MtiejPGqyOAbp0uHGEcNA1bDojrnVJ.mov" },
+      { label: "Backbeat 70bpm", url: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/practice/2026-05-12/backbeat%2070-ryC960xEKHB5hPLe4a291K0N68Ix5a.mov" },
+      { label: "Backbeat 75bpm", url: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/practice/2026-05-12/backbeat%2075-n3oq2onQViouCflGoPYx5Heg5TlHAp.mov" },
+      { label: "Backbeat 80bpm", url: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/practice/2026-05-12/backbeat%2080-MjBC5yeSL2NKw6N4shqfTGVnr9sZ6x.mov" },
+      { label: "16th groove 84bpm", url: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/practice/2026-05-12/16th%20groove%2084bpm-3imoa0hG4Gma1EIFwNGVwmQfUpZ0ov.mov" },
+      { label: "16th groove 88bpm", url: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/practice/2026-05-12/16th%20groove%2088bpm-HjYky45uVSj7tDCfIFX1ME5aiIUHic.mov" },
+    ],
   },
   {
-    id: "S001",
-    date: "2026-05-08",
+    id: "session-001",
+    date: "2026-05-11",
     sessionNumber: 1,
-    title: "Warm-up routine + brush patterns",
-    description:
-      "First session logged. Ran through my standard warm-up: singles, doubles, paradiddles at 60-100bpm. Then spent 25 minutes on jazz brush patterns — working on getting a smooth sweep circle with the left hand while the right hand plays independent time.",
-    duration: 40,
-    contentTypes: ["video"],
+    title: "Day one — single strokes, basic groove, gap click, transcription",
+    description: "Started with 5 minutes of single strokes on pad, pianissimo to fortissimo and back with dynamic ramps in between. Basic rock groove at 72bpm (kick on 1 and 3, snare on 2 and 4, hi-hat on eighth notes) for 5 minutes nonstop, then repeated at 92bpm. Same exercises with gap click via TimeGuru app — standard click had minor drift both ahead and behind (72 was generally better than 92), gap click had major drift (usually fast on 72, slow at 92). Transcribed the Steve Jordan drum part to \"Waiting on the World to Change\" by John Mayer. Listened to Tracy Chapman\'s \"Fast Car\" and wrote out the arrangement without playing any drum parts — pure listening and arrangement mapping. Finished with single stroke roll 16th notes, max tempo 175bpm.",
+    duration: 45,
+    contentTypes: [],
   },
 ];
 
-// Computed values
 export const totalSessions = practiceEntries.length;
-export const firstSessionDate = practiceEntries.length > 0
-  ? practiceEntries[practiceEntries.length - 1].date
-  : new Date().toISOString().split("T")[0];
+export const firstSessionDate = practiceEntries[practiceEntries.length - 1]?.date || "";
