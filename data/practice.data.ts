@@ -18,6 +18,15 @@ export interface PracticeEntry {
 
 export const practiceEntries: PracticeEntry[] = [
   {
+    id: "session-003",
+    date: "2026-05-13",
+    sessionNumber: 3,
+    title: "Halftime groove + 16th-note patterns at 60-65bpm",
+    description: "Slow halftime groove at 60bpm and 65bpm — kick on 1, snare on 3, no hi-hat, nothing extra. Stripping it down to just kick and snare to lock in the halftime feel at low tempos. Then a 16th-note based groove at 65bpm with 16th-note hi-hats, kick on 1 and 3, snare on 2 and 4. Followed that with a tripletized version of the same pattern — same kick/snare framework but shifting the subdivision from 16ths to triplets.",
+    duration: 30,
+    contentTypes: [],
+  },
+  {
     id: "session-002",
     date: "2026-05-12",
     sessionNumber: 2,
