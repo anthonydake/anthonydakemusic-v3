@@ -7,6 +7,7 @@ import {
   firstSessionDate,
   type PracticeEntry,
   type ContentType,
+  type VideoClip,
 } from "@/data/practice.data";
 import SiteHeader from "@/app/components/SiteHeader";
 
@@ -221,6 +222,33 @@ export default function PracticePageClient() {
                                 ))}
                               </div>
                             )}
+
+                            {/* Video clips */}
+                            {entry.videos && entry.videos.length > 0 && (
+                              <div className="mt-4 space-y-2">
+                                <span className="text-[12px] uppercase tracking-[0.2em] text-white/40">
+                                  {entry.videos.length} clips
+                                </span>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+                                  {entry.videos.map((clip, clipIdx) => (
+                                    <button
+                                      key={clipIdx}
+                                      onClick={() => setActiveVideo({ entryId: entry.id, clip })}
+                                      className="group relative bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 hover:border-white/20 transition-all min-h-[44px]"
+                                    >
+                                      <span className="flex items-center gap-2">
+                                        <span className="text-white/60 group-hover:text-white/90 transition-colors">
+                                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                        </span>
+                                        <span className="text-[12px] text-white/50 group-hover:text-white/70 transition-colors leading-tight">
+                                          {clip.label}
+                                        </span>
+                                      </span>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -240,6 +268,44 @@ export default function PracticePageClient() {
           )}
         </div>
       </main>
+
+      {/* Video Player Modal */}
+      {activeVideo && (
+        <div
+          className="fixed inset-0 z-[10000] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setActiveVideo(null)}
+        >
+          <div
+            className="relative w-full max-w-4xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setActiveVideo(null)}
+              className="absolute -top-12 right-0 text-white/60 hover:text-white text-[14px] uppercase tracking-wider flex items-center gap-2 h-11 px-3"
+            >
+              <span>Close</span>
+              <span className="text-[18px]">&times;</span>
+            </button>
+            <video
+              key={activeVideo.clip.url}
+              controls
+              autoPlay
+              playsInline
+              className="w-full rounded-lg"
+              style={{ maxHeight: "80vh" }}
+            >
+              <source src={activeVideo.clip.url} type="video/quicktime" />
+              <source src={activeVideo.clip.url} type="video/mp4" />
+              <span className="text-white/50">Your browser does not support video playback.</span>
+            </video>
+            <div className="mt-3 text-center">
+              <span className="text-[12px] uppercase tracking-[0.2em] text-white/40">
+                {activeVideo.clip.label}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style jsx global>{`
         .practice-scroll { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
