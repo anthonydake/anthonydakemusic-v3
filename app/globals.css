@@ -398,3 +398,11 @@ a[href="#main-content"]:focus {
   font-size: 0.875rem !important;
   text-decoration: none !important;
 }
+
+/* Safe area support for iPhone notch/Dynamic Island */
+@supports (padding: env(safe-area-inset-top)) {
+  .fixed {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}

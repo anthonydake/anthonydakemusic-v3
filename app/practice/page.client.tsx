@@ -111,6 +111,7 @@ export default function PracticePageClient() {
       <main
         id="main-content"
         className="relative z-[10] mx-auto max-w-3xl px-6 pb-24 pt-[120px] sm:pt-[160px] sm:px-8 h-[calc(100svh-56px)] overflow-hidden flex flex-col"
+        style={{ paddingLeft: "max(1.5rem, env(safe-area-inset-left, 1.5rem))", paddingRight: "max(1.5rem, env(safe-area-inset-right, 1.5rem))", paddingBottom: "max(6rem, calc(6rem + env(safe-area-inset-bottom, 0px)))" }}
       >
         {/* Header */}
         <div className="mb-8 flex-shrink-0">
@@ -147,8 +148,8 @@ export default function PracticePageClient() {
         {/* Timeline */}
         <div
           ref={scrollRef}
-          className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-2"
-          style={{ scrollbarWidth: "none" }}
+          className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-2 -webkit-overflow-scrolling-touch"
+          style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
         >
           {filteredEntries.length === 0 ? (
             <div className="text-center py-16">
@@ -187,7 +188,7 @@ export default function PracticePageClient() {
                         return (
                           <div
                             key={entry.id}
-                            className="relative group border border-white/[0.06] rounded-lg p-4 hover:border-white/15 transition-colors bg-white/[0.02]"
+                            className="relative group border border-white/[0.06] rounded-lg p-4 sm:p-5 hover:border-white/15 transition-colors bg-white/[0.02]"
                           >
                             {/* Session number + duration */}
                             <div className="flex items-center justify-between mb-2">
@@ -200,12 +201,12 @@ export default function PracticePageClient() {
                             </div>
 
                             {/* Title */}
-                            <h3 className="text-[14px] font-medium tracking-wide mb-2 leading-snug">
+                            <h3 className="text-[14px] sm:text-[15px] font-medium tracking-wide mb-2 leading-snug">
                               <span>{entry.title}</span>
                             </h3>
 
                             {/* Description */}
-                            <p className="text-[12px] leading-relaxed text-white/50 mb-3">
+                            <p className="text-[12px] leading-relaxed text-white/50 mb-3" style={{ overflowWrap: "break-word" }}>
                               <span>{entry.description}</span>
                             </p>
 
@@ -234,13 +235,13 @@ export default function PracticePageClient() {
                                     <button
                                       key={clipIdx}
                                       onClick={() => setActiveVideo({ entryId: entry.id, clip })}
-                                      className="group relative bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 hover:border-white/20 transition-all min-h-[44px]"
+                                      className="group relative bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 hover:border-white/20 transition-all min-h-[44px] active:scale-[0.97]"
                                     >
-                                      <span className="flex items-center gap-2">
-                                        <span className="text-white/60 group-hover:text-white/90 transition-colors">
+                                      <span className="flex items-center gap-2 min-w-0">
+                                        <span className="text-white/60 group-hover:text-white/90 transition-colors flex-shrink-0">
                                           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                                         </span>
-                                        <span className="text-[12px] text-white/50 group-hover:text-white/70 transition-colors leading-tight">
+                                        <span className="text-[12px] text-white/50 group-hover:text-white/70 transition-colors leading-tight truncate">
                                           {clip.label}
                                         </span>
                                       </span>
@@ -272,37 +273,40 @@ export default function PracticePageClient() {
       {/* Video Player Modal */}
       {activeVideo && (
         <div
-          className="fixed inset-0 z-[10000] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-[10000] bg-black/95 flex flex-col"
+          style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
           onClick={() => setActiveVideo(null)}
         >
-          <div
-            className="relative w-full max-w-4xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+          {/* Close bar */}
+          <div className="flex items-center justify-between px-4 py-3 flex-shrink-0">
+            <span className="text-[12px] uppercase tracking-[0.2em] text-white/50">
+              {activeVideo.clip.label}
+            </span>
             <button
               onClick={() => setActiveVideo(null)}
-              className="absolute -top-12 right-0 text-white/60 hover:text-white text-[14px] uppercase tracking-wider flex items-center gap-2 h-11 px-3"
+              className="text-white/60 hover:text-white text-[12px] uppercase tracking-wider flex items-center gap-1.5 h-11 px-3 -mr-3"
             >
               <span>Close</span>
               <span className="text-[18px]">&times;</span>
             </button>
+          </div>
+
+          {/* Video */}
+          <div
+            className="flex-1 flex items-center justify-center px-2 sm:px-4 pb-4 min-h-0"
+            onClick={(e) => e.stopPropagation()}
+          >
             <video
               key={activeVideo.clip.url}
               controls
-              autoPlay
               playsInline
-              className="w-full rounded-lg"
-              style={{ maxHeight: "80vh" }}
+              className="w-full max-h-full rounded-lg"
+              style={{ maxWidth: "56rem" }}
             >
-              <source src={activeVideo.clip.url} type="video/quicktime" />
               <source src={activeVideo.clip.url} type="video/mp4" />
+              <source src={activeVideo.clip.url} type="video/quicktime" />
               <span className="text-white/50">Your browser does not support video playback.</span>
             </video>
-            <div className="mt-3 text-center">
-              <span className="text-[12px] uppercase tracking-[0.2em] text-white/40">
-                {activeVideo.clip.label}
-              </span>
-            </div>
           </div>
         </div>
       )}
