@@ -44,7 +44,7 @@ export default function SiteHeader() {
             {/* Desktop: location + time */}
             <div className="hidden items-center md:flex">
               <span>Columbus, (OH)</span>
-              <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">\u2022</span>
+              <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
               <ColumbusTime />
             </div>
           </div>
