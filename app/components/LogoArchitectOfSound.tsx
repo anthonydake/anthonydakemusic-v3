@@ -29,7 +29,7 @@ export default function LogoArchitectOfSound() {
         </div>
 
         {/* Name */}
-        <h1 className="text-[36px] sm:text-[48px] md:text-[58px] font-small tracking-[-0.02em] leading-tight text-[#F2F2F2]">
+        <h1 className="font-serif-display text-[36px] sm:text-[48px] md:text-[58px] tracking-[-0.02em] leading-tight text-[#F2F2F2]">
           <TextScramble
             key={`name-${run}`}
             text="anthony dake"

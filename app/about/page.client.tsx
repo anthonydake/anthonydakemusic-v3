@@ -15,7 +15,7 @@ export default function AboutClient() {
           </p>
 
           {/* Title */}
-          <h1 className="mb-12 text-center text-[26px] sm:text-[34px] md:text-[42px] font-light leading-tight tracking-[-0.02em] text-[#F2F2F2]">
+          <h1 className="font-serif-display mb-12 text-center text-[26px] sm:text-[34px] md:text-[42px] leading-tight tracking-[-0.02em] text-[#F2F2F2]">
             From small-town church drummer to world-class performer
           </h1>
 

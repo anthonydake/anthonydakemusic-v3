@@ -480,7 +480,7 @@ export default function HomeClient({
           <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">
             (03) — booking
           </p>
-          <h2 className="text-3xl tracking-[0.06em] text-black sm:text-4xl md:text-5xl">
+          <h2 className="font-serif-display text-3xl tracking-[0.02em] text-black sm:text-4xl md:text-5xl">
             Live drums, session drums, music direction. Columbus, on call.
           </h2>
           <p className="max-w-lg text-[15px] leading-7 text-black/60">

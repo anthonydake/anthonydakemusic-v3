@@ -233,6 +233,13 @@ svg * {
   background-clip: border-box !important;
 }
 
+/* Editorial serif display — Fraunces 300. Apply only to signature
+   headlines, never to body or labels. Display sizes (>=28px) only. */
+.font-serif-display {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 300;
+}
+
 .archive-modal-surface {
   background-color: #000000 !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;

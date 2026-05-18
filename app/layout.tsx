@@ -1,10 +1,19 @@
 // build-ts: 2026-05-02T23:23:45.831760
 import type { Metadata, Viewport } from "next";
+import { Fraunces } from "next/font/google";
 import "./globals.css";
 import JsonLd from "./components/JsonLd";
 import TransitionProvider from "./components/TransitionProvider";
 import { SiteFooter } from "./components/SiteFooter";
 import { Analytics } from "@vercel/analytics/react";
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["300"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-serif",
+});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
 
@@ -46,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-white">
+    <html lang="en" className={`bg-white ${fraunces.variable}`}>
       <body className="antialiased bg-white text-black">
         <JsonLd
           data={{
