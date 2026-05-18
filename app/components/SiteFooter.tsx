@@ -25,12 +25,17 @@ export function SiteFooter() {
             <span>About</span>
           </Link>
         </div>
-        <div className="flex items-center gap-4">
-          <a href="mailto:adakemusic@gmail.com" className="hover:text-white/70 transition-colors">
-            <span>adakemusic@gmail.com</span>
-          </a>
-          <span className="text-white/20">·</span>
-          <span>Columbus, OH</span>
+        <div className="flex flex-col items-center gap-1 sm:items-end">
+          <span className="text-[10px] tracking-[0.22em] text-white/55">
+            Available for bookings
+          </span>
+          <div className="flex items-center gap-4">
+            <a href="mailto:adakemusic@gmail.com" className="hover:text-white/70 transition-colors">
+              <span>adakemusic@gmail.com</span>
+            </a>
+            <span className="text-white/20">·</span>
+            <span>Columbus, OH</span>
+          </div>
         </div>
         <span className="text-white/25">© {year} Anthony Dake</span>
       </div>

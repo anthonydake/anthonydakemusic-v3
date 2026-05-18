@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import HomeClient from "./components/HomeClient";
 import ColumbusTime from "./components/ColumbusTime";
 import HomeMark from "./components/HomeMark";
+import BookingModal from "./components/BookingModal";
 import { useTransition } from "./components/TransitionProvider";
 
 export default function HomePageClient() {
@@ -18,6 +19,11 @@ export default function HomePageClient() {
 
 function HomeInner() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
+  const openBooking = () => {
+    setMenuOpen(false);
+    setBookingOpen(true);
+  };
   const { triggerTransition, isTransitioning, isMobileFallback } = useTransition();
   const searchParams = useSearchParams();
   const q = searchParams.toString();
@@ -132,6 +138,13 @@ function HomeInner() {
               <Link className="hover:text-white py-3" href="/about">
                 About
               </Link>
+              <button
+                type="button"
+                onClick={openBooking}
+                className="ml-2 rounded-full border border-white/20 px-5 py-1.5 text-[11px] uppercase tracking-[0.2em] text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                Book
+              </button>
             </nav>
           </div>
         </div>
@@ -175,9 +188,19 @@ function HomeInner() {
             >
               About
             </Link>
+            <button
+              type="button"
+              onClick={openBooking}
+              className="mt-4 w-full rounded-full border border-white/30 py-3 text-[13px] uppercase tracking-[0.28em] text-white/90 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              Book
+            </button>
           </nav>
         </div>
       )}
+
+      <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
+
 
       <div id="main-content" className="pt-14">
         <HomeClient nextHref={projectsHref} />

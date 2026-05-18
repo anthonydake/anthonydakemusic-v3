@@ -2,6 +2,7 @@ import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
 export async function POST(request: Request) {
   try {
@@ -10,13 +11,14 @@ export async function POST(request: Request) {
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     const email =
       typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
-    const service = typeof body?.service === "string" ? body.service.trim() : "";
-    const description =
-      typeof body?.description === "string" ? body.description.trim() : "";
-    const timeline =
-      typeof body?.timeline === "string" ? body.timeline.trim() : "";
-    const musicLink =
-      typeof body?.musicLink === "string" ? body.musicLink.trim() : "";
+    const eventType =
+      typeof body?.eventType === "string" ? body.eventType.trim() : "";
+    const message =
+      typeof body?.message === "string" ? body.message.trim() : "";
+
+    const rawDate =
+      typeof body?.eventDate === "string" ? body.eventDate.trim() : "";
+    const eventDate = rawDate && ISO_DATE_REGEX.test(rawDate) ? rawDate : null;
 
     if (!name) {
       return NextResponse.json({ error: "Name is required." }, { status: 400 });
@@ -24,6 +26,12 @@ export async function POST(request: Request) {
     if (!email || !EMAIL_REGEX.test(email)) {
       return NextResponse.json(
         { error: "Valid email is required." },
+        { status: 400 }
+      );
+    }
+    if (!eventType) {
+      return NextResponse.json(
+        { error: "Event type is required." },
         { status: 400 }
       );
     }
@@ -41,12 +49,16 @@ export async function POST(request: Request) {
       );
     `;
 
+    // Spec-aligned columns; added idempotently so existing rows aren't disturbed.
+    await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_date DATE;`;
+    await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_type TEXT;`;
+    await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS message TEXT;`;
+
     await sql`
-      INSERT INTO bookings (name, email, service, description, timeline, music_link)
-      VALUES (${name}, ${email}, ${service}, ${description}, ${timeline}, ${musicLink});
+      INSERT INTO bookings (name, email, event_date, event_type, message)
+      VALUES (${name}, ${email}, ${eventDate}, ${eventType}, ${message});
     `;
 
-    // Also add to the archive email list so they get updates
     await sql`
       CREATE TABLE IF NOT EXISTS archive_emails (
         id SERIAL PRIMARY KEY,

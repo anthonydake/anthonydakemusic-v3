@@ -4,9 +4,16 @@ import { useState } from "react";
 import Link from "next/link";
 import ColumbusTime from "./ColumbusTime";
 import HomeMark from "./HomeMark";
+import BookingModal from "./BookingModal";
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
+
+  const openBooking = () => {
+    setMenuOpen(false);
+    setBookingOpen(true);
+  };
 
   return (
     <>
@@ -69,6 +76,13 @@ export default function SiteHeader() {
               <Link className="hover:text-white py-3" href="/about">
                 About
               </Link>
+              <button
+                type="button"
+                onClick={openBooking}
+                className="ml-2 rounded-full border border-white/20 px-5 py-1.5 text-[11px] uppercase tracking-[0.2em] text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                Book
+              </button>
             </nav>
           </div>
         </div>
@@ -112,9 +126,18 @@ export default function SiteHeader() {
             >
               About
             </Link>
+            <button
+              type="button"
+              onClick={openBooking}
+              className="mt-4 w-full rounded-full border border-white/30 py-3 text-[13px] uppercase tracking-[0.28em] text-white/90 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              Book
+            </button>
           </nav>
         </div>
       )}
+
+      <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
     </>
   );
 }
