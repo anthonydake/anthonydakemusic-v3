@@ -19,30 +19,6 @@ const EVENT_TYPES = [
   "Other",
 ];
 
-const PLAIN_TEXT_STYLE = {
-  color: "rgba(245, 245, 245, 0.85)",
-  WebkitTextFillColor: "rgba(245, 245, 245, 0.85)",
-  backgroundImage: "none",
-  WebkitBackgroundClip: "border-box" as const,
-  backgroundClip: "border-box" as const,
-};
-
-const LABEL_STYLE = {
-  color: "rgba(245, 245, 245, 0.55)",
-  WebkitTextFillColor: "rgba(245, 245, 245, 0.55)",
-  backgroundImage: "none",
-  WebkitBackgroundClip: "border-box" as const,
-  backgroundClip: "border-box" as const,
-};
-
-const ERROR_STYLE = {
-  color: "rgba(252, 165, 165, 0.9)",
-  WebkitTextFillColor: "rgba(252, 165, 165, 0.9)",
-  backgroundImage: "none",
-  WebkitBackgroundClip: "border-box" as const,
-  backgroundClip: "border-box" as const,
-};
-
 export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -191,19 +167,17 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           </svg>
         </button>
 
-        <p className="mb-1 text-[11px] uppercase tracking-[0.3em]" style={LABEL_STYLE}>
-          <span style={LABEL_STYLE}>Booking</span>
+        <p className="modal-label mb-1 text-[11px] uppercase tracking-[0.3em]">
+          Booking
         </p>
-        <h2 className="mb-6 text-2xl tracking-[0.04em]" style={PLAIN_TEXT_STYLE}>
-          <span style={PLAIN_TEXT_STYLE}>Let&apos;s talk about your project.</span>
+        <h2 className="modal-plain mb-6 text-2xl tracking-[0.04em]">
+          Let&apos;s talk about your project.
         </h2>
 
         {status === "success" ? (
           <div className="py-8 text-center">
-            <p style={PLAIN_TEXT_STYLE} className="text-base leading-7">
-              <span style={PLAIN_TEXT_STYLE}>
-                Thanks &mdash; I&apos;ll get back to you within 24 hours.
-              </span>
+            <p className="modal-plain text-base leading-7">
+              Thanks &mdash; I&apos;ll get back to you within 24 hours.
             </p>
           </div>
         ) : (
@@ -211,10 +185,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             <div>
               <label
                 htmlFor="bk-name"
-                className="mb-1 block text-[11px] uppercase tracking-[0.15em]"
-                style={LABEL_STYLE}
+                className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
               >
-                <span style={LABEL_STYLE}>Name</span>
+                Name
               </label>
               <input
                 ref={firstFieldRef}
@@ -231,10 +204,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             <div>
               <label
                 htmlFor="bk-email"
-                className="mb-1 block text-[11px] uppercase tracking-[0.15em]"
-                style={LABEL_STYLE}
+                className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
               >
-                <span style={LABEL_STYLE}>Email</span>
+                Email
               </label>
               <input
                 id="bk-email"
@@ -251,10 +223,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               <div>
                 <label
                   htmlFor="bk-date"
-                  className="mb-1 block text-[11px] uppercase tracking-[0.15em]"
-                  style={LABEL_STYLE}
+                  className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
                 >
-                  <span style={LABEL_STYLE}>Event Date</span>
+                  Event Date
                 </label>
                 <input
                   id="bk-date"
@@ -267,10 +238,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               <div>
                 <label
                   htmlFor="bk-type"
-                  className="mb-1 block text-[11px] uppercase tracking-[0.15em]"
-                  style={LABEL_STYLE}
+                  className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
                 >
-                  <span style={LABEL_STYLE}>Event Type</span>
+                  Event Type
                 </label>
                 <select
                   id="bk-type"
@@ -294,10 +264,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             <div>
               <label
                 htmlFor="bk-msg"
-                className="mb-1 block text-[11px] uppercase tracking-[0.15em]"
-                style={LABEL_STYLE}
+                className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
               >
-                <span style={LABEL_STYLE}>Message</span>
+                Message
               </label>
               <textarea
                 id="bk-msg"
@@ -310,8 +279,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </div>
 
             {status === "error" && (
-              <p className="text-[12px] leading-5" style={ERROR_STYLE}>
-                <span style={ERROR_STYLE}>{errorMessage}</span>
+              <p className="modal-error text-[12px] leading-5">
+                {errorMessage}
               </p>
             )}
 

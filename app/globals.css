@@ -206,6 +206,32 @@ svg * {
   background-clip: border-box !important;
 }
 
+/* Generic plain-text utilities used inside modals and other surfaces
+   that need to escape the body-level gradient text-fill. */
+.modal-plain {
+  color: rgba(245, 245, 245, 0.9) !important;
+  -webkit-text-fill-color: rgba(245, 245, 245, 0.9) !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+
+.modal-label {
+  color: rgba(245, 245, 245, 0.55) !important;
+  -webkit-text-fill-color: rgba(245, 245, 245, 0.55) !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+
+.modal-error {
+  color: rgba(252, 165, 165, 0.9) !important;
+  -webkit-text-fill-color: rgba(252, 165, 165, 0.9) !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+
 .archive-modal-surface {
   background-color: #000000 !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
