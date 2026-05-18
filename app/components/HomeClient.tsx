@@ -6,10 +6,18 @@ import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
-  initialSection?: "hero" | "services";
+  initialSection?: "hero" | "services" | "epk";
   nextHref?: string;
   onOpenBooking?: () => void;
 };
+
+const FEATURED_PLACEMENTS = [
+  { artist: "AR!YAH", title: "Aura" },
+  { artist: "Madelyn Leona", title: "Back & Forth" },
+  { artist: "Jae Esquire", title: "Get Down" },
+  { artist: "KJ The Cool Nerd", title: "Heartbreaker" },
+  { artist: "KJ The Cool Nerd", title: "Pray For Me" },
+];
 
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
@@ -24,13 +32,16 @@ export default function HomeClient({
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     []
   );
-  const [visible, setVisible] = useState<{ hero: boolean; services: boolean }>(() =>
-    reduceMotion ? { hero: true, services: true } : { hero: false, services: false }
+  const [visible, setVisible] = useState<{ hero: boolean; services: boolean; epk: boolean }>(() =>
+    reduceMotion
+      ? { hero: true, services: true, epk: true }
+      : { hero: false, services: false, epk: false }
   );
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [pillReady, setPillReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const servicesRef = useRef<HTMLElement | null>(null);
+  const epkRef = useRef<HTMLElement | null>(null);
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
@@ -38,9 +49,11 @@ export default function HomeClient({
 
     // Ensure route entry points match the intended section without visible jump.
     const target =
-      initialSection === "services"
-        ? servicesRef.current?.offsetTop ?? 0
-        : 0;
+      initialSection === "epk"
+        ? epkRef.current?.offsetTop ?? 0
+        : initialSection === "services"
+          ? servicesRef.current?.offsetTop ?? 0
+          : 0;
     const prev = container.style.scrollBehavior;
     container.style.scrollBehavior = "auto";
     container.scrollTop = target;
@@ -61,9 +74,9 @@ export default function HomeClient({
           if (!id) return;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
             setVisible((prev) =>
-              prev[id as "hero" | "services"]
+              prev[id as "hero" | "services" | "epk"]
                 ? prev
-                : { ...prev, [id as "hero" | "services"]: true }
+                : { ...prev, [id as "hero" | "services" | "epk"]: true }
             );
           }
         });
@@ -82,7 +95,7 @@ export default function HomeClient({
     if (!container) return;
     if (isMobileFallback) return;
 
-    const sections = [heroRef.current, servicesRef.current].filter(Boolean) as HTMLElement[];
+    const sections = [heroRef.current, servicesRef.current, epkRef.current].filter(Boolean) as HTMLElement[];
 
     const animateTo = (target: number) => {
       if (snapAnimating) return;
@@ -411,7 +424,7 @@ export default function HomeClient({
           <p className="text-[11px] uppercase tracking-[0.3em] opacity-40">
             <span>Services</span>
           </p>
-          <div className="grid w-full grid-cols-1 gap-4 sm:gap-6 md:grid-cols-3">
+          <div className="grid w-full max-w-3xl grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
             <ServiceCard
               title="Live Performance"
               description="Tours, one-off shows, festival dates, sub work. Click track, IEM, or acoustic — whatever the gig needs."
@@ -428,20 +441,55 @@ export default function HomeClient({
               onClick={onOpenBooking}
               icon={<HeadphonesIcon />}
             />
-            <ServiceCard
-              title="Music Direction"
-              description="Band assembly, rehearsal prep, set design, and show flow. I build the band and run the room."
-              secondary="Church, corporate, and touring acts"
-              ctaLabel="Let's Talk"
-              onClick={onOpenBooking}
-              icon={<BatonIcon />}
-            />
           </div>
+          <div className="mt-4 flex flex-col items-center gap-2">
+            <p className="text-[10px] uppercase tracking-[0.28em] opacity-30">
+              <span>Recent placements</span>
+            </p>
+            <Link
+              href="/placements"
+              className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 text-[11px] uppercase tracking-[0.18em] opacity-60 transition-opacity hover:opacity-100"
+            >
+              {FEATURED_PLACEMENTS.map((p, i) => (
+                <span key={`${p.artist}-${p.title}`} className="inline-flex items-center gap-3">
+                  {i > 0 && <span className="opacity-40">·</span>}
+                  <span>
+                    {p.artist} — {p.title}
+                  </span>
+                </span>
+              ))}
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section
+        ref={epkRef}
+        data-id="epk"
+        data-snap-section
+        className="snap-start min-h-screen bg-black"
+      >
+        <div
+          className={[
+            "mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-8 px-6 py-20 text-center transition-[opacity,transform]",
+            "duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+            visible.epk ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
+          ].join(" ")}
+        >
+          <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">
+            Work With Me
+          </p>
+          <h2 className="text-3xl tracking-[0.06em] text-black sm:text-4xl md:text-5xl">
+            Let&apos;s make your next show unforgettable.
+          </h2>
+          <p className="max-w-lg text-[15px] leading-7 text-black/60">
+            Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Check the EPK and get in touch.
+          </p>
           <Link
             href="/epk"
-            className="mt-4 inline-flex items-center text-[11px] uppercase tracking-[0.15em] opacity-40 transition-opacity hover:opacity-80"
+            className="epk-cta epk-cta-glow mt-2 inline-flex items-center justify-center rounded-full px-12 py-4.5 text-[13px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
-            <span>View Full Press Kit →</span>
+            EPK | 🥁
           </Link>
         </div>
       </section>
@@ -521,13 +569,3 @@ function HeadphonesIcon() {
   );
 }
 
-function BatonIcon() {
-  return (
-    <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden="true">
-      <GradientDefs id="svc-baton" />
-      <circle cx="30" cy="10" r="3" fill="url(#svc-baton)" />
-      <line x1="27.8" y1="12.2" x2="9" y2="31" stroke="url(#svc-baton)" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M7 33 Q5 35 7 37 Q9 35 7 33" fill="url(#svc-baton)" />
-    </svg>
-  );
-}
