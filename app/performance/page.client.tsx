@@ -144,12 +144,22 @@ function YearGroups({ items, revealCount }: { items: PerformanceItem[]; revealCo
                       <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
                       <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
                       <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2"><span>{p.venue}</span></div>
+                      {p.tags && p.tags.length > 0 && (
+                        <div className="text-[10px] uppercase tracking-[0.18em] opacity-30 col-span-2 mt-0.5">
+                          <span>{p.tags.join(", ")}</span>
+                        </div>
+                      )}
                     </div>
                     {/* Desktop: 3-col */}
                     <div className="hidden lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-8 leading-tight">
                       <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
-                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]">{venueLocation}</div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{venueLocation}</span></div>
                       <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
+                      {p.tags && p.tags.length > 0 && (
+                        <div className="text-[8.5px] uppercase tracking-[0.18em] opacity-30 col-span-3 mt-0.5">
+                          <span>{p.tags.join(", ")}</span>
+                        </div>
+                      )}
                     </div>
                   </>
                 );

@@ -6,6 +6,7 @@ export type PerformanceItem = {
   city: string;
   state: string;
   youtubeUrl?: string;
+  tags?: string[];
 };
 
 // Sorted newest-first

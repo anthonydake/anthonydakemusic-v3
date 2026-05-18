@@ -7,6 +7,7 @@ export type ProjectIndexItem = {
   title: string;
   role: DrumRole;
   youtubeUrl?: string;
+  tags?: string[];
 };
 
 // Sorted newest-first
