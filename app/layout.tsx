@@ -24,13 +24,13 @@ export const metadata: Metadata = {
     siteName: "Anthony Dake",
     title: "🥁 ANTHONY DAKE | DRUMS",
     description: "Session drummer and music director — live shows, tours, and studio sessions",
-    images: [{ url: "/hero.jpg", width: 1536, height: 1024, alt: "Anthony Dake" }],
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Anthony Dake" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "🥁 ANTHONY DAKE | DRUMS",
     description: "Session drummer and music director — live shows, tours, and studio sessions",
-    images: ["/hero.jpg"],
+    images: ["/og-image.jpg"],
   },
 };
 

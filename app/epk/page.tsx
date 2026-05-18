@@ -9,12 +9,12 @@ export const metadata: Metadata = {
     title: "ANTHONY DAKE | EPK",
     description: "Electronic press kit — demo reel, resume, and booking contact for drummer Anthony Dake.",
     url: "/epk",
-    images: [{ url: "/hero.jpg", width: 1536, height: 1024, alt: "Anthony Dake" }],
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Anthony Dake" }],
   },
   twitter: {
     title: "ANTHONY DAKE | EPK",
     description: "Electronic press kit — demo reel, resume, and booking contact for drummer Anthony Dake.",
-    images: ["/hero.jpg"],
+    images: ["/og-image.jpg"],
   },
 };
 

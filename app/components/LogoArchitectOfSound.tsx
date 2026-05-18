@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import TextScramble from "./TextScramble";
 
 export default function LogoArchitectOfSound() {
@@ -15,11 +16,15 @@ export default function LogoArchitectOfSound() {
     >
       <div className="flex flex-col items-center justify-center text-center">
         {/* Photo on top */}
-        <div className="mb-8 sm:mb-10">
-          <img
+        <div className="mb-8 sm:mb-10 mx-auto h-[150px] w-[150px] sm:h-[170px] sm:w-[170px] md:h-[190px] md:w-[190px] overflow-hidden rounded-full shadow-lg">
+          <Image
             src="/anthony-dake-drums.jpg"
             alt="Anthony Dake drumming at age 5"
-            className="mx-auto h-[150px] w-[150px] sm:h-[170px] sm:w-[170px] md:h-[190px] md:w-[190px] rounded-full object-cover shadow-lg"
+            width={190}
+            height={190}
+            priority
+            sizes="(max-width: 640px) 150px, (max-width: 768px) 170px, 190px"
+            className="h-full w-full object-cover"
           />
         </div>
 

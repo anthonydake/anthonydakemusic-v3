@@ -14,14 +14,14 @@ export const metadata: Metadata = {
       "Daily practice journal — raw, unfiltered sessions from a working session drummer.",
     url: "/practice",
     images: [
-      { url: "/hero.jpg", width: 1536, height: 1024, alt: "Anthony Dake" },
+      { url: "/og-image.jpg", width: 1200, height: 630, alt: "Anthony Dake" },
     ],
   },
   twitter: {
     title: "ANTHONY DAKE | PRACTICE",
     description:
       "Daily practice journal — raw, unfiltered sessions from a working session drummer.",
-    images: ["/hero.jpg"],
+    images: ["/og-image.jpg"],
   },
 };
 

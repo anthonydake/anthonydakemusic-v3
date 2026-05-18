@@ -11,12 +11,12 @@ export const metadata: Metadata = {
     title: "ANTHONY DAKE | PLACEMENTS",
     description: "Drum credits — live drums and drum programming across records and projects.",
     url: "/placements",
-    images: [{ url: "/hero.jpg", width: 1536, height: 1024, alt: "Anthony Dake" }],
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Anthony Dake" }],
   },
   twitter: {
     title: "ANTHONY DAKE | PLACEMENTS",
     description: "Drum credits — live drums and drum programming across records and projects.",
-    images: ["/hero.jpg"],
+    images: ["/og-image.jpg"],
   },
 };
 
