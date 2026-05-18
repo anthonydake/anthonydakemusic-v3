@@ -27,7 +27,7 @@ export function SiteFooter() {
         </div>
         <div className="flex flex-col items-center gap-1 sm:items-end">
           <span className="text-[10px] tracking-[0.22em] text-white/55">
-            Available for bookings
+            currently booking — 2026
           </span>
           <div className="flex items-center gap-4">
             <a href="mailto:adakemusic@gmail.com" className="hover:text-white/70 transition-colors">

@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import { useTransition } from "./TransitionProvider";
+import { projectIndex } from "../../data/projects.data";
 
 type HomeClientProps = {
   initialSection?: "hero" | "services" | "epk";
@@ -422,14 +423,14 @@ export default function HomeClient({
           ].join(" ")}
         >
           <p className="text-[11px] uppercase tracking-[0.3em] opacity-40">
-            <span>Services</span>
+            <span>(02) — services</span>
           </p>
           <div className="grid w-full max-w-3xl grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
             <ServiceCard
               title="Live Performance"
               description="Tours, one-off shows, festival dates, sub work. Click track, IEM, or acoustic — whatever the gig needs."
               secondary="Available for fly dates nationwide"
-              ctaLabel="Inquire"
+              ctaLabel="Send a brief"
               onClick={onOpenBooking}
               icon={<DrumIcon />}
             />
@@ -437,14 +438,14 @@ export default function HomeClient({
               title="Session Drums"
               description="Remote tracking from my room or in-person at your studio. Fast turnarounds, pro-quality stems."
               secondary="48-hour turnaround on most sessions"
-              ctaLabel="Book a Session"
+              ctaLabel="Send a brief"
               onClick={onOpenBooking}
               icon={<HeadphonesIcon />}
             />
           </div>
           <div className="mt-4 flex flex-col items-center gap-2">
             <p className="text-[10px] uppercase tracking-[0.28em] opacity-30">
-              <span>Recent placements</span>
+              <span>Recent — index of {projectIndex.length}</span>
             </p>
             <Link
               href="/placements"
@@ -477,13 +478,13 @@ export default function HomeClient({
           ].join(" ")}
         >
           <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">
-            Work With Me
+            (03) — booking
           </p>
           <h2 className="text-3xl tracking-[0.06em] text-black sm:text-4xl md:text-5xl">
-            Let&apos;s make your next show unforgettable.
+            Live drums, session drums, music direction. Columbus, on call.
           </h2>
           <p className="max-w-lg text-[15px] leading-7 text-black/60">
-            Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Check the EPK and get in touch.
+            For artists, music directors, supervisors, and producers who need a player who shows up ready. Press kit and contact below.
           </p>
           <Link
             href="/epk"

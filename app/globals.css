@@ -54,7 +54,8 @@ a {
 
 a:hover {
   text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.8);
+  text-decoration-color: rgba(255, 255, 255, 0.95);
+  text-decoration-thickness: 2px;
 }
 
 .home-nav,

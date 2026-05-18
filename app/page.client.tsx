@@ -143,7 +143,7 @@ function HomeInner() {
                 onClick={openBooking}
                 className="ml-2 rounded-full border border-white/20 px-5 py-1.5 text-[11px] uppercase tracking-[0.2em] text-white/80 transition-colors hover:bg-white/10 hover:text-white"
               >
-                Book
+                Book →
               </button>
             </nav>
           </div>
@@ -193,7 +193,7 @@ function HomeInner() {
               onClick={openBooking}
               className="mt-4 w-full rounded-full border border-white/30 py-3 text-[13px] uppercase tracking-[0.28em] text-white/90 transition-colors hover:bg-white/10 hover:text-white"
             >
-              Book
+              Book →
             </button>
           </nav>
         </div>
