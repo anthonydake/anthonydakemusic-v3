@@ -203,7 +203,7 @@ function HomeInner() {
 
 
       <div id="main-content" className="pt-14">
-        <HomeClient nextHref={projectsHref} />
+        <HomeClient nextHref={projectsHref} onOpenBooking={openBooking} />
       </div>
       <div className="pointer-events-none fixed inset-x-0 bottom-[12px] z-[20] flex justify-center">
         <span

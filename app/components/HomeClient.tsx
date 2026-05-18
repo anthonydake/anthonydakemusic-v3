@@ -6,8 +6,9 @@ import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import { useTransition } from "./TransitionProvider";
 
 type HomeClientProps = {
-  initialSection?: "hero" | "epk";
+  initialSection?: "hero" | "services";
   nextHref?: string;
+  onOpenBooking?: () => void;
 };
 
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -15,6 +16,7 @@ const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : use
 export default function HomeClient({
   initialSection = "hero",
   nextHref,
+  onOpenBooking,
 }: HomeClientProps) {
   const { isTransitioning, isMobileFallback, triggerTransition } = useTransition();
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -22,13 +24,13 @@ export default function HomeClient({
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     []
   );
-  const [visible, setVisible] = useState<{ hero: boolean; epk: boolean }>(() =>
-    reduceMotion ? { hero: true, epk: true } : { hero: false, epk: false }
+  const [visible, setVisible] = useState<{ hero: boolean; services: boolean }>(() =>
+    reduceMotion ? { hero: true, services: true } : { hero: false, services: false }
   );
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [pillReady, setPillReady] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
-  const epkRef = useRef<HTMLElement | null>(null);
+  const servicesRef = useRef<HTMLElement | null>(null);
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
@@ -36,8 +38,8 @@ export default function HomeClient({
 
     // Ensure route entry points match the intended section without visible jump.
     const target =
-      initialSection === "epk"
-        ? epkRef.current?.offsetTop ?? 0
+      initialSection === "services"
+        ? servicesRef.current?.offsetTop ?? 0
         : 0;
     const prev = container.style.scrollBehavior;
     container.style.scrollBehavior = "auto";
@@ -59,9 +61,9 @@ export default function HomeClient({
           if (!id) return;
           if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
             setVisible((prev) =>
-              prev[id as "hero" | "epk"]
+              prev[id as "hero" | "services"]
                 ? prev
-                : { ...prev, [id as "hero" | "epk"]: true }
+                : { ...prev, [id as "hero" | "services"]: true }
             );
           }
         });
@@ -80,7 +82,7 @@ export default function HomeClient({
     if (!container) return;
     if (isMobileFallback) return;
 
-    const sections = [heroRef.current, epkRef.current].filter(Boolean) as HTMLElement[];
+    const sections = [heroRef.current, servicesRef.current].filter(Boolean) as HTMLElement[];
 
     const animateTo = (target: number) => {
       if (snapAnimating) return;
@@ -394,35 +396,138 @@ export default function HomeClient({
       </section>
 
       <section
-        ref={epkRef}
-        data-id="epk"
+        ref={servicesRef}
+        data-id="services"
         data-snap-section
         className="snap-start min-h-screen bg-black"
       >
         <div
           className={[
-            "mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center justify-center gap-8 px-6 py-20 text-center transition-[opacity,transform]",
+            "mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center gap-6 px-6 py-20 transition-[opacity,transform]",
             "duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-            visible.epk ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
+            visible.services ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
           ].join(" ")}
         >
-          <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">
-            Work With Me
+          <p className="text-[11px] uppercase tracking-[0.3em] opacity-40">
+            <span>Services</span>
           </p>
-          <h2 className="text-3xl tracking-[0.06em] text-black sm:text-4xl md:text-5xl">
-            Let\&apos;s make your next show unforgettable.
-          </h2>
-          <p className="max-w-lg text-[15px] leading-7 text-black/60">
-            Session drums and musical direction for artists who want shows that hit hard and records that feel alive. Check the EPK and get in touch.
-          </p>
+          <div className="grid w-full grid-cols-1 gap-4 sm:gap-6 md:grid-cols-3">
+            <ServiceCard
+              title="Live Performance"
+              description="Tours, one-off shows, festival dates, sub work. Click track, IEM, or acoustic — whatever the gig needs."
+              secondary="Available for fly dates nationwide"
+              ctaLabel="Inquire"
+              onClick={onOpenBooking}
+              icon={<DrumIcon />}
+            />
+            <ServiceCard
+              title="Session Drums"
+              description="Remote tracking from my room or in-person at your studio. Fast turnarounds, pro-quality stems."
+              secondary="48-hour turnaround on most sessions"
+              ctaLabel="Book a Session"
+              onClick={onOpenBooking}
+              icon={<HeadphonesIcon />}
+            />
+            <ServiceCard
+              title="Music Direction"
+              description="Band assembly, rehearsal prep, set design, and show flow. I build the band and run the room."
+              secondary="Church, corporate, and touring acts"
+              ctaLabel="Let's Talk"
+              onClick={onOpenBooking}
+              icon={<BatonIcon />}
+            />
+          </div>
           <Link
             href="/epk"
-            className="epk-cta epk-cta-glow mt-2 inline-flex items-center justify-center rounded-full px-12 py-4.5 text-[13px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className="mt-4 inline-flex items-center text-[11px] uppercase tracking-[0.15em] opacity-40 transition-opacity hover:opacity-80"
           >
-            EPK | 🥁
+            <span>View Full Press Kit →</span>
           </Link>
         </div>
       </section>
     </div>
+  );
+}
+
+type ServiceCardProps = {
+  title: string;
+  description: string;
+  secondary: string;
+  ctaLabel: string;
+  onClick?: () => void;
+  icon: React.ReactNode;
+};
+
+function ServiceCard({ title, description, secondary, ctaLabel, onClick, icon }: ServiceCardProps) {
+  return (
+    <div className="group flex flex-col rounded-xl border border-white/[0.08] bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 sm:p-8">
+      <div className="mb-5">{icon}</div>
+      <h3 className="text-[15px] uppercase tracking-[0.15em] sm:text-[17px]">
+        <span>{title}</span>
+      </h3>
+      <p className="mt-3 text-[13px] leading-relaxed opacity-60 sm:text-[14px]">
+        <span>{description}</span>
+      </p>
+      <p className="mt-4 text-[10px] uppercase tracking-[0.18em] opacity-30">
+        <span>{secondary}</span>
+      </p>
+      <div className="mt-6">
+        <button
+          type="button"
+          onClick={onClick}
+          className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-2 text-[11px] uppercase tracking-[0.2em] opacity-70 transition-all hover:bg-white/10 hover:opacity-100"
+        >
+          {ctaLabel}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function GradientDefs({ id }: { id: string }) {
+  return (
+    <defs>
+      <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#3B82F6" />
+        <stop offset="60%" stopColor="#8EC5FF" />
+        <stop offset="100%" stopColor="#FFFFFF" />
+      </linearGradient>
+    </defs>
+  );
+}
+
+function DrumIcon() {
+  return (
+    <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden="true">
+      <GradientDefs id="svc-drum" />
+      <ellipse cx="20" cy="22" rx="13" ry="4.5" fill="none" stroke="url(#svc-drum)" strokeWidth="1.5" />
+      <line x1="7" y1="22" x2="7" y2="30" stroke="url(#svc-drum)" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="33" y1="22" x2="33" y2="30" stroke="url(#svc-drum)" strokeWidth="1.5" strokeLinecap="round" />
+      <ellipse cx="20" cy="30" rx="13" ry="4.5" fill="none" stroke="url(#svc-drum)" strokeWidth="1.5" />
+      <line x1="13" y1="14" x2="27" y2="6" stroke="url(#svc-drum)" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="13" y1="6" x2="27" y2="14" stroke="url(#svc-drum)" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function HeadphonesIcon() {
+  return (
+    <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden="true">
+      <GradientDefs id="svc-headphones" />
+      <path d="M7 22 Q7 8 20 8 Q33 8 33 22" fill="none" stroke="url(#svc-headphones)" strokeWidth="1.5" strokeLinecap="round" />
+      <rect x="5" y="21" width="7" height="11" rx="2" fill="none" stroke="url(#svc-headphones)" strokeWidth="1.5" />
+      <rect x="28" y="21" width="7" height="11" rx="2" fill="none" stroke="url(#svc-headphones)" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function BatonIcon() {
+  return (
+    <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden="true">
+      <GradientDefs id="svc-baton" />
+      <circle cx="30" cy="10" r="3" fill="url(#svc-baton)" />
+      <line x1="27.8" y1="12.2" x2="9" y2="31" stroke="url(#svc-baton)" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M7 33 Q5 35 7 37 Q9 35 7 33" fill="url(#svc-baton)" />
+    </svg>
   );
 }
