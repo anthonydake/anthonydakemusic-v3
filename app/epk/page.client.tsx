@@ -7,8 +7,20 @@ export default function EPKClient() {
     <>
       <SiteHeader />
       <main id="main-content" className="flex min-h-screen flex-col items-center justify-start bg-black px-4 pt-20 sm:pt-24 pb-6 sm:pb-8">
-        <h1 className="sr-only">Electronic Press Kit</h1>
         <div className="mx-auto w-full max-w-[800px] flex flex-col items-center">
+
+          {/* Title block */}
+          <div className="mb-6 flex w-full items-baseline justify-between gap-4">
+            <span className="text-[11px] uppercase tracking-[0.28em] opacity-50">
+              (EPK·01)
+            </span>
+            <h1 className="text-[18px] uppercase tracking-[0.2em] font-light sm:text-[22px]">
+              press kit
+            </h1>
+            <span className="text-[10px] uppercase tracking-[0.22em] opacity-30">
+              electronic press kit
+            </span>
+          </div>
 
           {/* ── Resume Download Button (top) ─────────────────── */}
           <div className="mb-3 text-center">

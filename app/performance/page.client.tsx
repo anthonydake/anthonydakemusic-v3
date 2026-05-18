@@ -75,12 +75,22 @@ export default function PerformanceIndexClient() {
   return (
     <div className="performance-index-frame relative bg-black text-white h-screen overflow-hidden">
       <SiteHeader />
-      <main id="main-content" className="relative z-[10] mx-auto max-w-[1600px] px-6 pb-24 pt-[120px] sm:pt-[200px] sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
-        <h1 className="sr-only">Performance</h1>
+      <main id="main-content" className="relative z-[10] mx-auto flex max-w-[1600px] flex-col px-6 pb-24 pt-[120px] sm:pt-[200px] sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
+        <div className="mb-6 flex flex-shrink-0 items-baseline justify-between gap-4">
+          <span className="text-[11px] uppercase tracking-[0.28em] opacity-50">
+            (IDX·02)
+          </span>
+          <h1 className="text-[18px] uppercase tracking-[0.2em] font-light sm:text-[22px]">
+            performance
+          </h1>
+          <span className="text-[10px] uppercase tracking-[0.22em] opacity-30">
+            index of {items.length}
+          </span>
+        </div>
         <section
           aria-label="Performance index"
           ref={rowsRef}
-          className="rows-scroll h-full min-h-0 overflow-y-auto overscroll-contain pr-2"
+          className="rows-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain pr-2"
         >
           <YearGroups items={items} revealCount={revealCount} />
         </section>

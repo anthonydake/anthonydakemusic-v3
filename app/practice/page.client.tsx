@@ -118,6 +118,9 @@ export default function PracticePageClient() {
       >
         {/* Header */}
         <div className="mb-8 flex-shrink-0">
+          <p className="mb-2 text-[11px] uppercase tracking-[0.28em] opacity-50">
+            <span>(LOG·01)</span>
+          </p>
           <h1 className="text-[28px] sm:text-[36px] font-light tracking-[0.3em] uppercase mb-2">
             <span>Practice</span>
           </h1>

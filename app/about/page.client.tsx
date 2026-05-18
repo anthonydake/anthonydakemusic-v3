@@ -9,6 +9,11 @@ export default function AboutClient() {
       <main id="main-content" className="min-h-screen bg-black px-4 pt-24 pb-20 sm:px-6 md:px-8">
         <article className="mx-auto max-w-[680px] text-[#E5E5E5]">
 
+          {/* Eyebrow */}
+          <p className="mb-4 text-center text-[11px] uppercase tracking-[0.28em] opacity-50">
+            <span>(BIO·01)</span>
+          </p>
+
           {/* Title */}
           <h1 className="mb-12 text-center text-[26px] sm:text-[34px] md:text-[42px] font-light leading-tight tracking-[-0.02em] text-[#F2F2F2]">
             From small-town church drummer to world-class performer
