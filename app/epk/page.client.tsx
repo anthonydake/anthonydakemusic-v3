@@ -6,7 +6,7 @@ export default function EPKClient() {
   return (
     <>
       <SiteHeader />
-      <main id="main-content" className="flex min-h-screen flex-col items-center justify-start bg-black px-4 pt-20 sm:pt-24 pb-6 sm:pb-8">
+      <main id="main-content" className="flex h-[100dvh] overflow-hidden flex-col items-center justify-start bg-black px-4 pt-20 sm:pt-24 pb-6 sm:pb-8">
         <div className="mx-auto w-full max-w-[800px] flex flex-col items-center">
 
           {/* Title block */}
@@ -27,11 +27,11 @@ export default function EPKClient() {
             <a
               href="/Anthony_Dake_Resume.pdf"
               download
-              className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-5 py-2 text-[11px] sm:px-7 sm:py-2.5 sm:text-[12px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               Download Resume (PDF)
             </a>
-            <p className="mt-2 text-[9px] uppercase tracking-[0.14em] text-white/20">
+            <p className="mt-2 text-center text-[9px] uppercase tracking-[0.14em] text-white/20">
               <span>PDF format &bull; Click to download</span>
             </p>
           </div>
@@ -40,7 +40,7 @@ export default function EPKClient() {
           <div className="w-full aspect-video rounded-xl overflow-hidden bg-[#111] border border-white/10 shadow-2xl">
             <iframe
               className="h-full w-full"
-              src="https://www.youtube.com/embed/gwNaFJyhTXo?rel=0&modestbranding=1&color=white"
+              src="https://www.youtube.com/embed/gwNaFJyhTXo?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&color=white"
               title="Anthony Dake — Demo Reel"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
@@ -137,10 +137,6 @@ export default function EPKClient() {
               </a>
             </div>
 
-            {/* Contact line */}
-            <p className="text-[10px] sm:text-[12px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-white/30">
-              <span>adakemusic@gmail.com &bull; Columbus, OH</span>
-            </p>
           </div>
 
         </div>

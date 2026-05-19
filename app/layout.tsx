@@ -4,7 +4,6 @@ import { Fraunces } from "next/font/google";
 import "./globals.css";
 import JsonLd from "./components/JsonLd";
 import TransitionProvider from "./components/TransitionProvider";
-import { SiteFooter } from "./components/SiteFooter";
 import { Analytics } from "@vercel/analytics/react";
 
 const fraunces = Fraunces({
@@ -108,7 +107,6 @@ export default function RootLayout({
         />
         <TransitionProvider>
           <div className="min-h-screen">{children}</div>
-          <SiteFooter />
           <Analytics />
         </TransitionProvider>
       </body>
