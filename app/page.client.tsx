@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import HomeClient from "./components/HomeClient";
-import ColumbusTime from "./components/ColumbusTime";
 import HomeMark from "./components/HomeMark";
 import BookingModal from "./components/BookingModal";
 import { useTransition } from "./components/TransitionProvider";
@@ -80,12 +79,6 @@ function HomeInner() {
 
   return (
     <>
-      <a
-        href="#main-content"
-        className="skip-to-content"
-      >
-        Skip to content
-      </a>
       <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-black/70 backdrop-blur">
         <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[12px] uppercase tracking-[0.28em] text-white/65">
           <div className="justify-self-start">
@@ -111,12 +104,15 @@ function HomeInner() {
                 )}
               </svg>
             </button>
-            {/* Desktop: location + time */}
-            <div className="hidden items-center md:flex">
-              <span>Columbus, (OH)</span>
-              <span className="mx-2 inline-block align-middle text-[14.875px] font-semibold leading-none">•</span>
-              <ColumbusTime />
-            </div>
+            {/* Desktop: left half of nav */}
+            <nav className="hidden items-center gap-8 md:flex">
+              <Link className="hover:text-white py-3" href="/placements">
+                Placements
+              </Link>
+              <Link className="hover:text-white py-3" href="/performance">
+                Performance
+              </Link>
+            </nav>
           </div>
           <Link
             href={homeHref}
@@ -125,13 +121,8 @@ function HomeInner() {
             <HomeMark />
           </Link>
           <div className="justify-self-end">
-            <nav className="hidden items-center gap-6 md:flex">
-              <Link className="hover:text-white py-3" href="/placements">
-                Placements
-              </Link>
-              <Link className="hover:text-white py-3" href="/performance">
-                Performance
-              </Link>
+            {/* Desktop: right half of nav */}
+            <nav className="hidden items-center gap-8 md:flex">
               <Link className="hover:text-white py-3" href="/practice">
                 Practice
               </Link>
