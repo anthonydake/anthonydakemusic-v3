@@ -237,14 +237,14 @@ export default function HomeClient({
                 <div className="mt-3 flex justify-center">
                   <Link
                     href="/epk"
-                    className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] lg:px-16 lg:text-[16px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                   >
                     EPK | 🥁
                   </Link>
                 </div>
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-9">
+                <div className="mt-6 lg:mt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-9 lg:gap-12">
                   <a
-                    className="group relative inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group relative inline-flex h-[62px] w-[62px] lg:h-[72px] lg:w-[72px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="mailto:adakemusic@gmail.com"
                     aria-label="Email"
                     onClick={(e) => {
@@ -278,7 +278,7 @@ export default function HomeClient({
                         backgroundClip: "border-box",
                       }}>Copied!</span>
                     </span>
-                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] lg:h-[48px] lg:w-[48px] transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientEmail" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -303,13 +303,13 @@ export default function HomeClient({
                     </svg>
                   </a>
                   <a
-                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] lg:h-[72px] lg:w-[72px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="https://www.instagram.com/anthony_dake/"
                     target="_blank"
                     rel="noreferrer me"
                     aria-label="Instagram"
                   >
-                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] lg:h-[48px] lg:w-[48px] transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientInstagram" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -333,13 +333,13 @@ export default function HomeClient({
                     </svg>
                   </a>
                   <a
-                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] lg:h-[72px] lg:w-[72px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="https://www.youtube.com/@anthony_dake"
                     target="_blank"
                     rel="noreferrer me"
                     aria-label="YouTube"
                   >
-                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] lg:h-[48px] lg:w-[48px] transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientYouTube" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
@@ -362,13 +362,13 @@ export default function HomeClient({
                     </svg>
                   </a>
                   <a
-                    className="group inline-flex h-[62px] w-[62px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group inline-flex h-[62px] w-[62px] lg:h-[72px] lg:w-[72px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="https://www.tiktok.com/@anthony_dake"
                     target="_blank"
                     rel="noreferrer me"
                     aria-label="TikTok"
                   >
-                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] transition group-hover:brightness-110">
+                    <svg viewBox="0 0 24 24" className="h-[41px] w-[41px] lg:h-[48px] lg:w-[48px] transition group-hover:brightness-110">
                       <defs>
                         <linearGradient id="socialGradientTikTok" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="#3B82F6" />
