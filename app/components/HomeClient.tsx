@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
+import TextScramble from "./TextScramble";
 import { useTransition } from "./TransitionProvider";
 import { projectIndex } from "../../data/projects.data";
 
@@ -40,6 +41,8 @@ export default function HomeClient({
   );
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [pillReady, setPillReady] = useState(false);
+  const [scrambleRun, setScrambleRun] = useState(0);
+  const retriggerScramble = () => setScrambleRun((n) => n + 1);
   const heroRef = useRef<HTMLElement | null>(null);
   const servicesRef = useRef<HTMLElement | null>(null);
   const epkRef = useRef<HTMLElement | null>(null);
@@ -233,8 +236,47 @@ export default function HomeClient({
                 <Link href="/" aria-label="Go to Home">
                   <LogoArchitectOfSound />
                 </Link>
-                
-                <div className="mt-3 flex justify-center">
+
+                {/* Proof strip — scrambled stats, retriggers on hover */}
+                <div
+                  className="mt-6 sm:mt-8 lg:mt-10 flex items-center justify-center gap-8 sm:gap-12 lg:gap-16 text-[#A1A1A6]"
+                  onMouseEnter={retriggerScramble}
+                  onMouseLeave={retriggerScramble}
+                >
+                  <div className="flex flex-col items-center">
+                    <span className="font-serif-display text-[32px] sm:text-[40px] lg:text-[48px] leading-none text-[#F2F2F2]">
+                      <TextScramble
+                        key={`perfs-${scrambleRun}`}
+                        text="~405"
+                        duration={600}
+                        charset="#%&$@+|0123456789"
+                        scrambleFraction={0.5}
+                        trigger={scrambleRun}
+                      />
+                    </span>
+                    <span className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.28em]">
+                      performances
+                    </span>
+                  </div>
+                  <div className="h-10 w-px bg-white/15" />
+                  <div className="flex flex-col items-center">
+                    <span className="font-serif-display text-[32px] sm:text-[40px] lg:text-[48px] leading-none text-[#F2F2F2]">
+                      <TextScramble
+                        key={`placs-${scrambleRun}`}
+                        text="~52"
+                        duration={600}
+                        charset="#%&$@+|0123456789"
+                        scrambleFraction={0.5}
+                        trigger={scrambleRun}
+                      />
+                    </span>
+                    <span className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.28em]">
+                      placements
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-6 sm:mt-8 flex justify-center">
                   <Link
                     href="/epk"
                     className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] lg:px-16 lg:text-[16px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
