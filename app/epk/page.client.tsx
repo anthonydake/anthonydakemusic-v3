@@ -17,7 +17,7 @@ export default function EPKClient() {
             <h1 className="text-[18px] uppercase tracking-[0.2em] font-light sm:text-[22px]">
               press kit
             </h1>
-            <span className="text-[10px] uppercase tracking-[0.22em] opacity-30">
+            <span className="hidden sm:inline text-[10px] uppercase tracking-[0.22em] opacity-30">
               electronic press kit
             </span>
           </div>
@@ -27,7 +27,7 @@ export default function EPKClient() {
             <a
               href="/Anthony_Dake_Resume.pdf"
               download
-              className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-5 py-2 text-[11px] sm:px-7 sm:py-2.5 sm:text-[12px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-6 py-2.5 text-[12px] sm:px-7 sm:py-2.5 sm:text-[12px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               Download Resume (PDF)
             </a>
