@@ -75,7 +75,7 @@ export default function ProjectsIndexClient() {
   return (
     <div className="projects-index-frame relative bg-black text-white h-screen overflow-hidden">
       <SiteHeader />
-      <main id="main-content" className="relative z-[10] mx-auto flex max-w-[1600px] flex-col px-6 pb-24 pt-[120px] sm:pt-[200px] sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
+      <main id="main-content" className="relative z-[10] mx-auto flex max-w-[1600px] flex-col px-6 pb-4 pt-20 sm:pt-24 sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
         <div className="mb-6 flex flex-shrink-0 items-baseline justify-between gap-4">
           <span className="text-[11px] uppercase tracking-[0.28em] opacity-50">
             (IDX·01)
