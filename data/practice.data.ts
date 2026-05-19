@@ -18,6 +18,42 @@ export interface PracticeEntry {
 
 export const practiceEntries: PracticeEntry[] = [
   {
+    id: "session-007",
+    date: "2026-05-18",
+    sessionNumber: 7,
+    title: "Brian Fullen book pg 15 + Ella Langley transcription",
+    description: "Continued work on page 15 of Brian Fullen's Bass Drum Essentials for the Drumset — limb independence exercises focusing on the feet, then layered a backbeat on top. Separately, transcribed the drum part to \"Be Her\" by Ella Langley (modern country). Two disciplines in one session: technical coordination from the book + ear training from the transcription.",
+    duration: 60,
+    contentTypes: [],
+  },
+  {
+    id: "session-006",
+    date: "2026-05-17",
+    sessionNumber: 6,
+    title: "\"Nosedive\" front-to-back + Brian Fullen book pages 14-15",
+    description: "Song study — learned \"Nosedive\" by Post Malone & Lainey Wilson (Aaron Sterling on drums) front-to-back at 77 BPM. Enough to make a \"30 min to learn Nosedive\" content piece out of it. Still chart-dependent — not ready to play without the sheet yet. Then Brian Fullen book pages 1-12 overview with emphasis on pages 14-15 at 90-96 BPM. Trouble spots: eighth notes + hi-hat upbeats + closed hi-hat foot exercises on page 15. Backbeat added to pages 15-16 was not 100% clean. Coordination was the blocker — the right kind of hard.",
+    duration: 75,
+    contentTypes: [],
+  },
+  {
+    id: "session-005",
+    date: "2026-05-16",
+    sessionNumber: 5,
+    title: "Practice session",
+    description: "Continued pocket work. (Minimal log — session completed, details not captured.)",
+    duration: 45,
+    contentTypes: [],
+  },
+  {
+    id: "session-004",
+    date: "2026-05-14",
+    sessionNumber: 4,
+    title: "Freeform shuffle + swing grooves, 100-132bpm",
+    description: "Pure feel work — shuffle and swing at higher tempos with no book, no song study. Just groove. Content was captured from this session.",
+    duration: 45,
+    contentTypes: [],
+  },
+  {
     id: "session-003",
     date: "2026-05-13",
     sessionNumber: 3,
