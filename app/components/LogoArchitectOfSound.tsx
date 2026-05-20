@@ -19,7 +19,7 @@ export default function LogoArchitectOfSound() {
         <div className="mb-8 sm:mb-10 mx-auto h-[150px] w-[150px] sm:h-[170px] sm:w-[170px] md:h-[190px] md:w-[190px] lg:h-[220px] lg:w-[220px] xl:h-[240px] xl:w-[240px] overflow-hidden rounded-full shadow-lg">
           <Image
             src="/anthony-dake-drums.jpg"
-            alt="Anthony Dake drumming at age 5"
+            alt="Anthony Dake — session drummer based in Columbus, Ohio"
             width={240}
             height={240}
             priority

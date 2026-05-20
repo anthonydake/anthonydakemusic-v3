@@ -233,6 +233,55 @@ svg * {
   background-clip: border-box !important;
 }
 
+/* Skip-to-content — hidden until focused (keyboard users only).
+   Stripped of the global gradient text-fill so the focused chip reads. */
+.skip-to-content {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.skip-to-content:focus,
+.skip-to-content:focus-visible {
+  position: fixed !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0.5rem 1rem !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  clip: auto !important;
+  clip-path: none !important;
+  white-space: normal !important;
+  z-index: 99999 !important;
+  top: 0.75rem !important;
+  left: 0.75rem !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  background: white !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  color: black !important;
+  -webkit-text-fill-color: black !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875rem !important;
+  text-decoration: none !important;
+}
+
 /* Editorial serif display — Fraunces 300. Apply only to signature
    headlines, never to body or labels. Display sizes (>=28px) only. */
 .font-serif-display {
