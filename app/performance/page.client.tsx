@@ -3,6 +3,7 @@
 import "../placements/projects-index.css";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { performanceIndex, type PerformanceItem } from "@/data/performance.data";
 import SiteHeader from "@/app/components/SiteHeader";
 import JsonLd from "@/app/components/JsonLd";
@@ -128,6 +129,9 @@ export default function PerformanceIndexClient() {
       <JsonLd data={breadcrumbsSchema("Performance", "/performance")} />
       <SiteHeader />
       <main id="main-content" className="relative z-[10] mx-auto flex max-w-[1600px] flex-col px-6 pb-4 pt-20 sm:pt-24 sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
+        <p className="sr-only">
+          Live performance credits — drums for hip-hop sets, festival mainstages, theater productions. The list below is {items.length} curated highlights; the full career spans roughly 405 documented performances since 2017, including DCI tours with Blue Knights, WGI seasons with Rhythm X and Dojo Percussion, marching band, jazz and percussion ensembles, and recent professional gigs across Columbus, Ohio.
+        </p>
         <div className="mb-6 flex flex-shrink-0 items-baseline justify-between gap-4">
           <span className="text-[11px] uppercase tracking-[0.28em] opacity-50">
             (IDX·02)
@@ -150,6 +154,11 @@ export default function PerformanceIndexClient() {
           className="rows-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain pr-2"
         >
           <YearGroups items={items} revealCount={revealCount} />
+          <nav aria-label="Related sections" className="mt-12 mb-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[10px] uppercase tracking-[0.22em] text-white/35">
+            <Link href="/placements" className="hover:text-white/70 transition-colors">See placements →</Link>
+            <Link href="/practice" className="hover:text-white/70 transition-colors">Practice log →</Link>
+            <Link href="/epk" className="hover:text-white/70 transition-colors">Press kit →</Link>
+          </nav>
         </section>
       </main>
 

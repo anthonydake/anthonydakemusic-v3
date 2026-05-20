@@ -19,6 +19,13 @@ export default function NotFound() {
         >
           <span>Go Home</span>
         </Link>
+        <nav aria-label="Site sections" className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[10px] uppercase tracking-[0.22em] text-white/35">
+          <Link href="/placements" className="hover:text-white/70 transition-colors">Placements</Link>
+          <Link href="/performance" className="hover:text-white/70 transition-colors">Performance</Link>
+          <Link href="/practice" className="hover:text-white/70 transition-colors">Practice</Link>
+          <Link href="/epk" className="hover:text-white/70 transition-colors">EPK</Link>
+          <Link href="/about" className="hover:text-white/70 transition-colors">About</Link>
+        </nav>
       </main>
     </>
   );
