@@ -219,11 +219,11 @@ export default function HomeClient({
     >
       <section
         ref={heroRef}
-        className="relative grid h-screen place-items-center snap-start bg-black"
+        className="relative grid h-screen place-items-center snap-start bg-black pt-14"
         data-id="hero"
         data-snap-section
       >
-        <div className="relative z-10 -translate-y-[90px]">
+        <div className="relative z-10">
           <div
             className={[
               "select-none transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -232,14 +232,13 @@ export default function HomeClient({
           >
             <div className="relative inline-block">
               <div className="transition-[opacity,transform] duration-300 ease-out">
-                <div className="mb-5 text-center text-[12px] uppercase tracking-[0.26em] text-black/60 sm:text-[13px]" />
                 <Link href="/" aria-label="Go to Home">
                   <LogoArchitectOfSound />
                 </Link>
 
                 {/* Proof strip — scrambled stats, retriggers on hover */}
                 <div
-                  className="mt-6 sm:mt-8 lg:mt-10 flex items-center justify-center gap-8 sm:gap-12 lg:gap-16 text-[#A1A1A6]"
+                  className="mt-8 sm:mt-10 flex items-center justify-center gap-8 sm:gap-12 lg:gap-16 text-[#A1A1A6]"
                   onMouseEnter={retriggerScramble}
                   onMouseLeave={retriggerScramble}
                 >
@@ -276,7 +275,7 @@ export default function HomeClient({
                   </div>
                 </div>
 
-                <div className="mt-6 sm:mt-8 flex justify-center">
+                <div className="mt-8 sm:mt-10 flex justify-center">
                   <Link
                     href="/epk"
                     className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
@@ -284,7 +283,7 @@ export default function HomeClient({
                     EPK | 🥁
                   </Link>
                 </div>
-                <div className="mt-6 lg:mt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-9 lg:gap-12">
+                <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-9 lg:gap-12">
                   <a
                     className="group relative inline-flex h-[62px] w-[62px] lg:h-[72px] lg:w-[72px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="mailto:adakemusic@gmail.com"

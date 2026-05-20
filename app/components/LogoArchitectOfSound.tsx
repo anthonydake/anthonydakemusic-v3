@@ -10,7 +10,7 @@ export default function LogoArchitectOfSound() {
 
   return (
     <div
-      className="relative inline-flex w-full max-w-[640px] lg:max-w-[820px] xl:max-w-[960px] flex-col items-center justify-center py-6 text-[#F2F2F2]"
+      className="relative inline-flex w-full max-w-[640px] lg:max-w-[820px] xl:max-w-[960px] flex-col items-center justify-center text-[#F2F2F2]"
       onMouseEnter={retrigger}
       onMouseLeave={retrigger}
     >
