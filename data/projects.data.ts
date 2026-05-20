@@ -10,10 +10,11 @@ export type ProjectIndexItem = {
   tags?: string[];
 };
 
-// Curated top 8 — ranked by streams + social momentum across all years, newest-first
+// Curated highlights — ranked by streams + social momentum across all years, newest-first
 export const projectIndex: ProjectIndexItem[] = [
   { id: "P12", year: 2025, artist: "AR!YAH", title: "Aura", role: "Drum Programming", youtubeUrl: "https://www.youtube.com/watch?v=rygn058o5OM" },
   { id: "P19", year: 2025, artist: "KJ The Cool Nerd", title: "Pray For Me", role: "Drum Programming", youtubeUrl: "https://www.youtube.com/watch?v=_oLkgRSg-ss" },
+  { id: "P09", year: 2024, artist: "Madelyn Leona", title: "Back & Forth", role: "Drums", youtubeUrl: "https://www.youtube.com/watch?v=6qLMNYQLHkw" },
   { id: "P10", year: 2024, artist: "Bitty", title: "Bring Me More", role: "Drum Programming", youtubeUrl: "https://www.youtube.com/watch?v=uxkUGPQdYZw" },
   { id: "P05", year: 2024, artist: "Bitty & WANYEH", title: "Bitts and Pieces", role: "Drum Programming", youtubeUrl: "https://www.youtube.com/watch?v=c_5nM0kKoig" },
   { id: "P06", year: 2024, artist: "KJ The Cool Nerd & WANYEH", title: "Dark Knight", role: "Drum Programming", youtubeUrl: "https://www.youtube.com/watch?v=_QfPY7PeSbQ" },

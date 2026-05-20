@@ -80,9 +80,14 @@ export default function ProjectsIndexClient() {
           <span className="text-[11px] uppercase tracking-[0.28em] opacity-50">
             (IDX·01)
           </span>
-          <h1 className="text-[18px] uppercase tracking-[0.2em] font-light sm:text-[22px]">
-            placements
-          </h1>
+          <div className="flex flex-col items-center gap-1">
+            <h1 className="text-[18px] uppercase tracking-[0.2em] font-light sm:text-[22px]">
+              placements
+            </h1>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-white/40">
+              recent highlights
+            </p>
+          </div>
           <span className="text-[10px] uppercase tracking-[0.22em] opacity-30">
             index of {items.length}
           </span>
