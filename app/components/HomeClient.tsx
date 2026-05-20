@@ -219,11 +219,11 @@ export default function HomeClient({
     >
       <section
         ref={heroRef}
-        className="relative grid h-screen place-items-center snap-start bg-black pt-14"
+        className="relative grid h-screen place-items-center snap-start bg-black"
         data-id="hero"
         data-snap-section
       >
-        <div className="relative z-10">
+        <div className="relative z-10 -translate-y-[50px]">
           <div
             className={[
               "select-none transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
