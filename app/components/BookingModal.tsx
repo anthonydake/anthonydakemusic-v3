@@ -25,6 +25,10 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const [eventDate, setEventDate] = useState("");
   const [eventType, setEventType] = useState("");
   const [message, setMessage] = useState("");
+  // Honeypot — kept in component state but hidden from real users.
+  const [website, setWebsite] = useState("");
+
+  const todayIso = new Date().toISOString().slice(0, 10);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -109,6 +113,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           eventDate: eventDate || null,
           eventType,
           message,
+          website, // honeypot
         }),
       });
       if (!res.ok) {
@@ -182,6 +187,18 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           </div>
         ) : (
           <form onSubmit={onSubmit} className="flex flex-col gap-4">
+            {/* Honeypot — hidden from sighted users + screen readers, bots fill it. */}
+            <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
+              <label htmlFor="bk-website">Website</label>
+              <input
+                id="bk-website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+              />
+            </div>
             <div>
               <label
                 htmlFor="bk-name"
@@ -230,6 +247,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 <input
                   id="bk-date"
                   type="date"
+                  min={todayIso}
                   value={eventDate}
                   onChange={(e) => setEventDate(e.target.value)}
                   className="form-input"

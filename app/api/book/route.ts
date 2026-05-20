@@ -3,10 +3,73 @@ import { NextResponse } from "next/server";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
+const SITE_HOST = new URL(SITE_URL).host;
+
+async function notifyBooking(payload: {
+  name: string;
+  email: string;
+  eventType: string;
+  eventDate: string | null;
+  message: string;
+}) {
+  const to = process.env.BOOKING_NOTIFY_EMAIL || "adakemusic@gmail.com";
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.BOOKING_NOTIFY_FROM || "noreply@anthonydakemusic.com";
+
+  const subject = `New booking inquiry — ${payload.eventType} (${payload.name})`;
+  const text =
+    `Name: ${payload.name}\n` +
+    `Email: ${payload.email}\n` +
+    `Event Type: ${payload.eventType}\n` +
+    `Event Date: ${payload.eventDate ?? "—"}\n\n` +
+    `Message:\n${payload.message || "(none)"}\n`;
+
+  if (!apiKey) {
+    console.warn("[booking] RESEND_API_KEY not set — inquiry stored in DB only");
+    console.warn(text);
+    return;
+  }
+
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({ from, to, subject, text, reply_to: payload.email }),
+    });
+    if (!res.ok) {
+      console.error("[booking] Resend send failed:", res.status, await res.text());
+    }
+  } catch (err) {
+    console.error("[booking] Resend send threw:", err);
+  }
+}
 
 export async function POST(request: Request) {
   try {
+    // Origin check — block off-site POSTs (curl/scrapers without correct Origin).
+    const origin = request.headers.get("origin");
+    if (origin) {
+      try {
+        if (new URL(origin).host !== SITE_HOST) {
+          return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+        }
+      } catch {
+        return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+      }
+    }
+
     const body = await request.json();
+
+    // Honeypot — hidden field that real users never fill. Bots auto-fill all fields.
+    if (typeof body?.website === "string" && body.website.trim() !== "") {
+      // Pretend to succeed so the bot moves on without retry.
+      return NextResponse.json({ ok: true });
+    }
 
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     const email =
@@ -72,6 +135,9 @@ export async function POST(request: Request) {
       VALUES (${email})
       ON CONFLICT (email) DO NOTHING;
     `;
+
+    // Fire-and-forget notify — never blocks the user's response.
+    notifyBooking({ name, email, eventType, eventDate, message }).catch(() => {});
 
     return NextResponse.json({ ok: true });
   } catch {
