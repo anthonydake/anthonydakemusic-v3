@@ -244,7 +244,7 @@ export default function HomeClient({
                   onMouseLeave={retriggerScramble}
                 >
                   <div className="flex flex-col items-center">
-                    <span className="font-serif-display text-[32px] sm:text-[40px] lg:text-[48px] leading-none text-[#F2F2F2]">
+                    <span className="font-serif-display text-[26px] sm:text-[32px] leading-none text-[#F2F2F2]">
                       <TextScramble
                         key={`perfs-${scrambleRun}`}
                         text="~405"
@@ -260,7 +260,7 @@ export default function HomeClient({
                   </div>
                   <div className="h-10 w-px bg-white/15" />
                   <div className="flex flex-col items-center">
-                    <span className="font-serif-display text-[32px] sm:text-[40px] lg:text-[48px] leading-none text-[#F2F2F2]">
+                    <span className="font-serif-display text-[26px] sm:text-[32px] leading-none text-[#F2F2F2]">
                       <TextScramble
                         key={`placs-${scrambleRun}`}
                         text="~52"
@@ -279,7 +279,7 @@ export default function HomeClient({
                 <div className="mt-6 sm:mt-8 flex justify-center">
                   <Link
                     href="/epk"
-                    className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] lg:px-16 lg:text-[16px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                   >
                     EPK | 🥁
                   </Link>
