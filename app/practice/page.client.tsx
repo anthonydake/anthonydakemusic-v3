@@ -182,9 +182,9 @@ export default function PracticePageClient() {
                       <div className="absolute -left-6 w-[15px] h-[15px] rounded-full border-2 border-blue-400/60 bg-black flex items-center justify-center">
                         <div className="w-[5px] h-[5px] rounded-full bg-blue-400" />
                       </div>
-                      <span className="text-[12px] uppercase tracking-[0.28em] text-white/50">
+                      <time dateTime={date} className="text-[12px] uppercase tracking-[0.28em] text-white/50">
                         {formatDate(date)}
-                      </span>
+                      </time>
                     </div>
 
                     {/* Entries for this date */}

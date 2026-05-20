@@ -19,25 +19,36 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusi
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "ANTHONY DAKE | DRUMS",
-    template: "ANTHONY DAKE | %s",
+    default: "Anthony Dake — Session Drummer (Columbus, OH)",
+    template: "%s · Anthony Dake — Session Drummer",
   },
-  description: "Session drummer and music director — live shows, tours, and studio sessions",
+  description:
+    "Anthony Dake — session drummer based in Columbus, Ohio. Live drums and studio sessions for independent artists, festivals, and theater.",
   icons: {
     icon: "/favicon.ico",
+  },
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": [
+        { url: "/practice/feed.xml", title: "Anthony Dake — Practice Log" },
+      ],
+    },
   },
   openGraph: {
     type: "website",
     url: "/",
     siteName: "Anthony Dake",
-    title: "🥁 ANTHONY DAKE | DRUMS",
-    description: "Session drummer and music director — live shows, tours, and studio sessions",
+    title: "Anthony Dake — Session Drummer (Columbus, OH)",
+    description:
+      "Session drummer for independent artists, festivals, and theater. Live drums and studio sessions.",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Anthony Dake" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "🥁 ANTHONY DAKE | DRUMS",
-    description: "Session drummer and music director — live shows, tours, and studio sessions",
+    title: "Anthony Dake — Session Drummer (Columbus, OH)",
+    description:
+      "Session drummer for independent artists, festivals, and theater. Live drums and studio sessions.",
     images: ["/og-image.jpg"],
   },
 };
@@ -55,6 +66,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`bg-white ${fraunces.variable}`}>
+      <head>
+        <link rel="me" href="https://www.instagram.com/anthony_dake/" />
+        <link rel="me" href="https://www.tiktok.com/@anthony_dake" />
+        <link rel="me" href="https://www.youtube.com/@anthony_dake" />
+        <link rel="me" href="mailto:adakemusic@gmail.com" />
+        <link rel="author" href={`${siteUrl}/about`} />
+      </head>
       <body className="antialiased bg-white text-black">
         <JsonLd
           data={{

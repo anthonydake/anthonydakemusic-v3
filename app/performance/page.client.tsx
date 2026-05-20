@@ -5,7 +5,57 @@ import "../placements/projects-index.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { performanceIndex, type PerformanceItem } from "@/data/performance.data";
 import SiteHeader from "@/app/components/SiteHeader";
+import JsonLd from "@/app/components/JsonLd";
 import { useTransition } from "@/app/components/TransitionProvider";
+
+const SITE_URL = "https://www.anthonydakemusic.com";
+
+function performanceSchema(items: PerformanceItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Anthony Dake — Live Performance Credits",
+    description:
+      "Curated live performance credits — drums for hip-hop sets, festival mainstages, and theater productions.",
+    itemListOrder: "https://schema.org/ItemListOrderDescending",
+    numberOfItems: items.length,
+    itemListElement: items.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "MusicEvent",
+        name: `${p.primaryArtist} at ${p.venue}`,
+        startDate: `${p.year}-01-01`,
+        performer: [
+          { "@type": "MusicGroup", name: p.primaryArtist },
+          { "@type": "Person", name: "Anthony Dake", roleName: "Drums" },
+        ],
+        location: {
+          "@type": "Place",
+          name: p.venue,
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: p.city,
+            addressRegion: p.state,
+            addressCountry: "US",
+          },
+        },
+        ...(p.youtubeUrl ? { sameAs: p.youtubeUrl, url: p.youtubeUrl } : {}),
+      },
+    })),
+  };
+}
+
+function breadcrumbsSchema(label: string, path: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL + "/" },
+      { "@type": "ListItem", position: 2, name: label, item: SITE_URL + path },
+    ],
+  };
+}
 
 export default function PerformanceIndexClient() {
   const { triggerTransition, isTransitioning, isMobileFallback } = useTransition();
@@ -74,6 +124,8 @@ export default function PerformanceIndexClient() {
 
   return (
     <div className="performance-index-frame relative bg-black text-white h-screen overflow-hidden">
+      <JsonLd data={performanceSchema(items)} />
+      <JsonLd data={breadcrumbsSchema("Performance", "/performance")} />
       <SiteHeader />
       <main id="main-content" className="relative z-[10] mx-auto flex max-w-[1600px] flex-col px-6 pb-4 pt-20 sm:pt-24 sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
         <div className="mb-6 flex flex-shrink-0 items-baseline justify-between gap-4">
@@ -147,7 +199,7 @@ function YearGroups({ items, revealCount }: { items: PerformanceItem[]; revealCo
                     {/* Mobile: 2-col */}
                     <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-0.5 leading-tight lg:hidden">
                       <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
-                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><time dateTime={String(p.year)}>{p.year}</time></div>
                       <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2"><span>{p.venue}</span></div>
                       {p.tags && p.tags.length > 0 && (
                         <div className="text-[10px] uppercase tracking-[0.18em] opacity-30 col-span-2 mt-0.5">
@@ -159,7 +211,7 @@ function YearGroups({ items, revealCount }: { items: PerformanceItem[]; revealCo
                     <div className="hidden lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-8 leading-tight">
                       <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
                       <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{venueLocation}</span></div>
-                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><span>{p.year}</span></div>
+                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><time dateTime={String(p.year)}>{p.year}</time></div>
                       {p.tags && p.tags.length > 0 && (
                         <div className="text-[8.5px] uppercase tracking-[0.18em] opacity-30 col-span-3 mt-0.5">
                           <span>{p.tags.join(", ")}</span>
