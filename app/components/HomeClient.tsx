@@ -223,22 +223,19 @@ export default function HomeClient({
         data-id="hero"
         data-snap-section
       >
-        <div className="relative z-10 -translate-y-[50px]">
-          <div
-            className={[
-              "select-none transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-              visible.hero ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
-            ].join(" ")}
-          >
+        <div className="hero-intro-shake relative z-10 -translate-y-[50px]">
+          <div className="select-none">
             <div className="relative inline-block">
-              <div className="transition-[opacity,transform] duration-300 ease-out">
-                <Link href="/" aria-label="Go to Home">
-                  <LogoArchitectOfSound />
-                </Link>
+              <div>
+                <div className="hero-element hero-element-1">
+                  <Link href="/" aria-label="Go to Home">
+                    <LogoArchitectOfSound />
+                  </Link>
+                </div>
 
                 {/* Proof strip — scrambled stats, retriggers on hover */}
                 <div
-                  className="mt-8 sm:mt-10 flex items-center justify-center gap-8 sm:gap-12 lg:gap-16 text-[#A1A1A6]"
+                  className="hero-element hero-element-2 mt-8 sm:mt-10 flex items-center justify-center gap-8 sm:gap-12 lg:gap-16 text-[#A1A1A6]"
                   onMouseEnter={retriggerScramble}
                   onMouseLeave={retriggerScramble}
                 >
@@ -275,7 +272,7 @@ export default function HomeClient({
                   </div>
                 </div>
 
-                <div className="mt-8 sm:mt-10 flex justify-center">
+                <div className="hero-element hero-element-3 mt-8 sm:mt-10 flex justify-center">
                   <Link
                     href="/epk"
                     className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
@@ -283,7 +280,7 @@ export default function HomeClient({
                     EPK | 🥁
                   </Link>
                 </div>
-                <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-9 lg:gap-12">
+                <div className="hero-element hero-element-4 mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-9 lg:gap-12">
                   <a
                     className="group relative inline-flex h-[62px] w-[62px] lg:h-[72px] lg:w-[72px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                     href="mailto:adakemusic@gmail.com"
