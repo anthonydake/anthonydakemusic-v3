@@ -1,6 +1,7 @@
 "use client";
 
 import SiteHeader from "../components/SiteHeader";
+import Testimonials from "../components/Testimonials";
 
 export default function AboutClient() {
   return (
@@ -183,6 +184,7 @@ export default function AboutClient() {
 
           </div>
         </article>
+        <Testimonials />
       </main>
     </>
   );
