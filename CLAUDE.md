@@ -251,6 +251,9 @@ The `/practice` page is an "open practice room" — a daily log of real sessions
 - `c50c2a9` — .gitignore: exclude .env*.local
 - `02f2a68` — Home: cut services to 2 cards, restore Work With Me, add placements strip
 - `08e648d` — Home: replace EPK section with Services breakdown
+- `b4a86fd` — Add booking inquiry form with /api/book integration + Book CTA in headers
+- `79caea5` — Cleanup: remove dead components (CustomCursor, FloatingCards, LenisProvider, ArchiveModal, ScribbleLink, ScrambleText, re-export stubs)
+- `a25e9fb` — Add CLAUDE.md with project context for Claude Code
 - `245ab18` — Fix SiteHeader bullet character (literal → actual •)
 
 ## Future Work
@@ -263,6 +266,13 @@ The `/practice` page is an "open practice room" — a daily log of real sessions
 - `/admin/archive`: dashboard for the `bookings` table (currently only the `archive_emails` list is exposed).
 - Branded 1200×630 OG image design (currently a crop of the portrait).
 - Audio embeds on the home page beyond the showcase (Spotify oEmbed for featured records).
+
+## Local Environment (Anthony's Mac)
+
+- **Active clone**: `~/anthonydakemusic-v3` — the one Claude Code runs in (has `.claude/settings.local.json` with pre-approved `git add/commit/push`, `npx next *`, `node *`, `npm install *`). Always work here.
+- **Do NOT use**: `~/Documents/GitHub/anthonydakemusic-v3` (stale GitHub Desktop clone with a divergent history) or `~/anthonydakemusic` (old v1 project, linked to the wrong Vercel project). An empty `anthonydakemusic-v3/` folder also sits in `~/Claude-Workspace/4-architect/` — ignore it.
+- Node/npm/`claude` come from **fnm**; they are on PATH in a normal Terminal login shell. Non-login contexts (`osascript do shell script`, cron) need `export PATH=$PATH:/opt/homebrew/bin` and will not see fnm shims.
+- A copy of this file is kept in sync at `~/Claude-Workspace/4-architect/CLAUDE.md` for Cowork sessions. Edit the repo copy, then `cp` it over.
 
 ## Working Preferences
 
