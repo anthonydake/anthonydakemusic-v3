@@ -68,7 +68,7 @@ There is **no site-wide footer** (removed in `08c3b27`). `ColumbusTime.tsx` and 
 
 Routing: `HomeClient` accepts `initialSection?: "hero" | "services" | "epk"` and will `scrollIntoView` the matching ref on mount. The section-id union is a **closed type** — adding a fourth value is a breaking change throughout the file (gotcha #10).
 
-Fade-in: an IntersectionObserver with `root: null` and `threshold ~0.35` flips the per-section `visible` state once (never back to false). Reduced-motion users start with everything visible. No other scroll machinery remains.
+Fade-in: an IntersectionObserver with `root: null`, `threshold: 0.08`, `rootMargin: "0px 0px -10% 0px"` flips the per-section `visible` state once (never back to false). **Hero starts `true` always** — it's above the fold and some touch browsers never fired the first entry for the initial visible section, which left phones stuck at opacity-0. Services + EPK still latch via the observer, with two fail-open fallbacks in the same effect: a `window` `scroll` listener (passive + once) and a 1200 ms `setTimeout` that both call `setVisible({ hero: true, services: true, epk: true })` unconditionally. Both are torn down with the observer on unmount. Reduced-motion users start with everything visible. The hero wrapper also skips the fade/transform classes entirely (it's always visible, no transition needed → no transform composite during hydration → no layout jump). No other scroll machinery remains.
 
 ## Booking System
 

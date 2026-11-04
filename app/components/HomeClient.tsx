@@ -35,10 +35,13 @@ export default function HomeClient({
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     []
   );
+  // Hero is above the fold and must never be gated behind the observer —
+  // some touch browsers never fired an entry on the initial visible section,
+  // leaving phones stuck at opacity-0. Start hero visible on every path.
   const [visible, setVisible] = useState<{ hero: boolean; services: boolean; epk: boolean }>(() =>
     reduceMotion
       ? { hero: true, services: true, epk: true }
-      : { hero: false, services: false, epk: false }
+      : { hero: true, services: false, epk: false }
   );
   const [scrambleRun, setScrambleRun] = useState(0);
   const [showHeroVideo, setShowHeroVideo] = useState(false);
@@ -59,6 +62,12 @@ export default function HomeClient({
     if (reduceMotion) return;
 
     const sections: Array<"hero" | "services" | "epk"> = ["hero", "services", "epk"];
+    const revealAll = () =>
+      setVisible((prev) =>
+        prev.hero && prev.services && prev.epk ? prev : { hero: true, services: true, epk: true }
+      );
+
+    // Fast path: observer latches each section as it enters the viewport.
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -77,7 +86,18 @@ export default function HomeClient({
     const nodes = document.querySelectorAll("[data-snap-section]");
     nodes.forEach((node) => observer.observe(node));
 
-    return () => observer.disconnect();
+    // Fail-open fallbacks: if the observer never fires (some touch browsers
+    // in certain lifecycle orders), the first scroll — or a 1200ms timer —
+    // unconditionally reveals everything so no section stays invisible.
+    const onScroll = () => revealAll();
+    window.addEventListener("scroll", onScroll, { passive: true, once: true });
+    const fallbackTimer = window.setTimeout(revealAll, 1200);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(fallbackTimer);
+    };
   }, [reduceMotion]);
 
   useEffect(() => {
@@ -114,12 +134,11 @@ export default function HomeClient({
           </div>
         )}
         <div className="relative z-10">
-          <div
-            className={[
-              "select-none transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-              visible.hero ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
-            ].join(" ")}
-          >
+          {/* Hero is always visible at first paint (see visible state init),
+              so no transition/transform classes are applied here — avoids any
+              layout jump from the composite transform during hydration. */}
+          <div className="select-none opacity-100">
+
             <div className="relative inline-block">
               <div className="transition-[opacity,transform] duration-300 ease-out">
                 <Link href="/" aria-label="Go to Home">
