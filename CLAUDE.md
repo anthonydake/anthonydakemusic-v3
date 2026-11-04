@@ -85,8 +85,11 @@ Snap mechanics: `useLayoutEffect` sets `scrollTop` to the target section on moun
   - `NEXT_PUBLIC_SITE_URL` — origin-check target.
   - `BOOKING_NOTIFY_EMAIL` — recipient of notification (default `adakemusic@gmail.com`).
   - `BOOKING_NOTIFY_FROM` — notification From address (default `noreply@anthonydakemusic.com`).
-  - `RESEND_API_KEY` — Resend bearer token. Missing → inquiry still stored, no email sent.
+  - `RESEND_API_KEY` — injected automatically by the **Resend native integration** from the Vercel Marketplace (resource `resend-email-apricot-harbor`, Free plan, Production + Preview, marked Sensitive). Never set it by hand; manage it from Vercel → Integrations → Resend.
+  - `RESEND_EMAIL_DOMAIN` — also injected by the integration (`anthonydakemusic.com`). The domain is **not verified yet**: DNS for anthonydakemusic.com is on Cloudflare, and the DKIM TXT + `rsend`/`send` CNAMEs listed at resend.com/domains still need to be added there.
+  - `BOOKING_NOTIFY_FROM` — currently `onboarding@resend.dev` (Resend's test sender, set 2026-11-03). It only delivers to the Resend account owner (adakemusic@gmail.com), which is fine for notifications. Switch to `noreply@anthonydakemusic.com` once the domain is verified.
   - `ARCHIVE_ADMIN_PASSWORD` — for `/admin/archive` auth.
+- Verified 2026-11-03: a test POST to `/api/book` produced a "Delivered" email in the Resend log (subject `New booking inquiry — <type> (<name>)`). Resend's email log at resend.com/emails is the first place to look if notifications stop.
 
 ## Media assets (Vercel Blob)
 
