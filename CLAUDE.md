@@ -279,4 +279,6 @@ The `/practice` page is an "open practice room" — a daily log of real sessions
 
 ## Working Preferences
 
+**Payments: do NOT use Stripe or PayPal** (Anthony's standing decision, 2026-11-03). That also rules out platforms that run on their rails (Lemon Squeezy, Gumroad, Shopify Payments, Polar, Payhip, Ko-fi). The planned processor for digital downloads and the practice-room membership is Square (Checkout API + Subscriptions API + webhooks → Neon → Resend delivery).
+
 Anthony prefers automated, zero-manual-step workflows. Build and push directly — don't ask him to run commands. When making changes, always run `npx next build` to verify before committing. The site should look polished and professional on mobile (iPhone, 375 px viewport) and desktop.
