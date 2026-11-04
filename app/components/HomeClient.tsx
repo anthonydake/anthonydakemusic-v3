@@ -187,11 +187,12 @@ export default function HomeClient({
               preload="metadata"
               poster={HERO_VIDEO_POSTER}
               aria-hidden="true"
-              className="h-full w-full object-cover opacity-40"
+              className="h-full w-full object-cover opacity-25 sm:opacity-30"
             >
               <source src={HERO_VIDEO_URL} type="video/mp4" />
             </video>
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
+            <div aria-hidden="true" className="hero-shade absolute inset-0" />
+            <div aria-hidden="true" className="hero-vignette absolute inset-0" />
           </div>
         )}
         <div className="relative z-10 -translate-y-[50px]">

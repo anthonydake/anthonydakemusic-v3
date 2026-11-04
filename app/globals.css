@@ -131,6 +131,30 @@ div, section, main, header, footer, nav, article, aside, form, ul, ol, figure, t
   background-clip: border-box !important;
 }
 
+/* Darkening layers for the hero reel. The container-reset rule above
+   strips background-image from every <div>, so these need higher
+   specificity to repaint their gradients. Keep them pointer-events-none
+   on the wrapper side; these rules only paint the layer. */
+section div.hero-shade {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.38) 45%,
+    rgba(0, 0, 0, 0.94) 100%
+  ) !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+section div.hero-vignette {
+  background-image: radial-gradient(
+    ellipse 58% 52% at 50% 48%,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0) 72%
+  ) !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+}
+
 input,
 textarea,
 select,
