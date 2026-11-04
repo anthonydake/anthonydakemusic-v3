@@ -10,7 +10,8 @@ import { projectIndex } from "../../data/projects.data";
 
 // Hero reel. Set to the public Vercel Blob URL of an H.264 .mp4 (muted, ~8–15s loop, ≤ ~6MB) to activate.
 // Upload with: npm run upload-media -- <local-file> hero/<name>.mp4   (see CLAUDE.md → Media assets)
-const HERO_VIDEO_URL: string | null = null;
+// PLACEHOLDER — center crop of a practice clip. Replace with the real hero reel.
+const HERO_VIDEO_URL: string | null = "https://s4sgra2uircghynp.public.blob.vercel-storage.com/hero/placeholder-reel.mp4";
 const HERO_VIDEO_POSTER = "/anthony-dake-drums.jpg";
 
 type HomeClientProps = {

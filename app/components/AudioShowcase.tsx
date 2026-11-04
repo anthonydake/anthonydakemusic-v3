@@ -11,10 +11,11 @@ export interface AudioClip {
 // Set real public URLs to activate (20–30s mp3 clips, ~128kbps).
 // Upload with: npm run upload-media -- <local-file> audio/<name>.mp3
 export const AUDIO_CLIPS: AudioClip[] = [
-  // { id: "gospel", label: "Gospel", src: "https://…/audio/gospel.mp3" },
-  // { id: "rnb",    label: "Pop / R&B", src: "https://…/audio/rnb.mp3" },
-  // { id: "rock",   label: "Rock", src: "https://…/audio/rock.mp3" },
-  // { id: "pocket", label: "Pocket", src: "https://…/audio/pocket.mp3" },
+  // PLACEHOLDERS — excerpts from practice clips, not finished recordings. Replace with real style clips.
+  { id: "gospel", label: "Gospel",    src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/placeholder-gospel.mp3" },
+  { id: "rnb",    label: "Pop / R&B", src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/placeholder-rnb.mp3" },
+  { id: "rock",   label: "Rock",      src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/placeholder-rock.mp3" },
+  { id: "pocket", label: "Pocket",    src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/placeholder-pocket.mp3" },
 ];
 
 const RING_RADIUS = 20;
