@@ -43,3 +43,6 @@ next-env.d.ts
 .DS_Store
 reports/
 .env*.local
+
+# local staging for raw media before upload — never committed
+/media/

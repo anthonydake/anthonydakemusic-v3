@@ -10,7 +10,8 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "check:links": "node scripts/check-external-links.mjs"
+    "check:links": "node scripts/check-external-links.mjs",
+    "upload-media": "node scripts/upload-media.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -25,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vercel/blob": "^2.8.2",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",
