@@ -7,6 +7,7 @@ import TextScramble from "./TextScramble";
 import AudioShowcase from "./AudioShowcase";
 import { useTransition } from "./TransitionProvider";
 import { projectIndex } from "../../data/projects.data";
+import { STATS } from "../../data/stats";
 
 // Hero reel. Set to the public Vercel Blob URL of an H.264 .mp4 (muted, ~8–15s loop, ≤ ~6MB) to activate.
 // Upload with: npm run upload-media -- <local-file> hero/<name>.mp4   (see CLAUDE.md → Media assets)
@@ -218,7 +219,7 @@ export default function HomeClient({
                     <span className="font-serif-display text-[26px] sm:text-[32px] leading-none text-[#F2F2F2]">
                       <TextScramble
                         key={`perfs-${scrambleRun}`}
-                        text="~405"
+                        text={`~${STATS.performances}`}
                         duration={600}
                         charset="#%&$@+|0123456789"
                         scrambleFraction={0.5}
@@ -234,7 +235,7 @@ export default function HomeClient({
                     <span className="font-serif-display text-[26px] sm:text-[32px] leading-none text-[#F2F2F2]">
                       <TextScramble
                         key={`placs-${scrambleRun}`}
-                        text="~52"
+                        text={`~${STATS.placements}`}
                         duration={600}
                         charset="#%&$@+|0123456789"
                         scrambleFraction={0.5}
@@ -500,13 +501,20 @@ export default function HomeClient({
           <p className="max-w-lg text-[15px] leading-7 text-black/60">
             For artists, music directors, supervisors, and producers who need a player who shows up ready. Press kit and contact below.
           </p>
-          <Link
-            href="/epk"
+          <button
+            type="button"
+            onClick={onOpenBooking}
             className="epk-cta epk-cta-glow mt-2 inline-flex items-center justify-center rounded-full px-12 py-4.5 text-[13px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
-            EPK | 🥁
+            <span className="submit-label">Book →</span>
+          </button>
+          <Link
+            href="/epk"
+            className="mt-2 text-[10px] uppercase tracking-[0.22em] text-white/40 transition-colors hover:text-white/70"
+          >
+            <span>Press kit →</span>
           </Link>
-          <p className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.22em] text-white/35">
+          <p className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.22em] text-white/35">
             <Link href="/placements" className="hover:text-white/70 transition-colors">
               <span>Placements →</span>
             </Link>

@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   practiceEntries,
-  totalSessions,
-  firstSessionDate,
   type PracticeEntry,
   type ContentType,
   type VideoClip,
@@ -33,9 +31,9 @@ function formatDate(dateStr: string): string {
   });
 }
 
-function formatSinceDate(dateStr: string): string {
+function formatLastSessionDate(dateStr: string): string {
   const date = new Date(dateStr + "T12:00:00");
-  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  return date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 }
 
 function groupByDate(entries: PracticeEntry[]): Map<string, PracticeEntry[]> {
@@ -126,8 +124,9 @@ export default function PracticePageClient() {
           </h1>
           <p className="text-[12px] uppercase tracking-[0.28em] text-white/40 mb-6">
             <span>
-              Session #{totalSessions} · Daily log since{" "}
-              {formatSinceDate(firstSessionDate)}
+              {practiceEntries[0]
+                ? `Practice journal · Last session ${formatLastSessionDate(practiceEntries[0].date)}`
+                : "Practice journal"}
             </span>
           </p>
 

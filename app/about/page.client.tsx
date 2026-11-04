@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import SiteHeader from "../components/SiteHeader";
 import Testimonials from "../components/Testimonials";
+import { openBooking } from "@/lib/booking";
 
 export default function AboutClient() {
   return (
@@ -185,6 +187,19 @@ export default function AboutClient() {
           </div>
         </article>
         <Testimonials />
+        <p className="mx-auto mt-16 mb-24 flex max-w-[680px] flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] uppercase tracking-[0.22em] text-white/50">
+          <button
+            type="button"
+            onClick={openBooking}
+            className="transition-colors hover:text-white/90"
+          >
+            <span>Book →</span>
+          </button>
+          <span className="opacity-40">·</span>
+          <Link href="/epk" className="transition-colors hover:text-white/90">
+            <span>Press kit →</span>
+          </Link>
+        </p>
       </main>
     </>
   );

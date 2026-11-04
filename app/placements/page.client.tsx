@@ -5,6 +5,7 @@ import "./projects-index.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { projectIndex, type ProjectIndexItem } from "@/data/projects.data";
+import { STATS } from "@/data/stats";
 import SiteHeader from "@/app/components/SiteHeader";
 import JsonLd from "@/app/components/JsonLd";
 import { useTransition } from "@/app/components/TransitionProvider";
@@ -122,7 +123,7 @@ export default function ProjectsIndexClient() {
       <SiteHeader />
       <main id="main-content" className="relative z-[10] mx-auto flex max-w-[1600px] flex-col px-6 pb-4 pt-20 sm:pt-24 sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
         <p className="sr-only">
-          Drum credits across released records since 2022 — drum performance and drum programming for independent artists, primarily in Columbus, Ohio. The list below is a curated selection of {items.length} highlights; the full catalog includes roughly 52 placements with collaborators including AR!YAH, KJ The Cool Nerd, Bitty, WANYEH, and Madelyn Leona.
+          Drum credits across released records since 2022 — drum performance and drum programming for independent artists, primarily in Columbus, Ohio. The list below is a curated selection of {items.length} highlights; the full catalog includes roughly {STATS.placements} placements with collaborators including AR!YAH, KJ The Cool Nerd, Bitty, WANYEH, and Madelyn Leona.
         </p>
         <div className="mb-6 flex flex-shrink-0 items-baseline justify-between gap-4">
           <span className="text-[11px] uppercase tracking-[0.28em] opacity-50">
@@ -133,7 +134,7 @@ export default function ProjectsIndexClient() {
               placements
             </h1>
             <p className="text-[10px] uppercase tracking-[0.22em] text-white/40">
-              recent highlights
+              Selected · {items.length} of ~{STATS.placements}
             </p>
           </div>
           <span className="text-[10px] uppercase tracking-[0.22em] opacity-30">

@@ -7,6 +7,7 @@ import HomeClient from "./components/HomeClient";
 import HomeMark from "./components/HomeMark";
 import BookingModal from "./components/BookingModal";
 import { useTransition } from "./components/TransitionProvider";
+import { OPEN_BOOKING_EVENT } from "@/lib/booking";
 
 export default function HomePageClient() {
   return (
@@ -39,6 +40,15 @@ function HomeInner() {
       readyRef.current = true;
     }, 800);
     return () => window.clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const onOpen = () => {
+      setMenuOpen(false);
+      setBookingOpen(true);
+    };
+    window.addEventListener(OPEN_BOOKING_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_BOOKING_EVENT, onOpen);
   }, []);
 
   useEffect(() => {

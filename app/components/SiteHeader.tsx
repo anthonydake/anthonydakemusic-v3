@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import HomeMark from "./HomeMark";
 import BookingModal from "./BookingModal";
+import { OPEN_BOOKING_EVENT } from "@/lib/booking";
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,6 +14,15 @@ export default function SiteHeader() {
     setMenuOpen(false);
     setBookingOpen(true);
   };
+
+  useEffect(() => {
+    const onOpen = () => {
+      setMenuOpen(false);
+      setBookingOpen(true);
+    };
+    window.addEventListener(OPEN_BOOKING_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_BOOKING_EVENT, onOpen);
+  }, []);
 
   return (
     <>
