@@ -122,20 +122,6 @@ export async function POST(request: Request) {
       VALUES (${name}, ${email}, ${eventDate}, ${eventType}, ${message});
     `;
 
-    await sql`
-      CREATE TABLE IF NOT EXISTS archive_emails (
-        id SERIAL PRIMARY KEY,
-        email TEXT UNIQUE NOT NULL,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      );
-    `;
-
-    await sql`
-      INSERT INTO archive_emails (email)
-      VALUES (${email})
-      ON CONFLICT (email) DO NOTHING;
-    `;
-
     // Fire-and-forget notify — never blocks the user's response.
     notifyBooking({ name, email, eventType, eventDate, message }).catch(() => {});
 

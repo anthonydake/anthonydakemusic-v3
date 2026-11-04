@@ -62,7 +62,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`bg-white ${fraunces.variable}`}>
       <head>
-        <link rel="me" href="https://www.instagram.com/anthony_dake/" />
         <link rel="me" href="https://www.tiktok.com/@anthony_dake" />
         <link rel="me" href="https://www.youtube.com/@anthony_dake" />
         <link rel="me" href="mailto:adakemusic@gmail.com" />
@@ -83,7 +82,6 @@ export default function RootLayout({
                 knowsAbout: ["Session Drumming", "Live Performance", "Music Direction", "Tour Preparation"],
                 areaServed: "Columbus, OH",
                 sameAs: [
-                  "https://www.instagram.com/anthony_dake/",
                   "https://www.tiktok.com/@anthony_dake",
                   "https://www.youtube.com/@anthony_dake",
                 ],
@@ -103,7 +101,6 @@ export default function RootLayout({
                   },
                 ],
                 sameAs: [
-                  "https://www.instagram.com/anthony_dake/",
                   "https://www.tiktok.com/@anthony_dake",
                   "https://www.youtube.com/@anthony_dake",
                 ],

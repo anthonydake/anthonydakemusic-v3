@@ -215,6 +215,10 @@ export default function AboutClient() {
             <span>Book →</span>
           </button>
           <span className="opacity-40">·</span>
+          <a href="mailto:adakemusic@gmail.com" className="transition-colors hover:text-white/90">
+            <span>Email →</span>
+          </a>
+          <span className="opacity-40">·</span>
           <Link href="/epk" className="transition-colors hover:text-white/90">
             <span>Press kit →</span>
           </Link>

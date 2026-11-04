@@ -22,17 +22,17 @@ export default function EPKClient() {
             </span>
           </div>
 
-          {/* ── Resume Download Button (top) ─────────────────── */}
+          {/* ── One-sheet (PDF) ─────────────────── */}
           <div className="mb-3 text-center">
             <a
               href="/Anthony_Dake_Resume.pdf"
               download
               className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-6 py-2.5 text-[12px] sm:px-7 sm:py-2.5 sm:text-[12px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
-              Download Resume (PDF)
+              One-sheet (PDF)
             </a>
             <p className="mt-2 text-center text-[9px] uppercase tracking-[0.14em] text-white/20">
-              <span>PDF format &bull; Click to download</span>
+              <span>PDF &middot; credits, reel, contact</span>
             </p>
           </div>
 
@@ -52,28 +52,6 @@ export default function EPKClient() {
           <div className="mt-4 sm:mt-6 flex flex-col items-center gap-3 sm:gap-4">
             {/* Social icons row */}
             <div className="flex items-center gap-3 sm:gap-5">
-              {/* Instagram */}
-              <a
-                className="group inline-flex h-[44px] w-[44px] sm:h-[50px] sm:w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-                href="https://www.instagram.com/anthony_dake/"
-                target="_blank"
-                rel="noreferrer me"
-                aria-label="Instagram"
-              >
-                <svg viewBox="0 0 24 24" className="h-[32px] w-[32px] transition group-hover:brightness-110">
-                  <defs>
-                    <linearGradient id="epkGradIG" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#3B82F6" />
-                      <stop offset="60%" stopColor="#8EC5FF" />
-                      <stop offset="100%" stopColor="#FFFFFF" />
-                    </linearGradient>
-                  </defs>
-                  <rect x="4" y="4" width="16" height="16" rx="4" ry="4" fill="none" stroke="url(#epkGradIG)" strokeWidth="1.5" />
-                  <circle cx="12" cy="12" r="4" fill="none" stroke="url(#epkGradIG)" strokeWidth="1.5" />
-                  <circle cx="17" cy="7" r="1" fill="url(#epkGradIG)" />
-                </svg>
-              </a>
-
               {/* YouTube */}
               <a
                 className="group inline-flex h-[44px] w-[44px] sm:h-[50px] sm:w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
@@ -117,25 +95,18 @@ export default function EPKClient() {
                 </svg>
               </a>
 
-              {/* Email */}
-              <a
-                className="group inline-flex h-[44px] w-[44px] sm:h-[50px] sm:w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-                href="mailto:adakemusic@gmail.com"
-                aria-label="Email"
-              >
-                <svg viewBox="0 0 24 24" className="h-[32px] w-[32px] transition group-hover:brightness-110">
-                  <defs>
-                    <linearGradient id="epkGradMail" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#3B82F6" />
-                      <stop offset="60%" stopColor="#8EC5FF" />
-                      <stop offset="100%" stopColor="#FFFFFF" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" fill="none" stroke="url(#epkGradMail)" strokeWidth="1.5" strokeLinejoin="round" />
-                  <path d="M22 8 12 13 2 8" fill="none" stroke="url(#epkGradMail)" strokeWidth="1.5" strokeLinejoin="round" />
-                </svg>
-              </a>
             </div>
+
+            {/* Plain-text contact line */}
+            <p className="text-center text-[11px] uppercase tracking-[0.22em] text-white/50">
+              <a href="mailto:adakemusic@gmail.com" className="hover:text-white/90 transition-colors">
+                <span>adakemusic@gmail.com</span>
+              </a>
+              <span className="mx-2 opacity-40">·</span>
+              <span>Columbus, OH</span>
+              <span className="mx-2 opacity-40">·</span>
+              <span>fly dates nationwide</span>
+            </p>
 
           </div>
 
