@@ -37,7 +37,7 @@ Next.js App Router. Every public route uses the `page.tsx` (server, exports `met
 - `AudioShowcase.tsx` — Horizontal row of circular play/pause buttons with a progress ring. Renders `null` while `AUDIO_CLIPS` is empty.
 - `BookingModal.tsx` — Booking inquiry dialog. Focus trap, Esc-to-close, honeypot, body-scroll lock, auto-close on success.
 - `SiteHeader.tsx` — Shared header for every subpage. Symmetric 3-column grid (Placements/Performance · HomeMark · About + Book CTA). Mobile hamburger overlay. Owns its own `BookingModal` state and listens for the `open-booking` event.
-- `HomeMark.tsx` — 🥁 glyph used as the home logo in both headers.
+- `HomeMark.tsx` — Inline SVG of the AD serif monogram (built from Fraunces 300 outlines) used as the home-logo glyph in both headers. Renders a letters-only version with a unique gradient id (`ad-mark-grad`, same 3B82F6 → 8EC5FF → FFFFFF stops as the rest of the site) at roughly 26×16 inside the 44px pill. The source SVGs live in `public/mark.svg` (with ring, for standalone use), `public/letters.svg` (no ring, same one inlined in the component), and `public/mark-white.svg` (monochrome fallback).
 - `LogoArchitectOfSound.tsx` — Centered type lockup with hover scramble. Accepts `showPortrait?: boolean` (default `true`); the hero passes `showPortrait={false}` so the childhood photo is suppressed there — it moved to the top of the About article.
 - `TextScramble.tsx` — Animated glyph-scramble primitive used by the proof strip and the logo.
 - `JsonLd.tsx` — `<script type="application/ld+json">` helper.
@@ -214,9 +214,9 @@ Per-page top padding (verified from the code):
 
 - `app/layout.tsx` sets `metadataBase`, OG + Twitter cards, and a `JsonLd` block at the root with `@graph` containing Person, Organization, WebSite. Each subpage re-declares its own OG/Twitter metadata.
 - `public/llms.txt` + `public/llms-full.txt` — LLM-focused site summary + full bio snapshot.
-- `public/og-image.jpg` — 1200×630 shared OG image (resized to 63 KB in `7d0eb79`).
+- `public/og-image.jpg` — 1200×630 branded social card (mark + "anthony dake" + tagline). Replaced the earlier childhood-portrait crop; `alt` is `Anthony Dake — live drums, session drums, music direction`.
+- Favicons + touch icons: `/favicon.ico`, `/favicon-32.png`, `/favicon.png` (192), `/apple-touch-icon.png` (180), `/icon-512.png` — all generated from the AD monogram with heavier 500-weight glyphs on black for small-size legibility.
 - `app/sitemap.ts` emits every static route; `app/robots.ts` emits `/robots.txt` with the sitemap URL.
-- `app/practice/feed.xml` emits RSS for the practice log.
 - Placements and performance rows render inline `MusicRecording` / `MusicEvent` JSON-LD (`1cb39d6`).
 
 ## Practice Page Vision
@@ -284,9 +284,8 @@ The `/practice` page is an "open practice room" — a daily log of real sessions
 - Upload the real hero reel + 3–4 audio clips (activation steps in "Media assets" above).
 - Replace the placeholder `/Anthony_Dake_Resume.pdf` with a real one-sheet (PDF: credits, reel link, contact). The EPK button already labels it that way.
 - Replace the childhood photo at the top of `/about` with a recent professional shot when one is available (keep caption; same slot).
-- Branded 1200×630 OG image design (currently a crop of the childhood portrait — now that the hero no longer uses that photo, this is more visible on social cards).
 - Collect 2–3 real testimonials with written permission; drop them into `data/testimonials.data.ts`.
-- Replace the drum-emoji HomeMark with a proper SVG logo mark.
+- Brand assets (AD monogram + favicons + OG card) are shipped. Source files live in `public/` (mark.svg, letters.svg, mark-white.svg, favicons, og-image.jpg) and in `~/Claude-Workspace/4-architect/brand/` for the generation scripts. Future iteration: tighten the glyph counters at 16×16 if the favicon reads muddy.
 - Practice page: paid access layer (Square — see Working Preferences).
 - Practice page: CMS/admin panel for adding entries without a code push.
 - Practice page: transcode the raw `.mov` clips → H.264 MP4 + VP9 WebM.

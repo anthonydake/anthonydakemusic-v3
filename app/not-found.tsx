@@ -6,7 +6,8 @@ export default function NotFound() {
     <>
       <SiteHeader />
       <main id="main-content" className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-6">
-        <span className="text-6xl mb-6">🥁</span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/mark.svg" alt="" width={96} height={96} className="mb-6 opacity-90" />
         <h1 className="text-2xl font-light tracking-widest uppercase mb-4">
           <span>Page not found</span>
         </h1>

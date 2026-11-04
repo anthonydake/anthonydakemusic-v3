@@ -25,7 +25,12 @@ export const metadata: Metadata = {
   description:
     "Anthony Dake — session drummer based in Columbus, Ohio. Live drums and studio sessions for independent artists, festivals, and theater.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   alternates: {
     canonical: "/",
@@ -37,7 +42,14 @@ export const metadata: Metadata = {
     title: "Anthony Dake — Session Drummer (Columbus, OH)",
     description:
       "Session drummer for independent artists, festivals, and theater. Live drums and studio sessions.",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Anthony Dake" }],
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Anthony Dake — live drums, session drums, music direction",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

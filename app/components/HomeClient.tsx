@@ -189,7 +189,7 @@ export default function HomeClient({
                     href="/epk"
                     className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-10 py-4 text-[13px] sm:px-14 sm:py-5 sm:text-[15px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                   >
-                    EPK | 🥁
+                    EPK →
                   </Link>
                 </div>
                 <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-9 lg:gap-12">
