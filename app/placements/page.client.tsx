@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { projectIndex, type ProjectIndexItem } from "@/data/projects.data";
 import { STATS } from "@/data/stats";
@@ -51,8 +50,6 @@ function breadcrumbsSchema(label: string, path: string) {
 
 export default function PlacementsClient() {
   const items = projectIndex;
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
 
   return (
     <div className="bg-black text-[#F2F2F2]">
@@ -61,9 +58,7 @@ export default function PlacementsClient() {
       <SiteHeader />
       <main
         id="main-content"
-        className={`page-fade-in mx-auto max-w-[960px] px-6 pt-24 pb-16 transition-opacity duration-300 ease-out sm:px-8 ${
-          mounted ? "opacity-100" : "opacity-0"
-        }`}
+        className="mx-auto max-w-[960px] px-6 pt-24 pb-16 sm:px-8"
       >
         <p className="sr-only">
           Drum credits across released records since 2022 — drum performance and drum programming for independent artists, primarily in Columbus, Ohio. The list below is a curated selection of {items.length} highlights; the full catalog includes roughly {STATS.placements} placements with collaborators including AR!YAH, KJ The Cool Nerd, Bitty, WANYEH, and Madelyn Leona.

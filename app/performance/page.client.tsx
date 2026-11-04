@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { performanceIndex, type PerformanceItem } from "@/data/performance.data";
 import { STATS } from "@/data/stats";
@@ -59,8 +58,6 @@ function breadcrumbsSchema(label: string, path: string) {
 
 export default function PerformanceClient() {
   const items = performanceIndex;
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
 
   return (
     <div className="bg-black text-[#F2F2F2]">
@@ -69,9 +66,7 @@ export default function PerformanceClient() {
       <SiteHeader />
       <main
         id="main-content"
-        className={`page-fade-in mx-auto max-w-[960px] px-6 pt-24 pb-16 transition-opacity duration-300 ease-out sm:px-8 ${
-          mounted ? "opacity-100" : "opacity-0"
-        }`}
+        className="mx-auto max-w-[960px] px-6 pt-24 pb-16 sm:px-8"
       >
         <p className="sr-only">
           Live performance credits — drums for hip-hop sets, festival mainstages, theater productions. The list below is {items.length} curated highlights; the full career spans roughly {STATS.performances} documented performances since 2017, including DCI tours with Blue Knights, WGI seasons with Rhythm X and Dojo Percussion, marching band, jazz and percussion ensembles, and recent professional gigs across Columbus, Ohio.

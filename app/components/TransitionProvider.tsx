@@ -3,11 +3,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
-// Simplified in the "Calm" pass — no curtain, no scroll-lock, no mobile
-// fallback distinction. `triggerTransition` is just `router.push` now;
-// a 150ms opacity fade is handled by the `.page-fade-in` class on the
-// `<main>` wrapper of each page. The API shape is preserved so existing
-// callers compile.
+// Simplified — no curtain, no scroll-lock, no fade, no mobile fallback
+// distinction. `triggerTransition` is just `router.push` now; pages render
+// fully visible on first paint (nothing is gated on JS). The API shape is
+// preserved so existing callers compile.
 type TransitionContextValue = {
   triggerTransition: (href: string) => void;
   isTransitioning: boolean;

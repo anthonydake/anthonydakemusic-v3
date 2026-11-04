@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import FooterLine from "./FooterLine";
@@ -18,17 +18,6 @@ export default function HomeClient({
   initialSection = "hero",
   onOpenBooking,
 }: HomeClientProps) {
-  const reduceMotion = useMemo(
-    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    []
-  );
-  // Hero starts visible always — it's above the fold and must not depend on
-  // the observer (some touch browsers don't fire the first entry).
-  const [visible, setVisible] = useState<Record<SectionId, boolean>>(() =>
-    reduceMotion
-      ? { hero: true, services: true, proof: true }
-      : { hero: true, services: false, proof: false }
-  );
   const heroRef = useRef<HTMLElement | null>(null);
   const servicesRef = useRef<HTMLElement | null>(null);
   const proofRef = useRef<HTMLElement | null>(null);
@@ -40,44 +29,6 @@ export default function HomeClient({
     if (!target) return;
     target.scrollIntoView({ block: "start", behavior: "auto" });
   }, [initialSection]);
-
-  useEffect(() => {
-    if (reduceMotion) return;
-
-    const keys: SectionId[] = ["hero", "services", "proof"];
-    const revealAll = () =>
-      setVisible((prev) =>
-        prev.hero && prev.services && prev.proof ? prev : { hero: true, services: true, proof: true }
-      );
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const id = entry.target.getAttribute("data-id");
-          if (!id) return;
-          if (!entry.isIntersecting) return;
-          const key = id as SectionId;
-          if (!keys.includes(key)) return;
-          setVisible((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
-        });
-      },
-      { root: null, threshold: 0.08, rootMargin: "0px 0px -10% 0px" }
-    );
-
-    const nodes = document.querySelectorAll("[data-snap-section]");
-    nodes.forEach((node) => observer.observe(node));
-
-    // Fail-open fallbacks (see CLAUDE.md Home Page Anatomy).
-    const onScroll = () => revealAll();
-    window.addEventListener("scroll", onScroll, { passive: true, once: true });
-    const fallbackTimer = window.setTimeout(revealAll, 1200);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      window.clearTimeout(fallbackTimer);
-    };
-  }, [reduceMotion]);
 
   const names = useMemo(() => {
     const seen = new Set<string>();
@@ -91,15 +42,11 @@ export default function HomeClient({
     return out.join(" · ");
   }, []);
 
-  const fade = (on: boolean) =>
-    `transition-opacity duration-300 ease-out ${on ? "opacity-100" : "opacity-0"}`;
-
   return (
     <div className="bg-black">
       <section
         ref={heroRef}
         data-id="hero"
-        data-snap-section
         className="flex min-h-[88svh] flex-col items-center justify-center bg-black px-6 pt-14 pb-16 text-center"
       >
         <LogoArchitectOfSound showPortrait={false} />
@@ -116,8 +63,7 @@ export default function HomeClient({
       <section
         ref={servicesRef}
         data-id="services"
-        data-snap-section
-        className={`${fade(visible.services)} mx-auto max-w-[640px] px-6 py-16 sm:py-24`}
+        className="mx-auto max-w-[640px] px-6 py-16 sm:py-24"
       >
         <h2 className="text-[15px] text-[#F2F2F2] mb-6">What I do</h2>
         <div className="space-y-5 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
@@ -148,8 +94,7 @@ export default function HomeClient({
       <section
         ref={proofRef}
         data-id="proof"
-        data-snap-section
-        className={`${fade(visible.proof)} mx-auto max-w-[640px] px-6 py-16 sm:py-24`}
+        className="mx-auto max-w-[640px] px-6 py-16 sm:py-24"
       >
         <h2 className="text-[15px] text-[#F2F2F2] mb-6">Proof</h2>
         <p className="text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">

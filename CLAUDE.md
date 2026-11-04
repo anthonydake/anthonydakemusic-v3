@@ -41,7 +41,7 @@ Next.js App Router. Every public route uses the `page.tsx` (server, exports `met
 - `HomeMark.tsx` — Inline SVG of the AD serif monogram (Source Serif 4 outlines, solid `#E5EEFF` fill; the standalone `public/mark.svg` adds a thin `#3B82F6` ring, dropped here because the header pill already draws a ring). Rendered at 25×14 inside the 44px pill. The source SVGs live in `public/mark.svg` (with ring), `public/letters.svg` (no ring, same one inlined here), `public/mark-white.svg` (monochrome fallback).
 - `LogoArchitectOfSound.tsx` — Fraunces 300 name lockup. Hero passes `showPortrait={false}` (About carries the childhood photo). The h1 inside this component holds the page's single `.grad` gradient — every other instance of the gradient on a page is a deliberate violation.
 - `JsonLd.tsx` — `<script type="application/ld+json">` helper.
-- `TransitionProvider.tsx` — Thin wrapper preserving the `useTransition()` API shape (`triggerTransition`, `isTransitioning`, `prefersReducedMotion`, `isMobileFallback`) so pre-existing callers compile. `triggerTransition` is now just `router.push`; the curtain overlay was removed. Page transitions are a 150ms opacity fade via the `.page-fade-in` class on `<main>`.
+- `TransitionProvider.tsx` — Thin wrapper preserving the `useTransition()` API shape (`triggerTransition`, `isTransitioning`, `prefersReducedMotion`, `isMobileFallback`) so pre-existing callers compile. `triggerTransition` is now just `router.push`; the curtain overlay and the page fade were both removed. Pages render fully visible on first paint — nothing is gated on JS.
 - `Testimonials.tsx` — Editorial pull-quote block on About (quote `#BFBFBF` italic, name `#F2F2F2`, role `#5C5C5C` sentence case). Renders `null` while `testimonials` is empty.
 
 There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in the Calm pass. `TextScramble`, `CurtainOverlay`, `ColumbusTime`, `SiteFooter`, `FloatingCards`, `CustomCursor`, `LenisProvider`, `ArchiveModal`, `ScribbleLink`, `ScrambleText` are all gone.
@@ -53,7 +53,7 @@ There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in t
 - `data/practice.data.ts` — Practice log entries + exported `practiceEntries`, `totalSessions`, `firstSessionDate`. Current log goes through Session #7 (2026-05-18).
 - `data/testimonials.data.ts` — Empty by default. Populate to activate the About testimonials section.
 - `data/stats.ts` — `STATS.performances` and `STATS.placements` — approximate career totals displayed in the hero proof strip and the `Selected · N of ~total` subheader on `/placements` and `/performance`. Edit here and both the hero and index pages update together.
-- `lib/booking.ts` — `openBooking()` helper that dispatches a `window` `CustomEvent('open-booking')`. Both headers listen for it, so any component can trigger the booking modal without lifting state. See Gotcha #7.
+- `lib/booking.ts` — `openBooking()` helper that dispatches a `window` `CustomEvent('open-booking')`. Both headers listen for it, so any component can trigger the booking modal without lifting state. See Gotcha #6.
 - `lib/projects.ts` — Project type definitions + re-export of `projects` from the generated file.
 - `lib/projects.generated.ts` — Generated at build time by `scripts/generate-projects.mjs` from `content/projects.json`. Do NOT edit by hand; the `predev` / `prebuild` npm scripts regenerate it.
 
@@ -67,9 +67,9 @@ There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in t
 
 Then `<FooterLine />` (site-wide).
 
-Routing: `HomeClient` accepts `initialSection?: "hero" | "services" | "proof"` and `scrollIntoView`s the matching ref on mount. The section-id union is a **closed type** (Gotcha #10) — adding a value means updating the union, state shape, refs, and observer cast in one pass.
+Routing: `HomeClient` accepts `initialSection?: "hero" | "services" | "proof"` and `scrollIntoView`s the matching ref on mount. The section-id union is a **closed type** (Gotcha #8) — adding a value means updating the union and the refs in one pass.
 
-Fade-in: IntersectionObserver with `root: null`, `threshold: 0.08`, `rootMargin: "0px 0px -10% 0px"` flips `visible[key]` to true once (never back to false). **Hero starts `true` always** — some touch browsers never fired the first entry for the initial visible section. Fail-open fallbacks in the same effect: a `window` `scroll` listener (passive + once) and a 1200 ms `setTimeout` that both call `setVisible({ hero: true, services: true, proof: true })`. Both are torn down with the observer on unmount. Reduced-motion users start with everything visible. The transition is opacity only, 300 ms — no translate, no scale.
+No fades: all three sections render fully visible in the server HTML on first paint. There is no `IntersectionObserver`, no `visible` state, no `opacity-0` default, and nothing is gated on hydration. Content must never depend on JS to appear.
 
 ## Booking System
 
@@ -144,16 +144,13 @@ items.map((p) => {
 })
 ```
 
-### 4. SKIP-TO-CONTENT LINK
-Both headers render `<a href="#main-content" className="skip-to-content">`. Plain `sr-only`-style hide + `:focus` reveal to a white chip. No gradient trickery any more (Calm pass).
-
-### 5. TYPESCRIPT TIMERS
+### 4. TYPESCRIPT TIMERS
 `window.setInterval` returns `number`, but `ReturnType<typeof setInterval>` resolves to `NodeJS.Timeout`. Type timer IDs explicitly: `let intervalId: number | null = null`.
 
-### 6. VIEWPORT + SAFE AREAS
+### 5. VIEWPORT + SAFE AREAS
 `app/layout.tsx` ships `viewport-fit=cover` so `env(safe-area-inset-*)` is available on iOS. Safe-area padding is applied inline per-component (practice page modal, main-content wrappers) — there is no global rule for it.
 
-### 7. BOOKING MODAL STATE IS DUPLICATED (shared via `open-booking` event)
+### 6. BOOKING MODAL STATE IS DUPLICATED (shared via `open-booking` event)
 Both `SiteHeader.tsx` and `app/page.client.tsx` keep their own `bookingOpen` state and render their own `<BookingModal />`. Only one header is ever mounted at a time, so there is no conflict. Entry points:
 - The Book → button inside the header itself (both desktop nav and the mobile pill).
 - A prop callback — e.g. `HomeClient` receives `onOpenBooking` and forwards it to the service cards + the section-03 CTA.
@@ -161,7 +158,7 @@ Both `SiteHeader.tsx` and `app/page.client.tsx` keep their own `bookingOpen` sta
 
 There is no shared React context — the event is the shared channel.
 
-### 8. ASSET-GATED FEATURES — EMPTY IS CORRECT
+### 7. ASSET-GATED FEATURES — EMPTY IS CORRECT
 Two features render **nothing** in production when their data is empty:
 - `AUDIO_CLIPS` (`AudioShowcase.tsx`, now mounted on `/epk`) — empty → component returns `null`.
 - `testimonials` (`data/testimonials.data.ts`) — empty → `<Testimonials />` returns `null`.
@@ -170,8 +167,8 @@ The home hero intentionally no longer carries a video reel (Calm pass parked it 
 
 **Current state:** `AUDIO_CLIPS` is populated with four PLACEHOLDER excerpts from practice clips; `testimonials` has three PLACEHOLDER quotes attributed to "Placeholder Name". Replace with real audio and real quotes (with written permission). Do not invent new placeholder content, and do not "clean up" by emptying them unless Anthony asks.
 
-### 9. CLOSED SECTION-ID UNION
-`HomeClient`'s `initialSection` and the internal `visible` state both use the type `"hero" | "services" | "proof"`. The IntersectionObserver callback casts `data-id` to this type. Adding a new section means updating the type, the state shape, the observer cast, and the refs in one pass.
+### 8. CLOSED SECTION-ID UNION
+`HomeClient`'s `initialSection` uses the type `"hero" | "services" | "proof"`. Adding a new section means updating the type and the refs in one pass.
 
 ## Video Infrastructure
 
@@ -191,8 +188,6 @@ Header height: `h-14` (56px), `fixed inset-x-0 top-0 z-[9999]`, `bg-black/70 bac
 Layout: `grid grid-cols-[1fr_auto_1fr]`. On `md+`: left half has Placements / Performance, center has the HomeMark pill, right half has About + a `Book →` button (Practice was dropped from the nav in Batch 2). On `<md`: left cell holds a hamburger button; the right cell holds a compact `Book →` pill (same style, `text-[10px] px-3 py-1.5`, `min-h-11` for tap target) so booking is one tap away without opening the hamburger. The desktop nav is hidden. Hamburger opens a fullscreen overlay (`fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm md:hidden`) with three links (Placements, Performance, About) + Book button, each with `onClick={() => setMenuOpen(false)}`.
 
 **Home page scroll (all devices):** normal document flow. No snap, no wheel-hijack, no `no-scroll`, no `overflow-y-hidden`. Calm pass removed the leftover `.no-scroll` CSS too.
-
-Skip-to-content: both headers render it above the `<header>` element, mapped to `#main-content`.
 
 Per-page top padding (verified from the code):
 - `/` (home) — `pt-14` on the `#main-content` wrapper (header is translucent, hero bleeds behind).
@@ -230,7 +225,7 @@ One idea per screen. One primary CTA style. One gradient per page. Solid text, n
 
 **Buttons.** One primary: `.epk-cta` — white pill, black text, no shadow, no glow, no hover-lift, hover-only `background-color: #E6E6E6`. One secondary: a plain text link with ` →`. No bordered pills, no outlined buttons — except the header `Book →` pill, which keeps its thin border (the single exception).
 
-**Motion.** No scramble, no curtain, no `-translate-y` hover lifts, no shadow pulses. Page transitions are a 150 ms opacity fade via `.page-fade-in` on `<main>`. Section fade-ins are 300 ms opacity only (no translate/scale). All animations respect `prefers-reduced-motion`.
+**Motion.** No scramble, no curtain, no `-translate-y` hover lifts, no shadow pulses. No page fade, no section fade-ins — every page is fully visible in the server HTML on first paint, because content must never be gated on JS (phones held pages invisible for seconds). Only motion left is link/color hover transitions. All animations respect `prefers-reduced-motion`.
 
 **Decoration.** Removed: eyebrows (`(02) — services`, `(IDX·01)`, `(BIO·01)`, `(LOG·01)`, `(EPK·01)`), corner labels (`INDEX OF 9`, `RECENT HIGHLIGHTS`, `ELECTRONIC PRESS KIT`), sub-captions under CTAs (`PDF · credits, reel, contact`), and card borders around content. Sections get at most one short heading in sentence case (`What I do`, `Proof`, `Listen`, `Contact`). Separate groups with whitespace (`py-16 sm:py-24`) and a single hairline `border-t` where needed.
 

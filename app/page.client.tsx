@@ -38,9 +38,6 @@ function HomeInner() {
 
   return (
     <>
-      <a href="#main-content" className="skip-to-content">
-        Skip to content
-      </a>
       <div className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-black/70 backdrop-blur">
         <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[12px] uppercase tracking-[0.18em] text-[#9A9A9A]">
           <div className="justify-self-start">
@@ -153,7 +150,7 @@ function HomeInner() {
       <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
 
 
-      <div id="main-content" className="page-fade-in pt-14">
+      <div id="main-content" className="pt-14">
         <HomeClient onOpenBooking={openBooking} />
       </div>
     </>

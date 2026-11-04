@@ -10,7 +10,7 @@ export default function EPKClient() {
       <SiteHeader />
       <main
         id="main-content"
-        className="page-fade-in mx-auto max-w-[760px] bg-black px-6 pt-24 pb-16 text-[#F2F2F2] sm:px-8"
+        className="mx-auto max-w-[760px] bg-black px-6 pt-24 pb-16 text-[#F2F2F2] sm:px-8"
       >
         <header className="mb-10 text-center">
           <h1 className="grad font-serif-display text-[40px] leading-tight tracking-[-0.02em] sm:text-[52px]">

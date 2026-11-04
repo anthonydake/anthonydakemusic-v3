@@ -8,7 +8,7 @@ export default function NotFound() {
       <SiteHeader />
       <main
         id="main-content"
-        className="page-fade-in flex min-h-[70vh] flex-col items-center justify-center bg-black px-6 pt-24 text-[#F2F2F2]"
+        className="flex min-h-[70vh] flex-col items-center justify-center bg-black px-6 pt-24 text-[#F2F2F2]"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/mark.svg" alt="" width={64} height={64} className="mb-6 opacity-90" />
