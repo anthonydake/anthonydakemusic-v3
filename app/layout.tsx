@@ -29,11 +29,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "/",
-    types: {
-      "application/rss+xml": [
-        { url: "/practice/feed.xml", title: "Anthony Dake — Practice Log" },
-      ],
-    },
   },
   openGraph: {
     type: "website",

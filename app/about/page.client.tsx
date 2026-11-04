@@ -218,6 +218,10 @@ export default function AboutClient() {
           <Link href="/epk" className="transition-colors hover:text-white/90">
             <span>Press kit →</span>
           </Link>
+          <span className="opacity-40">·</span>
+          <Link href="/practice" className="transition-colors hover:text-white/90">
+            <span>Practice journal →</span>
+          </Link>
         </p>
       </main>
     </>

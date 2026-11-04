@@ -93,9 +93,6 @@ function HomeInner() {
             </button>
             {/* Desktop: right half of nav */}
             <nav className="hidden items-center gap-8 md:flex">
-              <Link className="hover:text-white py-3" href="/practice">
-                Practice
-              </Link>
               <Link className="hover:text-white py-3" href="/about">
                 About
               </Link>
@@ -134,13 +131,6 @@ function HomeInner() {
               onClick={() => setMenuOpen(false)}
             >
               Performance
-            </Link>
-            <Link
-              className="w-full text-center py-4 text-[14px] uppercase tracking-[0.28em] text-white/70 hover:text-white transition-colors"
-              href="/practice"
-              onClick={() => setMenuOpen(false)}
-            >
-              Practice
             </Link>
             <Link
               className="w-full text-center py-4 text-[14px] uppercase tracking-[0.28em] text-white/70 hover:text-white transition-colors"

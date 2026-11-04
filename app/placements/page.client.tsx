@@ -149,7 +149,6 @@ export default function ProjectsIndexClient() {
           <YearGroups items={items} revealCount={revealCount} />
           <nav aria-label="Related sections" className="mt-12 mb-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[10px] uppercase tracking-[0.22em] text-white/35">
             <Link href="/performance" className="hover:text-white/70 transition-colors">See live performance →</Link>
-            <Link href="/practice" className="hover:text-white/70 transition-colors">Practice log →</Link>
             <Link href="/epk" className="hover:text-white/70 transition-colors">Press kit →</Link>
           </nav>
         </section>
