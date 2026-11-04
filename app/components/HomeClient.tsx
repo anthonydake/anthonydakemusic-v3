@@ -4,8 +4,14 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import TextScramble from "./TextScramble";
+import AudioShowcase from "./AudioShowcase";
 import { useTransition } from "./TransitionProvider";
 import { projectIndex } from "../../data/projects.data";
+
+// Hero reel. Set to the public Vercel Blob URL of an H.264 .mp4 (muted, ~8–15s loop, ≤ ~6MB) to activate.
+// Upload with: npm run upload-media -- <local-file> hero/<name>.mp4   (see CLAUDE.md → Media assets)
+const HERO_VIDEO_URL: string | null = null;
+const HERO_VIDEO_POSTER = "/anthony-dake-drums.jpg";
 
 type HomeClientProps = {
   initialSection?: "hero" | "services" | "epk";
@@ -42,6 +48,7 @@ export default function HomeClient({
   const [snapAnimating, setSnapAnimating] = useState(false);
   const [pillReady, setPillReady] = useState(false);
   const [scrambleRun, setScrambleRun] = useState(0);
+  const [showHeroVideo, setShowHeroVideo] = useState(false);
   const retriggerScramble = () => setScrambleRun((n) => n + 1);
   const heroRef = useRef<HTMLElement | null>(null);
   const servicesRef = useRef<HTMLElement | null>(null);
@@ -207,6 +214,13 @@ export default function HomeClient({
     return () => window.clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (!HERO_VIDEO_URL) return;
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setShowHeroVideo(true);
+  }, []);
+
   return (
     <div
       ref={containerRef}
@@ -219,10 +233,27 @@ export default function HomeClient({
     >
       <section
         ref={heroRef}
-        className="relative grid h-screen place-items-center snap-start bg-black"
+        className="relative grid h-screen place-items-center overflow-hidden snap-start bg-black"
         data-id="hero"
         data-snap-section
       >
+        {showHeroVideo && HERO_VIDEO_URL && (
+          <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={HERO_VIDEO_POSTER}
+              aria-hidden="true"
+              className="h-full w-full object-cover opacity-40"
+            >
+              <source src={HERO_VIDEO_URL} type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
+          </div>
+        )}
         <div className="relative z-10 -translate-y-[50px]">
           <div
             className={[
@@ -466,6 +497,7 @@ export default function HomeClient({
           <p className="text-[11px] uppercase tracking-[0.3em] opacity-40">
             <span>(02) — services</span>
           </p>
+          <AudioShowcase />
           <div className="grid w-full max-w-3xl grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
             <ServiceCard
               title="Live Performance"
