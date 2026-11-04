@@ -1,117 +1,61 @@
 "use client";
 
 import SiteHeader from "../components/SiteHeader";
+import AudioShowcase from "../components/AudioShowcase";
+import FooterLine from "../components/FooterLine";
 
 export default function EPKClient() {
   return (
     <>
       <SiteHeader />
-      <main id="main-content" className="flex h-[100dvh] overflow-hidden flex-col items-center justify-start bg-black px-4 pt-20 sm:pt-24 pb-6 sm:pb-8">
-        <div className="mx-auto w-full max-w-[800px] flex flex-col items-center">
+      <main
+        id="main-content"
+        className="page-fade-in mx-auto max-w-[640px] bg-black px-6 pt-24 pb-16 text-[#F2F2F2] sm:px-8"
+      >
+        <header className="mb-10">
+          <h1 className="grad font-serif-display text-[40px] leading-tight tracking-[-0.02em] sm:text-[52px]">
+            Press kit
+          </h1>
+        </header>
 
-          {/* Title block */}
-          <div className="mb-6 flex w-full items-baseline justify-between gap-4">
-            <span className="text-[11px] uppercase tracking-[0.28em] opacity-50">
-              (EPK·01)
-            </span>
-            <h1 className="text-[18px] uppercase tracking-[0.2em] font-light sm:text-[22px]">
-              press kit
-            </h1>
-            <span className="hidden sm:inline text-[10px] uppercase tracking-[0.22em] opacity-30">
-              electronic press kit
-            </span>
-          </div>
-
-          {/* ── One-sheet (PDF) ─────────────────── */}
-          <div className="mb-3 text-center">
-            <a
-              href="/Anthony_Dake_Resume.pdf"
-              download
-              className="epk-cta epk-cta-glow inline-flex items-center justify-center rounded-full px-6 py-2.5 text-[12px] sm:px-7 sm:py-2.5 sm:text-[12px] uppercase tracking-[0.3em] font-semibold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              One-sheet (PDF)
-            </a>
-            <p className="mt-2 text-center text-[9px] uppercase tracking-[0.14em] text-white/20">
-              <span>PDF &middot; credits, reel, contact</span>
-            </p>
-          </div>
-
-          {/* ── Demo Reel ────────────────────────────── */}
-          <div className="w-full aspect-video rounded-xl overflow-hidden bg-[#111] border border-white/10 shadow-2xl">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/gwNaFJyhTXo?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&color=white"
-              title="Anthony Dake — Demo Reel"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              loading="lazy"
-            />
-          </div>
-
-          {/* ── Connect + Contact (condensed below video) ──── */}
-          <div className="mt-4 sm:mt-6 flex flex-col items-center gap-3 sm:gap-4">
-            {/* Social icons row */}
-            <div className="flex items-center gap-3 sm:gap-5">
-              {/* YouTube */}
-              <a
-                className="group inline-flex h-[44px] w-[44px] sm:h-[50px] sm:w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-                href="https://www.youtube.com/@anthony_dake"
-                target="_blank"
-                rel="noreferrer me"
-                aria-label="YouTube"
-              >
-                <svg viewBox="0 0 24 24" className="h-[32px] w-[32px] transition group-hover:brightness-110">
-                  <defs>
-                    <linearGradient id="epkGradYT" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#3B82F6" />
-                      <stop offset="60%" stopColor="#8EC5FF" />
-                      <stop offset="100%" stopColor="#FFFFFF" />
-                    </linearGradient>
-                  </defs>
-                  <rect x="3.5" y="7" width="17" height="10" rx="3" ry="3" fill="none" stroke="url(#epkGradYT)" strokeWidth="1.5" />
-                  <polygon points="11,9.5 15,12 11,14.5" fill="url(#epkGradYT)" />
-                </svg>
-              </a>
-
-              {/* TikTok */}
-              <a
-                className="group inline-flex h-[44px] w-[44px] sm:h-[50px] sm:w-[50px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-                href="https://www.tiktok.com/@anthony_dake"
-                target="_blank"
-                rel="noreferrer me"
-                aria-label="TikTok"
-              >
-                <svg viewBox="0 0 24 24" className="h-[32px] w-[32px] transition group-hover:brightness-110">
-                  <defs>
-                    <linearGradient id="epkGradTT" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#3B82F6" />
-                      <stop offset="60%" stopColor="#8EC5FF" />
-                      <stop offset="100%" stopColor="#FFFFFF" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M12.3 5.1v7.7l-1.6 1" fill="none" stroke="url(#epkGradTT)" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M12.3 6.2c1.1 1.5 2.6 2.3 4.6 2.5" fill="none" stroke="url(#epkGradTT)" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="9.6" cy="16" r="2.9" fill="none" stroke="url(#epkGradTT)" strokeWidth="1.7" />
-                </svg>
-              </a>
-
-            </div>
-
-            {/* Plain-text contact line */}
-            <p className="text-center text-[11px] uppercase tracking-[0.22em] text-white/50">
-              <a href="mailto:adakemusic@gmail.com" className="hover:text-white/90 transition-colors">
-                <span>adakemusic@gmail.com</span>
-              </a>
-              <span className="mx-2 opacity-40">·</span>
-              <span>Columbus, OH</span>
-              <span className="mx-2 opacity-40">·</span>
-              <span>fly dates nationwide</span>
-            </p>
-
-          </div>
-
+        <div className="mb-12">
+          <a href="/Anthony_Dake_Resume.pdf" download className="epk-cta">
+            One-sheet (PDF) →
+          </a>
         </div>
+
+        <div className="mb-12 aspect-video w-full overflow-hidden rounded-xl border border-white/[0.08] bg-black">
+          <iframe
+            className="h-full w-full"
+            src="https://www.youtube.com/embed/gwNaFJyhTXo?playsinline=1&rel=0&modestbranding=1&color=white"
+            title="Anthony Dake — Demo Reel"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            loading="lazy"
+          />
+        </div>
+
+        <section className="mb-12">
+          <h2 className="mb-4 text-[15px] text-[#F2F2F2]">Listen</h2>
+          <AudioShowcase />
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-[15px] text-[#F2F2F2]">Contact</h2>
+          <p className="text-[15px] leading-[1.6] text-[#9A9A9A]">
+            <a
+              href="mailto:adakemusic@gmail.com"
+              className="text-[#F2F2F2] hover:text-[#9A9A9A] transition-colors"
+            >
+              adakemusic@gmail.com
+            </a>
+          </p>
+          <p className="mt-1 text-[15px] leading-[1.6] text-[#9A9A9A]">
+            Columbus, OH · fly dates nationwide
+          </p>
+        </section>
       </main>
+      <FooterLine />
     </>
   );
 }

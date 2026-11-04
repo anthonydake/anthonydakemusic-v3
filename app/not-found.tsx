@@ -1,32 +1,23 @@
 import Link from "next/link";
 import SiteHeader from "./components/SiteHeader";
+import FooterLine from "./components/FooterLine";
 
 export default function NotFound() {
   return (
     <>
       <SiteHeader />
-      <main id="main-content" className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-6">
+      <main
+        id="main-content"
+        className="page-fade-in flex min-h-[70vh] flex-col items-center justify-center bg-black px-6 pt-24 text-[#F2F2F2]"
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/mark.svg" alt="" width={96} height={96} className="mb-6 opacity-90" />
-        <h1 className="text-2xl font-light tracking-widest uppercase mb-4">
-          <span>Page not found</span>
-        </h1>
-        <p className="text-white/50 text-sm tracking-wider uppercase mb-8">
-          <span>This page doesn&#39;t exist — but the music does.</span>
-        </p>
-        <Link
-          href="/"
-          className="border border-white/20 rounded-full px-8 py-3 text-sm uppercase tracking-widest hover:bg-white/10 transition-colors"
-        >
-          <span>Go Home</span>
+        <img src="/mark.svg" alt="" width={64} height={64} className="mb-6 opacity-90" />
+        <p className="text-[15px] text-[#9A9A9A]">This page doesn&apos;t exist.</p>
+        <Link href="/" className="mt-6 text-[15px] text-[#F2F2F2] hover:text-[#9A9A9A] transition-colors">
+          Home →
         </Link>
-        <nav aria-label="Site sections" className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[10px] uppercase tracking-[0.22em] text-white/35">
-          <Link href="/placements" className="hover:text-white/70 transition-colors">Placements</Link>
-          <Link href="/performance" className="hover:text-white/70 transition-colors">Performance</Link>
-          <Link href="/epk" className="hover:text-white/70 transition-colors">EPK</Link>
-          <Link href="/about" className="hover:text-white/70 transition-colors">About</Link>
-        </nav>
       </main>
+      <FooterLine />
     </>
   );
 }

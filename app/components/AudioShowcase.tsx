@@ -82,7 +82,7 @@ export default function AudioShowcase() {
               onClick={() => handleToggle(clip)}
               aria-label={`${isActive ? "Pause" : "Play"} ${clip.label} clip`}
               aria-pressed={isActive}
-              className="group relative inline-flex h-[52px] w-[52px] items-center justify-center rounded-full border border-white/10 bg-black/70 shadow-sm transition hover:-translate-y-0.5 hover:border-white/30 hover:shadow-md sm:h-[56px] sm:w-[56px]"
+              className="group relative inline-flex h-[52px] w-[52px] items-center justify-center rounded-full border border-white/10 bg-black/70 transition-colors hover:border-white/30 sm:h-[56px] sm:w-[56px]"
             >
               <svg viewBox="0 0 48 48" className="h-full w-full" aria-hidden="true">
                 <defs>
@@ -159,9 +159,7 @@ export default function AudioShowcase() {
                 }}
               />
             </button>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 sm:text-[11px]">
-              <span>{clip.label}</span>
-            </span>
+            <span className="text-[12px] text-[#9A9A9A]">{clip.label}</span>
           </div>
         );
       })}

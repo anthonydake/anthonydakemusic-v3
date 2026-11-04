@@ -30,9 +30,8 @@ export default function SiteHeader() {
         Skip to content
       </a>
       <header className="fixed inset-x-0 top-0 z-[9999] isolate h-14 bg-black/70 backdrop-blur">
-        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[12px] uppercase tracking-[0.28em] text-white/65">
+        <div className="mx-auto grid h-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-6 text-[12px] uppercase tracking-[0.18em] text-[#9A9A9A]">
           <div className="justify-self-start">
-            {/* Mobile: hamburger button */}
             <button
               className="md:hidden inline-flex h-11 w-11 items-center justify-center"
               onClick={() => setMenuOpen(!menuOpen)}
@@ -54,40 +53,37 @@ export default function SiteHeader() {
                 )}
               </svg>
             </button>
-            {/* Desktop: left half of nav */}
             <nav className="hidden items-center gap-8 md:flex">
-              <Link className="hover:text-white py-3" href="/placements">
+              <Link className="py-3 hover:text-[#F2F2F2] transition-colors" href="/placements">
                 Placements
               </Link>
-              <Link className="hover:text-white py-3" href="/performance">
+              <Link className="py-3 hover:text-[#F2F2F2] transition-colors" href="/performance">
                 Performance
               </Link>
             </nav>
           </div>
           <Link
             href="/"
-            className="home-nav group inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black transition-colors hover:border-white/20"
           >
             <HomeMark />
           </Link>
           <div className="justify-self-end">
-            {/* Mobile: compact Book pill */}
             <button
               type="button"
               onClick={openBooking}
-              className="md:hidden inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              className="md:hidden inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-[#9A9A9A] transition-colors hover:text-[#F2F2F2]"
             >
               Book →
             </button>
-            {/* Desktop: right half of nav */}
             <nav className="hidden items-center gap-8 md:flex">
-              <Link className="hover:text-white py-3" href="/about">
+              <Link className="py-3 hover:text-[#F2F2F2] transition-colors" href="/about">
                 About
               </Link>
               <button
                 type="button"
                 onClick={openBooking}
-                className="ml-2 rounded-full border border-white/20 px-5 py-1.5 text-[11px] uppercase tracking-[0.2em] text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                className="ml-2 rounded-full border border-white/20 px-5 py-1.5 text-[11px] uppercase tracking-[0.18em] text-[#9A9A9A] transition-colors hover:text-[#F2F2F2]"
               >
                 Book →
               </button>
@@ -96,7 +92,6 @@ export default function SiteHeader() {
         </div>
       </header>
 
-      {/* Mobile dropdown menu */}
       {menuOpen && (
         <div
           className="fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm md:hidden"
@@ -107,21 +102,21 @@ export default function SiteHeader() {
             onClick={(e) => e.stopPropagation()}
           >
             <Link
-              className="w-full text-center py-4 text-[14px] uppercase tracking-[0.28em] text-white/70 hover:text-white transition-colors"
+              className="w-full py-4 text-center text-[14px] uppercase tracking-[0.18em] text-[#9A9A9A] hover:text-[#F2F2F2] transition-colors"
               href="/placements"
               onClick={() => setMenuOpen(false)}
             >
               Placements
             </Link>
             <Link
-              className="w-full text-center py-4 text-[14px] uppercase tracking-[0.28em] text-white/70 hover:text-white transition-colors"
+              className="w-full py-4 text-center text-[14px] uppercase tracking-[0.18em] text-[#9A9A9A] hover:text-[#F2F2F2] transition-colors"
               href="/performance"
               onClick={() => setMenuOpen(false)}
             >
               Performance
             </Link>
             <Link
-              className="w-full text-center py-4 text-[14px] uppercase tracking-[0.28em] text-white/70 hover:text-white transition-colors"
+              className="w-full py-4 text-center text-[14px] uppercase tracking-[0.18em] text-[#9A9A9A] hover:text-[#F2F2F2] transition-colors"
               href="/about"
               onClick={() => setMenuOpen(false)}
             >
@@ -130,7 +125,7 @@ export default function SiteHeader() {
             <button
               type="button"
               onClick={openBooking}
-              className="mt-4 w-full rounded-full border border-white/30 py-3 text-[13px] uppercase tracking-[0.28em] text-white/90 transition-colors hover:bg-white/10 hover:text-white"
+              className="mt-4 w-full rounded-full border border-white/30 py-3 text-[13px] uppercase tracking-[0.18em] text-[#F2F2F2] transition-colors hover:border-white/50"
             >
               Book →
             </button>

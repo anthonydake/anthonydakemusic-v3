@@ -1,25 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   practiceEntries,
   type PracticeEntry,
-  type ContentType,
   type VideoClip,
 } from "@/data/practice.data";
 import SiteHeader from "@/app/components/SiteHeader";
-
-const contentBadgeStyles: Record<ContentType, string> = {
-  video: "bg-red-500/15 text-red-400 border-red-500/20",
-  pdf: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
-  photos: "bg-amber-500/15 text-amber-400 border-amber-500/20",
-};
-
-const contentLabels: Record<ContentType, string> = {
-  video: "Video",
-  pdf: "PDF",
-  photos: "Photos",
-};
+import FooterLine from "@/app/components/FooterLine";
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr + "T12:00:00");
@@ -52,278 +40,157 @@ function groupByDate(entries: PracticeEntry[]): Map<string, PracticeEntry[]> {
 export default function PracticePageClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeVideo, setActiveVideo] = useState<{ entryId: string; clip: VideoClip } | null>(null);
-  const [revealCount, setRevealCount] = useState(0);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const filteredEntries = useMemo(() => {
     if (!searchQuery.trim()) return practiceEntries;
     const q = searchQuery.toLowerCase();
     return practiceEntries.filter(
-      (e) =>
-        e.title.toLowerCase().includes(q) ||
-        e.description.toLowerCase().includes(q)
+      (e) => e.title.toLowerCase().includes(q) || e.description.toLowerCase().includes(q)
     );
   }, [searchQuery]);
 
   const dateGroups = useMemo(() => groupByDate(filteredEntries), [filteredEntries]);
 
-  // Staggered reveal animation
   useEffect(() => {
-    const total = filteredEntries.length;
-    if (total === 0) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      setRevealCount(total);
-      return;
-    }
-    let count = 0;
-    let intervalId: number | null = null;
-    setRevealCount(0);
-    const t = window.setTimeout(() => {
-      count = 1;
-      setRevealCount(1);
-      intervalId = window.setInterval(() => {
-        count += 1;
-        setRevealCount(count);
-        if (count >= total && intervalId) window.clearInterval(intervalId);
-      }, 100);
-    }, 100);
-    return () => {
-      window.clearTimeout(t);
-      if (intervalId) window.clearInterval(intervalId);
-    };
-  }, [filteredEntries.length]);
-
-  // Lock body scroll
-  useEffect(() => {
+    if (!activeVideo) return;
     const { style } = document.body;
     const prev = style.overflow;
     style.overflow = "hidden";
     return () => {
       style.overflow = prev;
     };
-  }, []);
-
-  let flatIndex = 0;
+  }, [activeVideo]);
 
   return (
-    <div className="relative bg-black text-white h-screen overflow-hidden">
+    <div className="bg-black text-[#F2F2F2]">
       <SiteHeader />
       <main
         id="main-content"
-        className="relative z-[10] mx-auto max-w-3xl px-6 pb-24 pt-[120px] sm:pt-[160px] sm:px-8 h-[calc(100svh-56px)] overflow-hidden flex flex-col"
-        style={{ paddingLeft: "max(1.5rem, env(safe-area-inset-left, 1.5rem))", paddingRight: "max(1.5rem, env(safe-area-inset-right, 1.5rem))", paddingBottom: "max(6rem, calc(6rem + env(safe-area-inset-bottom, 0px)))" }}
+        className="page-fade-in mx-auto max-w-[640px] px-6 pt-24 pb-16 sm:px-8"
       >
-        {/* Header */}
-        <div className="mb-8 flex-shrink-0">
-          <p className="mb-2 text-[11px] uppercase tracking-[0.28em] opacity-50">
-            <span>(LOG·01)</span>
-          </p>
-          <h1 className="text-[28px] sm:text-[36px] font-light tracking-[0.3em] uppercase mb-2">
-            <span>Practice</span>
+        <header className="mb-10">
+          <h1 className="grad font-serif-display text-[40px] leading-tight tracking-[-0.02em] sm:text-[52px]">
+            Practice
           </h1>
-          <p className="text-[12px] uppercase tracking-[0.28em] text-white/40 mb-6">
-            <span>
-              {practiceEntries[0]
-                ? `Practice journal · Last session ${formatLastSessionDate(practiceEntries[0].date)}`
-                : "Practice journal"}
-            </span>
+          <p className="mt-2 text-[15px] text-[#9A9A9A]">
+            {practiceEntries[0]
+              ? `Practice journal · Last session ${formatLastSessionDate(practiceEntries[0].date)}`
+              : "Practice journal"}
           </p>
+        </header>
 
-          {/* Search */}
-          <div className="relative">
-            <input
-              type="text"
-              aria-label="Search practice sessions" placeholder="Search sessions..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-[12px] tracking-wider text-white/80 placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                aria-label="Clear search" className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 text-[16px] w-11 h-11 flex items-center justify-center"
-              >
-                <span>×</span>
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Timeline */}
-        <div
-          ref={scrollRef}
-          className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-2"
-          style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
-        >
-          {filteredEntries.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-white/30 text-[12px] uppercase tracking-widest">
-                <span>No sessions found</span>
-              </p>
-            </div>
-          ) : (
-            <div className="relative pl-6">
-              {/* Timeline rail */}
-              <div className="absolute left-[7px] top-0 bottom-0 w-px bg-white/10" />
-
-              {Array.from(dateGroups.entries()).map(([date, entries]) => {
-                const dateEntries = entries.filter((_, i) => {
-                  const idx = filteredEntries.indexOf(entries[i]);
-                  return idx < revealCount;
-                });
-                if (dateEntries.length === 0) return null;
-
-                return (
-                  <div key={date} className="mb-8">
-                    {/* Date header */}
-                    <div className="relative flex items-center mb-4">
-                      <div className="absolute -left-6 w-[15px] h-[15px] rounded-full border-2 border-blue-400/60 bg-black flex items-center justify-center">
-                        <div className="w-[5px] h-[5px] rounded-full bg-blue-400" />
-                      </div>
-                      <time dateTime={date} className="text-[12px] uppercase tracking-[0.28em] text-white/50">
-                        {formatDate(date)}
-                      </time>
-                    </div>
-
-                    {/* Entries for this date */}
-                    <div className="space-y-3">
-                      {dateEntries.map((entry) => {
-                        flatIndex++;
-                        return (
-                          <div
-                            key={entry.id}
-                            className="relative group border border-white/[0.06] rounded-lg p-4 sm:p-5 hover:border-white/15 transition-colors bg-white/[0.02]"
-                          >
-                            {/* Session number + duration */}
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-[12px] uppercase tracking-[0.3em] text-white/30">
-                                Session #{entry.sessionNumber}
-                              </span>
-                              <span className="text-[12px] uppercase tracking-[0.3em] text-white/30">
-                                {entry.duration} min
-                              </span>
-                            </div>
-
-                            {/* Title */}
-                            <h3 className="text-[14px] sm:text-[15px] font-medium tracking-wide mb-2 leading-snug">
-                              <span>{entry.title}</span>
-                            </h3>
-
-                            {/* Description */}
-                            <p className="text-[12px] leading-relaxed text-white/50 mb-3" style={{ overflowWrap: "break-word" }}>
-                              <span>{entry.description}</span>
-                            </p>
-
-                            {/* Content type badges */}
-                            {entry.contentTypes.length > 0 && (
-                              <div className="flex items-center gap-2">
-                                {entry.contentTypes.map((type) => (
-                                  <span
-                                    key={type}
-                                    className={`inline-flex items-center px-2.5 py-1 rounded text-[12px] uppercase tracking-wider border ${contentBadgeStyles[type]}`}
-                                  >
-                                    {contentLabels[type]}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
-
-                            {/* Video clips */}
-                            {entry.videos && entry.videos.length > 0 && (
-                              <div className="mt-4 space-y-2">
-                                <span className="text-[12px] uppercase tracking-[0.2em] text-white/40">
-                                  {entry.videos.length} clips
-                                </span>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
-                                  {entry.videos.map((clip, clipIdx) => (
-                                    <button
-                                      key={clipIdx}
-                                      onClick={() => setActiveVideo({ entryId: entry.id, clip })}
-                                      className="group relative bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 hover:border-white/20 transition-all min-h-[44px] active:scale-[0.97]"
-                                    >
-                                      <span className="flex items-center gap-2 min-w-0">
-                                        <span className="text-white/60 group-hover:text-white/90 transition-colors flex-shrink-0">
-                                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                                        </span>
-                                        <span className="text-[12px] text-white/50 group-hover:text-white/70 transition-colors leading-tight truncate">
-                                          {clip.label}
-                                        </span>
-                                      </span>
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* Timeline end dot */}
-              <div className="relative flex items-center">
-                <div className="absolute -left-6 w-[15px] h-[15px] rounded-full border-2 border-white/20 bg-black" />
-                <span className="text-[12px] uppercase tracking-[0.3em] text-white/20">
-                  The beginning
-                </span>
-              </div>
-            </div>
+        <div className="relative mb-10">
+          <input
+            type="text"
+            aria-label="Search practice sessions"
+            placeholder="Search sessions…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="form-input"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              aria-label="Clear search"
+              className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-[18px] text-[#5C5C5C] hover:text-[#F2F2F2] transition-colors"
+            >
+              ×
+            </button>
           )}
         </div>
-      </main>
 
-      {/* Video Player Modal */}
+        {filteredEntries.length === 0 ? (
+          <p className="py-16 text-center text-[15px] text-[#5C5C5C]">No sessions found</p>
+        ) : (
+          <div className="relative pl-6">
+            <div className="absolute left-[7px] top-0 bottom-0 w-px bg-white/[0.08]" />
+
+            {Array.from(dateGroups.entries()).map(([date, entries]) => (
+              <div key={date} className="mb-10">
+                <div className="relative mb-4 flex items-center">
+                  <div className="absolute -left-6 h-[15px] w-[15px] rounded-full border border-white/20 bg-black" />
+                  <time dateTime={date} className="text-[12px] text-[#5C5C5C]">
+                    {formatDate(date)}
+                  </time>
+                </div>
+
+                <div className="space-y-6">
+                  {entries.map((entry) => (
+                    <article key={entry.id}>
+                      <p className="text-[12px] text-[#5C5C5C]">
+                        Session #{entry.sessionNumber} · {entry.duration} min
+                      </p>
+                      <h3 className="mt-1 text-[15px] text-[#F2F2F2]">{entry.title}</h3>
+                      <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A]">
+                        {entry.description}
+                      </p>
+                      {entry.videos && entry.videos.length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-[#9A9A9A]">
+                          {entry.videos.map((clip, i) => (
+                            <button
+                              key={i}
+                              onClick={() => setActiveVideo({ entryId: entry.id, clip })}
+                              className="hover:text-[#F2F2F2] transition-colors"
+                            >
+                              {clip.label} →
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <div className="relative flex items-center">
+              <div className="absolute -left-6 h-[15px] w-[15px] rounded-full border border-white/10 bg-black" />
+              <span className="text-[12px] text-[#5C5C5C]">The beginning</span>
+            </div>
+          </div>
+        )}
+      </main>
+      <FooterLine />
+
       {activeVideo && (
         <div
-          className="fixed inset-0 z-[10000] bg-black/95 flex flex-col"
+          className="fixed inset-0 z-[10000] flex flex-col bg-black/95"
           style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
           onClick={() => setActiveVideo(null)}
-          onKeyDown={(e) => { if (e.key === "Escape") setActiveVideo(null); }}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setActiveVideo(null);
+          }}
           tabIndex={0}
           role="dialog"
           aria-label={`Video: ${activeVideo.clip.label}`}
         >
-          {/* Close bar */}
-          <div className="flex items-center justify-between px-4 py-3 flex-shrink-0">
-            <span className="text-[12px] uppercase tracking-[0.2em] text-white/50">
-              {activeVideo.clip.label}
-            </span>
+          <div className="flex flex-shrink-0 items-center justify-between px-4 py-3">
+            <span className="text-[12px] text-[#9A9A9A]">{activeVideo.clip.label}</span>
             <button
               onClick={() => setActiveVideo(null)}
-              className="text-white/60 hover:text-white text-[12px] uppercase tracking-wider flex items-center gap-1.5 h-11 px-3 -mr-3"
+              className="-mr-3 flex h-11 items-center gap-1.5 px-3 text-[12px] text-[#9A9A9A] hover:text-[#F2F2F2] transition-colors"
             >
-              <span>Close</span>
-              <span className="text-[18px]">&times;</span>
+              Close <span className="text-[18px]">&times;</span>
             </button>
           </div>
-
-          {/* Video */}
           <div
-            className="flex-1 flex items-center justify-center px-2 sm:px-4 pb-4 min-h-0"
+            className="flex min-h-0 flex-1 items-center justify-center px-2 pb-4 sm:px-4"
             onClick={(e) => e.stopPropagation()}
           >
             <video
               key={activeVideo.clip.url}
               controls
               playsInline
-              className="w-full max-h-full rounded-lg"
+              className="max-h-full w-full rounded-lg"
               style={{ maxWidth: "56rem" }}
             >
               <source src={activeVideo.clip.url} type="video/mp4" />
               <source src={activeVideo.clip.url} type="video/quicktime" />
-              <span className="text-white/50">Your browser does not support video playback.</span>
+              <span className="text-[#9A9A9A]">Your browser does not support video playback.</span>
             </video>
           </div>
         </div>
       )}
-
-      <style jsx global>{`
-        .practice-scroll { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
-        .practice-scroll::-webkit-scrollbar { width: 0; height: 0; }
-      `}</style>
     </div>
   );
 }

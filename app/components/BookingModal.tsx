@@ -10,12 +10,12 @@ type BookingModalProps = {
 type Status = "idle" | "submitting" | "success" | "error";
 
 const EVENT_TYPES = [
-  "Live Performance / Concert",
-  "Studio Session (Remote)",
-  "Studio Session (In-Person)",
-  "Church / Worship",
-  "Corporate Event",
-  "Music Direction",
+  "Live performance / concert",
+  "Studio session (remote)",
+  "Studio session (in-person)",
+  "Church / worship",
+  "Corporate event",
+  "Music direction",
   "Other",
 ];
 
@@ -25,7 +25,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const [eventDate, setEventDate] = useState("");
   const [eventType, setEventType] = useState("");
   const [message, setMessage] = useState("");
-  // Honeypot — kept in component state but hidden from real users.
   const [website, setWebsite] = useState("");
 
   const todayIso = new Date().toISOString().slice(0, 10);
@@ -34,8 +33,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const firstFieldRef = useRef<HTMLInputElement | null>(null);
 
-  // Reset transient state each time the modal opens; keep field values in case
-  // the user re-opens after an error and wants to retry without re-typing.
   useEffect(() => {
     if (!isOpen) return;
     setStatus("idle");
@@ -43,7 +40,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     requestAnimationFrame(() => firstFieldRef.current?.focus());
   }, [isOpen]);
 
-  // Lock page scroll while the modal is open.
   useEffect(() => {
     if (!isOpen) return;
     const prev = document.body.style.overflow;
@@ -53,7 +49,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     };
   }, [isOpen]);
 
-  // Escape to close.
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -66,7 +61,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
-  // Tab focus trap within the dialog.
   useEffect(() => {
     if (!isOpen) return;
     const root = dialogRef.current;
@@ -91,7 +85,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     return () => root.removeEventListener("keydown", onKey);
   }, [isOpen]);
 
-  // Auto-close after success.
   useEffect(() => {
     if (status !== "success") return;
     const t = window.setTimeout(() => onClose(), 3000);
@@ -113,14 +106,13 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           eventDate: eventDate || null,
           eventType,
           message,
-          website, // honeypot
+          website,
         }),
       });
       if (!res.ok) {
         const data = (await res.json().catch(() => ({}))) as { error?: string };
         setErrorMessage(
-          data?.error ||
-            "Something went wrong. Try emailing adakemusic@gmail.com directly."
+          data?.error || "Something went wrong. Try emailing adakemusic@gmail.com directly."
         );
         setStatus("error");
         return;
@@ -132,14 +124,14 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
       setMessage("");
       setStatus("success");
     } catch {
-      setErrorMessage(
-        "Something went wrong. Try emailing adakemusic@gmail.com directly."
-      );
+      setErrorMessage("Something went wrong. Try emailing adakemusic@gmail.com directly.");
       setStatus("error");
     }
   };
 
   if (!isOpen) return null;
+
+  const labelClass = "mb-1 block text-[12px] text-[#9A9A9A]";
 
   return (
     <div
@@ -152,42 +144,30 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
         aria-modal="true"
         aria-label="Booking inquiry"
         onClick={(e) => e.stopPropagation()}
-        className="relative my-8 w-full max-w-lg rounded-xl border border-white/10 bg-black p-8 shadow-2xl"
+        className="relative my-8 w-full max-w-lg rounded-xl border border-white/[0.08] bg-black p-8"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Close booking form"
-          className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white/5"
+          className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-[#9A9A9A] transition-colors hover:text-[#F2F2F2]"
         >
-          <svg
-            viewBox="0 0 20 20"
-            fill="none"
-            aria-hidden="true"
-            className="h-5 w-5"
-            style={{ color: "rgba(255,255,255,0.65)" }}
-          >
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-5 w-5">
             <line x1="5" y1="5" x2="15" y2="15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             <line x1="15" y1="5" x2="5" y2="15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </button>
 
-        <p className="modal-label mb-1 text-[11px] uppercase tracking-[0.3em]">
-          Booking
-        </p>
-        <h2 className="modal-plain mb-6 text-2xl tracking-[0.04em]">
-          Let&apos;s talk about your project.
-        </h2>
+        <h2 className="mb-6 text-[20px] text-[#F2F2F2]">Let&apos;s talk about your project.</h2>
 
         {status === "success" ? (
           <div className="py-8 text-center">
-            <p className="modal-plain text-base leading-7">
-              Thanks &mdash; I&apos;ll get back to you within 24 hours.
+            <p className="text-[15px] leading-[1.6] text-[#F2F2F2]">
+              Thanks — I&apos;ll get back to you within 24 hours.
             </p>
           </div>
         ) : (
           <form onSubmit={onSubmit} className="flex flex-col gap-4">
-            {/* Honeypot — hidden from sighted users + screen readers, bots fill it. */}
             <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
               <label htmlFor="bk-website">Website</label>
               <input
@@ -200,12 +180,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               />
             </div>
             <div>
-              <label
-                htmlFor="bk-name"
-                className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
-              >
-                Name
-              </label>
+              <label htmlFor="bk-name" className={labelClass}>Name</label>
               <input
                 ref={firstFieldRef}
                 id="bk-name"
@@ -219,12 +194,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </div>
 
             <div>
-              <label
-                htmlFor="bk-email"
-                className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
-              >
-                Email
-              </label>
+              <label htmlFor="bk-email" className={labelClass}>Email</label>
               <input
                 id="bk-email"
                 type="email"
@@ -238,12 +208,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="bk-date"
-                  className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
-                >
-                  Event Date
-                </label>
+                <label htmlFor="bk-date" className={labelClass}>Event date</label>
                 <input
                   id="bk-date"
                   type="date"
@@ -254,12 +219,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 />
               </div>
               <div>
-                <label
-                  htmlFor="bk-type"
-                  className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
-                >
-                  Event Type
-                </label>
+                <label htmlFor="bk-type" className={labelClass}>Event type</label>
                 <select
                   id="bk-type"
                   required
@@ -280,12 +240,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </div>
 
             <div>
-              <label
-                htmlFor="bk-msg"
-                className="modal-label mb-1 block text-[11px] uppercase tracking-[0.15em]"
-              >
-                Message
-              </label>
+              <label htmlFor="bk-msg" className={labelClass}>Message</label>
               <textarea
                 id="bk-msg"
                 rows={3}
@@ -297,28 +252,16 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </div>
 
             {status === "error" && (
-              <p className="modal-error text-[12px] leading-5">
-                {errorMessage}
-              </p>
+              <p className="text-[12px] leading-5 text-[#F5A3A3]">{errorMessage}</p>
             )}
 
             <div className="mt-2 flex justify-end">
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="epk-cta inline-flex items-center justify-center gap-2 rounded-full px-10 py-3.5 text-[12px] font-semibold uppercase tracking-[0.3em] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+                className="epk-cta disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {status === "submitting" ? (
-                  <>
-                    <span
-                      aria-hidden="true"
-                      className="submit-label inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-r-transparent"
-                    />
-                    <span className="submit-label">Sending…</span>
-                  </>
-                ) : (
-                  <span className="submit-label">Send Inquiry</span>
-                )}
+                {status === "submitting" ? "Sending…" : "Send inquiry →"}
               </button>
             </div>
           </form>
