@@ -54,6 +54,8 @@ There is **no site-wide footer** (removed in `08c3b27`). `ColumbusTime.tsx` and 
 - `data/performance.data.ts` — Live performance credits list.
 - `data/practice.data.ts` — Practice log entries + exported `practiceEntries`, `totalSessions`, `firstSessionDate`. Current log goes through Session #7 (2026-05-18).
 - `data/testimonials.data.ts` — Empty by default. Populate to activate the About testimonials section.
+- `data/stats.ts` — `STATS.performances` and `STATS.placements` — approximate career totals displayed in the hero proof strip and the `Selected · N of ~total` subheader on `/placements` and `/performance`. Edit here and both the hero and index pages update together.
+- `lib/booking.ts` — `openBooking()` helper that dispatches a `window` `CustomEvent('open-booking')`. Both headers listen for it, so any component can trigger the booking modal without lifting state. See Gotcha #7.
 - `lib/projects.ts` — Project type definitions + re-export of `projects` from the generated file.
 - `lib/projects.generated.ts` — Generated at build time by `scripts/generate-projects.mjs` from `content/projects.json`. Do NOT edit by hand; the `predev` / `prebuild` npm scripts regenerate it.
 
@@ -61,13 +63,13 @@ There is **no site-wide footer** (removed in `08c3b27`). `ColumbusTime.tsx` and 
 
 `app/page.client.tsx` is a thin wrapper that owns the inline header + `BookingModal` state. The three snap sections are rendered inside `HomeClient.tsx`:
 
-1. **hero** (`data-id="hero"`) — `LogoArchitectOfSound`, scrambled proof strip (`~405 performances · ~52 placements`), EPK CTA pill, social-icon row. Can be overlaid with a background reel when `HERO_VIDEO_URL` is set.
+1. **hero** (`data-id="hero"`) — `LogoArchitectOfSound`, scrambled proof strip (`~{STATS.performances} performances · ~{STATS.placements} placements` from `data/stats.ts`), EPK CTA pill, social-icon row. When `HERO_VIDEO_URL` is set, the reel renders behind a `.hero-shade` linear-gradient + `.hero-vignette` radial-gradient (see Gotcha #2) at `opacity-25 sm:opacity-30`.
 2. **services** (`data-id="services"`) — `(02) — services` eyebrow, `<AudioShowcase />`, two `ServiceCard`s (Live Performance, Session Drums) wired to `onOpenBooking`, and a "Recent — index of N" placements strip linking to `/placements`.
-3. **epk** (`data-id="epk"`) — Closing booking panel + EPK CTA.
+3. **epk** (`data-id="epk"`) — Closing booking panel. Primary CTA is now a `Book →` button wired to `onOpenBooking` (not the EPK link). Below it: `Press kit →` text link to `/epk`, then a centered `Placements → · Performance →` link row that closes the page.
 
 Routing: `HomeClient` accepts `initialSection?: "hero" | "services" | "epk"` and will scroll to the matching ref on mount. The section-id union is a **closed type** — adding a fourth value is a breaking change throughout the file.
 
-Snap mechanics: `useLayoutEffect` sets `scrollTop` to the target section on mount. On desktop a `wheel` listener (prevents default + animates to the next section's `offsetTop`) and a `touchend` listener handle snapping. On mobile (`isMobileFallback`) the home swipes up to `nextHref` via `triggerTransition`. An IntersectionObserver with `threshold: [0.55, 0.8]` flips the per-section `visible` state that drives the fade-in.
+Snap mechanics (desktop only): `useLayoutEffect` sets `scrollTop` to the target section on mount; a `wheel` listener prevents default + animates to the next section's `offsetTop`; an IntersectionObserver with `threshold: [0.55, 0.8]` flips the per-section `visible` state that drives the fade-in. On touch devices (`isMobileFallback`) **everything is native**: no wheel snap, no touch swipe navigation, no `no-scroll` on `html/body`, and the IntersectionObserver uses `root: null` (viewport) with a lower threshold so fade-ins trigger as sections scroll into view. The three sections stack and scroll naturally.
 
 ## Booking System
 
@@ -136,7 +138,9 @@ Edit `data/testimonials.data.ts` — add real entries only, with written permiss
 - `app/page.client.tsx` (home page)
 
 ### 2. GRADIENT TEXT SYSTEM — BARE TEXT IN DIVS IS INVISIBLE
-`globals.css` sets `body { color: transparent; background-clip: text }` with the gradient painted onto leaf elements (`p`, `span`, `a`, `h1`–`h6`, `button`, etc.). Container elements (`div`, `section`, `main`, `header`, `nav`, `article`, `form`) get `background-image: none !important`, so any text placed **directly** in a `<div>` renders invisible. Always wrap visible text in `<span>`, `<p>`, `<a>`, `<label>`, or a `<button>` label.
+`globals.css` sets `body { color: transparent; background-clip: text }` with the gradient painted onto leaf elements. The current leaf list is `h1–h6, p, span, a, li, label, small, strong, em, b, i, button, td, th, dt, dd, figcaption, blockquote, cite, time, legend, summary` — any tag NOT on that list renders transparent. Container elements (`div, section, main, header, footer, nav, article, aside, form, ul, ol, figure, table`) also get `background-image: none !important`, so text placed **directly** in a `<div>` renders invisible. Always wrap visible text in one of the leaf tags.
+
+**Painting backgrounds that must survive the container-reset:** the `!important` reset on `div` strips any plain Tailwind gradient class (`bg-gradient-to-b`, `from-black/60`, etc.). The pattern is to add a named class in `globals.css` with higher specificity (e.g. `section div.hero-shade { background-image: linear-gradient(...) !important; }`) and apply it as a bare className. The hero reel uses `.hero-shade` (linear) + `.hero-vignette` (radial) stacked under the content layer. Use the same pattern anywhere else a custom background on a `div` is needed.
 
 ### 3. JSX `.map()` PATTERN
 Don't use a ternary inside a parenthesized arrow return inside `.map()`. Use the if/return pattern:
@@ -157,8 +161,13 @@ Both headers render `<a href="#main-content" className="skip-to-content">`. The 
 ### 6. VIEWPORT + SAFE AREAS
 `app/layout.tsx` ships `viewport-fit=cover` so `env(safe-area-inset-*)` is available on iOS. Safe-area padding is applied inline per-component (practice page modal, main-content wrappers) — there is no global rule for it.
 
-### 7. BOOKING MODAL STATE IS DUPLICATED
-Both `SiteHeader.tsx` and `app/page.client.tsx` keep their own `bookingOpen` state and render their own `<BookingModal />`. Only one header is ever mounted at a time, so there is no conflict — but when you add a new entry point (another component with a Book button), either pass an `onOpenBooking` callback up (as `HomeClient` does) or own another `useState` locally. There is no shared context.
+### 7. BOOKING MODAL STATE IS DUPLICATED (shared via `open-booking` event)
+Both `SiteHeader.tsx` and `app/page.client.tsx` keep their own `bookingOpen` state and render their own `<BookingModal />`. Only one header is ever mounted at a time, so there is no conflict. Entry points:
+- The Book → button inside the header itself (both desktop nav and the mobile pill).
+- A prop callback — e.g. `HomeClient` receives `onOpenBooking` and forwards it to the service cards + the section-03 CTA.
+- A site-wide `window` `CustomEvent('open-booking')`. Both headers listen for it on mount; any component can call `openBooking()` from `lib/booking.ts` to pop the modal without lifting state. The About page closing row uses this.
+
+There is no shared React context — the event is the shared channel.
 
 ### 8. GRADIENT TEXT + FORM CONTROLS
 `<input>`, `<textarea>`, `<select>`, `<option>` need explicit `color` / `-webkit-text-fill-color` or the gradient-text cascade makes their values invisible. Use the `.form-input` class in `globals.css` (sets `color: #f5f5f5 !important` + kills the gradient). The booking modal headings/labels use `.modal-plain`, `.modal-label`, `.modal-error` for the same reason.
@@ -189,7 +198,9 @@ Three features render **nothing** in production when their data is empty:
 
 Header height: `h-14` (56px), `fixed inset-x-0 top-0 z-[9999]`, `bg-black/70 backdrop-blur`.
 
-Layout: `grid grid-cols-[1fr_auto_1fr]`. On `md+`: left half has Placements / Performance, center has the HomeMark pill, right half has Practice / About + a `Book →` button. On `<md`: left cell holds a hamburger button; the right nav is hidden. Hamburger opens a fullscreen overlay (`fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm md:hidden`) with the four links + Book button, each with `onClick={() => setMenuOpen(false)}`.
+Layout: `grid grid-cols-[1fr_auto_1fr]`. On `md+`: left half has Placements / Performance, center has the HomeMark pill, right half has Practice / About + a `Book →` button. On `<md`: left cell holds a hamburger button; the right cell holds a compact `Book →` pill (same style, `text-[10px] px-3 py-1.5`, `min-h-11` for tap target) so booking is one tap away without opening the hamburger. The desktop nav is hidden. Hamburger opens a fullscreen overlay (`fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm md:hidden`) with the four links + Book button, each with `onClick={() => setMenuOpen(false)}`.
+
+**Home page scroll on touch:** the three sections used to be locked (wheel-snap + swipe-to-next-page, with `html/body` set to `no-scroll`), which made the services + EPK sections unreachable on phones. Touch devices now scroll natively — no wheel listener, no touch-swipe-to-navigate, no `no-scroll` class, and `overflow-y-hidden` is dropped on the container. Desktop wheel-snap is unchanged. The `(scroll)` hint is hidden on `isMobileFallback` and on desktop after the first wheel event.
 
 Skip-to-content: both headers render it above the `<header>` element, mapped to `#main-content`.
 
@@ -221,6 +232,10 @@ The `/practice` page is an "open practice room" — a daily log of real sessions
 
 ## Commit History (most recent first)
 
+- `72b7ae4` — Copy: reconcile proof numbers with index pages; Book CTA in section 03; About closing row; practice label
+- `77e5a90` — Fix: practice dates invisible (time tag), submit label box, headline balance
+- `c89ae3c` — Hero: working shade layer + vignette; reel dimmed to 25–30%
+- `ba4af88` — Mobile: home page scrolls natively on touch; Book pill in mobile header; scroll hint fixes
 - `4fc6337` — Tooling: scripts/upload-media.mjs for Vercel Blob uploads
 - `e3e3aa0` — About: Testimonials component (renders only when real quotes are added)
 - `20a216a` — Hero: asset-gated background reel + AudioShowcase (inactive until media is uploaded)
