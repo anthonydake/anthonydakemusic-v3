@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import HomeClient from "./components/HomeClient";
 import HomeMark from "./components/HomeMark";
 import BookingModal from "./components/BookingModal";
-import { useTransition } from "./components/TransitionProvider";
 import { OPEN_BOOKING_EVENT } from "@/lib/booking";
 
 export default function HomePageClient() {
@@ -20,27 +19,13 @@ export default function HomePageClient() {
 function HomeInner() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
   const openBooking = () => {
     setMenuOpen(false);
     setBookingOpen(true);
   };
-  const { triggerTransition, isTransitioning, isMobileFallback } = useTransition();
   const searchParams = useSearchParams();
   const q = searchParams.toString();
   const homeHref = q ? `/?${q}` : "/";
-  const projectsHref = q ? `/placements?${q}` : "/placements";
-  const accumRef = useRef(0);
-  const triggeredRef = useRef(false);
-  const readyRef = useRef(false);
-  const lastWheelRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const t = window.setTimeout(() => {
-      readyRef.current = true;
-    }, 800);
-    return () => window.clearTimeout(t);
-  }, []);
 
   useEffect(() => {
     const onOpen = () => {
@@ -50,44 +35,6 @@ function HomeInner() {
     window.addEventListener(OPEN_BOOKING_EVENT, onOpen);
     return () => window.removeEventListener(OPEN_BOOKING_EVENT, onOpen);
   }, []);
-
-  useEffect(() => {
-    if (isMobileFallback) return;
-    if (isTransitioning) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      if (window.scrollY !== 0) return;
-      if (!readyRef.current) return;
-      if (triggeredRef.current) return;
-      setHasScrolled(true);
-      e.preventDefault();
-      const now = performance.now();
-      const delta = e.deltaY;
-      const minDelta = 35;
-      const triggerThreshold = 140;
-      const windowMs = 220;
-      if (Math.abs(delta) < minDelta) return;
-      if (delta <= 0) {
-        accumRef.current = 0;
-        lastWheelRef.current = null;
-        return;
-      }
-      if (lastWheelRef.current === null || now - lastWheelRef.current > windowMs) {
-        accumRef.current = 0;
-      }
-      lastWheelRef.current = now;
-      e.preventDefault();
-      accumRef.current += delta;
-      if (accumRef.current >= triggerThreshold) {
-        triggeredRef.current = true;
-        window.removeEventListener("wheel", handleWheel);
-        triggerTransition(projectsHref);
-      }
-    };
-
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, [isMobileFallback, isTransitioning, triggerTransition, projectsHref]);
 
   return (
     <>
@@ -217,39 +164,8 @@ function HomeInner() {
 
 
       <div id="main-content" className="pt-14">
-        <HomeClient nextHref={projectsHref} onOpenBooking={openBooking} />
+        <HomeClient onOpenBooking={openBooking} />
       </div>
-      {!isMobileFallback && !hasScrolled && (
-        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[20] flex justify-center">
-          <span
-            className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-white"
-            style={{ opacity: 0.35 }}
-          >
-            (scroll)
-          </span>
-        </div>
-      )}
-      <style jsx global>{`
-        @keyframes homeScrollPulse {
-          0% {
-            opacity: 0;
-          }
-          50% {
-            opacity: 1;
-          }
-          100% {
-            opacity: 0;
-          }
-        }
-        .home-scroll-indicator {
-          animation: homeScrollPulse 2s ease-in-out infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .home-scroll-indicator {
-            animation: none;
-          }
-        }
-      `}</style>
     </>
   );
 }

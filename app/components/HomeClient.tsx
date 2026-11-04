@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import TextScramble from "./TextScramble";
 import AudioShowcase from "./AudioShowcase";
-import { useTransition } from "./TransitionProvider";
 import { projectIndex } from "../../data/projects.data";
 import { STATS } from "../../data/stats";
 
@@ -17,7 +16,6 @@ const HERO_VIDEO_POSTER = "/anthony-dake-drums.jpg";
 
 type HomeClientProps = {
   initialSection?: "hero" | "services" | "epk";
-  nextHref?: string;
   onOpenBooking?: () => void;
 };
 
@@ -29,15 +27,10 @@ const FEATURED_PLACEMENTS = [
   { artist: "KJ The Cool Nerd", title: "Pray For Me" },
 ];
 
-const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
-
 export default function HomeClient({
   initialSection = "hero",
-  nextHref,
   onOpenBooking,
 }: HomeClientProps) {
-  const { isMobileFallback } = useTransition();
-  const containerRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     []
@@ -47,7 +40,6 @@ export default function HomeClient({
       ? { hero: true, services: true, epk: true }
       : { hero: false, services: false, epk: false }
   );
-  const [snapAnimating, setSnapAnimating] = useState(false);
   const [scrambleRun, setScrambleRun] = useState(0);
   const [showHeroVideo, setShowHeroVideo] = useState(false);
   const retriggerScramble = () => setScrambleRun((n) => n + 1);
@@ -55,106 +47,38 @@ export default function HomeClient({
   const servicesRef = useRef<HTMLElement | null>(null);
   const epkRef = useRef<HTMLElement | null>(null);
 
-  useIsoLayoutEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    // Ensure route entry points match the intended section without visible jump.
+  useEffect(() => {
+    if (initialSection === "hero") return;
     const target =
-      initialSection === "epk"
-        ? epkRef.current?.offsetTop ?? 0
-        : initialSection === "services"
-          ? servicesRef.current?.offsetTop ?? 0
-          : 0;
-    const prev = container.style.scrollBehavior;
-    container.style.scrollBehavior = "auto";
-    container.scrollTop = target;
-    container.style.scrollBehavior = prev;
+      initialSection === "epk" ? epkRef.current : initialSection === "services" ? servicesRef.current : null;
+    if (!target) return;
+    target.scrollIntoView({ block: "start", behavior: "auto" });
   }, [initialSection]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (reduceMotion) return;
 
-    if (reduceMotion) {
-      return;
-    }
-
+    const sections: Array<"hero" | "services" | "epk"> = ["hero", "services", "epk"];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const id = entry.target.getAttribute("data-id");
           if (!id) return;
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
-            setVisible((prev) =>
-              prev[id as "hero" | "services" | "epk"]
-                ? prev
-                : { ...prev, [id as "hero" | "services" | "epk"]: true }
-            );
-          }
+          if (!entry.isIntersecting) return;
+          if (entry.intersectionRatio < 0.35) return;
+          const key = id as "hero" | "services" | "epk";
+          if (!sections.includes(key)) return;
+          setVisible((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
         });
       },
-      {
-        root: isMobileFallback ? null : containerRef.current,
-        threshold: isMobileFallback ? [0.25, 0.4, 0.6] : [0.55, 0.8],
-      }
+      { root: null, threshold: [0.1, 0.35, 0.6] }
     );
 
-    const nodes = containerRef.current.querySelectorAll("[data-snap-section]");
+    const nodes = document.querySelectorAll("[data-snap-section]");
     nodes.forEach((node) => observer.observe(node));
 
     return () => observer.disconnect();
-  }, [reduceMotion, isMobileFallback]);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    if (isMobileFallback) return;
-
-    const sections = [heroRef.current, servicesRef.current, epkRef.current].filter(Boolean) as HTMLElement[];
-
-    const animateTo = (target: number) => {
-      if (snapAnimating) return;
-      setSnapAnimating(true);
-      container.scrollTo({ top: target, behavior: "smooth" });
-      window.setTimeout(() => setSnapAnimating(false), 750);
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      if (snapAnimating) return;
-      if (Math.abs(e.deltaY) < 10) return;
-      e.preventDefault();
-      const currentTop = container.scrollTop;
-      const positions = sections.map((s) => s.offsetTop);
-      const currentIndex =
-        positions.reduce((closest, pos, idx) => {
-          return Math.abs(pos - currentTop) < Math.abs(positions[closest] - currentTop) ? idx : closest;
-        }, 0) || 0;
-      const dir = e.deltaY > 0 ? 1 : -1;
-      const nextIndex = Math.min(Math.max(currentIndex + dir, 0), positions.length - 1);
-      animateTo(positions[nextIndex]);
-    };
-
-    container.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => {
-      container.removeEventListener("wheel", handleWheel);
-    };
-  }, [isMobileFallback, snapAnimating]);
-
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    if (isMobileFallback) {
-      document.documentElement.classList.remove("no-scroll");
-      document.body.classList.remove("no-scroll");
-      return;
-    }
-    document.documentElement.classList.add("no-scroll");
-    document.body.classList.add("no-scroll");
-    return () => {
-      document.documentElement.classList.remove("no-scroll");
-      document.body.classList.remove("no-scroll");
-    };
-  }, [isMobileFallback]);
+  }, [reduceMotion]);
 
   useEffect(() => {
     if (!HERO_VIDEO_URL) return;
@@ -164,17 +88,10 @@ export default function HomeClient({
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className={[
-        "site-bg bg-white scrollbar-hide",
-        isMobileFallback ? "min-h-screen" : "min-h-screen overflow-y-hidden snap-y snap-mandatory",
-      ].join(" ")}
-      style={{ scrollBehavior: "smooth" }}
-    >
+    <div className="site-bg bg-white scrollbar-hide">
       <section
         ref={heroRef}
-        className="relative grid min-h-screen place-items-center overflow-hidden snap-start bg-black pb-14"
+        className="relative grid min-h-screen place-items-center overflow-hidden bg-black pb-14"
         data-id="hero"
         data-snap-section
       >
@@ -427,7 +344,7 @@ export default function HomeClient({
         ref={servicesRef}
         data-id="services"
         data-snap-section
-        className="snap-start min-h-screen bg-black"
+        className="min-h-screen bg-black"
       >
         <div
           className={[
@@ -483,7 +400,7 @@ export default function HomeClient({
         ref={epkRef}
         data-id="epk"
         data-snap-section
-        className="snap-start min-h-screen bg-black"
+        className="min-h-screen bg-black"
       >
         <div
           className={[
