@@ -1,14 +1,12 @@
 "use client";
 
-import "../placements/projects-index.css";
-
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { performanceIndex, type PerformanceItem } from "@/data/performance.data";
 import { STATS } from "@/data/stats";
 import SiteHeader from "@/app/components/SiteHeader";
+import FooterLine from "@/app/components/FooterLine";
 import JsonLd from "@/app/components/JsonLd";
-import { useTransition } from "@/app/components/TransitionProvider";
 
 const SITE_URL = "https://www.anthonydakemusic.com";
 
@@ -59,199 +57,98 @@ function breadcrumbsSchema(label: string, path: string) {
   };
 }
 
-export default function PerformanceIndexClient() {
-  const { triggerTransition, isTransitioning, isMobileFallback } = useTransition();
-  // Already sorted newest-first in the data file
+export default function PerformanceClient() {
   const items = performanceIndex;
-
-  const [revealCount, setRevealCount] = useState(0);
-  const rowsRef = useRef<HTMLDivElement | null>(null);
-  const accumRef = useRef(0);
-  const triggeredRef = useRef(false);
-  const lastWheelRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (items.length === 0) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let interval: number | null = null;
-    const t = window.setTimeout(() => {
-      if (reduced) { setRevealCount(items.length); return; }
-      let count = 1;
-      setRevealCount(1);
-      interval = window.setInterval(() => {
-        count += 1;
-        setRevealCount(count);
-        if (count >= items.length && interval) window.clearInterval(interval);
-      }, 125);
-    }, 0);
-    return () => { window.clearTimeout(t); if (interval) window.clearInterval(interval); };
-  }, [items.length]);
-
-  useEffect(() => {
-    const { style } = document.body;
-    const prev = style.overflow;
-    style.overflow = "hidden";
-    return () => { style.overflow = prev; };
-  }, []);
-
-  // Scroll-to-home transition
-  useEffect(() => {
-    if (isTransitioning) return;
-    const rows = rowsRef.current;
-    if (!rows) return;
-    const handleWheel = (e: WheelEvent) => {
-      if (triggeredRef.current) return;
-      e.preventDefault();
-      const now = performance.now();
-      const delta = e.deltaY;
-      rows.scrollTop += delta * 0.35;
-      if (Math.abs(delta) < 35) return;
-      if (delta <= 0) { accumRef.current = 0; lastWheelRef.current = null; return; }
-      const atBottom = rows.scrollTop + rows.clientHeight >= rows.scrollHeight - 2;
-      if (!atBottom) { accumRef.current = 0; lastWheelRef.current = null; return; }
-      if (lastWheelRef.current === null || now - lastWheelRef.current > 220) accumRef.current = 0;
-      lastWheelRef.current = now;
-      accumRef.current += delta;
-      if (accumRef.current >= 140) {
-        triggeredRef.current = true;
-        rows.removeEventListener("wheel", handleWheel);
-        triggerTransition("/");
-      }
-    };
-    rows.addEventListener("wheel", handleWheel, { passive: false });
-    return () => rows.removeEventListener("wheel", handleWheel);
-  }, [isTransitioning, triggerTransition]);
-
-  useEffect(() => { const rows = rowsRef.current; if (rows) rows.scrollTop = 0; }, []);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
-    <div className="performance-index-frame relative bg-black text-white h-screen overflow-hidden">
+    <div className="bg-black text-[#F2F2F2]">
       <JsonLd data={performanceSchema(items)} />
       <JsonLd data={breadcrumbsSchema("Performance", "/performance")} />
       <SiteHeader />
-      <main id="main-content" className="relative z-[10] mx-auto flex max-w-[1600px] flex-col px-6 pb-4 pt-20 sm:pt-24 sm:px-8 lg:px-10 xl:px-12 2xl:px-16 h-[calc(100svh-56px)] overflow-hidden">
+      <main
+        id="main-content"
+        className={`page-fade-in mx-auto max-w-[960px] px-6 pt-24 pb-16 transition-opacity duration-300 ease-out sm:px-8 ${
+          mounted ? "opacity-100" : "opacity-0"
+        }`}
+      >
         <p className="sr-only">
           Live performance credits — drums for hip-hop sets, festival mainstages, theater productions. The list below is {items.length} curated highlights; the full career spans roughly {STATS.performances} documented performances since 2017, including DCI tours with Blue Knights, WGI seasons with Rhythm X and Dojo Percussion, marching band, jazz and percussion ensembles, and recent professional gigs across Columbus, Ohio.
         </p>
-        <div className="mb-6 flex flex-shrink-0 items-baseline justify-between gap-4">
-          <span className="text-[11px] uppercase tracking-[0.28em] opacity-50">
-            (IDX·02)
-          </span>
-          <div className="flex flex-col items-center gap-1">
-            <h1 className="text-[18px] uppercase tracking-[0.2em] font-light sm:text-[22px]">
-              performance
-            </h1>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-white/40">
-              Selected · {items.length} of ~{STATS.performances}
-            </p>
-          </div>
-          <span className="text-[10px] uppercase tracking-[0.22em] opacity-30">
-            index of {items.length}
-          </span>
-        </div>
-        <section
-          aria-label="Performance index"
-          ref={rowsRef}
-          className="rows-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain pr-2"
-        >
-          <YearGroups items={items} revealCount={revealCount} />
-          <nav aria-label="Related sections" className="mt-12 mb-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[10px] uppercase tracking-[0.22em] text-white/35">
-            <Link href="/placements" className="hover:text-white/70 transition-colors">See placements →</Link>
-            <Link href="/epk" className="hover:text-white/70 transition-colors">Press kit →</Link>
-          </nav>
-        </section>
-      </main>
 
-      {!isMobileFallback && (
-        <div className="pointer-events-none fixed inset-x-0 bottom-[12px] z-[20] flex justify-center">
-          <span className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-white" style={{ opacity: 0.35 }}>
-            (scroll)
-          </span>
-        </div>
-      )}
-      <style jsx global>{`
-        @keyframes homeScrollPulse { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
-        .home-scroll-indicator { animation: homeScrollPulse 2s ease-in-out infinite; }
-        @media (prefers-reduced-motion: reduce) { .home-scroll-indicator { animation: none; } }
-        .rows-scroll { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
-        .rows-scroll::-webkit-scrollbar { width: 0; height: 0; }
-      `}</style>
+        <header className="mb-10">
+          <h1 className="grad font-serif-display text-[40px] leading-tight tracking-[-0.02em] sm:text-[52px]">
+            Performance
+          </h1>
+          <p className="mt-2 text-[15px] text-[#9A9A9A]">
+            Selected · {items.length} of ~{STATS.performances}
+          </p>
+        </header>
+
+        <YearGroups items={items} />
+
+        <nav
+          aria-label="Related sections"
+          className="mt-14 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-[#F2F2F2]"
+        >
+          <Link href="/placements" className="hover:text-[#9A9A9A] transition-colors">
+            Placements →
+          </Link>
+          <Link href="/epk" className="hover:text-[#9A9A9A] transition-colors">
+            Press kit →
+          </Link>
+        </nav>
+      </main>
+      <FooterLine />
     </div>
   );
 }
 
-function YearGroups({ items, revealCount }: { items: PerformanceItem[]; revealCount: number }) {
+function YearGroups({ items }: { items: PerformanceItem[] }) {
   const years = Array.from(new Set(items.map((p) => p.year))).sort((a, b) => b - a);
 
-  // Build a flat index so reveal count works across year groups
-  const indexById = new Map<string, number>();
-  items.forEach((p, i) => indexById.set(p.id, i));
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       {years.map((year) => {
         const yearItems = items.filter((p) => p.year === year);
-        const yearVisible = yearItems.filter((p) => (indexById.get(p.id) ?? Infinity) < revealCount);
-        if (yearVisible.length === 0) return null;
-
         return (
-          <div key={year} className="space-y-2">
+          <section key={year} className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-white/10" />
-              <div className="text-[12px] lg:text-[10.625px] uppercase tracking-[0.28em] text-white/50"><span>{year}</span></div>
+              <span className="text-[11px] uppercase tracking-[0.18em] text-[#5C5C5C]">
+                {year}
+              </span>
+              <div className="h-px flex-1 bg-white/[0.08]" />
             </div>
-            <div className="space-y-0">
-              {yearVisible.map((p) => {
+            <ul className="divide-y divide-white/[0.06]">
+              {yearItems.map((p) => {
                 const venueLocation = `${p.venue}, ${p.city}, ${p.state}`;
                 const Row = (
-                  <>
-                    {/* Mobile: 2-col */}
-                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-0.5 leading-tight lg:hidden">
-                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
-                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><time dateTime={String(p.year)}>{p.year}</time></div>
-                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/55 col-span-2"><span>{p.venue}</span></div>
-                      {p.tags && p.tags.length > 0 && (
-                        <div className="text-[10px] uppercase tracking-[0.18em] opacity-30 col-span-2 mt-0.5">
-                          <span>{p.tags.join(", ")}</span>
-                        </div>
-                      )}
-                    </div>
-                    {/* Desktop: 3-col */}
-                    <div className="hidden lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-8 leading-tight">
-                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{p.primaryArtist}</span></div>
-                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em]"><span>{venueLocation}</span></div>
-                      <div className="text-[12px] lg:text-[9.5625px] uppercase tracking-[0.2em] text-white/50 text-right"><time dateTime={String(p.year)}>{p.year}</time></div>
-                      {p.tags && p.tags.length > 0 && (
-                        <div className="text-[8.5px] uppercase tracking-[0.18em] opacity-30 col-span-3 mt-0.5">
-                          <span>{p.tags.join(", ")}</span>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                );
-
-                if (p.youtubeUrl) {
-                  return (
-                    <a
-                      key={p.id}
-                      href={p.youtubeUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="projects-row projects-row-enter group block py-2.5 lg:py-3 hover:opacity-70 transition-opacity"
-                    >
-                      {Row}
-                    </a>
-                  );
-                }
-
-                return (
-                  <div key={p.id} className="projects-row projects-row-enter py-2.5 lg:py-3">
-                    {Row}
+                  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] items-baseline gap-x-6 py-3">
+                    <span className="text-[15px] text-[#F2F2F2]">{p.primaryArtist}</span>
+                    <span className="text-[15px] text-[#9A9A9A] transition-colors group-hover:text-[#F2F2F2]">
+                      {venueLocation}
+                    </span>
                   </div>
                 );
+                if (p.youtubeUrl) {
+                  return (
+                    <li key={p.id}>
+                      <a
+                        href={p.youtubeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group block"
+                      >
+                        {Row}
+                      </a>
+                    </li>
+                  );
+                }
+                return <li key={p.id}>{Row}</li>;
               })}
-            </div>
-          </div>
+            </ul>
+          </section>
         );
       })}
     </div>
