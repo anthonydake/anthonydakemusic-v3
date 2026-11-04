@@ -380,7 +380,9 @@ svg * {
 
 /* Submit-pill label — black text on the white .epk-cta surface. Must
    win over both the body-level gradient leaf-element rule and the
-   .epk-cta * white background-color, so each child span paints cleanly. */
+   .epk-cta * descendant rule (which paints a white background-color
+   AND a 0 10px 22px drop-shadow onto every child), so the inner span
+   paints as just letters, no white chip or dark rectangle behind. */
 .submit-label {
   color: #000 !important;
   -webkit-text-fill-color: #000 !important;
@@ -388,6 +390,8 @@ svg * {
   background-color: transparent !important;
   -webkit-background-clip: border-box !important;
   background-clip: border-box !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
 }
 
 .form-input {

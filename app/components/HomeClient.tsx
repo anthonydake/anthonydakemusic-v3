@@ -65,13 +65,13 @@ export default function HomeClient({
           const id = entry.target.getAttribute("data-id");
           if (!id) return;
           if (!entry.isIntersecting) return;
-          if (entry.intersectionRatio < 0.35) return;
           const key = id as "hero" | "services" | "epk";
           if (!sections.includes(key)) return;
+          // Latch: once visible, stay visible (keeps hero steady, no re-fades).
           setVisible((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
         });
       },
-      { root: null, threshold: [0.1, 0.35, 0.6] }
+      { root: null, threshold: 0.08, rootMargin: "0px 0px -10% 0px" }
     );
 
     const nodes = document.querySelectorAll("[data-snap-section]");
