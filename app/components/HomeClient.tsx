@@ -357,7 +357,7 @@ export default function HomeClient({
             <span>(02) — services</span>
           </p>
           <AudioShowcase />
-          <div className="grid w-full max-w-3xl grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+          <div className="grid w-full max-w-5xl grid-cols-1 items-stretch gap-4 sm:gap-6 md:grid-cols-3">
             <ServiceCard
               title="Live Performance"
               description="Tours, one-off shows, festival dates, sub work. Click track, IEM, or acoustic — whatever the gig needs."
@@ -373,6 +373,14 @@ export default function HomeClient({
               ctaLabel="Send a brief"
               onClick={onOpenBooking}
               icon={<HeadphonesIcon />}
+            />
+            <ServiceCard
+              title="Music Direction"
+              description="Band assembly, rehearsal prep, set design, and show flow. I build the band and run the room."
+              secondary="Church, corporate, and touring acts"
+              ctaLabel="Let's talk"
+              onClick={onOpenBooking}
+              icon={<BatonIcon />}
             />
           </div>
           <div className="mt-4 flex flex-col items-center gap-2">
@@ -457,7 +465,7 @@ type ServiceCardProps = {
 
 function ServiceCard({ title, description, secondary, ctaLabel, onClick, icon }: ServiceCardProps) {
   return (
-    <div className="group flex flex-col rounded-xl border border-white/[0.08] bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 sm:p-8">
+    <div className="group flex h-full flex-col rounded-xl border border-white/[0.08] bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 sm:p-8">
       <div className="mb-5">{icon}</div>
       <h3 className="text-balance text-[15px] uppercase tracking-[0.15em] sm:text-[17px]">
         <span>{title}</span>
@@ -468,7 +476,7 @@ function ServiceCard({ title, description, secondary, ctaLabel, onClick, icon }:
       <p className="mt-4 text-[10px] uppercase tracking-[0.18em] opacity-30">
         <span>{secondary}</span>
       </p>
-      <div className="mt-6">
+      <div className="mt-auto pt-6">
         <button
           type="button"
           onClick={onClick}
@@ -514,6 +522,21 @@ function HeadphonesIcon() {
       <path d="M7 22 Q7 8 20 8 Q33 8 33 22" fill="none" stroke="url(#svc-headphones)" strokeWidth="1.5" strokeLinecap="round" />
       <rect x="5" y="21" width="7" height="11" rx="2" fill="none" stroke="url(#svc-headphones)" strokeWidth="1.5" />
       <rect x="28" y="21" width="7" height="11" rx="2" fill="none" stroke="url(#svc-headphones)" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function BatonIcon() {
+  return (
+    <svg viewBox="0 0 40 40" className="h-10 w-10" aria-hidden="true">
+      <GradientDefs id="svc-baton" />
+      {/* Metronome body */}
+      <path d="M14 34 L26 34 L23 10 L17 10 Z" fill="none" stroke="url(#svc-baton)" strokeWidth="1.5" strokeLinejoin="round" />
+      {/* Pendulum */}
+      <line x1="20" y1="30" x2="28" y2="12" stroke="url(#svc-baton)" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="28" cy="12" r="1.8" fill="url(#svc-baton)" />
+      {/* Base pivot */}
+      <circle cx="20" cy="30" r="1.3" fill="url(#svc-baton)" />
     </svg>
   );
 }
