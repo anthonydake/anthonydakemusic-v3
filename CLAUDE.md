@@ -164,12 +164,12 @@ Both `SiteHeader.tsx` and `app/page.client.tsx` keep their own `bookingOpen` sta
 `<input>`, `<textarea>`, `<select>`, `<option>` need explicit `color` / `-webkit-text-fill-color` or the gradient-text cascade makes their values invisible. Use the `.form-input` class in `globals.css` (sets `color: #f5f5f5 !important` + kills the gradient). The booking modal headings/labels use `.modal-plain`, `.modal-label`, `.modal-error` for the same reason.
 
 ### 9. ASSET-GATED FEATURES — EMPTY IS CORRECT
-Three features render **nothing** in production until Anthony drops in media/content:
+Three features render **nothing** in production when their data is empty:
 - `HERO_VIDEO_URL` (`HomeClient.tsx`) — `null` → no reel, no overlay, no extra DOM.
 - `AUDIO_CLIPS` (`AudioShowcase.tsx`) — empty → component returns `null`.
 - `testimonials` (`data/testimonials.data.ts`) — empty → `<Testimonials />` returns `null`.
 
-Do NOT "fix" these by shipping placeholder text, fake quotes, or demo URLs. Activation is a one-line data edit per feature.
+**Current state (since `c88280c`, 2026-11-03):** all three are populated with PLACEHOLDERS at Anthony's request so he can see the design live — a center-crop of his "16th groove 88bpm" practice clip as the reel, four practice-clip excerpts as the audio buttons, and three quotes attributed to "Placeholder Name". Replace them with real assets/quotes; do not invent new placeholder content, and do not "clean up" by emptying them unless Anthony asks. The source placeholder files are in `~/Claude-Workspace/4-architect/media-placeholders/`.
 
 ### 10. CLOSED SECTION-ID UNION
 `HomeClient`'s `initialSection` and the internal `visible` state both use the type `"hero" | "services" | "epk"`. The IntersectionObserver callback casts `data-id` to this type. Adding a new snap section means updating the type, the state shape, the observer cast, and the refs in one pass.
