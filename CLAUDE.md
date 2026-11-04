@@ -14,9 +14,9 @@ Next.js App Router. Every public route uses the `page.tsx` (server, exports `met
 
 ### Pages (routes under `app/`)
 
-- `/` — Home. Three stacked sections (`hero → services → epk`) rendered by `HomeClient.tsx` as a normal scrolling page (no snap, no wheel-hijack). Inline header lives here, not `SiteHeader`.
-- `/about` — Bio/story: church drummer → DCI/WGI → conservatory → rebuild. Childhood photo renders near the top (first-kit caption) — the hero no longer carries it. Testimonials component mounted below the article (renders nothing until `data/testimonials.data.ts` is populated).
-- `/epk` — Electronic Press Kit. One-sheet PDF download, YouTube demo reel, YouTube + TikTok icons, plain-text contact line.
+- `/` — Home. Three stacked sections (`hero → services → proof`) rendered by `HomeClient.tsx` as a normal scrolling page. Inline header lives here, not `SiteHeader`. Hero is a name + one caption + one `Book →` button on black — no reel, no scramble, no stats inside the hero.
+- `/about` — Bio/story: church drummer → DCI/WGI → conservatory → rebuild. Childhood photo renders near the top (first-kit caption). Testimonials component mounted below the article (renders nothing until `data/testimonials.data.ts` is populated).
+- `/epk` — Press kit. One-sheet PDF button, YouTube demo reel (no autoplay), `Listen` heading + `<AudioShowcase />`, `Contact` heading + plain-text email line. No social icons — those live in the site-wide footer line.
 - `/placements` — Record credits index (artwork grid). Data from `data/projects.data.ts`.
 - `/performance` — Live performance credits index. Data from `data/performance.data.ts`.
 - `/practice` — "Open Practice Room". Reverse-chronological practice log with per-day groups, search, and optional video clips. Data from `data/practice.data.ts`. **Not linked from the header any more** (removed from nav in Batch 2); the only entry point is the `Practice journal →` link at the bottom of `/about`. The page itself remains live at `/practice`.
@@ -33,19 +33,18 @@ Next.js App Router. Every public route uses the `page.tsx` (server, exports `met
 
 ### Key Components (`app/components/`)
 
-- `HomeClient.tsx` — The three stacked sections of the home page: hero (logo + proof strip + EPK CTA + socials), services (3 cards: Live Performance, Session Drums, Music Direction + `AudioShowcase` + placements strip), epk (closing booking panel). Normal scrolling — no snap, no wheel-hijack. IntersectionObserver on `[data-snap-section]` at `root: null` drives the per-section fade-in.
-- `AudioShowcase.tsx` — Horizontal row of circular play/pause buttons with a progress ring. Renders `null` while `AUDIO_CLIPS` is empty.
-- `BookingModal.tsx` — Booking inquiry dialog. Focus trap, Esc-to-close, honeypot, body-scroll lock, auto-close on success.
-- `SiteHeader.tsx` — Shared header for every subpage. Symmetric 3-column grid (Placements/Performance · HomeMark · About + Book CTA). Mobile hamburger overlay. Owns its own `BookingModal` state and listens for the `open-booking` event.
-- `HomeMark.tsx` — Inline SVG of the AD serif monogram (built from Source Serif 4 outlines, solid `#E5EEFF` fill; the standalone `public/mark.svg` adds a thin `#3B82F6` ring, dropped here because the header pill already draws a ring) used as the home-logo glyph in both headers. Rendered at 25×14 inside the 44px pill, viewBox cropped to the glyph bounds. The source SVGs live in `public/mark.svg` (with ring, for standalone use), `public/letters.svg` (no ring, same one inlined in the component), and `public/mark-white.svg` (monochrome fallback).
-- `LogoArchitectOfSound.tsx` — Centered type lockup with hover scramble. Accepts `showPortrait?: boolean` (default `true`); the hero passes `showPortrait={false}` so the childhood photo is suppressed there — it moved to the top of the About article.
-- `TextScramble.tsx` — Animated glyph-scramble primitive used by the proof strip and the logo.
+- `HomeClient.tsx` — The three stacked sections of the home page: **hero** (name + caption + `Book →`), **services** (three bulleted lines with `<strong>` leads for Live performance / Session drums / Music direction + `Send a brief →` text link), **proof** (stats line + distinct-artists line + three text links to the deeper pages). Normal scrolling. IntersectionObserver on `[data-snap-section]` at `root: null`, `threshold: 0.08`, `rootMargin: "0px 0px -10% 0px"` drives a 300ms opacity-only fade-in for services + proof. Hero starts visible. Fail-open fallbacks (scroll + 1200ms timer) latch everything on, same shape as the previous batch.
+- `AudioShowcase.tsx` — Horizontal row of circular play/pause buttons with a progress ring. Lives on `/epk` now (moved out of the home page in the Calm pass). Renders `null` while `AUDIO_CLIPS` is empty.
+- `BookingModal.tsx` — Booking inquiry dialog. Focus trap, Esc-to-close, honeypot, body-scroll lock, auto-close on success. Sentence-case labels, one primary pill (`Send inquiry →`), no glow.
+- `FooterLine.tsx` — Site-wide single-row footer mounted on every page: `Columbus, OH · Email · YouTube · TikTok · Press kit`. `#5C5C5C` 12 px, hairline `border-t`, `py-10`. This is where the social links live now (they were removed from the hero and `/epk`).
+- `SiteHeader.tsx` — Shared header for every subpage. Symmetric 3-column grid (Placements/Performance · HomeMark · About + Book CTA). Uppercase nav at `tracking-[0.18em]` — the one allowed uppercase surface outside of year headers. Mobile hamburger overlay. Owns its own `BookingModal` state and listens for the `open-booking` event.
+- `HomeMark.tsx` — Inline SVG of the AD serif monogram (Source Serif 4 outlines, solid `#E5EEFF` fill; the standalone `public/mark.svg` adds a thin `#3B82F6` ring, dropped here because the header pill already draws a ring). Rendered at 25×14 inside the 44px pill. The source SVGs live in `public/mark.svg` (with ring), `public/letters.svg` (no ring, same one inlined here), `public/mark-white.svg` (monochrome fallback).
+- `LogoArchitectOfSound.tsx` — Fraunces 300 name lockup. Hero passes `showPortrait={false}` (About carries the childhood photo). The h1 inside this component holds the page's single `.grad` gradient — every other instance of the gradient on a page is a deliberate violation.
 - `JsonLd.tsx` — `<script type="application/ld+json">` helper.
-- `TransitionProvider.tsx` — Curtain/fade page transitions. Exposes `useTransition()` with `triggerTransition`, `isTransitioning`, `prefersReducedMotion`, `isMobileFallback`.
-- `CurtainOverlay.tsx` — The overlay element driven by `TransitionProvider`.
-- `Testimonials.tsx` — Editorial pull-quote block on About. Renders `null` while `testimonials` is empty.
+- `TransitionProvider.tsx` — Thin wrapper preserving the `useTransition()` API shape (`triggerTransition`, `isTransitioning`, `prefersReducedMotion`, `isMobileFallback`) so pre-existing callers compile. `triggerTransition` is now just `router.push`; the curtain overlay was removed. Page transitions are a 150ms opacity fade via the `.page-fade-in` class on `<main>`.
+- `Testimonials.tsx` — Editorial pull-quote block on About (quote `#BFBFBF` italic, name `#F2F2F2`, role `#5C5C5C` sentence case). Renders `null` while `testimonials` is empty.
 
-There is **no site-wide footer** (removed in `08c3b27`). `ColumbusTime.tsx` and `SiteFooter.tsx` no longer exist. The mobile `FloatingCards`, `CustomCursor`, `LenisProvider`, `ArchiveModal`, `ScribbleLink`, `ScrambleText` components mentioned in older docs are also gone.
+There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in the Calm pass. `TextScramble`, `CurtainOverlay`, `ColumbusTime`, `SiteFooter`, `FloatingCards`, `CustomCursor`, `LenisProvider`, `ArchiveModal`, `ScribbleLink`, `ScrambleText` are all gone.
 
 ### Data Files
 
@@ -60,15 +59,17 @@ There is **no site-wide footer** (removed in `08c3b27`). `ColumbusTime.tsx` and 
 
 ## Home Page Anatomy
 
-`app/page.client.tsx` is a thin wrapper that owns the inline header + `BookingModal` state. The three sections are rendered inside `HomeClient.tsx` and scroll naturally (no snap, no wheel-hijack, no `no-scroll` class — Batch 2 removed all of that on both desktop and mobile):
+`app/page.client.tsx` is a thin wrapper that owns the inline header + `BookingModal` state. The three stacked sections live in `HomeClient.tsx`:
 
-1. **hero** (`data-id="hero"`) — `LogoArchitectOfSound` with `showPortrait={false}`, scrambled proof strip (`~{STATS.performances} performances · ~{STATS.placements} placements` from `data/stats.ts`), EPK CTA pill, social-icon row (YouTube + TikTok only — Instagram and the email icon were removed in Batch 2; email is now a plain-text link on `/epk` and About). When `HERO_VIDEO_URL` is set, the reel renders behind a `.hero-shade` linear-gradient + `.hero-vignette` radial-gradient (see Gotcha #2) at `opacity-25 sm:opacity-30`. The video poster is `/hero-poster.jpg` — a 1920×1080 near-black (#050505) JPEG generated with `sharp`.
-2. **services** (`data-id="services"`) — `(02) — services` eyebrow, `<AudioShowcase />`, three `ServiceCard`s (Live Performance, Session Drums, Music Direction) wired to `onOpenBooking` (grid is `grid-cols-1 md:grid-cols-3`, cards use `h-full` + `mt-auto` on the CTA so they stretch equal-height), and a "Recent — index of N" placements strip linking to `/placements`.
-3. **epk** (`data-id="epk"`) — Closing booking panel. Primary CTA is a `Book →` button wired to `onOpenBooking` (not the EPK link). Below it: `Press kit →` text link to `/epk`, then a centered `Placements → · Performance →` link row that closes the page.
+1. **hero** (`data-id="hero"`, `min-h-[88svh]`, centered) — `LogoArchitectOfSound` with `showPortrait={false}` renders the Fraunces 300 name with the single page `.grad`. One caption line (`#9A9A9A`, 15/16px, max-w `[28ch]`): *"Drummer and music director. Live, studio, remote. Columbus, OH."* One `Book →` primary pill. Nothing else — no reel, no scramble, no stats, no socials, no shade/vignette.
+2. **services** (`data-id="services"`, `max-w-[640px]`, `py-16 sm:py-24`) — Heading `What I do`. Three `<p>` lines, each with a `<strong class="font-normal text-[#F2F2F2]">` lead: Live performance, Session drums, Music direction. One `Send a brief →` text link below.
+3. **proof** (`data-id="proof"`, same column width) — Heading `Proof`. Two `<p>` lines: `~{STATS.performances} performances · ~{STATS.placements} placements` and the first five distinct artists from `data/projects.data.ts` joined with ` · `. Three text links at the bottom: `Placements →   Performance →   Press kit →`.
 
-Routing: `HomeClient` accepts `initialSection?: "hero" | "services" | "epk"` and will `scrollIntoView` the matching ref on mount. The section-id union is a **closed type** — adding a fourth value is a breaking change throughout the file (gotcha #10).
+Then `<FooterLine />` (site-wide).
 
-Fade-in: an IntersectionObserver with `root: null`, `threshold: 0.08`, `rootMargin: "0px 0px -10% 0px"` flips the per-section `visible` state once (never back to false). **Hero starts `true` always** — it's above the fold and some touch browsers never fired the first entry for the initial visible section, which left phones stuck at opacity-0. Services + EPK still latch via the observer, with two fail-open fallbacks in the same effect: a `window` `scroll` listener (passive + once) and a 1200 ms `setTimeout` that both call `setVisible({ hero: true, services: true, epk: true })` unconditionally. Both are torn down with the observer on unmount. Reduced-motion users start with everything visible. The hero wrapper also skips the fade/transform classes entirely (it's always visible, no transition needed → no transform composite during hydration → no layout jump). No other scroll machinery remains.
+Routing: `HomeClient` accepts `initialSection?: "hero" | "services" | "proof"` and `scrollIntoView`s the matching ref on mount. The section-id union is a **closed type** (Gotcha #10) — adding a value means updating the union, state shape, refs, and observer cast in one pass.
+
+Fade-in: IntersectionObserver with `root: null`, `threshold: 0.08`, `rootMargin: "0px 0px -10% 0px"` flips `visible[key]` to true once (never back to false). **Hero starts `true` always** — some touch browsers never fired the first entry for the initial visible section. Fail-open fallbacks in the same effect: a `window` `scroll` listener (passive + once) and a 1200 ms `setTimeout` that both call `setVisible({ hero: true, services: true, proof: true })`. Both are torn down with the observer on unmount. Reduced-motion users start with everything visible. The transition is opacity only, 300 ms — no translate, no scale.
 
 ## Booking System
 
@@ -96,20 +97,14 @@ Fade-in: an IntersectionObserver with `root: null`, `threshold: 0.08`, `rootMarg
 
 The site streams media straight from Vercel Blob (public store). The existing practice clips live under `practice/2026-05-12/` on a blob store named `practice-videos`. The newer `hero/` and `audio/` paths are the convention for the home-page reel and `AudioShowcase` clips.
 
-### To activate the hero reel
+### Hero reel — parked
+
+The home hero is intentionally still after the Calm pass (a reel on top of busy text made the page feel busy). Only re-introduce behind a feature flag with clean, truly ambient footage at `opacity-20` or lower; otherwise it will fight the name block. Upload CLI still works:
 
 ```bash
 npx vercel env pull .env.local           # once, to get BLOB_READ_WRITE_TOKEN
 npm run upload-media -- ./media/reel.mp4 hero/reel.mp4
 ```
-
-The script prints a line to paste into `app/components/HomeClient.tsx`:
-
-```ts
-const HERO_VIDEO_URL: string | null = "https://…/hero/reel.mp4";
-```
-
-Recommended specs: H.264 MP4, 1920×1080 (or a 1080×1920-safe crop), 8–15s seamless loop, muted, ≤ ~6MB. Posters fall back to `/anthony-dake-drums.jpg`.
 
 ### To activate `AudioShowcase`
 
@@ -136,10 +131,8 @@ Edit `data/testimonials.data.ts` — add real entries only, with written permiss
 - `app/components/SiteHeader.tsx` (all subpages + 404)
 - `app/page.client.tsx` (home page)
 
-### 2. GRADIENT TEXT SYSTEM — BARE TEXT IN DIVS IS INVISIBLE
-`globals.css` sets `body { color: transparent; background-clip: text }` with the gradient painted onto leaf elements. The current leaf list is `h1–h6, p, span, a, li, label, small, strong, em, b, i, button, td, th, dt, dd, figcaption, blockquote, cite, time, legend, summary` — any tag NOT on that list renders transparent. Container elements (`div, section, main, header, footer, nav, article, aside, form, ul, ol, figure, table`) also get `background-image: none !important`, so text placed **directly** in a `<div>` renders invisible. Always wrap visible text in one of the leaf tags.
-
-**Painting backgrounds that must survive the container-reset:** the `!important` reset on `div` strips any plain Tailwind gradient class (`bg-gradient-to-b`, `from-black/60`, etc.). The pattern is to add a named class in `globals.css` with higher specificity (e.g. `section div.hero-shade { background-image: linear-gradient(...) !important; }`) and apply it as a bare className. The hero reel uses `.hero-shade` (linear) + `.hero-vignette` (radial) stacked under the content layer. Use the same pattern anywhere else a custom background on a `div` is needed.
+### 2. GRADIENT TEXT IS OPT-IN (`.grad` only)
+The Calm pass removed the global gradient-text machinery. `body { color: #F2F2F2; background: #000 }`; there is no `-webkit-text-fill-color: transparent` on anywhere but one utility class. The gradient is a single opt-in: `.grad` in `globals.css`. Apply it to the hero name on `/` and the page title on each subpage — **one instance per page, never more**. Every other text element paints its own color (default `#F2F2F2`, meta `#9A9A9A`, tertiary/caption `#5C5C5C`). Links: `#F2F2F2` with `#9A9A9A` on hover (or the reverse for meta text).
 
 ### 3. JSX `.map()` PATTERN
 Don't use a ternary inside a parenthesized arrow return inside `.map()`. Use the if/return pattern:
@@ -152,7 +145,7 @@ items.map((p) => {
 ```
 
 ### 4. SKIP-TO-CONTENT LINK
-Both headers render `<a href="#main-content" className="skip-to-content">`. The styles live in `globals.css` under `.skip-to-content` + `.skip-to-content:focus` — the class manually strips the gradient text-fill and uses `clip-path: inset(50%)` + `opacity: 0`. Do NOT swap it for Tailwind's `sr-only`; the gradient cascade interferes.
+Both headers render `<a href="#main-content" className="skip-to-content">`. Plain `sr-only`-style hide + `:focus` reveal to a white chip. No gradient trickery any more (Calm pass).
 
 ### 5. TYPESCRIPT TIMERS
 `window.setInterval` returns `number`, but `ReturnType<typeof setInterval>` resolves to `NodeJS.Timeout`. Type timer IDs explicitly: `let intervalId: number | null = null`.
@@ -168,19 +161,17 @@ Both `SiteHeader.tsx` and `app/page.client.tsx` keep their own `bookingOpen` sta
 
 There is no shared React context — the event is the shared channel.
 
-### 8. GRADIENT TEXT + FORM CONTROLS
-`<input>`, `<textarea>`, `<select>`, `<option>` need explicit `color` / `-webkit-text-fill-color` or the gradient-text cascade makes their values invisible. Use the `.form-input` class in `globals.css` (sets `color: #f5f5f5 !important` + kills the gradient). The booking modal headings/labels use `.modal-plain`, `.modal-label`, `.modal-error` for the same reason.
-
-### 9. ASSET-GATED FEATURES — EMPTY IS CORRECT
-Three features render **nothing** in production when their data is empty:
-- `HERO_VIDEO_URL` (`HomeClient.tsx`) — `null` → no reel, no overlay, no extra DOM.
-- `AUDIO_CLIPS` (`AudioShowcase.tsx`) — empty → component returns `null`.
+### 8. ASSET-GATED FEATURES — EMPTY IS CORRECT
+Two features render **nothing** in production when their data is empty:
+- `AUDIO_CLIPS` (`AudioShowcase.tsx`, now mounted on `/epk`) — empty → component returns `null`.
 - `testimonials` (`data/testimonials.data.ts`) — empty → `<Testimonials />` returns `null`.
 
-**Current state (since `c88280c`, 2026-11-03):** all three are populated with PLACEHOLDERS at Anthony's request so he can see the design live — a center-crop of his "16th groove 88bpm" practice clip as the reel, four practice-clip excerpts as the audio buttons, and three quotes attributed to "Placeholder Name". Replace them with real assets/quotes; do not invent new placeholder content, and do not "clean up" by emptying them unless Anthony asks. The source placeholder files are in `~/Claude-Workspace/4-architect/media-placeholders/`.
+The home hero intentionally no longer carries a video reel (Calm pass parked it — if it comes back, gate it behind a feature flag, use clean footage, and run it at `opacity-20` or lower). `HERO_VIDEO_URL` is a dead constant; leave it `null`.
 
-### 10. CLOSED SECTION-ID UNION
-`HomeClient`'s `initialSection` and the internal `visible` state both use the type `"hero" | "services" | "epk"`. The IntersectionObserver callback casts `data-id` to this type. Adding a new snap section means updating the type, the state shape, the observer cast, and the refs in one pass.
+**Current state:** `AUDIO_CLIPS` is populated with four PLACEHOLDER excerpts from practice clips; `testimonials` has three PLACEHOLDER quotes attributed to "Placeholder Name". Replace with real audio and real quotes (with written permission). Do not invent new placeholder content, and do not "clean up" by emptying them unless Anthony asks.
+
+### 9. CLOSED SECTION-ID UNION
+`HomeClient`'s `initialSection` and the internal `visible` state both use the type `"hero" | "services" | "proof"`. The IntersectionObserver callback casts `data-id` to this type. Adding a new section means updating the type, the state shape, the observer cast, and the refs in one pass.
 
 ## Video Infrastructure
 
@@ -199,7 +190,7 @@ Header height: `h-14` (56px), `fixed inset-x-0 top-0 z-[9999]`, `bg-black/70 bac
 
 Layout: `grid grid-cols-[1fr_auto_1fr]`. On `md+`: left half has Placements / Performance, center has the HomeMark pill, right half has About + a `Book →` button (Practice was dropped from the nav in Batch 2). On `<md`: left cell holds a hamburger button; the right cell holds a compact `Book →` pill (same style, `text-[10px] px-3 py-1.5`, `min-h-11` for tap target) so booking is one tap away without opening the hamburger. The desktop nav is hidden. Hamburger opens a fullscreen overlay (`fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm md:hidden`) with three links (Placements, Performance, About) + Book button, each with `onClick={() => setMenuOpen(false)}`.
 
-**Home page scroll (all devices):** Batch 2 removed the wheel-snap / swipe-to-navigate / `no-scroll` system entirely. Desktop and mobile both scroll naturally — no wheel listener, no touch-swipe-to-navigate, no `no-scroll` class, no `overflow-y-hidden` on the container, no `(scroll)` hint. The CSS rule `html.no-scroll, body.no-scroll` is still in `globals.css` but unused; left in place so a future modal can repurpose it.
+**Home page scroll (all devices):** normal document flow. No snap, no wheel-hijack, no `no-scroll`, no `overflow-y-hidden`. Calm pass removed the leftover `.no-scroll` CSS too.
 
 Skip-to-content: both headers render it above the `<header>` element, mapped to `#main-content`.
 
@@ -229,8 +220,32 @@ The `/practice` page is an "open practice room" — a daily log of real sessions
 - Self-hosted video via Vercel Blob (no YouTube embeds).
 - Current log: through Session #7 on 2026-05-18.
 
+## Design System ("Calm" — current)
+
+One idea per screen. One primary CTA style. One gradient per page. Solid text, no decoration, no motion for its own sake.
+
+**Color.** `#F2F2F2` primary, `#9A9A9A` meta, `#5C5C5C` tertiary / captions, `rgba(255,255,255,0.08)` hairlines. Black background. Links: `#F2F2F2` with `#9A9A9A` on hover (reverse for meta text). The blue→white gradient (`#3B82F6 → #8EC5FF → #FFFFFF`) is opt-in via `.grad` — exactly one instance per page (hero name on `/`, page title elsewhere).
+
+**Type.** Fraunces 300 (`var(--font-serif)` via `.font-serif-display`) on the hero name and page titles only. One sans for everything else at two sizes: 15–16 px body `leading-[1.6]`/`[1.75]`, 12 px meta. The only uppercase text left on the site is the header nav and the year-group micro-labels on the index pages (`text-[11px] tracking-[0.18em] text-[#5C5C5C]`). Sentence case everywhere else.
+
+**Buttons.** One primary: `.epk-cta` — white pill, black text, no shadow, no glow, no hover-lift, hover-only `background-color: #E6E6E6`. One secondary: a plain text link with ` →`. No bordered pills, no outlined buttons — except the header `Book →` pill, which keeps its thin border (the single exception).
+
+**Motion.** No scramble, no curtain, no `-translate-y` hover lifts, no shadow pulses. Page transitions are a 150 ms opacity fade via `.page-fade-in` on `<main>`. Section fade-ins are 300 ms opacity only (no translate/scale). All animations respect `prefers-reduced-motion`.
+
+**Decoration.** Removed: eyebrows (`(02) — services`, `(IDX·01)`, `(BIO·01)`, `(LOG·01)`, `(EPK·01)`), corner labels (`INDEX OF 9`, `RECENT HIGHLIGHTS`, `ELECTRONIC PRESS KIT`), sub-captions under CTAs (`PDF · credits, reel, contact`), and card borders around content. Sections get at most one short heading in sentence case (`What I do`, `Proof`, `Listen`, `Contact`). Separate groups with whitespace (`py-16 sm:py-24`) and a single hairline `border-t` where needed.
+
+**Density.** Reading column `max-w-[640px]` centered. Index pages `max-w-[960px]`. One group per screen at 375 px.
+
 ## Commit History (most recent first)
 
+- `099b3d4` — Calm 4/5: EPK, About, Practice, 404, modal, headers
+- `5d2615f` — Calm 3/5: index pages — two columns, no labels, no stagger
+- `115840f` — Calm 2/5: home — still hero, one button, services as a list, proof line, footer line
+- `306444a` — Calm 1/5: solid text, opt-in gradient, no glow/scramble/curtain
+- `1fa7fc5` — Brand: revised AD mark — text serif, solid fill
+- `60e6c9d` — Brand: AD monogram replaces the drum emoji — header mark, favicons, apple-touch-icon, branded OG card
+- `f00e069` — Fix: hero visible by default; fail-open section reveals
+- `3deabdb` — Fix: section fade-in threshold + CTA label shadow
 - `aea40b8` — EPK: one-sheet label + contact line; admin: bookings inbox replaces email list
 - `b2bdd08` — Services: add Music Direction card
 - `078dcfa` — Nav: drop Practice from main navigation; remove RSS; About keeps the only link
@@ -281,15 +296,14 @@ The `/practice` page is an "open practice room" — a daily log of real sessions
 
 ## Future Work
 
-- Upload the real hero reel + 3–4 audio clips (activation steps in "Media assets" above).
-- Replace the placeholder `/Anthony_Dake_Resume.pdf` with a real one-sheet (PDF: credits, reel link, contact). The EPK button already labels it that way.
-- Replace the childhood photo at the top of `/about` with a recent professional shot when one is available (keep caption; same slot).
+- Replace the placeholder `/Anthony_Dake_Resume.pdf` with a real one-sheet (PDF: credits, reel link, contact). The EPK button already says "One-sheet (PDF)".
+- Replace the childhood photo at the top of `/about` with a recent professional shot (keep caption; same slot). The same shot can replace the branded OG card (`/og-image.jpg`) once it exists.
+- Upload 3–4 real audio clips (replaces the practice-clip placeholders in `AudioShowcase`).
 - Collect 2–3 real testimonials with written permission; drop them into `data/testimonials.data.ts`.
-- Brand assets (AD monogram + favicons + OG card) are shipped. Source files live in `public/` (mark.svg, letters.svg, mark-white.svg, favicons, og-image.jpg) and in `~/Claude-Workspace/4-architect/brand/` for the generation scripts. Future iteration: tighten the glyph counters at 16×16 if the favicon reads muddy.
+- Brand assets (AD monogram + favicons + OG card) are shipped. Source files live in `public/` and in `~/Claude-Workspace/4-architect/brand/` for the generation scripts.
 - Practice page: paid access layer (Square — see Working Preferences).
 - Practice page: CMS/admin panel for adding entries without a code push.
 - Practice page: transcode the raw `.mov` clips → H.264 MP4 + VP9 WebM.
-- Audio embeds on the home page beyond the showcase (Spotify oEmbed for featured records).
 
 ## Local Environment (Anthony's Mac)
 
