@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Global reset-ish */
+/* Global reset */
 html,
 body {
   height: 100%;
@@ -10,12 +10,11 @@ body {
 
 :root {
   color-scheme: dark;
-  --bg-primary: #000000;
-  --bg-secondary: #000000;
-  --text-primary: #f5f5f5;
-  --text-secondary: #b3b3b3;
-  --divider: rgba(255, 255, 255, 0.09);
-  --text-gradient: linear-gradient(120deg, #3b82f6 0%, #8ec5ff 60%, #ffffff 100%);
+  --bg: #000000;
+  --text-primary: #F2F2F2;
+  --text-secondary: #9A9A9A;
+  --text-tertiary: #5C5C5C;
+  --hairline: rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -27,461 +26,131 @@ body {
 }
 
 body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-html.no-scroll,
-body.no-scroll {
-  overflow: hidden;
-  overscroll-behavior: none;
-}
-
-.site-bg {
-  position: relative;
-  background: var(--bg-primary);
+  background: var(--bg);
   color: var(--text-primary);
 }
 
 a {
   color: inherit;
   text-decoration: none;
-  text-decoration-color: rgba(142, 197, 255, 0.45);
-  text-underline-offset: 4px;
-  text-decoration-thickness: 1px;
-  transition: color 220ms ease, text-decoration-color 220ms ease;
-}
-
-a:hover {
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.95);
-  text-decoration-thickness: 2px;
-}
-
-.home-nav,
-.home-nav:hover,
-.home-nav:focus,
-.home-nav:active {
-  text-decoration: none !important;
-}
-
-.home-nav span,
-.home-nav span:hover {
-  color: initial !important;
-  -webkit-text-fill-color: initial !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
+  transition: color 180ms ease;
 }
 
 ::selection {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.bg-white {
-  background-color: var(--bg-primary) !important;
-}
-
-.bg-white\/70 {
-  background-color: #000000 !important;
-}
-
-.text-black {
-  color: var(--text-primary) !important;
-}
-
-[class*="text-black/"] {
-  color: var(--text-secondary) !important;
-}
-
-.bg-black\/10 {
-  background-color: var(--divider) !important;
-}
-
-.border-black\/10 {
-  border-color: var(--divider) !important;
-}
-
-img {
-  filter: brightness(0.96);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-}
-
-body {
-  color: transparent !important;
-  -webkit-text-fill-color: transparent !important;
-  background-image: var(--text-gradient);
+/* Opt-in gradient — exactly one instance per page: hero name on /, page title
+   elsewhere. Everything else uses solid --text-primary / --text-secondary. */
+.grad {
+  background-image: linear-gradient(120deg, #3B82F6 0%, #8EC5FF 55%, #FFFFFF 100%);
   -webkit-background-clip: text;
   background-clip: text;
-}
-
-h1, h2, h3, h4, h5, h6,
-p, span, a, li, label, small, strong, em, b, i,
-button, td, th, dt, dd, figcaption, blockquote, cite,
-time, legend, summary {
-  color: transparent !important;
-  -webkit-text-fill-color: transparent !important;
-  background-image: var(--text-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-div, section, main, header, footer, nav, article, aside, form, ul, ol, figure, table {
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-}
-
-/* Darkening layers for the hero reel. The container-reset rule above
-   strips background-image from every <div>, so these need higher
-   specificity to repaint their gradients. Keep them pointer-events-none
-   on the wrapper side; these rules only paint the layer. */
-section div.hero-shade {
-  background-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.62) 0%,
-    rgba(0, 0, 0, 0.38) 45%,
-    rgba(0, 0, 0, 0.94) 100%
-  ) !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-}
-section div.hero-vignette {
-  background-image: radial-gradient(
-    ellipse 58% 52% at 50% 48%,
-    rgba(0, 0, 0, 0.78) 0%,
-    rgba(0, 0, 0, 0) 72%
-  ) !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-}
-
-input,
-textarea,
-select,
-option {
-  caret-color: #8ec5ff;
-}
-
-input::placeholder,
-textarea::placeholder {
   color: transparent;
   -webkit-text-fill-color: transparent;
-  background-image: var(--text-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
 }
 
-svg,
-svg * {
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-  color: var(--text-primary) !important;
-  -webkit-text-fill-color: currentColor !important;
-}
-
-.bg-black\/10 {
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-}
-
-@keyframes scrollFlash {
-  0%, 60% { opacity: 0.2; }
-  50% { opacity: 1; }
-  100% { opacity: 0.2; }
-}
-
-.animate-scrollFlash {
-  animation: scrollFlash 2.4s ease-in-out infinite;
-}
-
-.fade-section {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.fade-section.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@keyframes archiveFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.archive-fade {
-  animation: archiveFadeIn 1.2s ease forwards;
-}
-
-.archive-modal-plain,
-.archive-modal-plain * {
-  color: #e2e2e2 !important;
-  -webkit-text-fill-color: #e2e2e2 !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-}
-
-/* Generic plain-text utilities used inside modals and other surfaces
-   that need to escape the body-level gradient text-fill. */
-.modal-plain {
-  color: rgba(245, 245, 245, 0.9) !important;
-  -webkit-text-fill-color: rgba(245, 245, 245, 0.9) !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-}
-
-.modal-label {
-  color: rgba(245, 245, 245, 0.55) !important;
-  -webkit-text-fill-color: rgba(245, 245, 245, 0.55) !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-}
-
-.modal-error {
-  color: rgba(252, 165, 165, 0.9) !important;
-  -webkit-text-fill-color: rgba(252, 165, 165, 0.9) !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-}
-
-/* Skip-to-content — hidden until focused (keyboard users only).
-   Stripped of the global gradient text-fill so the focused chip reads. */
-.skip-to-content {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  clip-path: inset(50%) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-  color: transparent !important;
-  -webkit-text-fill-color: transparent !important;
-}
-
-.skip-to-content:focus,
-.skip-to-content:focus-visible {
-  position: fixed !important;
-  width: auto !important;
-  height: auto !important;
-  padding: 0.5rem 1rem !important;
-  margin: 0 !important;
-  overflow: visible !important;
-  clip: auto !important;
-  clip-path: none !important;
-  white-space: normal !important;
-  z-index: 99999 !important;
-  top: 0.75rem !important;
-  left: 0.75rem !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  background: white !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-  color: black !important;
-  -webkit-text-fill-color: black !important;
-  border-radius: 0.25rem !important;
-  font-size: 0.875rem !important;
-  text-decoration: none !important;
-}
-
-/* Editorial serif display — Fraunces 300. Apply only to signature
-   headlines, never to body or labels. Display sizes (>=28px) only. */
+/* Fraunces 300 — hero name + page titles only. Display sizes. */
 .font-serif-display {
   font-family: var(--font-serif), Georgia, serif;
   font-weight: 300;
 }
 
-.archive-modal-surface {
-  background-color: #000000 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background-image: none !important;
+/* Primary pill — the one CTA style. White pill, black text, no shadow, no
+   glow. Only `:hover` change is a slight off-white. Uppercase with tight
+   tracking is the one allowed uppercase CTA label on the site. */
+.epk-cta {
+  background-color: #FFFFFF;
+  color: #000000;
+  border-radius: 9999px;
+  padding: 0.75rem 1.75rem;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 180ms ease;
 }
 
-.archive-title {
-  color: #f2f2f2 !important;
-  -webkit-text-fill-color: #f2f2f2 !important;
+.epk-cta:hover {
+  background-color: #E6E6E6;
 }
 
-.archive-close {
-  color: rgba(255, 255, 255, 0.7) !important;
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.7) !important;
-  background-image: none !important;
-}
-
-.archive-close:hover {
-  color: rgba(255, 255, 255, 0.95) !important;
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.95) !important;
-}
-
-.archive-modal-input::placeholder {
-  color: rgba(210, 210, 210, 0.6) !important;
-  -webkit-text-fill-color: rgba(210, 210, 210, 0.6) !important;
-}
-
-.archive-pill {
-  background-color: #ffffff !important;
-  border: 1px solid rgba(20, 20, 20, 0.18) !important;
-  color: #111111 !important;
-  -webkit-text-fill-color: #111111 !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
-}
-
-.archive-pill:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.25);
-  border-color: rgba(20, 20, 20, 0.28) !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .archive-fade {
-    animation: none;
-  }
-}
-
-.epk-cta,
-.epk-cta * {
-  background-color: #ffffff !important;
-  border: 1px solid rgba(20, 20, 20, 0.18) !important;
-  color: #111111 !important;
-  -webkit-text-fill-color: #111111 !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
-  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
-}
-
-/* Submit-pill label — black text on the white .epk-cta surface. Must
-   win over both the body-level gradient leaf-element rule and the
-   .epk-cta * descendant rule (which paints a white background-color
-   AND a 0 10px 22px drop-shadow onto every child), so the inner span
-   paints as just letters, no white chip or dark rectangle behind. */
-.submit-label {
-  color: #000 !important;
-  -webkit-text-fill-color: #000 !important;
-  background-image: none !important;
-  background-color: transparent !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
-}
-
+/* Dark form input — plain and self-contained. No gradient trickery any more. */
 .form-input {
   width: 100%;
   padding: 12px 16px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: rgba(255, 255, 255, 0.04) !important;
-  color: #f5f5f5 !important;
-  -webkit-text-fill-color: #f5f5f5 !important;
-  background-image: none !important;
-  -webkit-background-clip: border-box !important;
-  background-clip: border-box !important;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #F2F2F2;
   font-size: 15px;
   line-height: 1.6;
-  transition: border-color 200ms ease;
+  transition: border-color 180ms ease;
   outline: none;
 }
 
 .form-input:focus {
-  border-color: rgba(142, 197, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .form-input::placeholder {
-  color: rgba(180, 180, 180, 0.5) !important;
-  -webkit-text-fill-color: rgba(180, 180, 180, 0.5) !important;
+  color: #5C5C5C;
 }
 
 .form-input option {
   background-color: #000000;
-  color: #f5f5f5;
+  color: #F2F2F2;
 }
 
-.epk-cta:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.25) !important;
-  border-color: rgba(20, 20, 20, 0.28) !important;
-  text-decoration: none !important;
+/* Skip-to-content — visually hidden until focused. No gradient involved
+   any more, so the styling is a plain sr-only + :focus reveal. */
+.skip-to-content {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .fade-section {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
+.skip-to-content:focus,
+.skip-to-content:focus-visible {
+  position: fixed;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+  z-index: 99999;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: #FFFFFF;
+  color: #000000;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
 }
 
-
-
-
-/* Pulsing blue gradient glow on EPK CTA */
-@keyframes epkGlowPulse {
-  0%, 100% {
-    box-shadow:
-      0 0 12px 3px rgba(59, 130, 246, 0.35),
-      0 0 30px 8px rgba(142, 197, 255, 0.15),
-      0 10px 22px rgba(0, 0, 0, 0.2);
-  }
-  50% {
-    box-shadow:
-      0 0 20px 6px rgba(59, 130, 246, 0.55),
-      0 0 50px 14px rgba(142, 197, 255, 0.25),
-      0 10px 22px rgba(0, 0, 0, 0.2);
-  }
+/* Page fade — opacity only, 150ms. Used by TransitionProvider. */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.epk-cta-glow {
-  animation: epkGlowPulse 3s ease-in-out infinite !important;
-  border: 1px solid rgba(142, 197, 255, 0.3) !important;
-}
-
-.epk-cta-glow:hover {
-  animation: none !important;
-  box-shadow:
-    0 0 24px 8px rgba(59, 130, 246, 0.5),
-    0 0 60px 16px rgba(142, 197, 255, 0.2),
-    0 14px 26px rgba(0, 0, 0, 0.25) !important;
-  border-color: rgba(142, 197, 255, 0.5) !important;
+.page-fade-in {
+  animation: pageFadeIn 150ms ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .epk-cta-glow {
-    animation: none !important;
-    box-shadow:
-      0 0 16px 4px rgba(59, 130, 246, 0.4),
-      0 10px 22px rgba(0, 0, 0, 0.2) !important;
+  .page-fade-in {
+    animation: none;
   }
 }
-
-
-/* Safe area support — handled inline on practice page modal and main content.
-   Header already has px-6 which is sufficient. */

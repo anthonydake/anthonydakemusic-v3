@@ -1,12 +1,13 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import CurtainOverlay from "./CurtainOverlay";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
-type TransitionMode = "curtain" | "fade";
-type TransitionPhase = "idle" | "covering" | "revealing";
-
+// Simplified in the "Calm" pass — no curtain, no scroll-lock, no mobile
+// fallback distinction. `triggerTransition` is just `router.push` now;
+// a 150ms opacity fade is handled by the `.page-fade-in` class on the
+// `<main>` wrapper of each page. The API shape is preserved so existing
+// callers compile.
 type TransitionContextValue = {
   triggerTransition: (href: string) => void;
   isTransitioning: boolean;
@@ -29,13 +30,8 @@ type MediaQueryListLegacy = MediaQueryList & {
 
 export default function TransitionProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname();
-  const [phase, setPhase] = useState<TransitionPhase>("idle");
-  const [mode, setMode] = useState<TransitionMode>("curtain");
-  const [target, setTarget] = useState<string | null>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isMobileFallback, setIsMobileFallback] = useState(false);
-  const navCommittedRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -66,75 +62,20 @@ export default function TransitionProvider({ children }: { children: React.React
   const triggerTransition = useCallback(
     (href: string) => {
       if (!href) return;
-      if (phase !== "idle") return;
-      const nextMode: TransitionMode = prefersReducedMotion ? "fade" : "curtain";
-      setMode(nextMode);
-      setTarget(href);
-      navCommittedRef.current = false;
-      setPhase("covering");
+      router.push(href);
     },
-    [phase, prefersReducedMotion]
+    [router]
   );
-
-  useEffect(() => {
-    if (phase === "idle") return;
-    const prevent = (e: Event) => e.preventDefault();
-    const preventKeys = (e: KeyboardEvent) => {
-      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", "Space"].includes(e.code)) {
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("wheel", prevent, { passive: false });
-    window.addEventListener("touchmove", prevent, { passive: false });
-    window.addEventListener("keydown", preventKeys);
-
-    return () => {
-      window.removeEventListener("wheel", prevent);
-      window.removeEventListener("touchmove", prevent);
-      window.removeEventListener("keydown", preventKeys);
-    };
-  }, [phase]);
-
-  useEffect(() => {
-    if (phase !== "covering" || !target || pathname !== target) return;
-    const t = window.setTimeout(() => setPhase("revealing"), 0);
-    return () => window.clearTimeout(t);
-  }, [phase, target, pathname]);
-
-  const handleCoverComplete = useCallback(() => {
-    if (phase !== "covering") return;
-    if (!target) return;
-    if (navCommittedRef.current) return;
-    navCommittedRef.current = true;
-    router.push(target);
-  }, [phase, target, router]);
-
-  const handleRevealComplete = useCallback(() => {
-    if (phase !== "revealing") return;
-    setPhase("idle");
-    setTarget(null);
-  }, [phase]);
 
   const value = useMemo(
     () => ({
       triggerTransition,
-      isTransitioning: phase !== "idle",
+      isTransitioning: false,
       prefersReducedMotion,
       isMobileFallback,
     }),
-    [triggerTransition, phase, prefersReducedMotion, isMobileFallback]
+    [triggerTransition, prefersReducedMotion, isMobileFallback]
   );
 
-  return (
-    <TransitionContext.Provider value={value}>
-      {children}
-      <CurtainOverlay
-        phase={phase}
-        mode={mode}
-        onCoverComplete={handleCoverComplete}
-        onRevealComplete={handleRevealComplete}
-      />
-    </TransitionContext.Provider>
-  );
+  return <TransitionContext.Provider value={value}>{children}</TransitionContext.Provider>;
 }

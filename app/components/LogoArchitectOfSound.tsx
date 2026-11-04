@@ -1,26 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
-import TextScramble from "./TextScramble";
 
 type Props = {
   showPortrait?: boolean;
 };
 
+// Hero name lockup. Fraunces 300 with the one allowed gradient per page
+// (`.grad`). Portrait is opt-out (on by default for the standalone use,
+// off in the hero where the hero no longer carries a photo).
 export default function LogoArchitectOfSound({ showPortrait = true }: Props) {
-  const [run, setRun] = useState(0);
-  const retrigger = () => setRun((n) => n + 1);
-
   return (
-    <div
-      className="relative inline-flex w-full max-w-[640px] lg:max-w-[820px] xl:max-w-[960px] flex-col items-center justify-center text-[#F2F2F2]"
-      onMouseEnter={retrigger}
-      onMouseLeave={retrigger}
-    >
+    <div className="relative inline-flex w-full max-w-[640px] lg:max-w-[820px] xl:max-w-[960px] flex-col items-center justify-center">
       <div className="flex flex-col items-center justify-center text-center">
         {showPortrait && (
-          <div className="mb-8 sm:mb-10 mx-auto h-[150px] w-[150px] sm:h-[170px] sm:w-[170px] md:h-[190px] md:w-[190px] lg:h-[220px] lg:w-[220px] xl:h-[240px] xl:w-[240px] overflow-hidden rounded-full shadow-lg">
+          <div className="mb-8 sm:mb-10 mx-auto h-[150px] w-[150px] sm:h-[170px] sm:w-[170px] md:h-[190px] md:w-[190px] lg:h-[220px] lg:w-[220px] xl:h-[240px] xl:w-[240px] overflow-hidden rounded-full">
             <Image
               src="/anthony-dake-drums.jpg"
               alt="Anthony Dake — session drummer based in Columbus, Ohio"
@@ -33,30 +27,9 @@ export default function LogoArchitectOfSound({ showPortrait = true }: Props) {
           </div>
         )}
 
-        {/* Name */}
-        <h1 className="font-serif-display text-[36px] sm:text-[48px] md:text-[58px] tracking-[-0.02em] leading-tight text-[#F2F2F2]">
-          <TextScramble
-            key={`name-${run}`}
-            text="anthony dake"
-            className="block"
-            duration={500}
-            charset="#%&$@+|"
-            scrambleFraction={0.35}
-            trigger={run}
-          />
+        <h1 className="grad font-serif-display text-[36px] sm:text-[48px] md:text-[58px] tracking-[-0.02em] leading-tight">
+          anthony dake
         </h1>
-
-        {/* Subtitle */}
-        <div className="mt-4 sm:mt-5 text-[12px] sm:text-[14px] uppercase tracking-[0.32em] text-[#A1A1A6]">
-          <TextScramble
-            key={`desc-${run}`}
-            text="LIVE DRUMS | SESSION DRUMS"
-            duration={500}
-            charset="#%&$@+|"
-            scrambleFraction={0.35}
-            trigger={run}
-          />
-        </div>
       </div>
     </div>
   );

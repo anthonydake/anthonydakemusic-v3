@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
-import TextScramble from "./TextScramble";
 import AudioShowcase from "./AudioShowcase";
 import { projectIndex } from "../../data/projects.data";
 import { STATS } from "../../data/stats";
@@ -153,14 +152,7 @@ export default function HomeClient({
                 >
                   <div className="flex flex-col items-center">
                     <span className="font-serif-display text-[26px] sm:text-[32px] leading-none text-[#F2F2F2]">
-                      <TextScramble
-                        key={`perfs-${scrambleRun}`}
-                        text={`~${STATS.performances}`}
-                        duration={600}
-                        charset="#%&$@+|0123456789"
-                        scrambleFraction={0.5}
-                        trigger={scrambleRun}
-                      />
+                      ~{STATS.performances}
                     </span>
                     <span className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.28em]">
                       performances
@@ -169,14 +161,7 @@ export default function HomeClient({
                   <div className="h-10 w-px bg-white/15" />
                   <div className="flex flex-col items-center">
                     <span className="font-serif-display text-[26px] sm:text-[32px] leading-none text-[#F2F2F2]">
-                      <TextScramble
-                        key={`placs-${scrambleRun}`}
-                        text={`~${STATS.placements}`}
-                        duration={600}
-                        charset="#%&$@+|0123456789"
-                        scrambleFraction={0.5}
-                        trigger={scrambleRun}
-                      />
+                      ~{STATS.placements}
                     </span>
                     <span className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.28em]">
                       placements
