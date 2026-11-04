@@ -4,7 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import TextScramble from "./TextScramble";
 
-export default function LogoArchitectOfSound() {
+type Props = {
+  showPortrait?: boolean;
+};
+
+export default function LogoArchitectOfSound({ showPortrait = true }: Props) {
   const [run, setRun] = useState(0);
   const retrigger = () => setRun((n) => n + 1);
 
@@ -15,18 +19,19 @@ export default function LogoArchitectOfSound() {
       onMouseLeave={retrigger}
     >
       <div className="flex flex-col items-center justify-center text-center">
-        {/* Photo on top */}
-        <div className="mb-8 sm:mb-10 mx-auto h-[150px] w-[150px] sm:h-[170px] sm:w-[170px] md:h-[190px] md:w-[190px] lg:h-[220px] lg:w-[220px] xl:h-[240px] xl:w-[240px] overflow-hidden rounded-full shadow-lg">
-          <Image
-            src="/anthony-dake-drums.jpg"
-            alt="Anthony Dake — session drummer based in Columbus, Ohio"
-            width={240}
-            height={240}
-            priority
-            sizes="(max-width: 640px) 150px, (max-width: 768px) 170px, (max-width: 1024px) 190px, (max-width: 1280px) 220px, 240px"
-            className="h-full w-full object-cover"
-          />
-        </div>
+        {showPortrait && (
+          <div className="mb-8 sm:mb-10 mx-auto h-[150px] w-[150px] sm:h-[170px] sm:w-[170px] md:h-[190px] md:w-[190px] lg:h-[220px] lg:w-[220px] xl:h-[240px] xl:w-[240px] overflow-hidden rounded-full shadow-lg">
+            <Image
+              src="/anthony-dake-drums.jpg"
+              alt="Anthony Dake — session drummer based in Columbus, Ohio"
+              width={240}
+              height={240}
+              priority
+              sizes="(max-width: 640px) 150px, (max-width: 768px) 170px, (max-width: 1024px) 190px, (max-width: 1280px) 220px, 240px"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        )}
 
         {/* Name */}
         <h1 className="font-serif-display text-[36px] sm:text-[48px] md:text-[58px] tracking-[-0.02em] leading-tight text-[#F2F2F2]">

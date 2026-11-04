@@ -12,7 +12,7 @@ import { STATS } from "../../data/stats";
 // Upload with: npm run upload-media -- <local-file> hero/<name>.mp4   (see CLAUDE.md → Media assets)
 // PLACEHOLDER — center crop of a practice clip. Replace with the real hero reel.
 const HERO_VIDEO_URL: string | null = "https://s4sgra2uircghynp.public.blob.vercel-storage.com/hero/placeholder-reel.mp4";
-const HERO_VIDEO_POSTER = "/anthony-dake-drums.jpg";
+const HERO_VIDEO_POSTER = "/hero-poster.jpg";
 
 type HomeClientProps = {
   initialSection?: "hero" | "services" | "epk";
@@ -113,7 +113,7 @@ export default function HomeClient({
             <div aria-hidden="true" className="hero-vignette absolute inset-0" />
           </div>
         )}
-        <div className="relative z-10 -translate-y-[50px]">
+        <div className="relative z-10">
           <div
             className={[
               "select-none transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
@@ -123,7 +123,7 @@ export default function HomeClient({
             <div className="relative inline-block">
               <div className="transition-[opacity,transform] duration-300 ease-out">
                 <Link href="/" aria-label="Go to Home">
-                  <LogoArchitectOfSound />
+                  <LogoArchitectOfSound showPortrait={false} />
                 </Link>
 
                 {/* Proof strip — scrambled stats, retriggers on hover */}

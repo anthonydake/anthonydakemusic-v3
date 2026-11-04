@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import SiteHeader from "../components/SiteHeader";
 import Testimonials from "../components/Testimonials";
@@ -18,9 +19,27 @@ export default function AboutClient() {
           </p>
 
           {/* Title */}
-          <h1 className="font-serif-display text-balance mb-12 text-center text-[26px] sm:text-[34px] md:text-[42px] leading-tight tracking-[-0.02em] text-[#F2F2F2]">
+          <h1 className="font-serif-display text-balance mb-8 text-center text-[26px] sm:text-[34px] md:text-[42px] leading-tight tracking-[-0.02em] text-[#F2F2F2]">
             From small-town church drummer to world-class performer
           </h1>
+
+          {/* Childhood photo */}
+          <figure className="mx-auto mb-12 flex max-w-[320px] flex-col items-center">
+            <div className="h-[200px] w-[200px] overflow-hidden rounded-full shadow-lg sm:h-[240px] sm:w-[240px]">
+              <Image
+                src="/anthony-dake-drums.jpg"
+                alt="Anthony Dake as a child at his first drum kit in Topeka, Kansas"
+                width={320}
+                height={320}
+                loading="lazy"
+                sizes="(max-width: 640px) 200px, 240px"
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <figcaption className="mt-3 text-center text-[11px] uppercase tracking-[0.24em] text-[#A1A1A6]">
+              <span>First kit · Topeka, KS</span>
+            </figcaption>
+          </figure>
 
           {/* Body */}
           <div className="space-y-6 text-[15px] sm:text-[16px] leading-[1.8] text-[#BFBFBF]">
