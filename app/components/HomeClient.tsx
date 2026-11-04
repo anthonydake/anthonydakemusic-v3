@@ -494,7 +494,7 @@ export default function HomeClient({
           <p className="text-[11px] uppercase tracking-[0.35em] text-black/50">
             (03) — booking
           </p>
-          <h2 className="font-serif-display text-3xl tracking-[0.02em] text-black sm:text-4xl md:text-5xl">
+          <h2 className="font-serif-display text-balance text-3xl tracking-[0.02em] text-black sm:text-4xl md:text-5xl">
             Live drums, session drums, music direction. Columbus, on call.
           </h2>
           <p className="max-w-lg text-[15px] leading-7 text-black/60">
@@ -534,7 +534,7 @@ function ServiceCard({ title, description, secondary, ctaLabel, onClick, icon }:
   return (
     <div className="group flex flex-col rounded-xl border border-white/[0.08] bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 sm:p-8">
       <div className="mb-5">{icon}</div>
-      <h3 className="text-[15px] uppercase tracking-[0.15em] sm:text-[17px]">
+      <h3 className="text-balance text-[15px] uppercase tracking-[0.15em] sm:text-[17px]">
         <span>{title}</span>
       </h3>
       <p className="mt-3 text-[13px] leading-relaxed opacity-60 sm:text-[14px]">

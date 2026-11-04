@@ -312,12 +312,12 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                   <>
                     <span
                       aria-hidden="true"
-                      className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-r-transparent"
+                      className="submit-label inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-r-transparent"
                     />
-                    <span>Sending…</span>
+                    <span className="submit-label">Sending…</span>
                   </>
                 ) : (
-                  <span>Send Inquiry</span>
+                  <span className="submit-label">Send Inquiry</span>
                 )}
               </button>
             </div>

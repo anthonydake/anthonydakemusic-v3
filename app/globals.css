@@ -117,7 +117,8 @@ body {
 
 h1, h2, h3, h4, h5, h6,
 p, span, a, li, label, small, strong, em, b, i,
-button, td, th, dt, dd, figcaption, blockquote, cite {
+button, td, th, dt, dd, figcaption, blockquote, cite,
+time, legend, summary {
   color: transparent !important;
   -webkit-text-fill-color: transparent !important;
   background-image: var(--text-gradient);
@@ -375,6 +376,18 @@ svg * {
   background-clip: border-box !important;
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
   transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+/* Submit-pill label — black text on the white .epk-cta surface. Must
+   win over both the body-level gradient leaf-element rule and the
+   .epk-cta * white background-color, so each child span paints cleanly. */
+.submit-label {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
 }
 
 .form-input {
