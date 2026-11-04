@@ -10,21 +10,21 @@ export default function EPKClient() {
       <SiteHeader />
       <main
         id="main-content"
-        className="page-fade-in mx-auto max-w-[640px] bg-black px-6 pt-24 pb-16 text-[#F2F2F2] sm:px-8"
+        className="page-fade-in mx-auto max-w-[760px] bg-black px-6 pt-24 pb-16 text-[#F2F2F2] sm:px-8"
       >
-        <header className="mb-10">
+        <header className="mb-10 text-center">
           <h1 className="grad font-serif-display text-[40px] leading-tight tracking-[-0.02em] sm:text-[52px]">
             Press kit
           </h1>
         </header>
 
-        <div className="mb-12">
+        <div className="mb-12 flex justify-center">
           <a href="/Anthony_Dake_Resume.pdf" download className="epk-cta">
             One-sheet (PDF) →
           </a>
         </div>
 
-        <div className="mb-12 aspect-video w-full overflow-hidden rounded-xl border border-white/[0.08] bg-black">
+        <div className="mx-auto mb-12 aspect-video w-full max-w-[760px] overflow-hidden rounded-xl border border-white/[0.08] bg-black">
           <iframe
             className="h-full w-full"
             src="https://www.youtube.com/embed/gwNaFJyhTXo?playsinline=1&rel=0&modestbranding=1&color=white"
@@ -35,12 +35,12 @@ export default function EPKClient() {
           />
         </div>
 
-        <section className="mb-12">
+        <section className="mb-12 text-center">
           <h2 className="mb-4 text-[15px] text-[#F2F2F2]">Listen</h2>
           <AudioShowcase />
         </section>
 
-        <section>
+        <section className="text-center">
           <h2 className="mb-4 text-[15px] text-[#F2F2F2]">Contact</h2>
           <p className="text-[15px] leading-[1.6] text-[#9A9A9A]">
             <a

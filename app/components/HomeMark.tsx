@@ -3,18 +3,18 @@ interface HomeMarkProps {
 }
 
 // Inlined from public/letters.svg (revised cut, Source Serif 4 outlines,
-// solid #E5EEFF fill). The tight viewBox crops to the glyph bounds so the
-// serif AD fills ~55% of the 44px header pill; glyph center sits at the
-// viewBox center so it's optically centered without a nudge.
+// solid #E5EEFF fill). viewBox is tight to the exact bounds of the two glyph
+// paths. A small -translate-y nudge compensates for serif-capital optical
+// weight so the AD reads dead center in the 44px pill.
 export default function HomeMark({ className }: HomeMarkProps) {
   return (
     <svg
       aria-hidden="true"
       focusable="false"
-      className={className}
-      viewBox="50 72 100 56"
-      width="25"
-      height="14"
+      className={`-translate-y-[0.5px] ${className ?? ""}`.trim()}
+      viewBox="50.93 73 98.14 54"
+      width="26"
+      height="15"
       shapeRendering="geometricPrecision"
     >
       <g transform="translate(50.244 127.000) scale(0.079966)" fill="#E5EEFF">
