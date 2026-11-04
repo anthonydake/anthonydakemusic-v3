@@ -19,6 +19,7 @@ export default function HomePageClient() {
 function HomeInner() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const openBooking = () => {
     setMenuOpen(false);
     setBookingOpen(true);
@@ -48,6 +49,7 @@ function HomeInner() {
       if (window.scrollY !== 0) return;
       if (!readyRef.current) return;
       if (triggeredRef.current) return;
+      setHasScrolled(true);
       e.preventDefault();
       const now = performance.now();
       const delta = e.deltaY;
@@ -124,6 +126,14 @@ function HomeInner() {
             <HomeMark />
           </Link>
           <div className="justify-self-end">
+            {/* Mobile: compact Book pill */}
+            <button
+              type="button"
+              onClick={openBooking}
+              className="md:hidden inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              Book →
+            </button>
             {/* Desktop: right half of nav */}
             <nav className="hidden items-center gap-8 md:flex">
               <Link className="hover:text-white py-3" href="/practice">
@@ -199,14 +209,16 @@ function HomeInner() {
       <div id="main-content" className="pt-14">
         <HomeClient nextHref={projectsHref} onOpenBooking={openBooking} />
       </div>
-      <div className="pointer-events-none fixed inset-x-0 bottom-[12px] z-[20] flex justify-center">
-        <span
-          className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-white"
-          style={{ opacity: 0.35 }}
-        >
-          (scroll)
-        </span>
-      </div>
+      {!isMobileFallback && !hasScrolled && (
+        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[20] flex justify-center">
+          <span
+            className="home-scroll-indicator text-[11.6875px] lowercase tracking-[0.28em] text-white"
+            style={{ opacity: 0.35 }}
+          >
+            (scroll)
+          </span>
+        </div>
+      )}
       <style jsx global>{`
         @keyframes homeScrollPulse {
           0% {

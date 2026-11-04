@@ -61,6 +61,14 @@ export default function SiteHeader() {
             <HomeMark />
           </Link>
           <div className="justify-self-end">
+            {/* Mobile: compact Book pill */}
+            <button
+              type="button"
+              onClick={openBooking}
+              className="md:hidden inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              Book →
+            </button>
             {/* Desktop: right half of nav */}
             <nav className="hidden items-center gap-8 md:flex">
               <Link className="hover:text-white py-3" href="/practice">

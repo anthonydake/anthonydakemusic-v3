@@ -35,7 +35,7 @@ export default function HomeClient({
   nextHref,
   onOpenBooking,
 }: HomeClientProps) {
-  const { isTransitioning, isMobileFallback, triggerTransition } = useTransition();
+  const { isMobileFallback } = useTransition();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -47,7 +47,6 @@ export default function HomeClient({
       : { hero: false, services: false, epk: false }
   );
   const [snapAnimating, setSnapAnimating] = useState(false);
-  const [pillReady, setPillReady] = useState(false);
   const [scrambleRun, setScrambleRun] = useState(0);
   const [showHeroVideo, setShowHeroVideo] = useState(false);
   const retriggerScramble = () => setScrambleRun((n) => n + 1);
@@ -84,7 +83,7 @@ export default function HomeClient({
         entries.forEach((entry) => {
           const id = entry.target.getAttribute("data-id");
           if (!id) return;
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
             setVisible((prev) =>
               prev[id as "hero" | "services" | "epk"]
                 ? prev
@@ -93,14 +92,17 @@ export default function HomeClient({
           }
         });
       },
-      { root: containerRef.current, threshold: [0.55, 0.8] }
+      {
+        root: isMobileFallback ? null : containerRef.current,
+        threshold: isMobileFallback ? [0.25, 0.4, 0.6] : [0.55, 0.8],
+      }
     );
 
     const nodes = containerRef.current.querySelectorAll("[data-snap-section]");
     nodes.forEach((node) => observer.observe(node));
 
     return () => observer.disconnect();
-  }, [reduceMotion]);
+  }, [reduceMotion, isMobileFallback]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -131,89 +133,27 @@ export default function HomeClient({
       animateTo(positions[nextIndex]);
     };
 
-    let touchStart = 0;
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStart = e.touches[0].clientY;
-    };
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (snapAnimating) return;
-      const dy = e.changedTouches[0].clientY - touchStart;
-      if (Math.abs(dy) < 24) return;
-      const currentTop = container.scrollTop;
-      const positions = sections.map((s) => s.offsetTop);
-      const currentIndex =
-        positions.reduce((closest, pos, idx) => {
-          return Math.abs(pos - currentTop) < Math.abs(positions[closest] - currentTop) ? idx : closest;
-        }, 0) || 0;
-      const dir = dy < 0 ? 1 : -1;
-      const nextIndex = Math.min(Math.max(currentIndex + dir, 0), positions.length - 1);
-      animateTo(positions[nextIndex]);
-    };
-
     container.addEventListener("wheel", handleWheel, { passive: false });
-    container.addEventListener("touchstart", handleTouchStart, { passive: true });
-    container.addEventListener("touchend", handleTouchEnd, { passive: true });
 
     return () => {
       container.removeEventListener("wheel", handleWheel);
-      container.removeEventListener("touchstart", handleTouchStart);
-      container.removeEventListener("touchend", handleTouchEnd);
     };
   }, [isMobileFallback, snapAnimating]);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    if (!isMobileFallback) return;
-    if (!nextHref) return;
-    if (isTransitioning) return;
-
-    let touchStart = 0;
-    let triggered = false;
-    const swipeThreshold = 42;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStart = e.touches[0].clientY;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (triggered) return;
-      e.preventDefault();
-    };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (triggered) return;
-      const dy = e.changedTouches[0].clientY - touchStart;
-      if (dy < -swipeThreshold) {
-        triggered = true;
-        triggerTransition(nextHref);
-      }
-    };
-
-    container.addEventListener("touchstart", handleTouchStart, { passive: true });
-    container.addEventListener("touchmove", handleTouchMove, { passive: false });
-    container.addEventListener("touchend", handleTouchEnd, { passive: true });
-    return () => {
-      container.removeEventListener("touchstart", handleTouchStart);
-      container.removeEventListener("touchmove", handleTouchMove);
-      container.removeEventListener("touchend", handleTouchEnd);
-    };
-  }, [isMobileFallback, isTransitioning, nextHref, triggerTransition]);
-
-  useEffect(() => {
     if (typeof document === "undefined") return;
+    if (isMobileFallback) {
+      document.documentElement.classList.remove("no-scroll");
+      document.body.classList.remove("no-scroll");
+      return;
+    }
     document.documentElement.classList.add("no-scroll");
     document.body.classList.add("no-scroll");
     return () => {
       document.documentElement.classList.remove("no-scroll");
       document.body.classList.remove("no-scroll");
     };
-  }, []);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setPillReady(true), 6000);
-    return () => window.clearTimeout(timer);
-  }, []);
+  }, [isMobileFallback]);
 
   useEffect(() => {
     if (!HERO_VIDEO_URL) return;
@@ -226,15 +166,14 @@ export default function HomeClient({
     <div
       ref={containerRef}
       className={[
-        "site-bg min-h-screen bg-white scrollbar-hide",
-        "overflow-y-hidden",
-        isMobileFallback ? "" : "snap-y snap-mandatory",
+        "site-bg bg-white scrollbar-hide",
+        isMobileFallback ? "min-h-screen" : "min-h-screen overflow-y-hidden snap-y snap-mandatory",
       ].join(" ")}
       style={{ scrollBehavior: "smooth" }}
     >
       <section
         ref={heroRef}
-        className="relative grid h-screen place-items-center overflow-hidden snap-start bg-black"
+        className="relative grid min-h-screen place-items-center overflow-hidden snap-start bg-black pb-14"
         data-id="hero"
         data-snap-section
       >
@@ -566,6 +505,15 @@ export default function HomeClient({
           >
             EPK | 🥁
           </Link>
+          <p className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.22em] text-white/35">
+            <Link href="/placements" className="hover:text-white/70 transition-colors">
+              <span>Placements →</span>
+            </Link>
+            <span className="opacity-40">·</span>
+            <Link href="/performance" className="hover:text-white/70 transition-colors">
+              <span>Performance →</span>
+            </Link>
+          </p>
         </div>
       </section>
     </div>
