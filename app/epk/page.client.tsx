@@ -19,7 +19,13 @@ export default function EPKClient() {
         </header>
 
         <div className="mb-12 flex justify-center">
-          <a href="/Anthony_Dake_Resume.pdf" download className="epk-cta">
+          <a
+            href="/Anthony_Dake_One-Sheet.pdf"
+            download
+            target="_blank"
+            rel="noopener"
+            className="epk-cta"
+          >
             One-sheet (PDF) →
           </a>
         </div>
@@ -52,6 +58,14 @@ export default function EPKClient() {
           </p>
           <p className="mt-1 text-[15px] leading-[1.6] text-[#9A9A9A]">
             Columbus, OH · fly dates nationwide
+          </p>
+          <p className="mt-1 text-[15px] leading-[1.6] text-[#9A9A9A]">
+            <a
+              href="tel:+17856082604"
+              className="text-[#F2F2F2] hover:text-[#9A9A9A] transition-colors"
+            >
+              785.608.2604
+            </a>
           </p>
         </section>
       </main>

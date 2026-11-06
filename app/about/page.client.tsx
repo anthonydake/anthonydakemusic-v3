@@ -21,19 +21,17 @@ export default function AboutClient() {
           </h1>
 
           <figure className="mx-auto mb-12 flex max-w-[320px] flex-col items-center">
-            <div className="h-[200px] w-[200px] overflow-hidden rounded-full sm:h-[240px] sm:w-[240px]">
-              <Image
-                src="/anthony-dake-drums.jpg"
-                alt="Anthony Dake as a child at his first drum kit in Topeka, Kansas"
-                width={320}
-                height={320}
-                loading="lazy"
-                sizes="(max-width: 640px) 200px, 240px"
-                className="h-full w-full object-cover"
-              />
-            </div>
+            <Image
+              src="/portrait-about.jpg"
+              alt="Anthony Dake — Columbus, OH"
+              width={320}
+              height={369}
+              priority
+              sizes="(max-width: 640px) 100vw, 320px"
+              className="w-full rounded-2xl object-cover"
+            />
             <figcaption className="mt-3 text-center text-[12px] text-[#5C5C5C]">
-              First kit · Topeka, KS
+              Columbus, OH
             </figcaption>
           </figure>
 
@@ -57,6 +55,21 @@ export default function AboutClient() {
               the way. Michael Jackson records and 90s and early 2000s gospel on blast in the
               speakers behind us as we played along.
             </p>
+
+            <figure className="mx-auto my-4 flex max-w-[280px] flex-col items-center">
+              <Image
+                src="/anthony-dake-drums.jpg"
+                alt="Anthony Dake as a child at his first drum kit in Topeka, Kansas"
+                width={280}
+                height={280}
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, 280px"
+                className="w-full rounded-2xl object-cover"
+              />
+              <figcaption className="mt-3 text-center text-[12px] text-[#5C5C5C]">
+                First kit · Topeka, KS
+              </figcaption>
+            </figure>
 
             <p>
               We didn&apos;t talk a ton in lessons. It was all play, and I loved every second of it.

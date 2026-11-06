@@ -19,11 +19,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusi
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Anthony Dake — Session Drummer (Columbus, OH)",
-    template: "%s · Anthony Dake — Session Drummer",
+    default: "Anthony Dake — Drummer & Producer · Columbus, OH",
+    template: "%s · Anthony Dake",
   },
   description:
-    "Anthony Dake — session drummer based in Columbus, Ohio. Live drums and studio sessions for independent artists, festivals, and theater.",
+    "Drummer and producer in Columbus, OH. Live shows, tours and fly dates, remote and in-room session drums, drum programming and production. Book direct.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -39,23 +39,23 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: "Anthony Dake",
-    title: "Anthony Dake — Session Drummer (Columbus, OH)",
+    title: "Anthony Dake — Drummer & Producer · Columbus, OH",
     description:
-      "Session drummer for independent artists, festivals, and theater. Live drums and studio sessions.",
+      "Drummer and producer in Columbus, OH. Live shows, tours and fly dates, remote and in-room session drums, drum programming and production. Book direct.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Anthony Dake — live drums, session drums, music direction",
+        alt: "Anthony Dake — drummer and producer, Columbus, OH",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anthony Dake — Session Drummer (Columbus, OH)",
+    title: "Anthony Dake — Drummer & Producer · Columbus, OH",
     description:
-      "Session drummer for independent artists, festivals, and theater. Live drums and studio sessions.",
+      "Drummer and producer in Columbus, OH. Live shows, tours and fly dates, remote and in-room session drums, drum programming and production. Book direct.",
     images: ["/og-image.jpg"],
   },
 };
@@ -89,9 +89,14 @@ export default function RootLayout({
                 "@id": `${siteUrl}/#person`,
                 name: "Anthony Dake",
                 url: siteUrl,
-                jobTitle: "Session drummer and music director — live shows, tours, and studio sessions",
-                description: "Session drummer and music director based in Columbus, OH.",
-                knowsAbout: ["Session Drumming", "Live Performance", "Music Direction", "Tour Preparation"],
+                jobTitle: "Drummer and producer",
+                description: "Drummer and producer based in Columbus, OH.",
+                knowsAbout: [
+                  "Session Drumming",
+                  "Live Performance",
+                  "Drum Programming",
+                  "Music Production",
+                ],
                 areaServed: "Columbus, OH",
                 sameAs: [
                   "https://www.tiktok.com/@anthony_dake",

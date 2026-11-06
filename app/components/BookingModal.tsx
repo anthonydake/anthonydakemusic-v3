@@ -10,12 +10,12 @@ type BookingModalProps = {
 type Status = "idle" | "submitting" | "success" | "error";
 
 const EVENT_TYPES = [
-  "Live performance / concert",
-  "Studio session (remote)",
-  "Studio session (in-person)",
+  "Live show / tour date",
+  "Session drums (remote)",
+  "Session drums (in person)",
+  "Production / drum programming",
   "Church / worship",
   "Corporate event",
-  "Music direction",
   "Other",
 ];
 
