@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Personal website for Anthony Dake — drummer, session musician, music director based in Columbus, OH. Built with Next.js 16 (App Router, Turbopack) + Tailwind CSS v4, deployed on Vercel (auto-deploy on push to `main`).
+Personal website for Anthony Dake — drummer and producer based in Columbus, OH. The site sells exactly two offers: **Drummer** (live shows, tours, fly dates, session drums remote or in-room) and **Producer** (drum programming and production for records). Built with Next.js 16 (App Router, Turbopack) + Tailwind CSS v4, deployed on Vercel (auto-deploy on push to `main`).
 
 **Production**: https://www.anthonydakemusic.com
 **Repo**: https://github.com/anthonydake/anthonydakemusic-v3
@@ -14,9 +14,9 @@ Next.js App Router. Every public route uses the `page.tsx` (server, exports `met
 
 ### Pages (routes under `app/`)
 
-- `/` — Home. Three stacked sections (`hero → services → proof`) rendered by `HomeClient.tsx` as a normal scrolling page. Inline header lives here, not `SiteHeader`. Hero is a name + one caption + one `Book →` button on black — no reel, no scramble, no stats inside the hero.
-- `/about` — Bio/story: church drummer → DCI/WGI → conservatory → rebuild. Childhood photo renders near the top (first-kit caption). Testimonials component mounted below the article (renders nothing until `data/testimonials.data.ts` is populated).
-- `/epk` — Press kit. One-sheet PDF button, YouTube demo reel (no autoplay), `Listen` heading + `<AudioShowcase />`, `Contact` heading + plain-text email line. No social icons — those live in the site-wide footer line.
+- `/` — Home. Three stacked sections (`hero → services → proof`) rendered by `HomeClient.tsx` as a normal scrolling page. Inline header lives here, not `SiteHeader`. Hero is a circular portrait (`/portrait.jpg`) + Fraunces name + one caption + one `Book →` button on black — no reel, no scramble, no stats inside the hero.
+- `/about` — Bio/story: church drummer → DCI/WGI → conservatory → rebuild. The current headshot (`/portrait-about.jpg`, `rounded-2xl`, caption `Columbus, OH`) renders at the top; the childhood first-kit photo (`/anthony-dake-drums.jpg`, `rounded-2xl`, caption `First kit · Topeka, KS`) is lazy-loaded inline inside the story, immediately after the "I grew up in Topeka, Kansas" paragraph. Testimonials component mounted below the article (renders nothing until `data/testimonials.data.ts` is populated).
+- `/epk` — Press kit. `One-sheet (PDF) →` pill points at `/Anthony_Dake_One-Sheet.pdf` (`download` + `target="_blank"`). YouTube demo reel (no autoplay), `Listen` heading + `<AudioShowcase />`, `Contact` heading + email + `Columbus, OH · fly dates nationwide` + `785.608.2604` as a `tel:` link. No social icons — those live in the site-wide footer line. `Anthony_Dake_Resume.pdf` is kept on disk but no longer linked from anywhere.
 - `/placements` — Record credits index (artwork grid). Data from `data/projects.data.ts`.
 - `/performance` — Live performance credits index. Data from `data/performance.data.ts`.
 - `/practice` — "Open Practice Room". Reverse-chronological practice log with per-day groups, search, and optional video clips. Data from `data/practice.data.ts`. **Not linked from the header any more** (removed from nav in Batch 2); the only entry point is the `Practice journal →` link at the bottom of `/about`. The page itself remains live at `/practice`.
@@ -33,13 +33,13 @@ Next.js App Router. Every public route uses the `page.tsx` (server, exports `met
 
 ### Key Components (`app/components/`)
 
-- `HomeClient.tsx` — The three stacked sections of the home page: **hero** (name + caption + `Book →`), **services** (three bulleted lines with `<strong>` leads for Live performance / Session drums / Music direction + `Send a brief →` text link), **proof** (stats line + distinct-artists line + three text links to the deeper pages). Normal scrolling. IntersectionObserver on `[data-snap-section]` at `root: null`, `threshold: 0.08`, `rootMargin: "0px 0px -10% 0px"` drives a 300ms opacity-only fade-in for services + proof. Hero starts visible. Fail-open fallbacks (scroll + 1200ms timer) latch everything on, same shape as the previous batch.
+- `HomeClient.tsx` — The three stacked sections of the home page: **hero** (circular portrait + name + caption + `Book →`), **services** (two bulleted lines with `<strong>` leads for Drummer / Producer + `Send a brief →` text link), **proof** (stats line + distinct-artists line + stages/orgs line + three text links to the deeper pages). Normal scrolling, no fades.
 - `AudioShowcase.tsx` — Horizontal row of circular play/pause buttons with a progress ring. Lives on `/epk` now (moved out of the home page in the Calm pass). Renders `null` while `AUDIO_CLIPS` is empty.
 - `BookingModal.tsx` — Booking inquiry dialog. Focus trap, Esc-to-close, honeypot, body-scroll lock, auto-close on success. Sentence-case labels, one primary pill (`Send inquiry →`), no glow.
 - `FooterLine.tsx` — Site-wide single-row footer mounted on every page: `Columbus, OH · Email · YouTube · TikTok · Press kit`. `#5C5C5C` 12 px, hairline `border-t`, `py-10`. This is where the social links live now (they were removed from the hero and `/epk`).
 - `SiteHeader.tsx` — Shared header for every subpage. Symmetric 3-column grid (Placements/Performance · HomeMark · About + Book CTA). Uppercase nav at `tracking-[0.18em]` — the one allowed uppercase surface outside of year headers. Mobile hamburger overlay. Owns its own `BookingModal` state and listens for the `open-booking` event.
 - `HomeMark.tsx` — Inline SVG of the AD serif monogram (Source Serif 4 outlines, solid `#E5EEFF` fill; the standalone `public/mark.svg` adds a thin `#3B82F6` ring, dropped here because the header pill already draws a ring). Rendered at 25×14 inside the 44px pill. The source SVGs live in `public/mark.svg` (with ring), `public/letters.svg` (no ring, same one inlined here), `public/mark-white.svg` (monochrome fallback).
-- `LogoArchitectOfSound.tsx` — Fraunces 300 name lockup. Hero passes `showPortrait={false}` (About carries the childhood photo). The h1 inside this component holds the page's single `.grad` gradient — every other instance of the gradient on a page is a deliberate violation.
+- `LogoArchitectOfSound.tsx` — Fraunces 300 name lockup only. The hero portrait is rendered by `HomeClient.tsx` directly above this component (no `showPortrait` prop any more). The h1 inside this component holds the page's single `.grad` gradient — every other instance of the gradient on a page is a deliberate violation.
 - `JsonLd.tsx` — `<script type="application/ld+json">` helper.
 - `TransitionProvider.tsx` — Thin wrapper preserving the `useTransition()` API shape (`triggerTransition`, `isTransitioning`, `prefersReducedMotion`, `isMobileFallback`) so pre-existing callers compile. `triggerTransition` is now just `router.push`; the curtain overlay and the page fade were both removed. Pages render fully visible on first paint — nothing is gated on JS.
 - `Testimonials.tsx` — Editorial pull-quote block on About (quote `#BFBFBF` italic, name `#F2F2F2`, role `#5C5C5C` sentence case). Renders `null` while `testimonials` is empty.
@@ -61,9 +61,9 @@ There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in t
 
 `app/page.client.tsx` is a thin wrapper that owns the inline header + `BookingModal` state. The three stacked sections live in `HomeClient.tsx`:
 
-1. **hero** (`data-id="hero"`, `min-h-[88svh]`, centered) — `LogoArchitectOfSound` with `showPortrait={false}` renders the Fraunces 300 name with the single page `.grad`. One caption line (`#9A9A9A`, 15/16px, max-w `[28ch]`): *"Drummer and music director. Live, studio, remote. Columbus, OH."* One `Book →` primary pill. Nothing else — no reel, no scramble, no stats, no socials, no shade/vignette.
-2. **services** (`data-id="services"`, `max-w-[640px]`, `py-16 sm:py-24`) — Heading `What I do`. Three `<p>` lines, each with a `<strong class="font-normal text-[#F2F2F2]">` lead: Live performance, Session drums, Music direction. One `Send a brief →` text link below.
-3. **proof** (`data-id="proof"`, same column width) — Heading `Proof`. Two `<p>` lines: `~{STATS.performances} performances · ~{STATS.placements} placements` and the first five distinct artists from `data/projects.data.ts` joined with ` · `. Three text links at the bottom: `Placements →   Performance →   Press kit →`.
+1. **hero** (`data-id="hero"`, `min-h-[88svh]`, centered) — Circular portrait (`next/image` from `/portrait.jpg`, `priority`, `h-28 w-28 sm:h-36 sm:w-36 rounded-full object-cover mx-auto mb-7`, no ring/border — the photo's slate studio backdrop is the circle). Below it, `LogoArchitectOfSound` renders the Fraunces 300 name with the single page `.grad`. One caption line (`#9A9A9A`, 15/16px, max-w `[28ch]`): *"Drummer and producer. Live, studio, remote. Columbus, OH."* One `Book →` primary pill. Nothing else — no reel, no scramble, no stats, no socials, no shade/vignette.
+2. **services** (`data-id="services"`, `max-w-[640px]`, `py-16 sm:py-24`) — Heading `What I do`. Two `<p>` lines, each with a `<strong class="font-normal text-[#F2F2F2]">` lead: **Drummer** (live shows, tours, fly dates, session drums remote or in-room) and **Producer** (drum programming and production for records). One `Send a brief →` text link below.
+3. **proof** (`data-id="proof"`, same column width) — Heading `Proof`. Three `<p>` lines: `~{STATS.performances} performances · ~{STATS.placements} placements`, the first five distinct artists from `data/projects.data.ts` joined with ` · `, and a stages/orgs line from the résumé: `Columbus Pride · ComFest · Short North Stage · Shadowbox Live · Louis Pettinelli Entertainment · Bluecoats · Rhythm X · Blue Knights`. Three text links at the bottom: `Placements →   Performance →   Press kit →`.
 
 Then `<FooterLine />` (site-wide).
 
@@ -75,6 +75,7 @@ No fades: all three sections render fully visible in the server HTML on first pa
 
 - UI: `BookingModal.tsx` opened from the Book → button in `SiteHeader.tsx` (subpages), `app/page.client.tsx` (home-page inline header), the three service cards + section-03 CTA in `HomeClient.tsx` (passed via `onOpenBooking`), and anywhere else via the `open-booking` `window` event (`openBooking()` from `lib/booking.ts`). The modal state is **duplicated** in both headers; see Gotcha 7.
 - Fields: `name` (required), `email` (required, regex-validated), `eventDate` (optional, `type="date"`, `min={todayIso}`, ISO-validated on the server), `eventType` (required, select), `message` (optional). Hidden honeypot `website` field.
+- Event type options (`EVENT_TYPES` in `BookingModal.tsx`): `Live show / tour date`, `Session drums (remote)`, `Session drums (in person)`, `Production / drum programming`, `Church / worship`, `Corporate event`, `Other`. The server does **not** whitelist values — it stores whatever non-empty string is sent, so the list can evolve without a schema change.
 - Endpoint: `POST /api/book`.
   - Origin check: rejects POSTs whose `Origin` host does not match `NEXT_PUBLIC_SITE_URL`.
   - Honeypot: if `body.website` is non-empty, the route returns `{ ok: true }` without writing — bots think it worked, no retry.
@@ -198,9 +199,10 @@ Per-page top padding (verified from the code):
 
 ## SEO / AI discoverability
 
-- `app/layout.tsx` sets `metadataBase`, OG + Twitter cards, and a `JsonLd` block at the root with `@graph` containing Person, Organization, WebSite. Each subpage re-declares its own OG/Twitter metadata.
-- `public/llms.txt` + `public/llms-full.txt` — LLM-focused site summary + full bio snapshot.
-- `public/og-image.jpg` — 1200×630 branded social card (mark + "anthony dake" + tagline). Replaced the earlier childhood-portrait crop; `alt` is `Anthony Dake — live drums, session drums, music direction`.
+- `app/layout.tsx` sets `metadataBase`, default OG + Twitter cards, and a `JsonLd` block at the root with `@graph` containing Person (`jobTitle: "Drummer and producer"`), Organization, WebSite. Default title: `Anthony Dake — Drummer & Producer · Columbus, OH`. Default description: `Drummer and producer in Columbus, OH. Live shows, tours and fly dates, remote and in-room session drums, drum programming and production. Book direct.` Each subpage re-declares its own OG/Twitter metadata.
+- `app/page.tsx` sets the home-specific title/description (same copy as the layout defaults but as an absolute title) and OG/Twitter images.
+- `public/llms.txt` + `public/llms-full.txt` — LLM-focused site summary + full bio snapshot. Updated to the drummer + producer positioning and link to the one-sheet PDF.
+- `public/og-image.jpg` — 1200×630 social card, now carries the portrait. OG/Twitter `alt`: `Anthony Dake — drummer and producer, Columbus, OH`.
 - Favicons + touch icons: `/favicon.ico`, `/favicon-32.png`, `/favicon.png` (192), `/apple-touch-icon.png` (180), `/icon-512.png` — all generated from the AD monogram with heavier 500-weight glyphs on black for small-size legibility.
 - `app/sitemap.ts` emits every static route; `app/robots.ts` emits `/robots.txt` with the sitemap URL.
 - Placements and performance rows render inline `MusicRecording` / `MusicEvent` JSON-LD (`1cb39d6`).
@@ -291,10 +293,9 @@ One idea per screen. One primary CTA style. One gradient per page. Solid text, n
 
 ## Future Work
 
-- Replace the placeholder `/Anthony_Dake_Resume.pdf` with a real one-sheet (PDF: credits, reel link, contact). The EPK button already says "One-sheet (PDF)".
-- Replace the childhood photo at the top of `/about` with a recent professional shot (keep caption; same slot). The same shot can replace the branded OG card (`/og-image.jpg`) once it exists.
 - Upload 3–4 real audio clips (replaces the practice-clip placeholders in `AudioShowcase`).
 - Collect 2–3 real testimonials with written permission; drop them into `data/testimonials.data.ts`.
+- Finish the Cloudflare DNS for Resend (DKIM TXT + `rsend`/`send` CNAMEs) so `anthonydakemusic.com` becomes a verified sender; then flip `BOOKING_NOTIFY_FROM` from `onboarding@resend.dev` to `noreply@anthonydakemusic.com`.
 - Brand assets (AD monogram + favicons + OG card) are shipped. Source files live in `public/` and in `~/Claude-Workspace/4-architect/brand/` for the generation scripts.
 - Practice page: paid access layer (Square — see Working Preferences).
 - Practice page: CMS/admin panel for adding entries without a code push.
