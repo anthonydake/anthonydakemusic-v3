@@ -1,8 +1,27 @@
 "use client";
 
+import Image from "next/image";
 import SiteHeader from "../components/SiteHeader";
 import AudioShowcase from "../components/AudioShowcase";
 import FooterLine from "../components/FooterLine";
+
+const EPK_PHOTOS = [
+  {
+    src: "/photos/epk-comfest-2024.jpg",
+    alt: "Anthony Dake drumming on the ComFest main stage in Columbus, 2024",
+    caption: "ComFest · Columbus · 2024",
+  },
+  {
+    src: "/photos/epk-whitehall-2025.jpg",
+    alt: "Anthony Dake on stage at the Whitehall Food Truck Festival, opening for En Vogue, 2025",
+    caption: "Whitehall Food Truck Festival · opening for En Vogue · 2025",
+  },
+  {
+    src: "/photos/epk-hybrid-rig-2025.jpg",
+    alt: "Anthony Dake playing a hybrid acoustic and electronic rig with a Roland SPD-SX for Louis Pettinelli Entertainment, 2025",
+    caption: "Hybrid rig · Louis Pettinelli Entertainment · 2025",
+  },
+];
 
 export default function EPKClient() {
   return (
@@ -40,6 +59,27 @@ export default function EPKClient() {
             loading="lazy"
           />
         </div>
+
+        <ul className="mx-auto mb-12 grid max-w-[760px] grid-cols-3 gap-3 sm:gap-4">
+          {EPK_PHOTOS.map((p) => (
+            <li key={p.src}>
+              <figure className="flex flex-col items-center">
+                <Image
+                  src={p.src}
+                  alt={p.alt}
+                  width={1200}
+                  height={1500}
+                  sizes="(max-width: 640px) 33vw, 240px"
+                  className="aspect-[4/5] w-full rounded-2xl object-cover"
+                  loading="lazy"
+                />
+                <figcaption className="mt-2 text-center text-[12px] leading-[1.4] text-[#5C5C5C]">
+                  {p.caption}
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
 
         <section className="mb-12 text-center">
           <h2 className="mb-4 text-[15px] text-[#F2F2F2]">Listen</h2>

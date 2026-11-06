@@ -125,6 +125,21 @@ export default function AboutClient() {
               championship-winning ensembles for the 2020 season: <strong className="font-normal text-[#F2F2F2]">Rhythm X</strong> and <strong className="font-normal text-[#F2F2F2]">the Bluecoats</strong>.
             </p>
 
+            <figure className="mx-auto my-8 flex max-w-[480px] flex-col items-center">
+              <Image
+                src="/photos/about-blue-knights-2018.jpg"
+                alt="Anthony Dake on tenor drums with the Blue Knights, DCI 2018"
+                width={1600}
+                height={1067}
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, 480px"
+                className="w-full rounded-2xl object-cover"
+              />
+              <figcaption className="mt-3 text-center text-[12px] text-[#5C5C5C]">
+                Blue Knights · DCI 2018
+              </figcaption>
+            </figure>
+
             <p className="text-[#F2F2F2]">
               And right when I&apos;d hit the pinnacle of everything I&apos;d been chasing since I was 10 &mdash; the world fell apart.
             </p>
@@ -159,6 +174,21 @@ export default function AboutClient() {
               I have approached every day since as if it is day one.
             </p>
 
+            <figure className="mx-auto my-8 flex max-w-[480px] flex-col items-center">
+              <Image
+                src="/photos/about-duality-2022.jpg"
+                alt="Anthony Dake at the drum kit during D.U.A.L.I.T.Y., his senior recital at the Garden Theatre, 2022"
+                width={1439}
+                height={809}
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, 480px"
+                className="w-full rounded-2xl object-cover"
+              />
+              <figcaption className="mt-3 text-center text-[12px] text-[#5C5C5C]">
+                D.U.A.L.I.T.Y. · senior recital, Garden Theatre · 2022
+              </figcaption>
+            </figure>
+
             <p>
               That mentality is where the work I&apos;m doing now actually comes from. I call myself
               an <strong className="font-normal text-[#F2F2F2]">Architect of Sound</strong> because rebuilding from zero forced me to understand how
@@ -190,6 +220,21 @@ export default function AboutClient() {
               Pettinelli Entertainment for high-profile weddings and corporate events across the
               region.
             </p>
+
+            <figure className="mx-auto my-8 flex max-w-[360px] flex-col items-center">
+              <Image
+                src="/photos/about-main-street-2022.jpg"
+                alt="Anthony Dake drumming at the Main Street Music Festival with KJ The Cool Nerd, 2022"
+                width={1200}
+                height={1774}
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, 360px"
+                className="w-full rounded-2xl object-cover"
+              />
+              <figcaption className="mt-3 text-center text-[12px] text-[#5C5C5C]">
+                Main Street Music Festival · with KJ The Cool Nerd · 2022
+              </figcaption>
+            </figure>
 
             <p className="text-[#F2F2F2]">
               The blueprint is bigger.

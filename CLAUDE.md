@@ -15,8 +15,8 @@ Next.js App Router. Every public route uses the `page.tsx` (server, exports `met
 ### Pages (routes under `app/`)
 
 - `/` — Home. Three stacked sections (`hero → services → proof`) rendered by `HomeClient.tsx` as a normal scrolling page. Inline header lives here, not `SiteHeader`. Hero is a circular portrait (`/portrait.jpg`) + Fraunces name + one caption + one `Book →` button on black — no reel, no scramble, no stats inside the hero.
-- `/about` — Bio/story: church drummer → DCI/WGI → conservatory → rebuild. The current headshot (`/portrait-about.jpg`, `rounded-2xl`, caption `Columbus, OH`) renders at the top; the childhood first-kit photo (`/anthony-dake-drums.jpg`, `rounded-2xl`, caption `First kit · Topeka, KS`) is lazy-loaded inline inside the story, immediately after the "I grew up in Topeka, Kansas" paragraph. Testimonials component mounted below the article (renders nothing until `data/testimonials.data.ts` is populated).
-- `/epk` — Press kit. `One-sheet (PDF) →` pill points at `/Anthony_Dake_One-Sheet.pdf` (`download` + `target="_blank"`). YouTube demo reel (no autoplay), `Listen` heading + `<AudioShowcase />`, `Contact` heading + email + `Columbus, OH · fly dates nationwide` + `785.608.2604` as a `tel:` link. No social icons — those live in the site-wide footer line. `Anthony_Dake_Resume.pdf` is kept on disk but no longer linked from anywhere.
+- `/about` — Bio/story: church drummer → DCI/WGI → conservatory → rebuild. The current headshot (`/portrait-about.jpg`, `rounded-2xl`, caption `Columbus, OH`) renders at the top; the childhood first-kit photo (`/anthony-dake-drums.jpg`, `rounded-2xl`, caption `First kit · Topeka, KS`) is lazy-loaded inline inside the story, immediately after the "I grew up in Topeka, Kansas" paragraph. Three live-performance photos (`/photos/about-blue-knights-2018.jpg`, `.../about-duality-2022.jpg`, `.../about-main-street-2022.jpg`) are lazy-loaded inline at later beats in the story (after the "Blue Knights in 2018", "day one", and "The receipts:" paragraphs respectively) using the same `my-8 … rounded-2xl` figure pattern. Testimonials component mounted below the article (renders nothing until `data/testimonials.data.ts` is populated).
+- `/epk` — Press kit. `One-sheet (PDF) →` pill points at `/Anthony_Dake_One-Sheet.pdf` (`download` + `target="_blank"`). YouTube demo reel (no autoplay), then a three-up row of live performance photos (`EPK_PHOTOS` module-level const — ComFest, Whitehall Food Truck Festival, hybrid rig) rendered as a `grid grid-cols-3` of `aspect-[4/5] rounded-2xl` tiles with `#5C5C5C` captions, `Listen` heading + `<AudioShowcase />`, `Contact` heading + email + `Columbus, OH · fly dates nationwide` + `785.608.2604` as a `tel:` link. No social icons — those live in the site-wide footer line. `Anthony_Dake_Resume.pdf` is kept on disk but no longer linked from anywhere.
 - `/placements` — Record credits index (artwork grid). Data from `data/projects.data.ts`.
 - `/performance` — Live performance credits index. Data from `data/performance.data.ts`.
 - `/practice` — "Open Practice Room". Reverse-chronological practice log with per-day groups, search, and optional video clips. Data from `data/practice.data.ts`. **Not linked from the header any more** (removed from nav in Batch 2); the only entry point is the `Practice journal →` link at the bottom of `/about`. The page itself remains live at `/practice`.
@@ -97,6 +97,10 @@ No fades: all three sections render fully visible in the server HTML on first pa
 ## Media assets (Vercel Blob)
 
 The site streams media straight from Vercel Blob (public store). The existing practice clips live under `practice/2026-05-12/` on a blob store named `practice-videos`. The newer `hero/` and `audio/` paths are the convention for the home-page reel and `AudioShowcase` clips.
+
+### Photos (local to the repo)
+
+Live performance photos ship in `public/photos/` as web-sized JPEGs — do not upscale, do not add borders / shadows / filters / hover effects. EPK uses `epk-*.jpg` (1200×1500 portraits) in the three-up row; About uses `about-*.jpg` (mixed 1600×1067, 1439×809, 1200×1774) inline at specific story beats. Captions sit in `#5C5C5C` 12 px sentence case under each figure — same visual language as the two existing About figures (`portrait-about.jpg`, `anthony-dake-drums.jpg`).
 
 ### Hero reel — parked
 
