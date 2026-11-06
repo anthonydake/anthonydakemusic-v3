@@ -4,22 +4,36 @@ import { useEffect, useRef, useState } from "react";
 
 export interface AudioClip {
   id: string;
-  label: string;
+  title: string;
+  artist?: string;
+  duration: string;
   src: string;
 }
 
-// Set real public URLs to activate (20–30s mp3 clips, ~128kbps).
-// Upload with: npm run upload-media -- <local-file> audio/<name>.mp3
 export const AUDIO_CLIPS: AudioClip[] = [
-  // PLACEHOLDERS — excerpts from practice clips, not finished recordings. Replace with real style clips.
-  { id: "gospel", label: "Gospel",    src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/placeholder-gospel.mp3" },
-  { id: "rnb",    label: "Pop / R&B", src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/placeholder-rnb.mp3" },
-  { id: "rock",   label: "Rock",      src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/placeholder-rock.mp3" },
-  { id: "pocket", label: "Pocket",    src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/placeholder-pocket.mp3" },
+  { id: "back-and-forth",     title: "Back & Forth",       artist: "Madelyn Leona",   duration: "0:27", src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/back-and-forth.mp3" },
+  { id: "cycles",             title: "Cycles",             artist: "BittyOTW",        duration: "0:26", src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/cycles.mp3" },
+  { id: "mr-nice-guy",        title: "Mr Nice Guy",        artist: "unreleased demo", duration: "0:25", src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/mr-nice-guy.mp3" },
+  { id: "the-thought-of-you", title: "The Thought of You",                            duration: "0:17", src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/the-thought-of-you.mp3" },
+  { id: "untitled-beat",      title: "Untitled beat",                                 duration: "0:30", src: "https://s4sgra2uircghynp.public.blob.vercel-storage.com/audio/untitled-beat.mp3" },
 ];
 
-const RING_RADIUS = 20;
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+function PlayIcon() {
+  return (
+    <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true">
+      <path d="M0 0 L10 6 L0 12 Z" />
+    </svg>
+  );
+}
+
+function PauseIcon() {
+  return (
+    <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true">
+      <rect x="0.5" y="0" width="2.5" height="12" rx="0.5" />
+      <rect x="7" y="0" width="2.5" height="12" rx="0.5" />
+    </svg>
+  );
+}
 
 export default function AudioShowcase() {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -69,100 +83,56 @@ export default function AudioShowcase() {
   };
 
   return (
-    <div className="my-6 flex w-full flex-wrap items-start justify-center gap-5 sm:gap-6">
+    <ul className="mx-auto w-full max-w-[560px] text-left">
       {AUDIO_CLIPS.map((clip) => {
-        const isActive = activeId === clip.id;
-        const pct = progress[clip.id] ?? 0;
-        const dashOffset = RING_CIRCUMFERENCE * (1 - pct);
-        const gradientId = `audio-gradient-${clip.id}`;
+        const playing = activeId === clip.id;
+        const pct = (progress[clip.id] ?? 0) * 100;
         return (
-          <div key={clip.id} className="flex flex-col items-center gap-2">
+          <li key={clip.id} className="border-t border-white/[0.08] last:border-b">
             <button
               type="button"
               onClick={() => handleToggle(clip)}
-              aria-label={`${isActive ? "Pause" : "Play"} ${clip.label} clip`}
-              aria-pressed={isActive}
-              className="group relative inline-flex h-[52px] w-[52px] items-center justify-center rounded-full border border-white/10 bg-black/70 transition-colors hover:border-white/30 sm:h-[56px] sm:w-[56px]"
+              aria-pressed={playing}
+              aria-label={`${playing ? "Pause" : "Play"} ${clip.title}${clip.artist ? ` by ${clip.artist}` : ""}`}
+              className="group flex w-full items-center gap-4 py-3.5 text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
             >
-              <svg viewBox="0 0 48 48" className="h-full w-full" aria-hidden="true">
-                <defs>
-                  <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#3B82F6" />
-                    <stop offset="60%" stopColor="#8EC5FF" />
-                    <stop offset="100%" stopColor="#FFFFFF" />
-                  </linearGradient>
-                </defs>
-                {isActive && (
-                  <circle
-                    cx="24"
-                    cy="24"
-                    r={RING_RADIUS}
-                    fill="none"
-                    stroke={`url(#${gradientId})`}
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeDasharray={RING_CIRCUMFERENCE}
-                    strokeDashoffset={dashOffset}
-                    transform="rotate(-90 24 24)"
-                    style={{ transition: "stroke-dashoffset 120ms linear" }}
-                  />
-                )}
-                {isActive ? (
-                  <g>
-                    <rect
-                      x="18"
-                      y="16"
-                      width="3.5"
-                      height="16"
-                      rx="0.75"
-                      fill="none"
-                      stroke={`url(#${gradientId})`}
-                      strokeWidth="1.5"
-                      strokeLinejoin="round"
-                    />
-                    <rect
-                      x="26.5"
-                      y="16"
-                      width="3.5"
-                      height="16"
-                      rx="0.75"
-                      fill="none"
-                      stroke={`url(#${gradientId})`}
-                      strokeWidth="1.5"
-                      strokeLinejoin="round"
-                    />
-                  </g>
-                ) : (
-                  <path
-                    d="M19 15.5 L33 24 L19 32.5 Z"
-                    fill="none"
-                    stroke={`url(#${gradientId})`}
-                    strokeWidth="1.5"
-                    strokeLinejoin="round"
-                  />
-                )}
-              </svg>
-              <audio
-                ref={(el) => {
-                  audioRefs.current[clip.id] = el;
-                }}
-                src={clip.src}
-                preload="none"
-                onTimeUpdate={(e) => {
-                  const el = e.currentTarget;
-                  if (!el.duration || Number.isNaN(el.duration)) return;
-                  setProgress((p) => ({ ...p, [clip.id]: el.currentTime / el.duration }));
-                }}
-                onEnded={() => {
-                  setActiveId((a) => (a === clip.id ? null : a));
-                  setProgress((p) => ({ ...p, [clip.id]: 0 }));
-                }}
-              />
+              <span
+                aria-hidden="true"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/[0.16] text-[#F2F2F2] transition-colors group-hover:border-white/[0.4] group-focus-visible:border-white/[0.4]"
+              >
+                {playing ? <PauseIcon /> : <PlayIcon />}
+              </span>
+              <span className="min-w-0 flex-1 text-[15px] leading-[1.4] text-[#F2F2F2]">
+                {clip.title}
+                {clip.artist ? <span className="text-[#9A9A9A]"> · {clip.artist}</span> : null}
+              </span>
+              <span className="shrink-0 text-[12px] tabular-nums text-[#5C5C5C]">{clip.duration}</span>
             </button>
-            <span className="text-[12px] text-[#9A9A9A]">{clip.label}</span>
-          </div>
+            <div className="h-px w-full bg-transparent" aria-hidden="true">
+              <div
+                className="h-px bg-[#F2F2F2] transition-[width] duration-150 ease-linear motion-reduce:transition-none"
+                style={{ width: playing ? `${pct}%` : "0%" }}
+              />
+            </div>
+            <audio
+              ref={(el) => {
+                audioRefs.current[clip.id] = el;
+              }}
+              src={clip.src}
+              preload="none"
+              onTimeUpdate={(e) => {
+                const el = e.currentTarget;
+                if (!el.duration || Number.isNaN(el.duration)) return;
+                setProgress((p) => ({ ...p, [clip.id]: el.currentTime / el.duration }));
+              }}
+              onEnded={() => {
+                setActiveId((a) => (a === clip.id ? null : a));
+                setProgress((p) => ({ ...p, [clip.id]: 0 }));
+              }}
+            />
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 }

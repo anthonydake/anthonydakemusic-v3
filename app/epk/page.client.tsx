@@ -83,6 +83,7 @@ export default function EPKClient() {
 
         <section className="mb-12 text-center">
           <h2 className="mb-4 text-[15px] text-[#F2F2F2]">Listen</h2>
+          <p className="mb-5 text-[12px] text-[#5C5C5C]">Drums and production on every track.</p>
           <AudioShowcase />
         </section>
 

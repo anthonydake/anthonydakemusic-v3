@@ -34,7 +34,7 @@ Next.js App Router. Every public route uses the `page.tsx` (server, exports `met
 ### Key Components (`app/components/`)
 
 - `HomeClient.tsx` — The three stacked sections of the home page: **hero** (circular portrait + name + caption + `Book →`), **services** (two bulleted lines with `<strong>` leads for Drummer / Producer + `Send a brief →` text link), **proof** (stats line + distinct-artists line + stages/orgs line + three text links to the deeper pages). Normal scrolling, no fades.
-- `AudioShowcase.tsx` — Horizontal row of circular play/pause buttons with a progress ring. Lives on `/epk` now (moved out of the home page in the Calm pass). Renders `null` while `AUDIO_CLIPS` is empty.
+- `AudioShowcase.tsx` — Credits-style vertical list on `/epk`. Each row is a 36 px circular play/pause icon + `title · artist` in sentence case + `0:MM` duration, separated by hairline `border-white/[0.08]` top/bottom rules. A 1 px `#F2F2F2` progress hairline sits on the row's bottom edge and grows from 0 → 100 % while that row plays; no ring, no gradient, no glow. One `<audio preload="none">` per clip; only one plays at a time; unmount pauses everything; respects `prefers-reduced-motion`. Renders `null` while `AUDIO_CLIPS` is empty.
 - `BookingModal.tsx` — Booking inquiry dialog. Focus trap, Esc-to-close, honeypot, body-scroll lock, auto-close on success. Sentence-case labels, one primary pill (`Send inquiry →`), no glow.
 - `FooterLine.tsx` — Site-wide single-row footer mounted on every page: `Columbus, OH · Email · YouTube · TikTok · Press kit`. `#5C5C5C` 12 px, hairline `border-t`, `py-10`. This is where the social links live now (they were removed from the hero and `/epk`).
 - `SiteHeader.tsx` — Shared header for every subpage. Symmetric 3-column grid (Placements/Performance · HomeMark · About + Book CTA). Uppercase nav at `tracking-[0.18em]` — the one allowed uppercase surface outside of year headers. Mobile hamburger overlay. Owns its own `BookingModal` state and listens for the `open-booking` event.
@@ -111,19 +111,19 @@ npx vercel env pull .env.local           # once, to get BLOB_READ_WRITE_TOKEN
 npm run upload-media -- ./media/reel.mp4 hero/reel.mp4
 ```
 
-### To activate `AudioShowcase`
+### To add a clip
 
 ```bash
-npm run upload-media -- ./media/gospel.mp3 audio/gospel.mp3
+npm run upload-media -- ./media/new-track.mp3 audio/new-track.mp3
 ```
 
-The script prints an entry to paste into `AUDIO_CLIPS` in `app/components/AudioShowcase.tsx`:
+The script prints the public URL; paste a new entry into `AUDIO_CLIPS` in `app/components/AudioShowcase.tsx`:
 
 ```ts
-{ id: "gospel", label: "Gospel", src: "https://…/audio/gospel.mp3" },
+{ id: "new-track", title: "New track", artist: "Artist name", duration: "0:27", src: "https://…/audio/new-track.mp3" },
 ```
 
-Recommended specs: MP3 ~128 kbps, 20–30s, loudness around −14 LUFS, clean fade-in/fade-out (no tail noise).
+Omit `artist` when the clip is Anthony's own (unreleased beat, instrumental). Recommended specs: MP3 ~160 kbps, 17–30s, −14 LUFS / −1 dBTP, clean fade-in/fade-out (no tail noise).
 
 ### To add a testimonial
 
@@ -170,7 +170,7 @@ Two features render **nothing** in production when their data is empty:
 
 The home hero intentionally no longer carries a video reel (Calm pass parked it — if it comes back, gate it behind a feature flag, use clean footage, and run it at `opacity-20` or lower). `HERO_VIDEO_URL` is a dead constant; leave it `null`.
 
-**Current state:** `AUDIO_CLIPS` is populated with four PLACEHOLDER excerpts from practice clips — replace with real audio. `testimonials` now holds three real client texts (sent with permission) rendered as the PNG bubbles in `public/reviews/`. Do not invent new placeholder content, and do not "clean up" by emptying either array unless Anthony asks.
+**Current state:** `AUDIO_CLIPS` holds five finished clips (−14 LUFS, −1 dBTP, MP3 160 kbps, faded) on Vercel Blob under `audio/`: `back-and-forth` (Madelyn Leona), `cycles` (BittyOTW), `mr-nice-guy` (unreleased demo), `the-thought-of-you`, and `untitled-beat`. The `/epk` Listen section carries a single caption under the heading — "Drums and production on every track." — so individual rows don't need per-track role labels. `testimonials` holds three real client texts (sent with permission) rendered as the PNG bubbles in `public/reviews/`. Do not invent new placeholder content, and do not "clean up" by emptying either array unless Anthony asks.
 
 ### 8. CLOSED SECTION-ID UNION
 `HomeClient`'s `initialSection` uses the type `"hero" | "services" | "proof"`. Adding a new section means updating the type and the refs in one pass.
@@ -297,7 +297,6 @@ One idea per screen. One primary CTA style. One gradient per page. Solid text, n
 
 ## Future Work
 
-- Upload 3–4 real audio clips (replaces the practice-clip placeholders in `AudioShowcase`).
 - Finish the Cloudflare DNS for Resend (DKIM TXT + `rsend`/`send` CNAMEs) so `anthonydakemusic.com` becomes a verified sender; then flip `BOOKING_NOTIFY_FROM` from `onboarding@resend.dev` to `noreply@anthonydakemusic.com`.
 - Brand assets (AD monogram + favicons + OG card) are shipped. Source files live in `public/` and in `~/Claude-Workspace/4-architect/brand/` for the generation scripts.
 - Practice page: paid access layer (Square — see Working Preferences).
