@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
+import HeroListen from "./HeroListen";
 import FooterLine from "./FooterLine";
 import { projectIndex } from "../../data/projects.data";
 import { STATS } from "../../data/stats";
@@ -49,24 +50,39 @@ export default function HomeClient({
       <section
         ref={heroRef}
         data-id="hero"
-        className="flex min-h-[88svh] flex-col items-center justify-center bg-black px-6 pt-14 pb-16 text-center"
+        className="relative -mt-14 bg-black md:mx-auto md:mt-0 md:grid md:max-w-[1040px] md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:items-center md:gap-14 md:px-8 md:pt-24 md:pb-16"
       >
-        <Image
-          src="/portrait.jpg"
-          alt="Anthony Dake"
-          width={144}
-          height={144}
-          priority
-          className="rounded-full object-cover h-28 w-28 sm:h-36 sm:w-36 mx-auto mb-7"
-        />
-        <LogoArchitectOfSound />
-        <p className="mx-auto mt-6 max-w-[28ch] text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
-          Drummer and producer. Live, studio, remote. Columbus, OH.
-        </p>
-        <div className="mt-10">
-          <button type="button" onClick={onOpenBooking} className="epk-cta">
-            Book →
-          </button>
+        <div className="relative md:static">
+          <Image
+            src="/photos/epk-comfest-2024.jpg"
+            alt="Anthony Dake playing drums on the ComFest main stage in Columbus, 2024"
+            width={1200}
+            height={1500}
+            priority
+            sizes="(max-width: 768px) 100vw, 480px"
+            className="aspect-[4/5] w-full object-cover object-[center_20%] md:rounded-2xl"
+          />
+          <div
+            aria-hidden="true"
+            className="hero-fade pointer-events-none absolute inset-x-0 bottom-0 h-[45%] md:hidden"
+          />
+        </div>
+
+        <div className="relative -mt-28 px-6 text-center md:mt-0 md:px-0">
+          <LogoArchitectOfSound />
+          <p className="mx-auto mt-4 max-w-[24ch] text-[17px] leading-[1.45] text-[#F2F2F2] sm:text-[18px]">
+            The drummer for your show, session, or record.
+          </p>
+          <p className="mx-auto mt-3 max-w-[34ch] text-[13px] leading-[1.6] text-[#9A9A9A]">
+            ~{STATS.performances} shows · ~{STATS.placements} records · Columbus Pride · ComFest · Blue Knights · Bluecoats
+          </p>
+          <div className="mt-7 flex items-center justify-center gap-6">
+            <button type="button" onClick={onOpenBooking} className="epk-cta">
+              Book →
+            </button>
+            <HeroListen />
+          </div>
+          <p className="mt-5 text-[12px] text-[#5C5C5C]">Columbus, OH · fly dates nationwide</p>
         </div>
       </section>
 
@@ -104,9 +120,6 @@ export default function HomeClient({
       >
         <h2 className="text-[15px] text-[#F2F2F2] mb-6">Proof</h2>
         <p className="text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
-          ~{STATS.performances} performances · ~{STATS.placements} placements
-        </p>
-        <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
           {names}
         </p>
         <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
