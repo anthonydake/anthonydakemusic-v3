@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import FooterLine from "./FooterLine";
@@ -49,9 +50,17 @@ export default function HomeClient({
         data-id="hero"
         className="flex min-h-[88svh] flex-col items-center justify-center bg-black px-6 pt-14 pb-16 text-center"
       >
-        <LogoArchitectOfSound showPortrait={false} />
+        <Image
+          src="/portrait.jpg"
+          alt="Anthony Dake"
+          width={144}
+          height={144}
+          priority
+          className="rounded-full object-cover h-28 w-28 sm:h-36 sm:w-36 mx-auto mb-7"
+        />
+        <LogoArchitectOfSound />
         <p className="mx-auto mt-6 max-w-[28ch] text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
-          Drummer and music director. Live, studio, remote. Columbus, OH.
+          Drummer and producer. Live, studio, remote. Columbus, OH.
         </p>
         <div className="mt-10">
           <button type="button" onClick={onOpenBooking} className="epk-cta">
@@ -68,16 +77,12 @@ export default function HomeClient({
         <h2 className="text-[15px] text-[#F2F2F2] mb-6">What I do</h2>
         <div className="space-y-5 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
           <p>
-            <strong className="font-normal text-[#F2F2F2]">Live performance</strong>
-            {" — tours, one-offs, festivals, sub work. Click, IEM, or acoustic."}
+            <strong className="font-normal text-[#F2F2F2]">Drummer</strong>
+            {" — live shows, tours, and fly dates; session drums remote or in your room. Click, IEM, acoustic and hybrid rigs."}
           </p>
           <p>
-            <strong className="font-normal text-[#F2F2F2]">Session drums</strong>
-            {" — remote from my room or in yours. 48-hour turnaround."}
-          </p>
-          <p>
-            <strong className="font-normal text-[#F2F2F2]">Music direction</strong>
-            {" — I build the band and run the room. Church, corporate, touring."}
+            <strong className="font-normal text-[#F2F2F2]">Producer</strong>
+            {" — drum programming and production for records. Remote, fast, release-ready stems."}
           </p>
         </div>
         <p className="mt-8">
@@ -102,6 +107,9 @@ export default function HomeClient({
         </p>
         <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
           {names}
+        </p>
+        <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
+          Columbus Pride · ComFest · Short North Stage · Shadowbox Live · Louis Pettinelli Entertainment · Bluecoats · Rhythm X · Blue Knights
         </p>
         <p className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-[#F2F2F2]">
           <Link href="/placements" className="hover:text-[#9A9A9A] transition-colors">
