@@ -42,7 +42,7 @@ Next.js App Router. Every public route uses the `page.tsx` (server, exports `met
 - `LogoArchitectOfSound.tsx` — Fraunces 300 name lockup only. The hero portrait is rendered by `HomeClient.tsx` directly above this component (no `showPortrait` prop any more). The h1 inside this component holds the page's single `.grad` gradient — every other instance of the gradient on a page is a deliberate violation.
 - `JsonLd.tsx` — `<script type="application/ld+json">` helper.
 - `TransitionProvider.tsx` — Thin wrapper preserving the `useTransition()` API shape (`triggerTransition`, `isTransitioning`, `prefersReducedMotion`, `isMobileFallback`) so pre-existing callers compile. `triggerTransition` is now just `router.push`; the curtain overlay and the page fade were both removed. Pages render fully visible on first paint — nothing is gated on JS.
-- `Testimonials.tsx` — Editorial pull-quote block on About (quote `#BFBFBF` italic, name `#F2F2F2`, role `#5C5C5C` sentence case). Renders `null` while `testimonials` is empty.
+- `Testimonials.tsx` — Renders real client texts as cleaned iMessage bubble screenshots on About. Each entry is a transparent PNG from `/public/reviews/` rendered via `next/image` (its native width/height, capped at `max-w-[380px]`, centered, `select-none`) with a `#5C5C5C` sentence-case caption line below it. The full quote text is in the image `alt`. Renders `null` while `testimonials` is empty.
 
 There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in the Calm pass. `TextScramble`, `CurtainOverlay`, `ColumbusTime`, `SiteFooter`, `FloatingCards`, `CustomCursor`, `LenisProvider`, `ArchiveModal`, `ScribbleLink`, `ScrambleText` are all gone.
 
@@ -51,7 +51,7 @@ There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in t
 - `data/projects.data.ts` — Lightweight placements index (title/artist pairs) used by the home services section + `/placements` route.
 - `data/performance.data.ts` — Live performance credits list.
 - `data/practice.data.ts` — Practice log entries + exported `practiceEntries`, `totalSessions`, `firstSessionDate`. Current log goes through Session #7 (2026-05-18).
-- `data/testimonials.data.ts` — Empty by default. Populate to activate the About testimonials section.
+- `data/testimonials.data.ts` — Array of `Testimonial { id, image, width, height, alt, caption }` entries. Each one is a real client text screenshot in `/public/reviews/` with its full quote in `alt` and a short attribution in `caption`. Populated — the first entry is also inlined in the home Proof section. The About page shows the first three.
 - `data/stats.ts` — `STATS.performances` and `STATS.placements` — approximate career totals displayed in the hero proof strip and the `Selected · N of ~total` subheader on `/placements` and `/performance`. Edit here and both the hero and index pages update together.
 - `lib/booking.ts` — `openBooking()` helper that dispatches a `window` `CustomEvent('open-booking')`. Both headers listen for it, so any component can trigger the booking modal without lifting state. See Gotcha #6.
 - `lib/projects.ts` — Project type definitions + re-export of `projects` from the generated file.
@@ -63,7 +63,7 @@ There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in t
 
 1. **hero** (`data-id="hero"`, `min-h-[88svh]`, centered) — Circular portrait (`next/image` from `/portrait.jpg`, `priority`, `h-28 w-28 sm:h-36 sm:w-36 rounded-full object-cover mx-auto mb-7`, no ring/border — the photo's slate studio backdrop is the circle). Below it, `LogoArchitectOfSound` renders the Fraunces 300 name with the single page `.grad`. One caption line (`#9A9A9A`, 15/16px, max-w `[28ch]`): *"Drummer and producer. Live, studio, remote. Columbus, OH."* One `Book →` primary pill. Nothing else — no reel, no scramble, no stats, no socials, no shade/vignette.
 2. **services** (`data-id="services"`, `max-w-[640px]`, `py-16 sm:py-24`) — Heading `What I do`. Two `<p>` lines, each with a `<strong class="font-normal text-[#F2F2F2]">` lead: **Drummer** (live shows, tours, fly dates, session drums remote or in-room) and **Producer** (drum programming and production for records). One `Send a brief →` text link below.
-3. **proof** (`data-id="proof"`, same column width) — Heading `Proof`. Three `<p>` lines: `~{STATS.performances} performances · ~{STATS.placements} placements`, the first five distinct artists from `data/projects.data.ts` joined with ` · `, and a stages/orgs line from the résumé: `Columbus Pride · ComFest · Short North Stage · Shadowbox Live · Louis Pettinelli Entertainment · Bluecoats · Rhythm X · Blue Knights`. Three text links at the bottom: `Placements →   Performance →   Press kit →`.
+3. **proof** (`data-id="proof"`, same column width) — Heading `Proof`. Three `<p>` lines: `~{STATS.performances} performances · ~{STATS.placements} placements`, the first five distinct artists from `data/projects.data.ts` joined with ` · `, and a stages/orgs line from the résumé: `Columbus Pride · ComFest · Short North Stage · Shadowbox Live · Louis Pettinelli Entertainment · Bluecoats · Rhythm X · Blue Knights`. Then `testimonials[0]` (the drumming bubble) inlined at `mt-10 max-w-[360px] mx-auto` with its caption — part of Proof, no heading. Three text links at the bottom (with `mt-8` before them): `Placements →   Performance →   Press kit →`.
 
 Then `<FooterLine />` (site-wide).
 
@@ -121,9 +121,9 @@ The script prints an entry to paste into `AUDIO_CLIPS` in `app/components/AudioS
 
 Recommended specs: MP3 ~128 kbps, 20–30s, loudness around −14 LUFS, clean fade-in/fade-out (no tail noise).
 
-### To activate testimonials
+### To add a testimonial
 
-Edit `data/testimonials.data.ts` — add real entries only, with written permission. The About page's `<Testimonials />` renders nothing until the array has at least one item (first 3 are displayed).
+Drop a cleaned bubble PNG into `public/reviews/` (transparent background, 1× capture — never upscale past its pixel width), then add an entry to `data/testimonials.data.ts` with the image path, native `width`/`height`, the full quote text in `alt`, and a short attribution in `caption`. The About page shows the first three; the home Proof section inlines whichever entry is at index 0, so order matters there.
 
 ## Critical Gotchas
 
@@ -166,7 +166,7 @@ Two features render **nothing** in production when their data is empty:
 
 The home hero intentionally no longer carries a video reel (Calm pass parked it — if it comes back, gate it behind a feature flag, use clean footage, and run it at `opacity-20` or lower). `HERO_VIDEO_URL` is a dead constant; leave it `null`.
 
-**Current state:** `AUDIO_CLIPS` is populated with four PLACEHOLDER excerpts from practice clips; `testimonials` has three PLACEHOLDER quotes attributed to "Placeholder Name". Replace with real audio and real quotes (with written permission). Do not invent new placeholder content, and do not "clean up" by emptying them unless Anthony asks.
+**Current state:** `AUDIO_CLIPS` is populated with four PLACEHOLDER excerpts from practice clips — replace with real audio. `testimonials` now holds three real client texts (sent with permission) rendered as the PNG bubbles in `public/reviews/`. Do not invent new placeholder content, and do not "clean up" by emptying either array unless Anthony asks.
 
 ### 8. CLOSED SECTION-ID UNION
 `HomeClient`'s `initialSection` uses the type `"hero" | "services" | "proof"`. Adding a new section means updating the type and the refs in one pass.
@@ -294,7 +294,6 @@ One idea per screen. One primary CTA style. One gradient per page. Solid text, n
 ## Future Work
 
 - Upload 3–4 real audio clips (replaces the practice-clip placeholders in `AudioShowcase`).
-- Collect 2–3 real testimonials with written permission; drop them into `data/testimonials.data.ts`.
 - Finish the Cloudflare DNS for Resend (DKIM TXT + `rsend`/`send` CNAMEs) so `anthonydakemusic.com` becomes a verified sender; then flip `BOOKING_NOTIFY_FROM` from `onboarding@resend.dev` to `noreply@anthonydakemusic.com`.
 - Brand assets (AD monogram + favicons + OG card) are shipped. Source files live in `public/` and in `~/Claude-Workspace/4-architect/brand/` for the generation scripts.
 - Practice page: paid access layer (Square — see Working Preferences).

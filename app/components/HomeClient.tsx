@@ -7,6 +7,7 @@ import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import FooterLine from "./FooterLine";
 import { projectIndex } from "../../data/projects.data";
 import { STATS } from "../../data/stats";
+import { testimonials } from "../../data/testimonials.data";
 
 type SectionId = "hero" | "services" | "proof";
 
@@ -111,6 +112,22 @@ export default function HomeClient({
         <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
           Columbus Pride · ComFest · Short North Stage · Shadowbox Live · Louis Pettinelli Entertainment · Bluecoats · Rhythm X · Blue Knights
         </p>
+        {testimonials[0] && (
+          <figure className="mt-10 mx-auto max-w-[360px]">
+            <Image
+              src={testimonials[0].image}
+              alt={testimonials[0].alt}
+              width={testimonials[0].width}
+              height={testimonials[0].height}
+              loading="lazy"
+              sizes="(max-width: 360px) 100vw, 360px"
+              className="h-auto w-full mx-auto select-none"
+            />
+            <figcaption className="mt-3 text-[12px] text-[#5C5C5C] text-center">
+              {testimonials[0].caption}
+            </figcaption>
+          </figure>
+        )}
         <p className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-[#F2F2F2]">
           <Link href="/placements" className="hover:text-[#9A9A9A] transition-colors">
             Placements →
