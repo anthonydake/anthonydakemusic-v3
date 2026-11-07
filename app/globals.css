@@ -91,6 +91,22 @@ a {
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 45%, #000 100%);
 }
 
+/* Desktop hero scroll hint — the one allowed exception to the Calm pass's
+   no-motion rule. Pulses the `(scroll)` label at the bottom of the hero. */
+@keyframes scrollFlash {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+.animate-scrollFlash {
+  animation: scrollFlash 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-scrollFlash {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
 /* Dark form input — plain and self-contained. No gradient trickery any more. */
 .form-input {
   width: 100%;

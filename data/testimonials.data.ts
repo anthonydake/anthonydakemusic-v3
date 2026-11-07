@@ -21,20 +21,20 @@ export const HERO_TESTIMONIALS: Testimonial[] = [
     caption: "Artist · via text",
   },
   {
-    id: "live-2026",
-    image: "/reviews/review-7.png",
-    width: 502,
-    height: 364,
-    alt: "Oh yeah imma be there on Saturday to hang for sure! We can talk about linking up again and check the calendars then. You're real one for sure. I was very impressed with your drumming man. Fr I'm not gassing you up. You were solid for sure.",
-    caption: "Artist · after a live show · via text",
-  },
-  {
     id: "beat-1",
     image: "/reviews/review-2.png",
     width: 528,
     height: 205,
     alt: "I LOVE WHAT YOU DID WITH THIS BEAT! Truly fantastic. Ps sorry for the late response, I just got home from the music video shoot! Also Micah says hi!",
     caption: "Artist · beat & production · via text",
+  },
+  {
+    id: "live-2026",
+    image: "/reviews/review-7.png",
+    width: 502,
+    height: 364,
+    alt: "Oh yeah imma be there on Saturday to hang for sure! We can talk about linking up again and check the calendars then. You're real one for sure. I was very impressed with your drumming man. Fr I'm not gassing you up. You were solid for sure.",
+    caption: "Artist · after a live show · via text",
   },
   {
     id: "fire-1",

@@ -50,9 +50,9 @@ export default function HomeClient({
       <section
         ref={heroRef}
         data-id="hero"
-        className="relative -mt-14 bg-black md:mt-0 md:pb-16"
+        className="relative -mt-14 bg-black md:mt-0 md:pb-12"
       >
-        <div className="md:mx-auto md:grid md:max-w-[1040px] md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:items-center md:gap-14 md:px-8 md:pt-24">
+        <div className="md:mx-auto md:grid md:max-w-[1200px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-12 md:px-8 md:pt-20">
           <div className="relative md:static">
             <Image
               src="/photos/epk-comfest-2024.jpg"
@@ -83,10 +83,18 @@ export default function HomeClient({
               </button>
               <HeroListen />
             </div>
+            <HeroTexts />
           </div>
         </div>
 
-        <HeroTexts />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-3 hidden justify-center md:flex"
+        >
+          <span className="animate-scrollFlash text-[11px] uppercase tracking-[0.28em] text-[#9A9A9A]">
+            (scroll)
+          </span>
+        </div>
       </section>
 
       <section
