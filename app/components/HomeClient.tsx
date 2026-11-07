@@ -34,7 +34,7 @@ const OFFER_CARDS = [
     title: "Producer",
     photo: "/photos/epk-hybrid-rig-2025.jpg",
     alt: "Anthony Dake playing a hybrid acoustic and electronic rig, 2025",
-    objectPosition: "center 30%",
+    objectPosition: "top",
     copy: "Drum programming and production for records. Remote, fast, release-ready stems.",
     linkLabel: "Send a brief →",
     preset: "Production / drum programming",
