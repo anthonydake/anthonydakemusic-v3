@@ -11,19 +11,28 @@ export interface Testimonial {
   caption: string;
 }
 
+export const HERO_TESTIMONIAL: Testimonial = {
+  id: "track-1",
+  image: "/reviews/review-3.png",
+  width: 512,
+  height: 172,
+  alt: "You're wonderful!!! I'm so grateful for your collaboration and talent - I could not be more excited about this track!!",
+  caption: "Artist · via text",
+};
+
 export const testimonials: Testimonial[] = [
   {
     id: "live-2026",
     image: "/reviews/review-7.png",
-    width: 514,
-    height: 168,
-    alt: "You're real one for sure. I was very impressed with your drumming man. Fr I'm not gassing you up. You were solid for sure.",
+    width: 502,
+    height: 364,
+    alt: "Oh yeah imma be there on Saturday to hang for sure! We can talk about linking up again and check the calendars then. You're real one for sure. I was very impressed with your drumming man. Fr I'm not gassing you up. You were solid for sure.",
     caption: "Artist · after a live show · via text",
   },
   {
     id: "production-1",
     image: "/reviews/review-4.png",
-    width: 498,
+    width: 503,
     height: 300,
     alt: "Anthony! I am DROOLING! I'm obsessed with this… the production changes really take it up and over! I can definitely give more thought to the lyrics, I really like the melody but am absolutely open to feedback if there's any changes your ear is craving!",
     caption: "Artist · production client · via text",

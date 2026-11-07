@@ -15,6 +15,11 @@ body {
   --text-secondary: #9A9A9A;
   --text-tertiary: #5C5C5C;
   --hairline: rgba(255, 255, 255, 0.08);
+  --font-sans: "Gill Sans Nova", "Gill Sans", "Gill Sans MT", var(--font-cabin), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+  --font-sans: "Gill Sans Nova", "Gill Sans", "Gill Sans MT", var(--font-cabin), ui-sans-serif, system-ui, sans-serif;
 }
 
 * {
@@ -28,6 +33,7 @@ body {
 body {
   background: var(--bg);
   color: var(--text-primary);
+  font-family: var(--font-sans);
 }
 
 a {
@@ -50,10 +56,12 @@ a {
   -webkit-text-fill-color: transparent;
 }
 
-/* Fraunces 300 — hero name + page titles only. Display sizes. */
-.font-serif-display {
-  font-family: var(--font-serif), Georgia, serif;
+/* Display — Gill Sans Light where the visitor has it, Cabin 400 otherwise.
+   Hero name + page titles only. */
+.font-display {
+  font-family: var(--font-sans);
   font-weight: 300;
+  letter-spacing: -0.015em;
 }
 
 /* Primary pill — the one CTA style. White pill, black text, no shadow, no

@@ -16,7 +16,7 @@ export default function AboutClient() {
         className="bg-black px-4 pt-24 pb-16 text-[#F2F2F2] sm:px-6 md:px-8"
       >
         <article className="mx-auto max-w-[640px]">
-          <h1 className="grad font-serif-display mb-10 text-center text-[32px] leading-tight tracking-[-0.02em] text-balance sm:text-[44px]">
+          <h1 className="grad font-display mb-10 text-center text-[36px] leading-tight tracking-[-0.015em] text-balance sm:text-[48px]">
             From small-town church drummer to world-class performer
           </h1>
 

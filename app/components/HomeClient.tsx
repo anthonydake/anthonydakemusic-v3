@@ -8,7 +8,7 @@ import HeroListen from "./HeroListen";
 import FooterLine from "./FooterLine";
 import { projectIndex } from "../../data/projects.data";
 import { STATS } from "../../data/stats";
-import { testimonials } from "../../data/testimonials.data";
+import { HERO_TESTIMONIAL } from "../../data/testimonials.data";
 
 type SectionId = "hero" | "services" | "proof";
 
@@ -70,11 +70,14 @@ export default function HomeClient({
 
         <div className="relative -mt-28 px-6 text-center md:mt-0 md:px-0">
           <LogoArchitectOfSound />
-          <p className="mx-auto mt-4 max-w-[24ch] text-[17px] leading-[1.45] text-[#F2F2F2] sm:text-[18px]">
-            The drummer for your show, session, or record.
+          <p className="mt-4 text-[26px] leading-[1.2] text-[#F2F2F2] sm:text-[28px]">
+            {Math.floor(STATS.performances / 10) * 10}+ shows. {Math.floor(STATS.placements / 10) * 10}+ records.
           </p>
-          <p className="mx-auto mt-3 max-w-[34ch] text-[13px] leading-[1.6] text-[#9A9A9A]">
-            ~{STATS.performances} shows · ~{STATS.placements} records · Columbus Pride · ComFest · Blue Knights · Bluecoats
+          <p className="mx-auto mt-3 max-w-[30ch] text-[15px] leading-[1.55] text-[#9A9A9A] sm:text-[16px]">
+            Drummer and producer for live shows, sessions, and records. Columbus, OH.
+          </p>
+          <p className="mx-auto mt-3 max-w-[34ch] text-[12px] leading-[1.6] text-[#5C5C5C]">
+            Columbus Pride · ComFest · Blue Knights · Bluecoats · Rhythm X
           </p>
           <div className="mt-7 flex items-center justify-center gap-6">
             <button type="button" onClick={onOpenBooking} className="epk-cta">
@@ -82,7 +85,20 @@ export default function HomeClient({
             </button>
             <HeroListen />
           </div>
-          <p className="mt-5 text-[12px] text-[#5C5C5C]">Columbus, OH · fly dates nationwide</p>
+          <figure className="mx-auto mt-10 flex max-w-[360px] flex-col items-center">
+            <Image
+              src={HERO_TESTIMONIAL.image}
+              alt={HERO_TESTIMONIAL.alt}
+              width={HERO_TESTIMONIAL.width}
+              height={HERO_TESTIMONIAL.height}
+              loading="lazy"
+              sizes="(max-width: 360px) 100vw, 360px"
+              className="h-auto w-full select-none"
+            />
+            <figcaption className="mt-3 text-[12px] text-[#5C5C5C]">
+              {HERO_TESTIMONIAL.caption}
+            </figcaption>
+          </figure>
         </div>
       </section>
 
@@ -125,22 +141,6 @@ export default function HomeClient({
         <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
           Columbus Pride · ComFest · Short North Stage · Shadowbox Live · Louis Pettinelli Entertainment · Bluecoats · Rhythm X · Blue Knights
         </p>
-        {testimonials[0] && (
-          <figure className="mt-10 mx-auto max-w-[360px]">
-            <Image
-              src={testimonials[0].image}
-              alt={testimonials[0].alt}
-              width={testimonials[0].width}
-              height={testimonials[0].height}
-              loading="lazy"
-              sizes="(max-width: 360px) 100vw, 360px"
-              className="h-auto w-full mx-auto select-none"
-            />
-            <figcaption className="mt-3 text-[12px] text-[#5C5C5C] text-center">
-              {testimonials[0].caption}
-            </figcaption>
-          </figure>
-        )}
         <p className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-[#F2F2F2]">
           <Link href="/placements" className="hover:text-[#9A9A9A] transition-colors">
             Placements →

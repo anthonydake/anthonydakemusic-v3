@@ -69,7 +69,7 @@ export default function PracticePageClient() {
         className="mx-auto max-w-[640px] px-6 pt-24 pb-16 sm:px-8"
       >
         <header className="mb-10">
-          <h1 className="grad font-serif-display text-[40px] leading-tight tracking-[-0.02em] sm:text-[52px]">
+          <h1 className="grad font-display text-[44px] leading-tight tracking-[-0.015em] sm:text-[58px]">
             Practice
           </h1>
           <p className="mt-2 text-[15px] text-[#9A9A9A]">

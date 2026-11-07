@@ -32,7 +32,7 @@ export default function EPKClient() {
         className="mx-auto max-w-[760px] bg-black px-6 pt-24 pb-16 text-[#F2F2F2] sm:px-8"
       >
         <header className="mb-10 text-center">
-          <h1 className="grad font-serif-display text-[40px] leading-tight tracking-[-0.02em] sm:text-[52px]">
+          <h1 className="grad font-display text-[44px] leading-tight tracking-[-0.015em] sm:text-[58px]">
             Press kit
           </h1>
         </header>
