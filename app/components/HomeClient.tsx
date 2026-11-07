@@ -50,9 +50,9 @@ export default function HomeClient({
       <section
         ref={heroRef}
         data-id="hero"
-        className="relative -mt-14 bg-black md:mt-0 md:pb-12"
+        className="relative -mt-14 bg-black md:mt-0 md:flex md:min-h-[calc(100svh-3.5rem)] md:flex-col md:justify-center md:pb-12"
       >
-        <div className="md:mx-auto md:grid md:max-w-[1200px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-12 md:px-8 md:pt-16">
+        <div className="md:mx-auto md:grid md:w-full md:max-w-[1200px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-12 md:px-8 md:py-10 short:py-6">
           <div className="relative md:static">
             <Image
               src="/photos/epk-comfest-2024.jpg"
@@ -74,10 +74,10 @@ export default function HomeClient({
             <p className="mt-4 text-[26px] leading-[1.2] text-[#F2F2F2] sm:text-[28px]">
               {Math.floor(STATS.performances / 10) * 10}+ shows. {Math.floor(STATS.placements / 10) * 10}+ records.
             </p>
-            <p className="mx-auto mt-3 max-w-[30ch] text-[15px] leading-[1.55] text-[#9A9A9A] sm:text-[16px]">
+            <p className="mx-auto mt-3 max-w-[30ch] text-[15px] leading-[1.55] text-[#9A9A9A] sm:text-[16px] short:max-w-[44ch]">
               Drummer and producer for live shows, sessions, and records. Columbus, OH.
             </p>
-            <div className="mt-7 flex items-center justify-center gap-6">
+            <div className="mt-7 flex items-center justify-center gap-6 short:mt-5">
               <button type="button" onClick={onOpenBooking} className="epk-cta">
                 Book →
               </button>
@@ -89,9 +89,9 @@ export default function HomeClient({
 
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-3 hidden justify-center md:flex"
+          className="pointer-events-none absolute inset-x-0 bottom-4 hidden justify-center md:flex"
         >
-          <span className="animate-scrollFlash text-[11px] uppercase tracking-[0.28em] text-[#9A9A9A]">
+          <span className="animate-scrollFlash text-[12px] uppercase tracking-[0.28em] text-[#F2F2F2]">
             (scroll)
           </span>
         </div>
