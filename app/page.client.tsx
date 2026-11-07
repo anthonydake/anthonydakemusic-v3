@@ -19,8 +19,10 @@ export default function HomePageClient() {
 function HomeInner() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [bookingPreset, setBookingPreset] = useState<string | undefined>(undefined);
   const openBooking = () => {
     setMenuOpen(false);
+    setBookingPreset(undefined);
     setBookingOpen(true);
   };
   const searchParams = useSearchParams();
@@ -28,7 +30,9 @@ function HomeInner() {
   const homeHref = q ? `/?${q}` : "/";
 
   useEffect(() => {
-    const onOpen = () => {
+    const onOpen = (e: Event) => {
+      const detail = (e as CustomEvent<{ eventType?: string }>).detail;
+      setBookingPreset(detail?.eventType);
       setMenuOpen(false);
       setBookingOpen(true);
     };
@@ -147,7 +151,11 @@ function HomeInner() {
         </div>
       )}
 
-      <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
+      <BookingModal
+        isOpen={bookingOpen}
+        onClose={() => setBookingOpen(false)}
+        initialEventType={bookingPreset}
+      />
 
 
       <div id="main-content" className="pt-14">

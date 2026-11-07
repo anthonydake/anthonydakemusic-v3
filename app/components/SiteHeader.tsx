@@ -9,14 +9,18 @@ import { OPEN_BOOKING_EVENT } from "@/lib/booking";
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [bookingPreset, setBookingPreset] = useState<string | undefined>(undefined);
 
   const openBooking = () => {
     setMenuOpen(false);
+    setBookingPreset(undefined);
     setBookingOpen(true);
   };
 
   useEffect(() => {
-    const onOpen = () => {
+    const onOpen = (e: Event) => {
+      const detail = (e as CustomEvent<{ eventType?: string }>).detail;
+      setBookingPreset(detail?.eventType);
       setMenuOpen(false);
       setBookingOpen(true);
     };
@@ -130,7 +134,11 @@ export default function SiteHeader() {
         </div>
       )}
 
-      <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
+      <BookingModal
+        isOpen={bookingOpen}
+        onClose={() => setBookingOpen(false)}
+        initialEventType={bookingPreset}
+      />
     </>
   );
 }

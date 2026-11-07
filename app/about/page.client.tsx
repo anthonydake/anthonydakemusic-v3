@@ -254,7 +254,7 @@ export default function AboutClient() {
         <Testimonials />
 
         <p className="mx-auto mt-16 flex max-w-[640px] flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[15px] text-[#F2F2F2]">
-          <button type="button" onClick={openBooking} className="hover:text-[#9A9A9A] transition-colors">
+          <button type="button" onClick={() => openBooking()} className="hover:text-[#9A9A9A] transition-colors">
             Book →
           </button>
           <span className="text-[#5C5C5C]" aria-hidden="true">·</span>

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 type BookingModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  initialEventType?: string;
 };
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -19,7 +20,7 @@ const EVENT_TYPES = [
   "Other",
 ];
 
-export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
+export default function BookingModal({ isOpen, onClose, initialEventType }: BookingModalProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -37,8 +38,11 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     if (!isOpen) return;
     setStatus("idle");
     setErrorMessage("");
+    if (initialEventType && EVENT_TYPES.includes(initialEventType)) {
+      setEventType(initialEventType);
+    }
     requestAnimationFrame(() => firstFieldRef.current?.focus());
-  }, [isOpen]);
+  }, [isOpen, initialEventType]);
 
   useEffect(() => {
     if (!isOpen) return;

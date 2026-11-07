@@ -5,9 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import HeroTexts from "./HeroTexts";
+import HomeReel from "./HomeReel";
 import FooterLine from "./FooterLine";
 import { projectIndex } from "../../data/projects.data";
 import { STATS } from "../../data/stats";
+import { openBooking as openBookingPreset } from "@/lib/booking";
 
 type SectionId = "hero" | "services" | "proof";
 
@@ -15,6 +17,29 @@ type HomeClientProps = {
   initialSection?: SectionId;
   onOpenBooking?: () => void;
 };
+
+const OFFER_CARDS = [
+  {
+    id: "drummer",
+    title: "Drummer",
+    photo: "/photos/epk-whitehall-2025.jpg",
+    alt: "Anthony Dake behind the kit at the Whitehall Food Truck Festival, 2025",
+    objectPosition: "center 35%",
+    copy: "Live shows, tours, and fly dates. Session drums remote or in your room. Click, IEM, acoustic and hybrid rigs.",
+    linkLabel: "Book a date →",
+    preset: "Live show / tour date",
+  },
+  {
+    id: "producer",
+    title: "Producer",
+    photo: "/photos/epk-hybrid-rig-2025.jpg",
+    alt: "Anthony Dake playing a hybrid acoustic and electronic rig, 2025",
+    objectPosition: "center 30%",
+    copy: "Drum programming and production for records. Remote, fast, release-ready stems.",
+    linkLabel: "Send a brief →",
+    preset: "Production / drum programming",
+  },
+] as const;
 
 export default function HomeClient({
   initialSection = "hero",
@@ -36,10 +61,17 @@ export default function HomeClient({
     const seen = new Set<string>();
     const out: string[] = [];
     for (const p of projectIndex) {
-      if (seen.has(p.artist)) continue;
-      seen.add(p.artist);
-      out.push(p.artist);
-      if (out.length === 5) break;
+      const parts = p.artist.split(/\s+&\s+|\s+x\s+|,\s+/i);
+      for (const raw of parts) {
+        const name = raw.trim();
+        if (!name) continue;
+        const key = name.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(name);
+        if (out.length === 6) break;
+      }
+      if (out.length === 6) break;
     }
     return out.join(" · ");
   }, []);
@@ -102,36 +134,44 @@ export default function HomeClient({
       <section
         ref={servicesRef}
         data-id="services"
-        className="mx-auto max-w-[640px] px-6 py-16 sm:py-24"
+        className="mx-auto max-w-[960px] px-6 py-16 sm:py-24"
       >
-        <h2 className="text-[15px] text-[#F2F2F2] mb-6">What I do</h2>
-        <div className="space-y-5 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
-          <p>
-            <strong className="font-normal text-[#F2F2F2]">Drummer</strong>
-            {" — live shows, tours, and fly dates; session drums remote or in your room. Click, IEM, acoustic and hybrid rigs."}
-          </p>
-          <p>
-            <strong className="font-normal text-[#F2F2F2]">Producer</strong>
-            {" — drum programming and production for records. Remote, fast, release-ready stems."}
-          </p>
+        <h2 className="mb-6 text-[15px] text-[#F2F2F2]">What I do</h2>
+        <div className="grid gap-10 md:grid-cols-2 md:gap-8">
+          {OFFER_CARDS.map((card) => (
+            <article key={card.id}>
+              <Image
+                src={card.photo}
+                alt={card.alt}
+                width={1200}
+                height={1500}
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 460px"
+                className="aspect-[4/3] w-full rounded-2xl object-cover"
+                style={{ objectPosition: card.objectPosition }}
+              />
+              <h3 className="mt-5 text-[20px] text-[#F2F2F2]">{card.title}</h3>
+              <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A]">{card.copy}</p>
+              <button
+                type="button"
+                onClick={() => openBookingPreset(card.preset)}
+                className="mt-4 text-[15px] text-[#F2F2F2] transition-colors hover:text-[#9A9A9A]"
+              >
+                {card.linkLabel}
+              </button>
+            </article>
+          ))}
         </div>
-        <p className="mt-8">
-          <button
-            type="button"
-            onClick={onOpenBooking}
-            className="text-[15px] text-[#F2F2F2] hover:text-[#9A9A9A] transition-colors"
-          >
-            Send a brief →
-          </button>
-        </p>
       </section>
+
+      <HomeReel />
 
       <section
         ref={proofRef}
         data-id="proof"
         className="mx-auto max-w-[640px] px-6 py-16 sm:py-24"
       >
-        <h2 className="text-[15px] text-[#F2F2F2] mb-6">Proof</h2>
+        <h2 className="mb-6 text-[15px] text-[#F2F2F2]">Proof</h2>
         <p className="text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
           {names}
         </p>
@@ -149,6 +189,24 @@ export default function HomeClient({
             Press kit →
           </Link>
         </p>
+      </section>
+
+      <section className="mx-auto max-w-[640px] border-t border-white/[0.08] px-6 py-20 text-center sm:py-28">
+        <p className="text-[26px] leading-[1.25] text-[#F2F2F2] sm:text-[30px]">
+          Got a date? Tell me about it.
+        </p>
+        <p className="mx-auto mt-3 max-w-[36ch] text-[15px] leading-[1.6] text-[#9A9A9A]">
+          Live shows, sessions, and records. Columbus, OH, and fly dates nationwide.
+        </p>
+        <div className="mt-8 flex items-center justify-center">
+          <button
+            type="button"
+            onClick={onOpenBooking}
+            className="epk-cta min-w-[240px] sm:min-w-[260px]"
+          >
+            Book →
+          </button>
+        </div>
       </section>
 
       <FooterLine />
