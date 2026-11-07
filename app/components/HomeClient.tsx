@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
-import HeroListen from "./HeroListen";
 import HeroTexts from "./HeroTexts";
 import FooterLine from "./FooterLine";
 import { projectIndex } from "../../data/projects.data";
@@ -77,11 +76,14 @@ export default function HomeClient({
             <p className="mx-auto mt-3 max-w-[30ch] text-[15px] leading-[1.55] text-[#9A9A9A] sm:text-[16px] short:max-w-[44ch]">
               Drummer and producer for live shows, sessions, and records. Columbus, OH.
             </p>
-            <div className="mt-7 flex items-center justify-center gap-6 short:mt-5">
-              <button type="button" onClick={onOpenBooking} className="epk-cta">
+            <div className="mt-7 flex items-center justify-center short:mt-5">
+              <button
+                type="button"
+                onClick={onOpenBooking}
+                className="epk-cta min-w-[240px] sm:min-w-[260px]"
+              >
                 Book →
               </button>
-              <HeroListen />
             </div>
             <HeroTexts />
           </div>
