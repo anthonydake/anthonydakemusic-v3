@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LogoArchitectOfSound from "./LogoArchitectOfSound";
 import HeroTexts from "./HeroTexts";
 import HomeReel from "./HomeReel";
 import FooterLine from "./FooterLine";
-import { projectIndex } from "../../data/projects.data";
+import ProductionRows from "./ProductionRows";
+import { PRODUCTIONS } from "../../data/productions.data";
 import { STATS } from "../../data/stats";
 import { openBooking as openBookingPreset } from "@/lib/booking";
 
@@ -56,25 +57,6 @@ export default function HomeClient({
     if (!target) return;
     target.scrollIntoView({ block: "start", behavior: "auto" });
   }, [initialSection]);
-
-  const names = useMemo(() => {
-    const seen = new Set<string>();
-    const out: string[] = [];
-    for (const p of projectIndex) {
-      const parts = p.artist.split(/\s+&\s+|\s+x\s+|,\s+/i);
-      for (const raw of parts) {
-        const name = raw.trim();
-        if (!name) continue;
-        const key = name.toLowerCase();
-        if (seen.has(key)) continue;
-        seen.add(key);
-        out.push(name);
-        if (out.length === 6) break;
-      }
-      if (out.length === 6) break;
-    }
-    return out.join(" · ");
-  }, []);
 
   return (
     <div className="bg-black">
@@ -171,11 +153,14 @@ export default function HomeClient({
         data-id="proof"
         className="mx-auto max-w-[640px] px-6 py-16 sm:py-24"
       >
-        <h2 className="mb-6 text-[15px] text-[#F2F2F2]">Proof</h2>
-        <p className="text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
-          {names}
+        <h2 className="mb-1 text-[15px] text-[#F2F2F2]">Full productions</h2>
+        <p className="text-[12px] text-[#5C5C5C]">
+          Songs I produced start to finish. Tap to play.
         </p>
-        <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
+        <div className="mt-5">
+          <ProductionRows items={PRODUCTIONS} />
+        </div>
+        <p className="mt-10 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
           Columbus Pride · ComFest · Short North Stage · Shadowbox Live · Louis Pettinelli Entertainment · Bluecoats · Rhythm X · Blue Knights
         </p>
         <p className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-[#F2F2F2]">

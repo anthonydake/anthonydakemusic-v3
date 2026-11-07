@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { projectIndex, type ProjectIndexItem } from "@/data/projects.data";
+import { PRODUCTIONS } from "@/data/productions.data";
 import { STATS } from "@/data/stats";
 import SiteHeader from "@/app/components/SiteHeader";
 import FooterLine from "@/app/components/FooterLine";
 import JsonLd from "@/app/components/JsonLd";
+import ProductionRows from "@/app/components/ProductionRows";
 
 const SITE_URL = "https://www.anthonydakemusic.com";
 
@@ -49,11 +51,15 @@ function breadcrumbsSchema(label: string, path: string) {
 }
 
 export default function PlacementsClient() {
-  const items = projectIndex;
+  const productionIds = new Set(PRODUCTIONS.map((p) => p.youtubeId));
+  const drumItems = projectIndex.filter(
+    (p) => !p.youtubeUrl || !Array.from(productionIds).some((id) => p.youtubeUrl!.includes(id))
+  );
+  const totalSelected = PRODUCTIONS.length + drumItems.length;
 
   return (
     <div className="bg-black text-[#F2F2F2]">
-      <JsonLd data={placementsSchema(items)} />
+      <JsonLd data={placementsSchema(drumItems)} />
       <JsonLd data={breadcrumbsSchema("Placements", "/placements")} />
       <SiteHeader />
       <main
@@ -61,7 +67,7 @@ export default function PlacementsClient() {
         className="mx-auto max-w-[960px] px-6 pt-24 pb-16 sm:px-8"
       >
         <p className="sr-only">
-          Drum credits across released records since 2022 — drum performance and drum programming for independent artists, primarily in Columbus, Ohio. The list below is a curated selection of {items.length} highlights; the full catalog includes roughly {STATS.placements} placements with collaborators including AR!YAH, KJ The Cool Nerd, Bitty, WANYEH, and Madelyn Leona.
+          Drum credits across released records since 2022 — drum performance and drum programming for independent artists, primarily in Columbus, Ohio. The list below is a curated selection of {totalSelected} highlights; the full catalog includes roughly {STATS.placements} placements with collaborators including AR!YAH, KJ The Cool Nerd, Bitty, WANYEH, and Madelyn Leona.
         </p>
 
         <header className="mb-10">
@@ -69,11 +75,22 @@ export default function PlacementsClient() {
             Placements
           </h1>
           <p className="mt-2 text-[15px] text-[#9A9A9A]">
-            Selected · {items.length} of ~{STATS.placements}
+            Selected · {totalSelected} of ~{STATS.placements}
           </p>
         </header>
 
-        <YearGroups items={items} />
+        <section className="mb-16">
+          <h2 className="mb-1 text-[15px] text-[#F2F2F2]">Full productions</h2>
+          <p className="text-[12px] text-[#5C5C5C]">
+            Songs I produced start to finish. Tap to play.
+          </p>
+          <div className="mt-5">
+            <ProductionRows items={PRODUCTIONS} />
+          </div>
+        </section>
+
+        <h2 className="mb-6 text-[15px] text-[#F2F2F2]">Drums &amp; drum programming</h2>
+        <YearGroups items={drumItems} />
 
         <nav
           aria-label="Related sections"
