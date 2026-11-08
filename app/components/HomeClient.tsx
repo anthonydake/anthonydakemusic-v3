@@ -139,13 +139,7 @@ export default function HomeClient({
             <p className="mt-3 text-[22px] font-semibold leading-[1.2] text-[#F2F2F2] sm:text-[26px]">
               Producer / Drummer
             </p>
-            <p className="mx-auto mt-3 max-w-[34ch] text-[17px] leading-[1.5] text-[#F2F2F2] sm:text-[18px] short:max-w-[40ch]">
-              Drummer and producer for live shows, sessions, and records. Columbus, OH.
-            </p>
-            <p className="mt-6 text-[15px] text-[#9A9A9A] short:mt-4">
-              Let&apos;s build your next record or show.
-            </p>
-            <div className="mt-3 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center short:mt-5">
               <button
                 type="button"
                 onClick={() => openBookingPreset("Production / drum programming")}
