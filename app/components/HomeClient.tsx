@@ -11,6 +11,11 @@ import ProductionRows from "./ProductionRows";
 import { PRODUCTIONS } from "../../data/productions.data";
 import { STATS } from "../../data/stats";
 import { STAGE_ARTISTS, ORGANIZATIONS } from "../../data/credits.data";
+import {
+  OFFER_TESTIMONIALS,
+  HOME_TESTIMONIALS,
+  type Testimonial,
+} from "../../data/testimonials.data";
 import { openBooking as openBookingPreset } from "@/lib/booking";
 
 type SectionId = "hero" | "services" | "proof";
@@ -36,6 +41,7 @@ type OfferCard = {
   copy?: string;
   scrollLink?: string;
   copyAfter?: string;
+  testimonial?: Testimonial;
 };
 
 const OFFER_CARDS: readonly OfferCard[] = [
@@ -53,6 +59,7 @@ const OFFER_CARDS: readonly OfferCard[] = [
     close: "Tours, fly dates, and sessions — remote or in your room.",
     linkLabel: "Book a date →",
     preset: "Live show / tour date",
+    testimonial: OFFER_TESTIMONIALS.drummer,
   },
   {
     id: "producer",
@@ -66,6 +73,7 @@ const OFFER_CARDS: readonly OfferCard[] = [
     copyAfter: " — I work remote and deliver release-ready stems.",
     linkLabel: "Send a brief →",
     preset: "Production / drum programming",
+    testimonial: OFFER_TESTIMONIALS.producer,
   },
 ];
 
@@ -218,10 +226,26 @@ export default function HomeClient({
                   {card.copyAfter}
                 </p>
               )}
+              {card.testimonial && (
+                <figure className="mt-6 max-w-[320px]">
+                  <Image
+                    src={card.testimonial.image}
+                    alt={card.testimonial.alt}
+                    width={card.testimonial.width}
+                    height={card.testimonial.height}
+                    loading="lazy"
+                    sizes="320px"
+                    className="h-auto w-full select-none"
+                  />
+                  <figcaption className="mt-1.5 text-[11px] leading-[1.4] text-[#5C5C5C]">
+                    {card.testimonial.caption}
+                  </figcaption>
+                </figure>
+              )}
               <button
                 type="button"
                 onClick={() => openBookingPreset(card.preset)}
-                className="mt-4 text-[15px] text-[#F2F2F2] transition-colors hover:text-[#9A9A9A]"
+                className={`${card.testimonial ? "mt-5" : "mt-4"} text-[15px] text-[#F2F2F2] transition-colors hover:text-[#9A9A9A]`}
               >
                 {card.linkLabel}
               </button>
@@ -256,6 +280,30 @@ export default function HomeClient({
             Press kit →
           </Link>
         </p>
+      </section>
+
+      <section className="mx-auto max-w-[960px] px-6 pb-16 sm:pb-24">
+        <h2 className="mb-6 text-[15px] text-[#F2F2F2]">What people say</h2>
+        <ul className="mt-8 grid gap-10 md:grid-cols-3 md:items-start md:gap-8">
+          {HOME_TESTIMONIALS.map((t) => (
+            <li key={t.id} className="mx-auto w-full max-w-[340px] md:max-w-none">
+              <figure>
+                <Image
+                  src={t.image}
+                  alt={t.alt}
+                  width={t.width}
+                  height={t.height}
+                  loading="lazy"
+                  sizes="(max-width: 768px) 340px, 300px"
+                  className="h-auto w-full select-none"
+                />
+                <figcaption className="mt-1.5 text-center text-[11px] leading-[1.4] text-[#5C5C5C]">
+                  {t.caption}
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="mx-auto max-w-[640px] border-t border-white/[0.08] px-6 py-20 text-center sm:py-28">

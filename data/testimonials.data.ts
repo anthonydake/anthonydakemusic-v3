@@ -46,7 +46,26 @@ export const HERO_TESTIMONIALS: Testimonial[] = [
   },
 ];
 
-export const testimonials: Testimonial[] = [
+export const OFFER_TESTIMONIALS: { drummer: Testimonial; producer: Testimonial } = {
+  drummer: {
+    id: "live-show-2",
+    image: "/reviews/review-10.png",
+    width: 506,
+    height: 359,
+    alt: "Brother!! Thank you for everything you did to prepare for this show, everybody loved what you added to the mix and feel of the tracks. I look forward to the next one, I'm spending the morning making notes and adjustments for future reference, have a great day with the classroom! 🙌🏻",
+    caption: "Artist · after a live show · via text",
+  },
+  producer: {
+    id: "song-1",
+    image: "/reviews/review-11.png",
+    width: 475,
+    height: 167,
+    alt: "Thank you so much anthony! Your song you made pulls on my heart strings every time I hear it! Yess I'll send some now!",
+    caption: "On a song I made · via text",
+  },
+};
+
+export const HOME_TESTIMONIALS: Testimonial[] = [
   {
     id: "production-1",
     image: "/reviews/review-4.png",
@@ -54,6 +73,33 @@ export const testimonials: Testimonial[] = [
     height: 300,
     alt: "Anthony! I am DROOLING! I'm obsessed with this… the production changes really take it up and over! I can definitely give more thought to the lyrics, I really like the melody but am absolutely open to feedback if there's any changes your ear is craving!",
     caption: "Artist · production client · via text",
+  },
+  {
+    id: "live-show-3",
+    image: "/reviews/review-9.png",
+    width: 496,
+    height: 199,
+    alt: "Thank you so much for all you did to make the show so special yesterday. You were absolutely phenomenal! Sincerely so stoked to have the privilege of collaborating with you",
+    caption: "Artist · after a live show · via text",
+  },
+  {
+    id: "beat-2",
+    image: "/reviews/review-13.png",
+    width: 506,
+    height: 103,
+    alt: "I swear you told me you didn't sample lol 🥶🥶🥶",
+    caption: "Artist · on a beat · via text",
+  },
+];
+
+export const testimonials: Testimonial[] = [
+  {
+    id: "produced-1",
+    image: "/reviews/review-12.png",
+    width: 506,
+    height: 327,
+    alt: "Hey Anthony! So sorry for the delayed response. Harmony had its big concert of the season last Thursday and it was a long week. For sure, let's connect and catch up! I did a gig with Jasmine and one of the tracks you produced for her sounds great! Let's text early next week and find a time!",
+    caption: "Drummer · on a track I produced · via text",
   },
   {
     id: "mix-1",
