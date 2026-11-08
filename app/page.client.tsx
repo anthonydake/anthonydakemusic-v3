@@ -159,7 +159,7 @@ function HomeInner() {
 
 
       <div id="main-content" className="pt-14">
-        <HomeClient onOpenBooking={openBooking} />
+        <HomeClient />
       </div>
     </>
   );

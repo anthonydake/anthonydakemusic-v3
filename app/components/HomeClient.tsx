@@ -17,12 +17,12 @@ type SectionId = "hero" | "services" | "proof";
 
 type HomeClientProps = {
   initialSection?: SectionId;
-  onOpenBooking?: () => void;
 };
 
 type OfferCard = {
   id: string;
   title: string;
+  count: string;
   photo: string;
   alt: string;
   objectPosition: string;
@@ -42,6 +42,7 @@ const OFFER_CARDS: readonly OfferCard[] = [
   {
     id: "drummer",
     title: "Drummer",
+    count: `${Math.floor(STATS.performances / 10) * 10}+ shows`,
     photo: "/photos/epk-whitehall-2025.jpg",
     alt: "Anthony Dake behind the kit at the Whitehall Food Truck Festival, 2025",
     objectPosition: "center 35%",
@@ -56,6 +57,7 @@ const OFFER_CARDS: readonly OfferCard[] = [
   {
     id: "producer",
     title: "Producer",
+    count: `${Math.floor(STATS.placements / 10) * 10}+ records`,
     photo: "/photos/epk-hybrid-rig-2025.jpg",
     alt: "Anthony Dake playing a hybrid acoustic and electronic rig, 2025",
     objectPosition: "top",
@@ -84,7 +86,6 @@ function NameList({ names }: { names: readonly string[] }) {
 
 export default function HomeClient({
   initialSection = "hero",
-  onOpenBooking,
 }: HomeClientProps) {
   const heroRef = useRef<HTMLElement | null>(null);
   const servicesRef = useRef<HTMLElement | null>(null);
@@ -116,7 +117,7 @@ export default function HomeClient({
         data-id="hero"
         className="relative -mt-14 bg-black md:mt-0 md:flex md:min-h-[calc(100svh-3.5rem)] md:flex-col md:justify-center md:pb-12"
       >
-        <div className="md:mx-auto md:grid md:w-full md:max-w-[1200px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-12 md:px-8 md:py-10 short:py-6">
+        <div className="md:mx-auto md:grid md:w-full md:max-w-[1200px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-12 md:px-8 md:py-10 short:py-4">
           <div className="relative md:static">
             <Image
               src="/photos/epk-comfest-2024.jpg"
@@ -135,19 +136,29 @@ export default function HomeClient({
 
           <div className="relative -mt-28 px-6 text-center md:mt-0 md:px-0">
             <LogoArchitectOfSound />
-            <p className="mt-4 text-[26px] leading-[1.2] text-[#F2F2F2] sm:text-[28px]">
-              {Math.floor(STATS.performances / 10) * 10}+ shows. {Math.floor(STATS.placements / 10) * 10}+ records.
+            <p className="mt-3 text-[22px] font-semibold leading-[1.2] text-[#F2F2F2] sm:text-[26px]">
+              Producer / Drummer
             </p>
-            <p className="mx-auto mt-3 max-w-[30ch] text-[15px] leading-[1.55] text-[#9A9A9A] sm:text-[16px] short:max-w-[44ch]">
+            <p className="mx-auto mt-3 max-w-[34ch] text-[17px] leading-[1.5] text-[#F2F2F2] sm:text-[18px] short:max-w-[40ch]">
               Drummer and producer for live shows, sessions, and records. Columbus, OH.
             </p>
-            <div className="mt-7 flex items-center justify-center short:mt-5">
+            <p className="mt-6 text-[15px] text-[#9A9A9A] short:mt-4">
+              Let&apos;s build your next record or show.
+            </p>
+            <div className="mt-3 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <button
                 type="button"
-                onClick={onOpenBooking}
-                className="epk-cta min-w-[240px] sm:min-w-[260px]"
+                onClick={() => openBookingPreset("Production / drum programming")}
+                className="epk-cta min-w-[220px]"
               >
-                Book →
+                Book production →
+              </button>
+              <button
+                type="button"
+                onClick={() => openBookingPreset("Live show / tour date")}
+                className="epk-cta min-w-[220px]"
+              >
+                Book drums →
               </button>
             </div>
             <HeroTexts />
@@ -183,7 +194,10 @@ export default function HomeClient({
                 className="aspect-[4/3] w-full rounded-2xl object-cover"
                 style={{ objectPosition: card.objectPosition }}
               />
-              <h3 className="mt-5 text-[20px] text-[#F2F2F2]">{card.title}</h3>
+              <div className="mt-5 flex items-baseline justify-between gap-4">
+                <h3 className="text-[20px] text-[#F2F2F2]">{card.title}</h3>
+                <span className="text-[15px] tabular-nums text-[#9A9A9A]">{card.count}</span>
+              </div>
               {card.lead && (
                 <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A]">{card.lead}</p>
               )}
@@ -257,13 +271,20 @@ export default function HomeClient({
         <p className="mx-auto mt-3 max-w-[36ch] text-[15px] leading-[1.6] text-[#9A9A9A]">
           Live shows, sessions, and records. Columbus, OH, and fly dates nationwide.
         </p>
-        <div className="mt-8 flex items-center justify-center">
+        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <button
             type="button"
-            onClick={onOpenBooking}
-            className="epk-cta min-w-[240px] sm:min-w-[260px]"
+            onClick={() => openBookingPreset("Production / drum programming")}
+            className="epk-cta min-w-[220px]"
           >
-            Book →
+            Book production →
+          </button>
+          <button
+            type="button"
+            onClick={() => openBookingPreset("Live show / tour date")}
+            className="epk-cta min-w-[220px]"
+          >
+            Book drums →
           </button>
         </div>
       </section>

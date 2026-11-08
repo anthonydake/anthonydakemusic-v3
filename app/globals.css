@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@custom-variant short (@media (min-width: 48rem) and (max-height: 820px));
+@custom-variant short (@media (min-width: 48rem) and (max-height: 860px));
 
 /* Global reset */
 html,
