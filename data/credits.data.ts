@@ -12,6 +12,7 @@ export const STAGE_ARTISTS: string[] = [
   "Jasmine Spitzer",
   "Waves De Ache",
   "Bobby Floyd",
+  "Columbus Children's Choir",
 ];
 
 export const ORGANIZATIONS: string[] = [
