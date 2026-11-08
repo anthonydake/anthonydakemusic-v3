@@ -51,7 +51,7 @@ There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in t
 
 ### Data Files
 
-- `data/credits.data.ts` — Two plain string arrays consumed by the Drummer offer card in `HomeClient.tsx`: `STAGE_ARTISTS` (13 names of artists Anthony has shared the stage with) and `ORGANIZATIONS` (10 corps / ensembles / venues / producers he's performed with). Array order is display order; edit here and the home card updates.
+- `data/credits.data.ts` — Two plain string arrays consumed by the Drummer offer card in `HomeClient.tsx`: `STAGE_ARTISTS` (14 names of artists Anthony has shared the stage with) and `ORGANIZATIONS` (10 corps / ensembles / venues / producers he's performed with). Array order is display order; edit here and the home card updates.
 - `data/projects.data.ts` — Lightweight placements index (title/artist pairs) used by the `/placements` route. The home Proof section no longer reads it; the drum-list section of `/placements` filters out entries whose `youtubeUrl` matches a `PRODUCTIONS` `youtubeId` so nothing is listed twice.
 - `data/productions.data.ts` — `Production` type + `PRODUCTIONS` array: six songs Anthony produced start to finish, each with `title`, `artist`, `year`, `youtubeId`, `cover` (square 600×600 JPEG in `public/covers/`), and `duration`. Order in the array = display order on home and on `/placements` (`Cycles → Aura → Pray For Me → Back & Forth → Repercussions → Missin U`). Consumed by `<ProductionRows />`.
 - `data/performance.data.ts` — Live performance credits list.
@@ -269,6 +269,8 @@ Declaration order matters: `tiny` must come after `short` so its utilities sort 
 
 ## Commit History (most recent first)
 
+- `702f7ab` — Credits: add Columbus Children's Choir to the stage list
+- `87a7128` — Chore: ignore .next at any depth
 - `6c0f2db` — Chore: remove stray public/reviews/.next/ trace files accidentally committed in 5e6381e
 - `5e6381e` — Texts: five more client texts — under the offer cards, a What people say row on home, and About
 - `d79caf4` — Hero: drop the description and invitation line
