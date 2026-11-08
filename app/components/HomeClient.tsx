@@ -10,6 +10,7 @@ import FooterLine from "./FooterLine";
 import ProductionRows from "./ProductionRows";
 import { PRODUCTIONS } from "../../data/productions.data";
 import { STATS } from "../../data/stats";
+import { STAGE_ARTISTS, ORGANIZATIONS } from "../../data/credits.data";
 import { openBooking as openBookingPreset } from "@/lib/booking";
 
 type SectionId = "hero" | "services" | "proof";
@@ -19,14 +20,36 @@ type HomeClientProps = {
   onOpenBooking?: () => void;
 };
 
-const OFFER_CARDS = [
+type OfferCard = {
+  id: string;
+  title: string;
+  photo: string;
+  alt: string;
+  objectPosition: string;
+  linkLabel: string;
+  preset: string;
+  lead?: string;
+  artists?: readonly string[];
+  orgsLead?: string;
+  orgs?: readonly string[];
+  close?: string;
+  copy?: string;
+  scrollLink?: string;
+  copyAfter?: string;
+};
+
+const OFFER_CARDS: readonly OfferCard[] = [
   {
     id: "drummer",
     title: "Drummer",
     photo: "/photos/epk-whitehall-2025.jpg",
     alt: "Anthony Dake behind the kit at the Whitehall Food Truck Festival, 2025",
     objectPosition: "center 35%",
-    copy: "Live shows, tours, and fly dates. Session drums remote or in your room. Click, IEM, acoustic and hybrid rigs.",
+    lead: "I've had the honor of opening for En Vogue, playing the main stages at Columbus Pride and ComFest, and sharing the stage with",
+    artists: STAGE_ARTISTS,
+    orgsLead: "and performing with",
+    orgs: ORGANIZATIONS,
+    close: "Tours, fly dates, and sessions — remote or in your room.",
     linkLabel: "Book a date →",
     preset: "Live show / tour date",
   },
@@ -36,11 +59,28 @@ const OFFER_CARDS = [
     photo: "/photos/epk-hybrid-rig-2025.jpg",
     alt: "Anthony Dake playing a hybrid acoustic and electronic rig, 2025",
     objectPosition: "top",
-    copy: "Drum programming and production for records. Remote, fast, release-ready stems.",
+    copy: "Whole songs start to finish, or just the drums. ",
+    scrollLink: "Hear the released records below",
+    copyAfter: " — I work remote and deliver release-ready stems.",
     linkLabel: "Send a brief →",
     preset: "Production / drum programming",
   },
-] as const;
+];
+
+function NameList({ names }: { names: readonly string[] }) {
+  return (
+    <p className="mt-2 text-[15px] leading-[1.75] text-[#F2F2F2]">
+      {names.map((name, i) => (
+        <span key={name}>
+          <span className="whitespace-nowrap">{name}</span>
+          {i < names.length - 1 && (
+            <span aria-hidden="true" className="text-[#5C5C5C]"> · </span>
+          )}
+        </span>
+      ))}
+    </p>
+  );
+}
 
 export default function HomeClient({
   initialSection = "hero",
@@ -57,6 +97,17 @@ export default function HomeClient({
     if (!target) return;
     target.scrollIntoView({ block: "start", behavior: "auto" });
   }, [initialSection]);
+
+  const scrollToProof = () => {
+    if (!proofRef.current) return;
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    proofRef.current.scrollIntoView({
+      block: "start",
+      behavior: reduced ? "auto" : "smooth",
+    });
+  };
 
   return (
     <div className="bg-black">
@@ -133,7 +184,32 @@ export default function HomeClient({
                 style={{ objectPosition: card.objectPosition }}
               />
               <h3 className="mt-5 text-[20px] text-[#F2F2F2]">{card.title}</h3>
-              <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A]">{card.copy}</p>
+              {card.lead && (
+                <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A]">{card.lead}</p>
+              )}
+              {card.artists && <NameList names={card.artists} />}
+              {card.orgsLead && (
+                <p className="mt-4 text-[15px] leading-[1.6] text-[#9A9A9A]">{card.orgsLead}</p>
+              )}
+              {card.orgs && <NameList names={card.orgs} />}
+              {card.close && (
+                <p className="mt-4 text-[15px] leading-[1.6] text-[#9A9A9A]">{card.close}</p>
+              )}
+              {card.copy && (
+                <p className="mt-2 text-[15px] leading-[1.6] text-[#9A9A9A]">
+                  {card.copy}
+                  {card.scrollLink && (
+                    <button
+                      type="button"
+                      onClick={scrollToProof}
+                      className="text-[#F2F2F2] underline-offset-4 hover:underline"
+                    >
+                      {card.scrollLink}
+                    </button>
+                  )}
+                  {card.copyAfter}
+                </p>
+              )}
               <button
                 type="button"
                 onClick={() => openBookingPreset(card.preset)}
@@ -150,6 +226,7 @@ export default function HomeClient({
 
       <section
         ref={proofRef}
+        id="proof"
         data-id="proof"
         className="mx-auto max-w-[640px] px-6 py-16 sm:py-24"
       >
@@ -160,10 +237,7 @@ export default function HomeClient({
         <div className="mt-5">
           <ProductionRows items={PRODUCTIONS} />
         </div>
-        <p className="mt-10 text-[15px] leading-[1.6] text-[#9A9A9A] sm:text-[16px]">
-          Columbus Pride · ComFest · Short North Stage · Shadowbox Live · Louis Pettinelli Entertainment · Bluecoats · Rhythm X · Blue Knights
-        </p>
-        <p className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-[#F2F2F2]">
+        <p className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-[#F2F2F2]">
           <Link href="/placements" className="hover:text-[#9A9A9A] transition-colors">
             Placements →
           </Link>
