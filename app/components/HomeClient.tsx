@@ -117,7 +117,7 @@ export default function HomeClient({
         data-id="hero"
         className="relative -mt-14 bg-black md:mt-0 md:flex md:min-h-[calc(100svh-3.5rem)] md:flex-col md:justify-center md:pb-12"
       >
-        <div className="md:mx-auto md:grid md:w-full md:max-w-[1200px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-12 md:px-8 md:py-10 short:py-4">
+        <div className="md:mx-auto md:grid md:w-full md:max-w-[1200px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-12 md:px-8 md:py-10 short:py-4 tiny:py-2">
           <div className="relative md:static">
             <Image
               src="/photos/epk-comfest-2024.jpg"

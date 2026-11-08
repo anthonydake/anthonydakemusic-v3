@@ -5,7 +5,7 @@ export default function HeroTexts() {
   return (
     <ul
       aria-label="What people say"
-      className="-mx-6 mt-8 flex snap-x snap-mandatory items-start gap-4 overflow-x-auto px-6 pb-1 [scroll-padding-left:1.5rem] md:mx-auto md:mt-8 md:grid md:w-full md:max-w-[500px] md:snap-none md:grid-cols-2 md:gap-x-5 md:gap-y-4 md:overflow-visible md:px-0 md:pb-0 short:mt-5 short:max-w-[440px]"
+      className="-mx-6 mt-8 flex snap-x snap-mandatory items-start gap-4 overflow-x-auto px-6 pb-1 [scroll-padding-left:1.5rem] md:mx-auto md:mt-8 md:grid md:w-full md:max-w-[500px] md:snap-none md:grid-cols-2 md:gap-x-5 md:gap-y-4 md:overflow-visible md:px-0 md:pb-0 short:mt-5 short:max-w-[440px] tiny:mt-4 tiny:max-w-[420px]"
     >
       {HERO_TESTIMONIALS.map((t) => (
         <li
