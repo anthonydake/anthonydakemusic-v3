@@ -123,7 +123,7 @@ One-off digital downloads, paid on Square's hosted checkout page. Card details n
 - `lib/store/config.ts` — env → Square config. `catalog.ts` — which products are sellable right now. `square.ts` — the three Square calls + the webhook signature check (plain `fetch`, no SDK; no `Square-Version` header, so the version pinned on the Square application applies). `orders.ts` — the `store_orders` table, created idempotently like `bookings`. `fulfill.ts` — paid transition + emails. `files.ts` — where a product's file comes from. `email.ts` — Resend.
 - `app/store/…`, `app/api/store/…`, `app/api/square/webhook/route.ts` — pages and routes. Pages keep the `page.tsx` + `page.client.tsx` split.
 
-**Env vars** (Vercel — none are set yet):
+**Env vars** (Vercel — as of 2026-11-23 only the two sandbox values are set, both in Preview only):
 - `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID` — without both, `/store` 404s and checkout is off.
 - `SQUARE_WEBHOOK_SIGNATURE_KEY` — without it the webhook answers `503`.
 - `SQUARE_ENVIRONMENT` — `production` means real money; anything else (or unset) is sandbox. Sandbox keys belong in Vercel's Preview environment, production keys in Production.
@@ -142,7 +142,13 @@ One-off digital downloads, paid on Square's hosted checkout page. Card details n
 
 **Self-test.** `npm install --no-save @electric-sql/pglite && node scripts/store-selftest.mjs` — 43 checks against the real route handlers with a mock Square, in-memory Postgres (PGlite) and captured email. It touches nothing real. Run it after any change under `lib/store/` or the store routes.
 
-**Status (2026-11-23).** Code complete; the self-test and `npm run build` pass. Not yet run against Square itself — that needs Anthony's Square account. To switch on sandbox: create the Square account and a Developer application; put the sandbox access token, location id and webhook signature key in Vercel (Preview); subscribe a webhook to `payment.updated` and `refund.updated` at `https://<deployment>/api/square/webhook`. Before any live sale: decide sales tax (quick-pay links charge the listed price with no tax line) and move the site off Vercel's free plan (commercial use).
+**Testing in sandbox.** Square's sandbox never shows a card form for a payment link, so there is no test card to type. Buy lands on Square's "Checkout API Sandbox Testing Panel": `Next` → `Test Payment` simulates a buyer paying (once per link). The panel does not send the browser back by itself — follow its "Customer redirected to" link, or keep the order page open, which polls. The simulated payment carries no buyer email, so the buyer email is never sent in sandbox; the sale notice is. Preview deployments sit behind Vercel login, so Square's webhook cannot reach them — on a preview the order page's own check is what marks the order paid. An env var change only reaches a new deployment: push a commit to the branch (the dashboard's Redeploy button may ask for an emailed code).
+
+**Status (2026-11-23).** Verified end to end in Square's sandbox on the Vercel preview of branch `square-store`: Buy → payment link → simulated payment → the order page confirmed it with Square (`One moment` turned into `Thank you` on the page's own refresh) → the file downloaded → the `[TEST] New sale` notice arrived. `/store` and all five order-page states were also checked at 375 px and desktop. Square Developer application: `Anthony Dake Music`. The `store_orders` table now exists and holds sandbox rows. Not merged to `main`; nothing is live.
+
+Not proven yet: the webhook against Square (not registered — it needs a public URL), the buyer email (needs the verified Resend domain and a payment that carries an email), refunds, and a real card (production only).
+
+Before any live sale: production access token + location id in Vercel (Production) with `SQUARE_ENVIRONMENT=production`; a webhook subscription to `payment.updated` and `refund.updated` at `https://www.anthonydakemusic.com/api/square/webhook` and its signature key in `SQUARE_WEBHOOK_SIGNATURE_KEY`; the Resend domain verified; a real product; a sales-tax decision (quick-pay links charge the listed price with no tax line); the site off Vercel's free plan (commercial use). Then buy the cheapest product with a real card and refund it.
 
 ## Media assets (Vercel Blob)
 
@@ -371,7 +377,7 @@ Declaration order matters: `tiny` must come after `short` so its utilities sort 
 
 ## Future Work
 
-- Store: first sandbox payment end to end (needs Anthony's Square account + keys in Vercel Preview), then sales-tax handling and the first real product before any live sale. See Store (Square).
+- Store: sandbox checkout verified 2026-11-23 on the `square-store` preview. Going live is Anthony's call; the checklist (production keys, webhook, Resend domain, first real product, sales tax, Vercel plan, one real-card purchase and refund) is under Store (Square) → Status.
 - Finish the Cloudflare DNS for Resend (DKIM TXT + `rsend`/`send` CNAMEs) so `anthonydakemusic.com` becomes a verified sender; then flip `BOOKING_NOTIFY_FROM` from `onboarding@resend.dev` to `noreply@anthonydakemusic.com`.
 - Brand assets (AD monogram + favicons + OG card) are shipped. Source files live in `public/` and in `~/Claude-Workspace/4-architect/brand/` for the generation scripts.
 - Practice page: paid access layer (Square — see Working Preferences).
