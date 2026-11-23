@@ -33,9 +33,15 @@ function paymentFor(squareOrderId, overrides = {}) {
     order_id: squareOrderId,
     amount_money: { amount: PRICE_CENTS, currency: "USD" },
     buyer_email_address: BUYER,
+    receipt_number: "RcPt",
+    source_type: "CARD",
+    card_details: { card: { card_brand: "VISA", last_4: "1111" } },
     ...overrides,
   };
 }
+
+// What Square's sandbox "Test Payment" button produces: no buyer, no card.
+const NO_BUYER = { buyer_email_address: undefined, receipt_number: undefined, source_type: undefined, card_details: undefined };
 
 const mockServer = http.createServer(async (req, res) => {
   const chunks = [];
@@ -124,6 +130,8 @@ const webhookRoute = await import("../app/api/square/webhook/route.ts");
 const downloadRoute = await import("../app/api/store/download/route.ts");
 const { confirmWithSquare } = await import("../lib/store/fulfill.ts");
 const { listProducts } = await import("../lib/store/catalog.ts");
+const { buildReceiptEmail } = await import("../lib/store/receipt.ts");
+const { describePaidWith } = await import("../lib/store/square.ts");
 const { ensureStoreSchema, getOrderById, downloadIsOpen, orderPageState } = await import(
   "../lib/store/orders.ts"
 );
@@ -273,6 +281,45 @@ try {
     "the buyer is emailed a link to their order page",
     delivery?.text?.includes(`${SITE}/store/thanks/${first.ourId}`) && order.email_sent_at instanceof Date
   );
+  const mark = delivery?.attachments?.[0];
+  check(
+    "that email is a receipt: named sender, test-marked subject, HTML with a plain-text twin",
+    delivery?.subject === "[TEST] Your download and receipt from Anthony Dake" &&
+      delivery.from === "Anthony Dake <noreply@anthonydakemusic.com>" &&
+      delivery.reply_to === "adakemusic@gmail.com" &&
+      delivery.html?.startsWith("<!doctype html>") &&
+      delivery.text?.startsWith("Receipt from Anthony Dake"),
+    `${delivery?.subject} / ${delivery?.from}`
+  );
+  check(
+    "the receipt shows what Square reported: amount, receipt number, card, who it was sent to",
+    delivery?.html?.includes(">$1.00<") &&
+      delivery.html.includes(">RcPt<") &&
+      delivery.html.includes(">Visa ending 1111<") &&
+      delivery.html.includes(`>${BUYER}<`) &&
+      delivery.html.includes(">Test download<") &&
+      delivery.text.includes("Receipt number: RcPt") &&
+      delivery.text.includes("Paid with: Visa ending 1111")
+  );
+  check(
+    "its button goes to the order page and it says the link's 30-day window",
+    delivery?.html?.includes(`href="${SITE}/store/thanks/${first.ourId}"`) && delivery.html.includes("The link works for 30 days.")
+  );
+  check(
+    "a sandbox receipt says no money moved",
+    delivery?.html?.includes("Sandbox test order. No money moved.") && delivery.text.includes("Sandbox test order. No money moved.")
+  );
+  check(
+    "the mark travels inside the email as an inline PNG",
+    delivery?.html?.includes('src="cid:ad-mark"') &&
+      mark?.content_id === "ad-mark" &&
+      mark.content_type === "image/png" &&
+      Buffer.from(mark.content, "base64").subarray(1, 4).toString("latin1") === "PNG"
+  );
+  check(
+    "the receipt loads nothing from the site, so it works before the store is live",
+    !/(src|background)="https?:/i.test(delivery?.html ?? "x") && !delivery.html.includes("<script")
+  );
 
   const paidAt = order.paid_at.getTime();
   const emailCount = emails.length;
@@ -334,6 +381,92 @@ try {
   res = await webhook(paymentEvent(third.link.orderId));
   order = await getOrderById(third.ourId);
   check("the next event retries the email", order.email_sent_at instanceof Date);
+
+  // --- sandbox has no buyer: the receipt goes to the store's own inbox so it can be seen
+  const noBuyer = await checkout();
+  let before = emails.length;
+  res = await webhook(paymentEvent(noBuyer.link.orderId, NO_BUYER));
+  order = await getOrderById(noBuyer.ourId);
+  let fresh = emails.slice(before);
+  let receipt = fresh.find((e) => e.subject?.includes("receipt"));
+  check(
+    "a sandbox payment with no buyer still sends the receipt, to the store inbox",
+    res.status === 200 &&
+      order.status === "paid" &&
+      order.buyer_email === null &&
+      order.email_sent_at instanceof Date &&
+      fresh.length === 2 &&
+      receipt?.to === "adakemusic@gmail.com" &&
+      receipt.subject.startsWith("[TEST] ") &&
+      receipt.html.includes(">adakemusic@gmail.com<"),
+    JSON.stringify(fresh.map((e) => [e.to, e.subject]))
+  );
+  check(
+    "when Square gives no receipt number or card, those lines are left out, not guessed",
+    receipt && !receipt.html.includes("Receipt number") && !receipt.html.includes("Paid with") && !receipt.text.includes("Paid with")
+  );
+  before = emails.length;
+  res = await webhook(paymentEvent(noBuyer.link.orderId, NO_BUYER));
+  check("and it is sent once", emails.length === before);
+
+  // --- a live order with no buyer email: no receipt to anyone but the buyer
+  const liveSquareOrder = "LIVEORDER1";
+  const liveId = crypto.randomUUID();
+  await sql`
+    INSERT INTO store_orders (id, product_id, amount_cents, environment, square_order_id, download_token)
+    VALUES (${liveId}, 'test-download', ${PRICE_CENTS}, 'production', ${liveSquareOrder}, ${crypto.randomBytes(32).toString("base64url")})
+  `;
+  before = emails.length;
+  res = await webhook(paymentEvent(liveSquareOrder, { buyer_email_address: undefined }));
+  order = await getOrderById(liveId);
+  fresh = emails.slice(before);
+  check(
+    "a live payment with no buyer email sends the sale notice and no receipt",
+    order.status === "paid" && order.email_sent_at === null && fresh.length === 1 && fresh[0].subject.startsWith("New sale"),
+    JSON.stringify(fresh.map((e) => [e.to, e.subject]))
+  );
+  before = emails.length;
+  res = await webhook(paymentEvent(liveSquareOrder));
+  order = await getOrderById(liveId);
+  receipt = emails.slice(before).find((e) => e.to === BUYER);
+  check(
+    "once Square reports the buyer's email, the live receipt goes to the buyer, unmarked",
+    order.buyer_email === BUYER &&
+      order.email_sent_at instanceof Date &&
+      receipt?.subject === "Your download and receipt from Anthony Dake" &&
+      !receipt.html.includes("Sandbox test order")
+  );
+
+  // --- the receipt builder on its own
+  const built = buildReceiptEmail({
+    to: "buyer@example.com",
+    productTitle: 'Groove <Pack> & "Loops"',
+    pageUrl: `${SITE}/store/thanks/x?a=1&b=2`,
+    itemCents: 2500,
+    paidCents: 2500,
+    currency: "USD",
+    paidAt: new Date("2026-11-24T03:30:00Z"), // 10:30 pm on the 23rd in Columbus
+    downloadDays: 30,
+    receiptNumber: null,
+    paidWith: null,
+    test: false,
+  });
+  check(
+    "text from outside is escaped before it goes into the email",
+    built.html.includes("Groove &lt;Pack&gt; &amp; &quot;Loops&quot;") && !built.html.includes("<Pack>") && built.html.includes("?a=1&amp;b=2")
+  );
+  check("receipt money always shows cents", built.html.includes(">$25.00<") && !built.html.includes(">$25<"));
+  check("the paid date is the day in Columbus, not on the server", built.html.includes("Paid November 23, 2026") && built.text.includes("paid November 23, 2026"));
+  check(
+    "how the buyer paid is read from Square, or left out",
+    describePaidWith({ card_details: { card: { card_brand: "VISA", last_4: "4242" } } }) === "Visa ending 4242" &&
+      describePaidWith({ card_details: { card: { card_brand: "AMERICAN_EXPRESS", last_4: "1005" } } }) === "American Express ending 1005" &&
+      describePaidWith({ card_details: { card: { card_brand: "SOMETHING_NEW", last_4: "9999" } } }) === "Card ending 9999" &&
+      describePaidWith({ card_details: { card: { card_brand: "VISA" } } }) === "Visa" &&
+      describePaidWith({ card_details: { card: { card_brand: "VISA", last_4: "12<4" } } }) === "Visa" &&
+      describePaidWith({ wallet_details: { brand: "CASH_APP" } }) === "Cash App" &&
+      describePaidWith({}) === null
+  );
 
   // --- webhook URL + configuration
   const fourth = await checkout();

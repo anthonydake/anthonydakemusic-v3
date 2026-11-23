@@ -14,7 +14,40 @@ export type SquarePayment = {
   order_id?: string;
   amount_money?: SquareMoney;
   buyer_email_address?: string;
+  // Read only for the buyer's receipt. Any of these can be missing.
+  receipt_number?: string;
+  source_type?: string;
+  card_details?: { card?: { card_brand?: string; last_4?: string } };
+  wallet_details?: { brand?: string };
 };
+
+const CARD_BRANDS: Record<string, string> = {
+  VISA: "Visa",
+  MASTERCARD: "Mastercard",
+  AMERICAN_EXPRESS: "American Express",
+  DISCOVER: "Discover",
+  DISCOVER_DINERS: "Diners Club",
+  JCB: "JCB",
+  CHINA_UNIONPAY: "UnionPay",
+  INTERAC: "Interac",
+  EFTPOS: "eftpos",
+};
+
+/**
+ * How the buyer paid, in the words a receipt uses: "Visa ending 4242". Null
+ * when Square does not say — the receipt then leaves the line out instead of
+ * guessing.
+ */
+export function describePaidWith(payment: SquarePayment): string | null {
+  const card = payment.card_details?.card;
+  const last4 = /^\d{4}$/.test(card?.last_4 ?? "") ? card?.last_4 : null;
+  if (card?.card_brand || last4) {
+    const brand = CARD_BRANDS[card?.card_brand ?? ""] ?? "Card";
+    return last4 ? `${brand} ending ${last4}` : brand === "Card" ? null : brand;
+  }
+  if (payment.wallet_details?.brand === "CASH_APP") return "Cash App";
+  return null;
+}
 
 export type SquareTender = { id?: string; payment_id?: string };
 

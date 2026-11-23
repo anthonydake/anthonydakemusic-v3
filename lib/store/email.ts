@@ -1,5 +1,5 @@
 import { SUPPORT_EMAIL } from "./config";
-import { DOWNLOAD_WINDOW_DAYS } from "./orders";
+import { buildReceiptEmail, type ReceiptEmail, type ReceiptInput } from "./receipt";
 import { formatPrice } from "@/data/store.data";
 
 // Same Resend setup as the booking notification (key injected by the Vercel
@@ -15,11 +15,25 @@ function fromAddress(): string {
   );
 }
 
+/** A buyer sees who the mail is from, so give the bare address a name. */
+function fromNamed(): string {
+  const address = fromAddress();
+  return address.includes("<") ? address : `Anthony Dake <${address}>`;
+}
+
+/** Where the store's own mail goes: sale notices, and sandbox receipts. */
+export function storeInbox(): string {
+  return process.env.BOOKING_NOTIFY_EMAIL || SUPPORT_EMAIL;
+}
+
 async function send(payload: {
   to: string;
   subject: string;
   text: string;
+  html?: string;
+  from?: string;
   reply_to?: string;
+  attachments?: ReceiptEmail["attachments"];
 }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -33,7 +47,7 @@ async function send(payload: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({ from: fromAddress(), ...payload }),
+      body: JSON.stringify({ ...payload, from: payload.from ?? fromAddress() }),
     });
     if (!res.ok) {
       console.error("[store] Resend send failed:", res.status, await res.text());
@@ -46,22 +60,21 @@ async function send(payload: {
   }
 }
 
-/** Buyer's copy of the download link. Points at the order page, not the file. */
-export async function sendDownloadEmail(input: {
-  to: string;
-  productTitle: string;
-  pageUrl: string;
-  test: boolean;
-}): Promise<boolean> {
+/**
+ * The buyer's receipt, with the download button on it. The button points at
+ * the order page, not the file. Sent as HTML with a plain-text twin, and the
+ * mark rides along as an inline image (see lib/store/receipt.ts).
+ */
+export async function sendReceiptEmail(input: ReceiptInput): Promise<boolean> {
+  const receipt = buildReceiptEmail(input);
   return send({
     to: input.to,
+    from: fromNamed(),
     reply_to: SUPPORT_EMAIL,
-    subject: `${input.test ? "[TEST] " : ""}Your download: ${input.productTitle}`,
-    text:
-      `Thanks for your order.\n\n` +
-      `Your download: ${input.pageUrl}\n\n` +
-      `The link works for ${DOWNLOAD_WINDOW_DAYS} days. If anything goes wrong with the file, reply to this email.\n\n` +
-      `Anthony Dake\n`,
+    subject: receipt.subject,
+    text: receipt.text,
+    html: receipt.html,
+    attachments: receipt.attachments,
   });
 }
 
@@ -73,9 +86,8 @@ export async function sendSaleNotice(input: {
   orderId: string;
   test: boolean;
 }): Promise<boolean> {
-  const to = process.env.BOOKING_NOTIFY_EMAIL || SUPPORT_EMAIL;
   return send({
-    to,
+    to: storeInbox(),
     subject: `${input.test ? "[TEST] " : ""}New sale — ${input.productTitle} (${formatPrice(input.amountCents)})`,
     text:
       `Product: ${input.productTitle}\n` +

@@ -129,12 +129,19 @@ export async function attachBuyerEmail(id: string, email: string): Promise<void>
   await sql`UPDATE store_orders SET buyer_email = ${email} WHERE id = ${id} AND buyer_email IS NULL;`;
 }
 
-/** Claims the delivery email so two overlapping webhooks can't both send it. */
+/**
+ * Claims the receipt email so two overlapping webhooks can't both send it.
+ * A live order needs a buyer email to claim. A sandbox order does not: its
+ * receipt goes to the store's own inbox (see receiptRecipient in fulfill.ts).
+ */
 export async function claimDeliveryEmail(id: string): Promise<StoreOrder | null> {
   const { rows } = await sql<StoreOrder>`
     UPDATE store_orders
     SET email_sent_at = NOW()
-    WHERE id = ${id} AND status = 'paid' AND email_sent_at IS NULL AND buyer_email IS NOT NULL
+    WHERE id = ${id}
+      AND status = 'paid'
+      AND email_sent_at IS NULL
+      AND (buyer_email IS NOT NULL OR environment <> 'production')
     RETURNING *;
   `;
   return rows[0] ?? null;

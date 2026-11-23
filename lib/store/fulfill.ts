@@ -1,16 +1,17 @@
 import { getProduct } from "./catalog";
 import { getSquareConfig } from "./config";
-import { sendDownloadEmail, sendSaleNotice } from "./email";
+import { sendReceiptEmail, sendSaleNotice, storeInbox } from "./email";
 import {
   attachBuyerEmail,
   claimDeliveryEmail,
+  DOWNLOAD_WINDOW_DAYS,
   getOrderById,
   getOrderBySquareOrderId,
   markOrderPaid,
   releaseDeliveryEmail,
   type StoreOrder,
 } from "./orders";
-import { getPayment, retrieveOrder, type SquarePayment } from "./square";
+import { describePaidWith, getPayment, retrieveOrder, type SquarePayment } from "./square";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -20,15 +21,41 @@ function describeError(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
 }
 
-async function deliverByEmail(order: StoreOrder, origin: string): Promise<void> {
-  if (order.status !== "paid" || order.email_sent_at || !order.buyer_email) return;
-  const claimed = await claimDeliveryEmail(order.id);
-  if (!claimed || !claimed.buyer_email) return; // another event is already sending it
+/**
+ * Who gets the receipt. Normally the buyer. Square's sandbox test payment has
+ * no buyer at all, so in sandbox only the receipt goes to the store's own
+ * inbox — otherwise a test order could never show what a buyer receives.
+ */
+function receiptRecipient(order: StoreOrder): string | null {
+  if (order.buyer_email) return order.buyer_email;
+  return order.environment !== "production" ? storeInbox() : null;
+}
 
-  const ok = await sendDownloadEmail({
-    to: claimed.buyer_email,
-    productTitle: getProduct(claimed.product_id)?.title ?? "your download",
+async function deliverByEmail(
+  order: StoreOrder,
+  origin: string,
+  payment: SquarePayment
+): Promise<void> {
+  if (order.status !== "paid" || order.email_sent_at || !receiptRecipient(order)) return;
+  const claimed = await claimDeliveryEmail(order.id);
+  if (!claimed) return; // another event is already sending it
+  const to = receiptRecipient(claimed);
+  if (!to) {
+    await releaseDeliveryEmail(claimed.id);
+    return;
+  }
+
+  const ok = await sendReceiptEmail({
+    to,
+    productTitle: getProduct(claimed.product_id)?.title ?? "Your download",
     pageUrl: `${origin}/store/thanks/${claimed.id}`,
+    itemCents: claimed.amount_cents,
+    paidCents: payment.amount_money?.amount ?? claimed.amount_cents,
+    currency: claimed.currency,
+    paidAt: claimed.paid_at ? new Date(claimed.paid_at) : new Date(),
+    downloadDays: DOWNLOAD_WINDOW_DAYS,
+    receiptNumber: payment.receipt_number?.trim() || null,
+    paidWith: describePaidWith(payment),
     test: claimed.environment !== "production",
   });
   if (!ok) await releaseDeliveryEmail(claimed.id);
@@ -93,7 +120,7 @@ export async function settlePayment(
     order = { ...order, buyer_email: buyerEmail };
   }
 
-  await deliverByEmail(order, origin);
+  await deliverByEmail(order, origin, payment);
   return result;
 }
 
