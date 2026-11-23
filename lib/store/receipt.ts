@@ -115,7 +115,14 @@ const HAIRLINE =
 function row(
   label: string,
   value: string,
-  opts: { last?: boolean; labelInk?: boolean; strong?: boolean; wraps?: "label" | "value" } = {}
+  opts: {
+    last?: boolean;
+    labelInk?: boolean;
+    strong?: boolean;
+    wraps?: "label" | "value";
+    /** Already-escaped HTML to show in place of the plain value. */
+    valueHtml?: string;
+  } = {}
 ): string {
   const gap = opts.last ? "0" : "4px";
   const wraps = opts.wraps ?? "value";
@@ -133,7 +140,7 @@ function row(
   return (
     `<tr>` +
     `<td align="left" valign="baseline"${wraps === "label" ? "" : tight} style="${labelStyle}">${escapeHtml(label)}</td>` +
-    `<td align="right" valign="baseline"${wraps === "label" ? tight : ""} style="${valueStyle}">${escapeHtml(value)}</td>` +
+    `<td align="right" valign="baseline"${wraps === "label" ? tight : ""} style="${valueStyle}">${opts.valueHtml ?? escapeHtml(value)}</td>` +
     `</tr>`
   );
 }
@@ -159,8 +166,14 @@ export function buildReceiptEmail(input: ReceiptInput): ReceiptEmail {
   if (input.paidWith) details.push(["Paid with", input.paidWith]);
   details.push(["Sent to", input.to]);
 
+  // Gmail turns a bare email address into a blue underlined link. Giving the
+  // address a link of its own, in the receipt's ink, keeps it looking like text.
+  const addressLink = `<a href="mailto:${escapeHtml(input.to)}" style="color:${INK};text-decoration:none;">${escapeHtml(input.to)}</a>`;
   const detailRows = details.map(([label, value], i) =>
-    row(label, value, { last: i === details.length - 1 })
+    row(label, value, {
+      last: i === details.length - 1,
+      valueHtml: label === "Sent to" ? addressLink : undefined,
+    })
   );
   const itemRows = [
     row(input.productTitle, item, { labelInk: true, wraps: "label" }),
@@ -181,6 +194,8 @@ export function buildReceiptEmail(input: ReceiptInput): ReceiptEmail {
     `<meta name="supported-color-schemes" content="light only">` +
     `<title>Receipt from Anthony Dake</title>` +
     `<link rel="stylesheet" href="${FONT_LINK}">` +
+    // Apple Mail turns dates and places into links; keep them looking like text.
+    `<style>a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important;font:inherit!important;}</style>` +
     `</head>` +
     `<body style="margin:0;padding:0;background-color:${BG};">` +
     // What an inbox shows next to the subject.
@@ -223,10 +238,10 @@ export function buildReceiptEmail(input: ReceiptInput): ReceiptEmail {
     `</body></html>`;
 
   const text =
-    `Receipt from Anthony Dake\n\n` +
-    `${paid}, paid ${date}\n\n` +
-    `Your download: ${input.pageUrl}\n` +
+    `Your download is ready: ${input.pageUrl}\n` +
     `${window}\n\n` +
+    `Receipt from Anthony Dake\n` +
+    `${paid}, paid ${date}\n\n` +
     details.map(([label, value]) => `${label}: ${value}`).join("\n") +
     `\n\n` +
     `${input.productTitle}: ${item}\n` +

@@ -288,7 +288,8 @@ try {
       delivery.from === "Anthony Dake <noreply@anthonydakemusic.com>" &&
       delivery.reply_to === "adakemusic@gmail.com" &&
       delivery.html?.startsWith("<!doctype html>") &&
-      delivery.text?.startsWith("Receipt from Anthony Dake"),
+      delivery.text?.startsWith("Your download is ready: ") &&
+      delivery.text.includes("Receipt from Anthony Dake"),
     `${delivery?.subject} / ${delivery?.from}`
   );
   check(
@@ -315,6 +316,10 @@ try {
       mark?.content_id === "ad-mark" &&
       mark.content_type === "image/png" &&
       Buffer.from(mark.content, "base64").subarray(1, 4).toString("latin1") === "PNG"
+  );
+  check(
+    "the buyer's address is given its own link so mail apps do not paint it blue",
+    delivery?.html?.includes(`<a href="mailto:${BUYER}" style="color:#000000;text-decoration:none;">${BUYER}</a>`)
   );
   check(
     "the receipt loads nothing from the site, so it works before the store is live",
