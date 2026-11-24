@@ -153,6 +153,7 @@ export async function POST(request: Request) {
     await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_date DATE;`;
     await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_type TEXT;`;
     await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS message TEXT;`;
+    await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS music_link TEXT;`;
 
     await sql`
       INSERT INTO bookings (name, email, event_date, event_type, message, music_link)

@@ -34,6 +34,7 @@ export async function GET(request: Request) {
   await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_date DATE;`;
   await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_type TEXT;`;
   await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS message TEXT;`;
+  await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS music_link TEXT;`;
 
   const { rows } = await sql`
     SELECT id, name, email, event_type, event_date, message, music_link, created_at
