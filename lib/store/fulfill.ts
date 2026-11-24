@@ -1,5 +1,5 @@
 import { getProduct } from "./catalog";
-import { getSquareConfig } from "./config";
+import { getSquareConfig, receiptAssetBase } from "./config";
 import { sendReceiptEmail, sendSaleNotice, storeInbox } from "./email";
 import {
   attachBuyerEmail,
@@ -57,6 +57,7 @@ async function deliverByEmail(
     receiptNumber: payment.receipt_number?.trim() || null,
     paidWith: describePaidWith(payment),
     test: claimed.environment !== "production",
+    assetBase: receiptAssetBase(),
   });
   if (!ok) await releaseDeliveryEmail(claimed.id);
 }

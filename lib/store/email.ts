@@ -1,5 +1,5 @@
 import { SUPPORT_EMAIL } from "./config";
-import { buildReceiptEmail, type ReceiptEmail, type ReceiptInput } from "./receipt";
+import { buildReceiptEmail, type ReceiptInput } from "./receipt";
 import { formatPrice } from "@/data/store.data";
 
 // Same Resend setup as the booking notification (key injected by the Vercel
@@ -33,7 +33,6 @@ async function send(payload: {
   html?: string;
   from?: string;
   reply_to?: string;
-  attachments?: ReceiptEmail["attachments"];
 }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -62,8 +61,8 @@ async function send(payload: {
 
 /**
  * The buyer's receipt, with the download button on it. The button points at
- * the order page, not the file. Sent as HTML with a plain-text twin, and the
- * mark rides along as an inline image (see lib/store/receipt.ts).
+ * the order page, not the file. Sent as HTML with a plain-text twin; its
+ * images load from a public folder (see receiptAssetBase in config.ts).
  */
 export async function sendReceiptEmail(input: ReceiptInput): Promise<boolean> {
   const receipt = buildReceiptEmail(input);
@@ -74,7 +73,6 @@ export async function sendReceiptEmail(input: ReceiptInput): Promise<boolean> {
     subject: receipt.subject,
     text: receipt.text,
     html: receipt.html,
-    attachments: receipt.attachments,
   });
 }
 

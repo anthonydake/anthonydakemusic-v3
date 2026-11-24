@@ -40,3 +40,26 @@ export function getSquareConfig(): SquareConfig | null {
 
   return { environment, accessToken, locationId, apiBase };
 }
+
+/**
+ * Where the receipt email's five images are served from. A mail app only
+ * shows an image that sits at a public https address.
+ * - Live: the site's own /email/ folder (public/email/ in this repo).
+ * - A Vercel preview sits behind a login, so nothing on it is public. The
+ *   repo is public, though, so a preview reads the same files straight from
+ *   GitHub at the exact commit it was built from. That is what lets a receipt
+ *   be tested from a branch before the images are on the live site. If the
+ *   repo is ever made private, preview receipts lose their images.
+ */
+export function receiptAssetBase(): string {
+  if (process.env.VERCEL_ENV === "preview") {
+    const owner = process.env.VERCEL_GIT_REPO_OWNER?.trim() ?? "";
+    const repo = process.env.VERCEL_GIT_REPO_SLUG?.trim() ?? "";
+    const sha = process.env.VERCEL_GIT_COMMIT_SHA?.trim() ?? "";
+    const name = /^[\w.-]+$/;
+    if (name.test(owner) && name.test(repo) && /^[0-9a-f]{40}$/.test(sha)) {
+      return `https://raw.githubusercontent.com/${owner}/${repo}/${sha}/public/email`;
+    }
+  }
+  return "https://www.anthonydakemusic.com/email";
+}

@@ -14,8 +14,11 @@
 // only a sandbox payment proves.
 
 import crypto from "node:crypto";
+import fs from "node:fs";
 import http from "node:http";
 import { register } from "node:module";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const SITE = "https://store.selftest";
 const SIGNATURE_KEY = "selftest-signature-key";
@@ -132,6 +135,7 @@ const { confirmWithSquare } = await import("../lib/store/fulfill.ts");
 const { listProducts } = await import("../lib/store/catalog.ts");
 const { buildReceiptEmail } = await import("../lib/store/receipt.ts");
 const { describePaidWith } = await import("../lib/store/square.ts");
+const { receiptAssetBase } = await import("../lib/store/config.ts");
 const { ensureStoreSchema, getOrderById, downloadIsOpen, orderPageState } = await import(
   "../lib/store/orders.ts"
 );
@@ -281,13 +285,12 @@ try {
     "the buyer is emailed a link to their order page",
     delivery?.text?.includes(`${SITE}/store/thanks/${first.ourId}`) && order.email_sent_at instanceof Date
   );
-  const mark = delivery?.attachments?.[0];
   check(
     "that email is a receipt: named sender, test-marked subject, HTML with a plain-text twin",
     delivery?.subject === "[TEST] Your download and receipt from Anthony Dake" &&
       delivery.from === "Anthony Dake <noreply@anthonydakemusic.com>" &&
       delivery.reply_to === "adakemusic@gmail.com" &&
-      delivery.html?.startsWith("<!doctype html>") &&
+      /^<!doctype html>/i.test(delivery.html ?? "") &&
       delivery.text?.startsWith("Your download is ready: ") &&
       delivery.text.includes("Receipt from Anthony Dake"),
     `${delivery?.subject} / ${delivery?.from}`
@@ -310,20 +313,27 @@ try {
     "a sandbox receipt says no money moved",
     delivery?.html?.includes("Sandbox test order. No money moved.") && delivery.text.includes("Sandbox test order. No money moved.")
   );
+  const ASSETS = "https://www.anthonydakemusic.com/email";
+  const images = [...(delivery?.html ?? "").matchAll(/(?:src|background)="([^"]+)"|url\("([^"]+)"\)/g)].map((m) => m[1] ?? m[2]);
   check(
-    "the mark travels inside the email as an inline PNG",
-    delivery?.html?.includes('src="cid:ad-mark"') &&
-      mark?.content_id === "ad-mark" &&
-      mark.content_type === "image/png" &&
-      Buffer.from(mark.content, "base64").subarray(1, 4).toString("latin1") === "PNG"
+    "the receipt's five images load from the site's public /email/ folder, and nothing rides along as an attachment",
+    images.length === 5 &&
+      ["receipt-mark.png", "receipt-bg.png", "receipt-top.png", "receipt-top-dark.png", "receipt-bg-dark.png"].every((f) => images.includes(`${ASSETS}/${f}`)) &&
+      delivery.attachments === undefined &&
+      !delivery.html.includes("cid:"),
+    JSON.stringify(images)
+  );
+  check(
+    "every image the email names is a file in public/email/",
+    images.every((u) => fs.existsSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../public/email", u.split("/").pop())))
   );
   check(
     "the buyer's address is given its own link so mail apps do not paint it blue",
-    delivery?.html?.includes(`<a href="mailto:${BUYER}" style="color:#000000;text-decoration:none;">${BUYER}</a>`)
+    delivery?.html?.includes(`<a class="ink" href="mailto:${BUYER}" style="color:#181611;text-decoration:none;">${BUYER}</a>`)
   );
   check(
-    "the receipt loads nothing from the site, so it works before the store is live",
-    !/(src|background)="https?:/i.test(delivery?.html ?? "x") && !delivery.html.includes("<script")
+    "the receipt carries no script and no leftover placeholder",
+    !delivery.html.includes("<script") && !delivery.html.includes("{{") && !delivery.html.includes("undefined")
   );
 
   const paidAt = order.paid_at.getTime();
@@ -455,6 +465,7 @@ try {
     receiptNumber: null,
     paidWith: null,
     test: false,
+    assetBase: "https://www.anthonydakemusic.com/email/",
   });
   check(
     "text from outside is escaped before it goes into the email",
@@ -472,6 +483,27 @@ try {
       describePaidWith({ wallet_details: { brand: "CASH_APP" } }) === "Cash App" &&
       describePaidWith({}) === null
   );
+
+  // --- where the receipt's images are served from
+  const sha = "0123456789abcdef0123456789abcdef01234567";
+  const live = receiptAssetBase();
+  Object.assign(process.env, { VERCEL_ENV: "preview", VERCEL_GIT_REPO_OWNER: "anthonydake", VERCEL_GIT_REPO_SLUG: "anthonydakemusic-v3", VERCEL_GIT_COMMIT_SHA: sha });
+  const preview = receiptAssetBase();
+  process.env.VERCEL_GIT_COMMIT_SHA = "main; rm -rf";
+  const oddSha = receiptAssetBase();
+  process.env.VERCEL_ENV = "production";
+  process.env.VERCEL_GIT_COMMIT_SHA = sha;
+  const production = receiptAssetBase();
+  for (const k of ["VERCEL_ENV", "VERCEL_GIT_REPO_OWNER", "VERCEL_GIT_REPO_SLUG", "VERCEL_GIT_COMMIT_SHA"]) delete process.env[k];
+  check(
+    "live receipts load their images from the site; a preview loads them from the public repo at its own commit",
+    live === "https://www.anthonydakemusic.com/email" &&
+      production === live &&
+      oddSha === live &&
+      preview === `https://raw.githubusercontent.com/anthonydake/anthonydakemusic-v3/${sha}/public/email`,
+    JSON.stringify({ live, preview, oddSha, production })
+  );
+  check("a trailing slash on the image folder does no harm", built.html.includes('src="https://www.anthonydakemusic.com/email/receipt-mark.png"') && !built.html.includes("email//"));
 
   // --- webhook URL + configuration
   const fourth = await checkout();
