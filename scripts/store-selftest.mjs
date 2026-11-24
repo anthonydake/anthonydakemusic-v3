@@ -300,7 +300,8 @@ try {
     delivery?.html?.includes(">$1.00<") &&
       delivery.html.includes(">RcPt<") &&
       delivery.html.includes(">Visa ending 1111<") &&
-      delivery.html.includes(`>${BUYER}<`) &&
+      delivery.html.includes(`href="mailto:${BUYER}"`) &&
+      delivery.text.includes(`Sent to: ${BUYER}`) &&
       delivery.html.includes(">Test download<") &&
       delivery.text.includes("Receipt number: RcPt") &&
       delivery.text.includes("Paid with: Visa ending 1111")
@@ -329,7 +330,13 @@ try {
   );
   check(
     "the buyer's address is given its own link so mail apps do not paint it blue",
-    delivery?.html?.includes(`<a class="ink" href="mailto:${BUYER}" style="color:#181611;text-decoration:none;">${BUYER}</a>`)
+    delivery?.html?.includes(`<a class="ink" href="mailto:${BUYER}" style="color:#181611;text-decoration:none;">`)
+  );
+  check(
+    "a long address wraps after the @, not mid-word: its two halves are inline blocks",
+    delivery?.html?.includes(
+      `text-decoration:none;"><span style="display:inline-block;">selftest-buyer@</span><span style="display:inline-block;">example.com</span></a>`
+    ) && delivery?.text?.includes(BUYER)
   );
   check(
     "the receipt carries no script and no leftover placeholder",
@@ -413,7 +420,8 @@ try {
       fresh.length === 2 &&
       receipt?.to === "adakemusic@gmail.com" &&
       receipt.subject.startsWith("[TEST] ") &&
-      receipt.html.includes(">adakemusic@gmail.com<"),
+      receipt.html.includes('href="mailto:adakemusic@gmail.com"') &&
+      receipt.text.includes("Sent to: adakemusic@gmail.com"),
     JSON.stringify(fresh.map((e) => [e.to, e.subject]))
   );
   check(

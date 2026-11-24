@@ -245,7 +245,15 @@ export function buildReceiptEmail(input: ReceiptInput): ReceiptEmail {
 
   // Gmail turns a bare email address into a blue underlined link. Giving the
   // address a link of its own, in the receipt's ink, keeps it looking like text.
-  const address = `<a class="ink" href="mailto:${escapeHtml(input.to)}" style="color:${INK};text-decoration:none;">${escapeHtml(input.to)}</a>`;
+  //
+  // On a phone a long address has to wrap, and left alone it breaks wherever
+  // the line runs out ("name@gmail.co" / "m"). Gmail's fallback serif is wider
+  // than Instrument Serif, so there that starts at about 24 characters. Set as
+  // two inline blocks, the address breaks after the "@" first.
+  const at = input.to.lastIndexOf("@");
+  const half = (text: string) => `<span style="display:inline-block;">${escapeHtml(text)}</span>`;
+  const shown = at > 0 ? half(input.to.slice(0, at + 1)) + half(input.to.slice(at + 1)) : escapeHtml(input.to);
+  const address = `<a class="ink" href="mailto:${escapeHtml(input.to)}" style="color:${INK};text-decoration:none;">${shown}</a>`;
   const detailRows = details
     .map(([label, value]) => detailRow(label, label === "Sent to" ? address : escapeHtml(value)))
     .join("\n");
