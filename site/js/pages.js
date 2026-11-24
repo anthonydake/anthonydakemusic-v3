@@ -56,6 +56,7 @@
     belt.addEventListener('pointerup', up); belt.addEventListener('pointercancel', up);
     belt.addEventListener('pointerenter', function (ev) { if (ev.pointerType === 'mouse') hover = true; }); belt.addEventListener('pointerleave', function () { hover = false; });
     belt.addEventListener('dragstart', function (ev) { ev.preventDefault(); });
+    belt.addEventListener('scroll', function () { if (!calm && belt.scrollLeft) belt.scrollLeft = 0; });       /* travelling, the belt is moved by the script alone */
     /* THE KEYBOARD: the belt can be reached with Tab; it waits while it is held that way, and the left and right arrows move it a cover at a time
        (anything that moves by itself for more than a few seconds needs a way to be stopped by every visitor, not only one with a mouse or a finger) */
     belt.tabIndex = 0;
@@ -195,6 +196,13 @@
   new MutationObserver(sync).observe(body, { attributes: true, attributeFilter: ['data-page'] });
   function again() { if (was && was !== 'home') each(was, 'resize'); }
   window.addEventListener('resize', again); if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(again);
+  /* THE STAGE NEVER SCROLLS. A box that only hides what spills from it can still be scrolled by the browser itself (the Tab key reaching a field near the foot, find in page):
+     the header would slide off the top with no way to bring it back. The stylesheet clips the stage where a browser can; this puts anything that slips through straight back.
+     The same for the page box sideways (it scrolls up and down only) and for the belt while it is travelling (its covers are moved by the script, not by scrolling). */
+  var stage = doc.getElementById('stage');
+  function pin(el, both) { if (!el) return; el.addEventListener('scroll', function () { if (both && el.scrollTop) el.scrollTop = 0; if (el.scrollLeft) el.scrollLeft = 0; }); }
+  pin(stage, true); pin(dest, false);
+  window.addEventListener('scroll', function () { if (window.scrollX || window.scrollY) window.scrollTo(0, 0); });
   /* A page scrolls inside its own box, not the window, so the keys that scroll a window are passed on to it while nothing else has the keyboard
      (a page opened by its address starts that way). */
   doc.addEventListener('keydown', function (ev) {

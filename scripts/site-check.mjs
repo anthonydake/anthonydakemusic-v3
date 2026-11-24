@@ -186,6 +186,9 @@ async function moves(size) {
     await page.setViewportSize({ width: 1280, height: 620 }); await page.goto(SITE + "/production"); await ready(page); await page.waitForTimeout(300);
     await page.keyboard.press("PageDown");
     check(`${tag}: a page opened by its address scrolls with the keyboard`, (await page.evaluate(() => document.querySelector("#dest").scrollTop)) > 100);
+    // the browser bringing something into view (Tab to the last field, find in page) must never slide the header off
+    const held2 = await page.evaluate(async () => { document.querySelector(".bk-send").scrollIntoView({ block: "center" }); document.querySelector("#dest a.back").focus(); await new Promise((r) => setTimeout(r, 200)); return { stage: document.querySelector("#stage").scrollTop, top: document.querySelector("#hdr").getBoundingClientRect().top, win: scrollY, left: document.querySelector("#dest").scrollLeft }; });
+    check(`${tag}: bringing the foot of a page into view leaves the header where it is`, held2.stage === 0 && held2.top === 0 && held2.win === 0 && held2.left === 0, held2);
     await page.setViewportSize(SIZES.desk.viewport); await page.goto(SITE + "/"); await ready(page); await page.click("#hdr .tx.r"); await at(page, "production");
   }
   await page.click("#hdr .tx.l"); await at(page, "products");

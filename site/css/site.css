@@ -19,7 +19,7 @@ body.soft{--bg:#f7f6f2;--bgc:247,246,242;--ink:#181611;--sub:#49453c;--lead:#1d4
 
 /* ------------------------------------------------------------------ 2 · STAGE AND HEADER
    The stage is the whole window. It is as tall as the window ever gets (a phone's toolbars slid away), so the drawing runs behind them; the words keep to what is visible. */
-#stage{position:fixed;top:0;left:0;width:100%;height:100vh;height:100lvh;overflow:hidden;background:var(--bg)}
+#stage{position:fixed;top:0;left:0;width:100%;height:100vh;height:100lvh;overflow:hidden;overflow:clip;background:var(--bg)}       /* clip, not just hidden: a hidden box can still be scrolled by the browser itself (Tab to a field, find in page), which would slide the header off; a clipped one cannot. Older browsers get hidden and the script's guard (site/js/pages.js) */
 #gl{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 #hdr{position:absolute;left:0;top:0;width:100%;height:56px;background:var(--hdr);z-index:4}
 .pin{position:absolute;left:50%;top:6px;width:44px;height:44px;margin-left:-22px;border-radius:50%;background:var(--pin);box-shadow:0 0 0 1px var(--pinedge)}
@@ -107,7 +107,7 @@ body[data-page="about"] .dest>a.back{margin-top:2px}
    capitals of "A Full Build". In this face a 12 px line of 16 leaves 5.5 px under its capitals and a 21 px line of 27 leaves 5 px over them: so 22 px here, and 17 px over the offer. */
 .belt-label{margin:0 0 22px;padding-left:.14em;font-size:12px;line-height:16px;letter-spacing:.14em;text-transform:uppercase;text-align:center;color:var(--sub)}
 /* THE BELT: the covers travel across the page, left to right, the first in his order in front. It bleeds to both edges of the screen. */
-.belt{position:relative;margin:0 -28px;overflow:hidden;touch-action:pan-y;cursor:grab;text-align:left;-webkit-user-select:none;user-select:none}
+.belt{position:relative;margin:0 -28px;overflow:hidden;overflow:clip;touch-action:pan-y;cursor:grab;text-align:left;-webkit-user-select:none;user-select:none}
 .belt.drag{cursor:grabbing}
 .belt:focus{outline:none}
 .belt:focus-visible{outline:1px solid var(--sub);outline-offset:-1px}       /* reached with the keyboard: a hairline inside its own box (it runs to both edges of the screen, so nothing can be drawn round it) */
