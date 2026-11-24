@@ -1,0 +1,23 @@
+/* THE WORKSHOP PANEL (site/css/test.css): only in the one-file prototype (site/build.mjs --file). A small TEST chip that opens a panel to try the two grounds and play the opening again,
+   and shows how fast the drawing is running. It is not part of the site and is never in public/site/app.css. */
+body{--ctl:rgba(255,255,255,.2)}
+body.soft{--ctl:rgba(24,22,17,.38)}
+@media (prefers-color-scheme:light){body:not(.black){--ctl:rgba(24,22,17,.38)}}
+#chip{position:absolute;left:18px;top:72px;z-index:6;appearance:none;-webkit-appearance:none;margin:0;padding:0 5px;height:19px;border:0;border-radius:0;background:var(--ink);color:var(--bg);font-family:inherit;font-size:10px;letter-spacing:.04em;line-height:19px;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent}
+/* on a page the chip steps back until it is wanted */
+body:not([data-page="home"]) #chip{opacity:.28;transition:opacity .2s}
+body:not([data-page="home"]) #chip[aria-expanded="true"],body:not([data-page="home"]) #chip:hover,body:not([data-page="home"]) #chip:focus-visible{opacity:1}
+#panel{position:absolute;left:14px;top:100px;z-index:6;width:262px;max-width:calc(100% - 28px);box-sizing:border-box;padding:12px 12px 10px;border:1px solid var(--ctl);border-radius:12px;background:rgba(var(--bgc),.94);color:var(--sub);font-size:12px;line-height:1.4;text-align:left}
+#panel p{margin:0}
+#panel .row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+#panel .row.stack{flex-direction:column;align-items:flex-start;gap:6px}
+.seg{display:inline-flex}
+#panel button{appearance:none;-webkit-appearance:none;margin:0;height:30px;padding:0 11px;border:1px solid var(--ctl);background:none;color:inherit;font:inherit;font-size:11px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.seg button+button{border-left:0}
+.seg button:first-child{border-radius:15px 0 0 15px}
+.seg button:last-child{border-radius:0 15px 15px 0}
+#panel button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+#panel button.one{width:100%;border-radius:15px}
+#chip:focus-visible,#panel button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+#read{font-size:11px;line-height:1.45}
+@media (max-height:520px){#chip,#panel{display:none}}

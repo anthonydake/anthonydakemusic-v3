@@ -1,14 +1,9 @@
 import type { MetadataRoute } from "next";
+import { SITE } from "@/site/content.mjs";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
-
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-    },
-    sitemap: `${siteUrl}/sitemap.xml`,
+    rules: { userAgent: "*", allow: "/", disallow: ["/admin/", "/api/", "/products/thanks/"] },
+    sitemap: `${SITE.origin}/sitemap.xml`,
   };
 }
-

@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { NextResponse } from "next/server";
+import { ADMIN_COOKIE, ADMIN_MINUTES, issueAdminPass } from "@/lib/admin/session";
 
 const PASSWORD_ENV = "ARCHIVE_ADMIN_PASSWORD";
 
@@ -24,13 +25,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // A signed, short-lived pass (lib/admin/session.ts), never a fixed value.
+    const pass = issueAdminPass();
+    if (!pass) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const response = NextResponse.json({ ok: true });
     response.cookies.set({
-      name: "archive_admin",
-      value: "1",
+      name: ADMIN_COOKIE,
+      value: pass,
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 10,
+      maxAge: 60 * ADMIN_MINUTES,
       path: "/",
     });
     return response;

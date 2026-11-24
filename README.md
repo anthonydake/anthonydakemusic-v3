@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# anthonydakemusic-v3
 
-## Getting Started
+The website of Anthony Dake, Architect of Sound. Music production in Columbus, OH.
 
-First, run the development server:
+- Live: https://www.anthonydakemusic.com
+- Hosting: Vercel (`main` deploys itself; every other branch gets a private preview)
+
+**Read `CLAUDE.md` first.** It says how the site is put together, where every word lives, the rules that come with the work, and how to check a change.
+
+## The short version
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # the site at http://localhost:3000
+npm run build        # what Vercel runs
+npm run site:file    # the whole site as one file: out/anthony-dake-site-prototype.html
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The site's own source is in `site/`: the words in `site/content.mjs`, the pages in `site/templates.mjs`, the styles in `site/css/`, the scripts in `site/js/`. Public pages are plain HTML documents sent by route handlers under `app/`; there is no React on them.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm install --no-save @electric-sql/pglite playwright
+node scripts/store-selftest.mjs     # the store's route handlers, against a mock Square
+node scripts/site-check.mjs         # a real browser through every page and flow
+node scripts/local-site.mjs         # the whole site locally, with nothing real behind it
+```

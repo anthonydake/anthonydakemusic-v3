@@ -48,7 +48,7 @@ async function deliverByEmail(
   const ok = await sendReceiptEmail({
     to,
     productTitle: getProduct(claimed.product_id)?.title ?? "Your download",
-    pageUrl: `${origin}/store/thanks/${claimed.id}`,
+    pageUrl: `${origin}/products/thanks/${claimed.id}`,
     itemCents: claimed.amount_cents,
     paidCents: payment.amount_money?.amount ?? claimed.amount_cents,
     currency: claimed.currency,

@@ -19,7 +19,7 @@ export const STORE_PRODUCTS: StoreProduct[] = [
   {
     id: "test-download",
     title: "Test download",
-    blurb: "A placeholder for checking the checkout flow. Sandbox only — it is never listed in live mode.",
+    blurb: "A placeholder for checking the checkout flow. Sandbox only. It is never listed in live mode.",
     priceCents: 100,
     placeholder: true,
   },

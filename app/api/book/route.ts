@@ -1,19 +1,29 @@
 import { sql } from "@vercel/postgres";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { BOOKING } from "@/site/content.mjs";
+
+// The booking form on /production posts here. Two ways in, one result:
+//   - with scripts on, the page sends JSON and gets JSON back ({ ok: true });
+//   - with scripts off, the browser posts the plain form and is sent on to
+//     /production/sent or /production/not-sent.
+// Either way the request is kept in the `bookings` table (the list is at
+// /admin/bookings) and Anthony is emailed.
+export const dynamic = "force-dynamic";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
-const SITE_HOST = new URL(SITE_URL).host;
+const MAX = { name: 200, email: 320, link: 2000, note: 5000, eventType: 200 };
 
-async function notifyBooking(payload: {
+type Inquiry = {
   name: string;
   email: string;
   eventType: string;
   eventDate: string | null;
-  message: string;
-}) {
+  link: string;
+  note: string;
+};
+
+async function notifyBooking(payload: Inquiry) {
   const to = process.env.BOOKING_NOTIFY_EMAIL || "adakemusic@gmail.com";
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.BOOKING_NOTIFY_FROM || "noreply@anthonydakemusic.com";
@@ -22,13 +32,13 @@ async function notifyBooking(payload: {
   const text =
     `Name: ${payload.name}\n` +
     `Email: ${payload.email}\n` +
-    `Event Type: ${payload.eventType}\n` +
-    `Event Date: ${payload.eventDate ?? "—"}\n\n` +
-    `Message:\n${payload.message || "(none)"}\n`;
+    `For: ${payload.eventType}\n` +
+    (payload.eventDate ? `Date: ${payload.eventDate}\n` : "") +
+    `Link to released music: ${payload.link || "(none)"}\n\n` +
+    `Note:\n${payload.note || "(none)"}\n`;
 
   if (!apiKey) {
     console.warn("[booking] RESEND_API_KEY not set — inquiry stored in DB only");
-    console.warn(text);
     return;
   }
 
@@ -49,55 +59,82 @@ async function notifyBooking(payload: {
   }
 }
 
-export async function POST(request: Request) {
+// The email goes out after the answer has been sent, and the platform is told
+// to keep the function alive until it has (a plain un-awaited promise can be
+// cut off the moment the response leaves). Outside a request (the self-test)
+// it simply runs.
+function later(task: () => Promise<void>) {
   try {
-    // Origin check — block off-site POSTs (curl/scrapers without correct Origin).
+    after(task);
+  } catch {
+    void task();
+  }
+}
+
+function text(value: unknown, max: number): string {
+  return typeof value === "string" ? value.trim().slice(0, max) : "";
+}
+
+/** A one-line field: line breaks become spaces (the name goes into an email's subject). */
+function line(value: unknown, max: number): string {
+  return text(typeof value === "string" ? value.replace(/[\r\n\t]+/g, " ") : value, max);
+}
+
+export async function POST(request: Request) {
+  const self = new URL(request.url);
+  const asForm = !(request.headers.get("content-type") ?? "").toLowerCase().includes("application/json");
+
+  // What each kind of caller gets back.
+  const done = () =>
+    asForm ? NextResponse.redirect(new URL("/production/sent", self), 303) : NextResponse.json({ ok: true });
+  const refuse = (error: string, status: number) =>
+    asForm ? NextResponse.redirect(new URL("/production/not-sent", self), 303) : NextResponse.json({ error }, { status });
+
+  try {
+    // Same-origin posts only. Compared against the host that served this
+    // request (not NEXT_PUBLIC_SITE_URL), so preview deployments work too.
     const origin = request.headers.get("origin");
     if (origin) {
+      const host = (request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? self.host).split(",")[0].trim();
+      let from = "";
       try {
-        if (new URL(origin).host !== SITE_HOST) {
-          return NextResponse.json({ error: "Forbidden." }, { status: 403 });
-        }
+        from = new URL(origin).host;
       } catch {
+        from = "";
+      }
+      if (!from || (from !== host && from !== self.host)) {
         return NextResponse.json({ error: "Forbidden." }, { status: 403 });
       }
     }
 
-    const body = await request.json();
-
-    // Honeypot — hidden field that real users never fill. Bots auto-fill all fields.
-    if (typeof body?.website === "string" && body.website.trim() !== "") {
-      // Pretend to succeed so the bot moves on without retry.
-      return NextResponse.json({ ok: true });
+    let body: Record<string, unknown> = {};
+    if (asForm) {
+      const form = await request.formData();
+      form.forEach((value, key) => {
+        if (typeof value === "string") body[key] = value;
+      });
+    } else {
+      const parsed: unknown = await request.json();
+      if (parsed && typeof parsed === "object") body = parsed as Record<string, unknown>;
     }
 
-    const name = typeof body?.name === "string" ? body.name.trim() : "";
-    const email =
-      typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
-    const eventType =
-      typeof body?.eventType === "string" ? body.eventType.trim() : "";
-    const message =
-      typeof body?.message === "string" ? body.message.trim() : "";
+    // Honeypot — a hidden field people never see. A script that fills every
+    // field gives itself away; it is told all went well so it does not retry.
+    if (typeof body.website === "string" && body.website.trim() !== "") return done();
 
-    const rawDate =
-      typeof body?.eventDate === "string" ? body.eventDate.trim() : "";
+    const name = line(body.name, MAX.name);
+    const email = line(body.email, MAX.email).toLowerCase();
+    // What the request is for. The production form sends its own name for it;
+    // a plain form post carries none, so it gets the same one.
+    const eventType = line(body.eventType, MAX.eventType) || BOOKING.type;
+    // `link` and `note` are the form's fields; `message` is the older name for the note.
+    const link = line(body.link, MAX.link);
+    const note = text(body.note, MAX.note) || text(body.message, MAX.note);
+    const rawDate = text(body.eventDate, 10);
     const eventDate = rawDate && ISO_DATE_REGEX.test(rawDate) ? rawDate : null;
 
-    if (!name) {
-      return NextResponse.json({ error: "Name is required." }, { status: 400 });
-    }
-    if (!email || !EMAIL_REGEX.test(email)) {
-      return NextResponse.json(
-        { error: "Valid email is required." },
-        { status: 400 }
-      );
-    }
-    if (!eventType) {
-      return NextResponse.json(
-        { error: "Event type is required." },
-        { status: 400 }
-      );
-    }
+    if (!name) return refuse("Name is required.", 400);
+    if (!email || !EMAIL_REGEX.test(email)) return refuse("Valid email is required.", 400);
 
     await sql`
       CREATE TABLE IF NOT EXISTS bookings (
@@ -112,21 +149,21 @@ export async function POST(request: Request) {
       );
     `;
 
-    // Spec-aligned columns; added idempotently so existing rows aren't disturbed.
+    // Added idempotently so existing rows aren't disturbed.
     await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_date DATE;`;
     await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS event_type TEXT;`;
     await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS message TEXT;`;
 
     await sql`
-      INSERT INTO bookings (name, email, event_date, event_type, message)
-      VALUES (${name}, ${email}, ${eventDate}, ${eventType}, ${message});
+      INSERT INTO bookings (name, email, event_date, event_type, message, music_link)
+      VALUES (${name}, ${email}, ${eventDate}, ${eventType}, ${note}, ${link || null});
     `;
 
-    // Fire-and-forget notify — never blocks the user's response.
-    notifyBooking({ name, email, eventType, eventDate, message }).catch(() => {});
+    later(() => notifyBooking({ name, email, eventType, eventDate, link, note }));
 
-    return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: "Server error." }, { status: 500 });
+    return done();
+  } catch (err) {
+    console.error("[booking] request failed:", err instanceof Error ? err.message : String(err));
+    return refuse("Server error.", 500);
   }
 }

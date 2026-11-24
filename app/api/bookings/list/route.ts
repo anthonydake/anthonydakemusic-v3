@@ -1,12 +1,22 @@
 import { sql } from "@vercel/postgres";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { ADMIN_COOKIE, adminPassIsValid } from "@/lib/admin/session";
 
-export async function GET() {
-  const cookieStore = await cookies();
-  const adminCookie = cookieStore.get("archive_admin")?.value;
-  if (!adminCookie) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export const dynamic = "force-dynamic";
+
+function cookie(request: Request, name: string): string | undefined {
+  for (const part of (request.headers.get("cookie") ?? "").split(";")) {
+    const at = part.indexOf("=");
+    if (at > 0 && part.slice(0, at).trim() === name) return decodeURIComponent(part.slice(at + 1).trim());
+  }
+  return undefined;
+}
+
+export async function GET(request: Request) {
+  // The cookie must be a pass this site signed and that has not run out:
+  // its mere presence proves nothing (see lib/admin/session.ts).
+  if (!adminPassIsValid(cookie(request, ADMIN_COOKIE))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: { "Cache-Control": "private, no-store" } });
   }
 
   await sql`
@@ -26,10 +36,10 @@ export async function GET() {
   await sql`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS message TEXT;`;
 
   const { rows } = await sql`
-    SELECT id, name, email, event_type, event_date, message, created_at
+    SELECT id, name, email, event_type, event_date, message, music_link, created_at
     FROM bookings
     ORDER BY created_at DESC;
   `;
 
-  return NextResponse.json({ bookings: rows });
+  return NextResponse.json({ bookings: rows }, { headers: { "Cache-Control": "private, no-store" } });
 }

@@ -9,9 +9,10 @@
 // (PGlite), emails are captured instead of sent, and any other network call
 // fails the run. No Square account, no real database, no money.
 //
-// Not covered here: the two page components (/store and /store/thanks/[order])
-// — `npm run build` compiles them — and Square's real payload shapes, which
-// only a sandbox payment proves.
+// Not covered here: the pages themselves (/products and
+// /products/thanks/[order]) — scripts/site-check.mjs walks them in a real
+// browser, from Buy to Download — and Square's real payload shapes, which only
+// a sandbox payment proves.
 
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -196,7 +197,7 @@ try {
   let attempt = await checkout();
   check(
     "live mode refuses to sell the placeholder",
-    attempt.res.status === 303 && attempt.location.endsWith("/store?error=unavailable") && !attempt.link
+    attempt.res.status === 303 && attempt.location.endsWith("/products?error=unavailable") && !attempt.link
   );
   process.env.SQUARE_ENVIRONMENT = "sandbox";
 
@@ -216,7 +217,7 @@ try {
       sent?.quick_pay?.location_id === "SELFTESTLOC" &&
       UUID_RE.test(first.ourId) &&
       sent?.idempotency_key === first.ourId &&
-      sent?.checkout_options?.redirect_url === `${SITE}/store/thanks/${first.ourId}`,
+      sent?.checkout_options?.redirect_url === `${SITE}/products/thanks/${first.ourId}`,
     JSON.stringify(sent)
   );
   let order = await getOrderById(first.ourId);
@@ -232,15 +233,15 @@ try {
   attempt = await checkout("test-download", "https://evil.example");
   check("a cross-site checkout post is refused", attempt.res.status === 403 && !attempt.link);
   attempt = await checkout("no-such-product");
-  check("an unknown product is sent back to the store", attempt.location.endsWith("/store?error=unavailable") && !attempt.link);
+  check("an unknown product is sent back to the store", attempt.location.endsWith("/products?error=unavailable") && !attempt.link);
 
   const token = process.env.SQUARE_ACCESS_TOKEN;
   delete process.env.SQUARE_ACCESS_TOKEN;
   attempt = await checkout();
-  check("with no Square keys, checkout is unavailable", attempt.location.endsWith("/store?error=unavailable") && !attempt.link);
+  check("with no Square keys, checkout is unavailable", attempt.location.endsWith("/products?error=unavailable") && !attempt.link);
   process.env.SQUARE_ACCESS_TOKEN = "wrong-token";
   attempt = await checkout();
-  check("a Square error sends the buyer back unharmed", attempt.location.endsWith("/store?error=checkout"));
+  check("a Square error sends the buyer back unharmed", attempt.location.endsWith("/products?error=checkout"));
   process.env.SQUARE_ACCESS_TOKEN = token;
 
   // --- before payment
@@ -283,7 +284,7 @@ try {
   check("Anthony gets a sale notice, marked as a test", notice?.to === "adakemusic@gmail.com" && notice.subject.startsWith("[TEST] "));
   check(
     "the buyer is emailed a link to their order page",
-    delivery?.text?.includes(`${SITE}/store/thanks/${first.ourId}`) && order.email_sent_at instanceof Date
+    delivery?.text?.includes(`${SITE}/products/thanks/${first.ourId}`) && order.email_sent_at instanceof Date
   );
   check(
     "that email is a receipt: named sender, test-marked subject, HTML with a plain-text twin",
@@ -308,7 +309,7 @@ try {
   );
   check(
     "its button goes to the order page and it says the link's 30-day window",
-    delivery?.html?.includes(`href="${SITE}/store/thanks/${first.ourId}"`) && delivery.html.includes("The link works for 30 days.")
+    delivery?.html?.includes(`href="${SITE}/products/thanks/${first.ourId}"`) && delivery.html.includes("The link works for 30 days.")
   );
   check(
     "a sandbox receipt says no money moved",
@@ -464,7 +465,7 @@ try {
   const built = buildReceiptEmail({
     to: "buyer@example.com",
     productTitle: 'Groove <Pack> & "Loops"',
-    pageUrl: `${SITE}/store/thanks/x?a=1&b=2`,
+    pageUrl: `${SITE}/products/thanks/x?a=1&b=2`,
     itemCents: 2500,
     paidCents: 2500,
     currency: "USD",

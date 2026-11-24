@@ -8,9 +8,9 @@ import { createPaymentLink } from "@/lib/store/square";
 export const dynamic = "force-dynamic";
 
 // Plain HTML form target: POST product=<id>, answer with a redirect. Works
-// with JavaScript off — the Buy button on /store is a real form.
+// with JavaScript off — the Buy button on /products is a real form.
 function backToStore(request: Request, code: string) {
-  return NextResponse.redirect(new URL(`/store?error=${code}`, request.url), 303);
+  return NextResponse.redirect(new URL(`/products?error=${code}`, request.url), 303);
 }
 
 export async function POST(request: Request) {
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
       name: product.title,
       amountCents: product.priceCents,
       currency: "USD",
-      redirectUrl: `${self.origin}/store/thanks/${orderId}`,
+      redirectUrl: `${self.origin}/products/thanks/${orderId}`,
       note: `anthonydakemusic.com order ${orderId}`,
       supportEmail: SUPPORT_EMAIL,
     });

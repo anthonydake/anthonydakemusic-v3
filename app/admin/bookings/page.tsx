@@ -9,6 +9,7 @@ type BookingEntry = {
   event_type: string | null;
   event_date: string | null;
   message: string | null;
+  music_link: string | null;
   created_at: string;
 };
 
@@ -140,6 +141,23 @@ export default function BookingsAdminPage() {
                       </>
                     ) : null}
                   </p>
+                  {b.music_link ? (
+                    <p className="mt-3 break-all text-[13px] leading-6 text-white/70">
+                      {/* shown as text unless it is a real web address: a visitor typed it */}
+                      {/^https?:\/\//i.test(b.music_link) ? (
+                        <a
+                          href={b.music_link}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                          className="underline decoration-white/20 underline-offset-4 hover:decoration-white/60"
+                        >
+                          <span>{b.music_link}</span>
+                        </a>
+                      ) : (
+                        <span>{b.music_link}</span>
+                      )}
+                    </p>
+                  ) : null}
                   {b.message ? (
                     <p className="mt-3 whitespace-pre-wrap text-[13px] leading-6 text-white/70">
                       <span>{b.message}</span>

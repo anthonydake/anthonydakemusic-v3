@@ -195,7 +195,7 @@ export type OrderPageState = "ready" | "pending" | "stalled" | "refunded" | "exp
 /** How many times the order page re-checks an unconfirmed payment on its own. */
 export const MAX_AUTO_CHECKS = 12;
 
-/** What /store/thanks/[order] shows for an order, given how often it has re-checked. */
+/** What /products/thanks/[order] shows for an order, given how often it has re-checked. */
 export function orderPageState(order: StoreOrder, checks: number): OrderPageState {
   if (order.status === "refunded") return "refunded";
   if (order.status === "paid") return downloadIsOpen(order) ? "ready" : "expired";
