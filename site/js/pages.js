@@ -140,13 +140,11 @@
     sv.firstChild.setAttribute('d', 'M' + r + ' 0H' + (w - r) + 'Q' + w + ' 0 ' + w + ' ' + r + 'V' + (h - r) + 'Q' + w + ' ' + h + ' ' + (w - r) + ' ' + h + 'H' + t(20) + 'C' + t(13) + ' ' + h + ' ' + t(5) + ' ' + (h + t(5)) + ' ' + (-t(7)) + ' ' + (h + t(6)) + 'C0 ' + (h + t(2)) + ' 0 ' + (h - t(4)) + ' 0 ' + (h - t(15)) + 'V' + r + 'Q0 0 ' + r + ' 0Z');
   }
 
-  /* ================================================================== ABOUT · THE PHOTOGRAPH AND ITS TEXTS, THEN HIS BIO
+  /* ================================================================== ABOUT · THE PHOTOGRAPH AND ITS TEXTS, ON ONE SCREEN
      (his words: "I kind of want the texts to be much smaller and then surround the photo maybe?" and "it cant scroll its all got to fit on one page", 24 Nov 2026; later that day he
-     sent his bio for this page, asked for the texts "spread out just a little bit more laterally", each still overlapping the photograph "just a little bit", and for them to lean
-     to the mouse.)
-     THE PHOTOGRAPH TAKES THE HEIGHT THAT IS LEFT. What must share the screen with it is measured as it stands, and the photograph gets the rest, with the room its texts need above
-     and below it. On a laptop (BESIDE) the bio stands beside the photograph, so label, photograph, credit and Back share one screen and nothing scrolls. Anywhere else the bio is
-     under the photograph: the first screen is the label, the photograph and the credit, with PEEK px kept at its foot so the bio's first words show and say there is more below.
+     asked for the texts "spread out just a little bit more laterally", each still overlapping the photograph "just a little bit", and for them to lean to the mouse. His bio stood
+     here for an evening and then moved to the press kit at his word.)
+     Everything on the page but the photograph is measured as it stands; the height left on the screen goes to the photograph, with the room its texts need above and below it.
      On a screen too short to give the photograph MIN4 px of height with four texts round it, the two at the foot are left out (as the home screen leaves out its text on a short
      screen); too short even then, it keeps MIN2 px and the page scrolls. The screen's visible height is used, so a phone's toolbars are allowed for.
      On a phone the photograph is never wider than 78% of the column, and the texts are pinned to the column's sides. On a wide screen the wall the texts are pinned to is drawn in
@@ -156,17 +154,12 @@
      OVER px on the photograph is drawn in until it does.
      Where each text is pinned is in site/content.mjs (ABOUT.texts). */
   function wireAbout(sec) {
-    var abt = sec.querySelector('.abt'), show = sec.querySelector('.abt-show'), wall = sec.querySelector('.abt-wall'), credit = sec.querySelector('.abt-c'), bio = sec.querySelector('.abt-bio'),
-        pf = wall && wall.querySelector('.abt-pic'), figs = wall ? Array.prototype.slice.call(wall.querySelectorAll('.msg')) : []; if (!wall) return null;
-    var A = SITE.ABOUT || { texts: [], photo: { w: 2, h: 3 } }, TEXTS = A.texts, RATIO = A.photo.h / A.photo.w, MIN4 = 220, MIN2 = 200, shown = figs.length, im = pf && pf.querySelector('img'), two = false;
+    var wall = sec.querySelector('.abt-wall'), pf = wall && wall.querySelector('.abt-pic'), figs = wall ? Array.prototype.slice.call(wall.querySelectorAll('.msg')) : []; if (!wall) return null;
+    var A = SITE.ABOUT || { texts: [], photo: { w: 2, h: 3 } }, TEXTS = A.texts, RATIO = A.photo.h / A.photo.w, MIN4 = 220, MIN2 = 200, shown = figs.length, im = pf && pf.querySelector('img');
     if (!pf) wall.classList.add('plain');
     var OUT = 165;       /* a wide screen: how far the texts' outer edges stand from the photograph's sides, px */
     var OVER = 24, HOLD = 8;       /* a wide screen: the least a text lies over the photograph where it stands, and the least the lean may ever leave it, px */
-    var GAP = 56, PEEK = 30;       /* beside: the space between the texts and the bio (the same number as the stylesheet's gap). under: how much of the bio shows at the foot of the first screen, px */
-    var besideMq = window.matchMedia ? window.matchMedia('(min-width: 1180px) and (min-height: 640px)') : null;       /* BESIDE: the same two numbers as site/css/wide.css */
-    function beside() { return !!(bio && show && besideMq && besideMq.matches); }
     function widest(W) { return wide() ? W - 2 * OUT : W * .78; }       /* the most width the photograph may take of a wall W wide */
-    function outer(el) { if (!el) return 0; var cs = getComputedStyle(el); return el.offsetHeight + (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0); }
     /* where the first n texts sit on a photograph Hp tall: their tops, measured from the photograph's top, and how far they stand out above it and below it */
     function room(Hp, n) {
       var ys = [], up = 0, down = 0, i, t, h, y;
@@ -174,20 +167,18 @@
       return { ys: ys, up: up, down: down ? down + TAIL : 0 };
     }
     function place() {
-      if (!pf) return; wall.style.maxWidth = ''; if (show) show.style.width = '';
-      two = beside();
-      if (two) show.style.width = Math.max(0, Math.floor(Math.min(Math.max(720, Math.min(1000, window.innerWidth * .5)), abt.clientWidth - bio.offsetWidth - GAP))) + 'px';       /* the most room the photograph and its texts may have beside the bio */
-      var W = wall.clientWidth, maxH = Math.round(widest(W) * RATIO), back = dest.querySelector('a.back'), pad = parseFloat(getComputedStyle(dest).paddingBottom) || 0, above, below, avail, n = Math.min(4, figs.length), Hp, r, pw, lw = 0, rw = 0, i, ww; if (!W) return;
+      if (!pf) return; wall.style.maxWidth = '';
+      var W = wall.clientWidth, maxH = Math.round(widest(W) * RATIO), kids = dest.children, top = dest.getBoundingClientRect().top, foot = top, i, rc, others, avail, n = Math.min(4, figs.length), Hp, r, pw, lw = 0, rw = 0, ww; if (!W) return;
       figs.forEach(function (f) { f.classList.remove('out'); });
-      /* the page may still be sliding in when this first runs, so nothing is measured against the screen: a height is the distance between two things on the page,
+      /* the page may still be sliding in when this first runs, so nothing is measured against the screen: the content's height is the distance between two things on the page,
          to a part of a px, and the screen's height is the page box's own */
-      above = (abt.getBoundingClientRect().top - dest.getBoundingClientRect().top) + dest.scrollTop + (parseFloat(getComputedStyle(wall).marginTop) || 0);
-      below = outer(credit) + (two || !bio ? outer(back) + pad : (parseFloat(getComputedStyle(bio).marginTop) || 0) + PEEK);
-      avail = Math.min(dest.clientHeight, window.innerHeight - dest.offsetTop) - above - below - 2;
+      for (i = 0; i < kids.length; i++) { rc = kids[i].getClientRects(); if (rc.length && rc[0].bottom > foot) foot = rc[0].bottom; }
+      others = (foot - top) + dest.scrollTop + parseFloat(getComputedStyle(dest).paddingBottom) - wall.getBoundingClientRect().height;
+      avail = Math.min(dest.clientHeight, window.innerHeight - dest.offsetTop) - others - 2;
       function most(n, min) { var H, q; for (H = maxH; H >= min; H--) { q = room(H, n); if (q.up + H + q.down <= avail) return H; } return 0; }
       Hp = most(n, Math.min(MIN4, maxH)); if (!Hp && n > 2) { n = 2; Hp = most(2, Math.min(MIN2, maxH)) || Math.min(MIN2, maxH); } else if (!Hp) Hp = Math.min(MIN2, maxH);
       shown = n; pw = Math.round(Hp / RATIO); pf.style.width = pw + 'px';
-      if (wide()) { for (i = 0; i < n; i++) { if (TEXTS[i][1] === 'l') lw = Math.max(lw, figs[i].offsetWidth); else rw = Math.max(rw, figs[i].offsetWidth); } ww = Math.min(W, Math.max(pw + 2 * OUT, lw + rw + 24)); wall.style.maxWidth = ww + 'px'; if (two) show.style.width = ww + 'px'; }
+      if (wide()) { for (i = 0; i < n; i++) { if (TEXTS[i][1] === 'l') lw = Math.max(lw, figs[i].offsetWidth); else rw = Math.max(rw, figs[i].offsetWidth); } ww = Math.min(W, Math.max(pw + 2 * OUT, lw + rw + 24)); wall.style.maxWidth = ww + 'px'; }
       r = room(pf.offsetHeight, n);
       wall.style.paddingTop = r.up + 'px'; wall.style.paddingBottom = r.down + 'px';
       var side = wide() ? (wall.clientWidth - pw) / 2 : 0;       /* a wide screen: the room beside the photograph */
@@ -224,7 +215,7 @@
       g.px = ev.clientX; g.py = ev.clientY; if (!g.late) g.late = setTimeout(function () { g.late = 0; if (g.on) aim(g.px, g.py, performance.now()); }, 120 - (now - g.last));
     }
     if (!calm && window.PointerEvent) window.addEventListener('pointermove', mouse, { passive: true });
-    hooks.abt = { state: function () { return { shown: shown, beside: two, lean: [+g.x.toFixed(3), +g.y.toFixed(3), +g.tx.toFixed(3), +g.ty.toFixed(3)], photo: pf ? [pf.offsetLeft, pf.offsetTop, pf.offsetWidth, pf.offsetHeight] : null, texts: figs.map(function (f) { return [f.offsetLeft, f.offsetTop, f.offsetWidth, f.offsetHeight]; }) }; } };
+    hooks.abt = { state: function () { return { shown: shown, lean: [+g.x.toFixed(3), +g.y.toFixed(3), +g.tx.toFixed(3), +g.ty.toFixed(3)], photo: pf ? [pf.offsetLeft, pf.offsetTop, pf.offsetWidth, pf.offsetHeight] : null, texts: figs.map(function (f) { return [f.offsetLeft, f.offsetTop, f.offsetWidth, f.offsetHeight]; }) }; } };
     window.__abt = hooks.abt;
     return { open: function () { g.on = true; g.x = g.y = g.tx = g.ty = 0; g.last = -1e9; vars(); all(); }, close: function () { g.on = false; if (g.raf) cancelAnimationFrame(g.raf); g.raf = 0; if (g.late) clearTimeout(g.late); g.late = 0; }, resize: all };
   }

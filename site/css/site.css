@@ -98,12 +98,13 @@ body:not([data-page="home"]) #first{visibility:hidden}       /* on a page the ho
 .pg-h.vh{margin:-1px;padding:0}
 .dest>a.back{display:block;width:max-content;margin:14px auto 0}
 /* a wash of the ground behind a page's running words, feathered above and below, so they read over the drawing (the booking form has the same) */
-.pk,.pd,.od,.ms,.abt-bio{position:relative}
-.pk::before,.pd::before,.od::before,.ms::before,.abt-bio::before{content:"";position:absolute;left:-28px;right:-28px;top:-18px;bottom:-14px;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(var(--bgc),0),rgba(var(--bgc),.88) 20px,rgba(var(--bgc),.88) calc(100% - 20px),rgba(var(--bgc),0))}
+.pk,.pd,.od,.ms{position:relative}
+.pk::before,.pd::before,.od::before,.ms::before{content:"";position:absolute;left:-28px;right:-28px;top:-18px;bottom:-14px;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(var(--bgc),0),rgba(var(--bgc),.88) 20px,rgba(var(--bgc),.88) calc(100% - 20px),rgba(var(--bgc),0))}
 /* past a phone's width a page's words keep to the phone's column (374 px), on the centre line; the drawing and the belt of covers still run edge to edge */
 .offer,.bk,.bk-done,.abt{max-width:374px;margin-left:auto;margin-right:auto}
-@media (min-width:431px){.bk::before,.bk-done::before,.pk::before,.pd::before,.od::before,.ms::before,.abt-bio::before{left:-56px;right:-56px;-webkit-mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent)}}
-body[data-page="about"] .dest{padding-top:18px}
+@media (min-width:431px){.bk::before,.bk-done::before,.pk::before,.pd::before,.od::before,.ms::before{left:-56px;right:-56px;-webkit-mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent)}}
+body[data-page="about"] .dest{padding-top:18px;padding-bottom:8px}
+body[data-page="about"] .dest>a.back{margin-top:2px}
 
 /* ------------------------------------------------------------------ 6 · PRODUCTION
    The two words "Recent releases", the belt of covers, the one offer, the booking form. The page shows no heading: its name is there for screen readers and search. */
@@ -163,9 +164,8 @@ body[data-page="about"] .dest{padding-top:18px}
 .bk[hidden],.bk-done[hidden],.bk-fail[hidden]{display:none}
 
 /* ------------------------------------------------------------------ 7 · ABOUT
-   The page's name as its grey label; the photograph with four texts from artists round it; one credit; then his bio.
-   THE PHOTOGRAPH AND ITS TEXTS FILL THE FIRST SCREEN: the photograph takes the height that is left (the script works it out and puts each text in its place). On a phone the bio
-   comes under it and the page scrolls to it, its first words showing at the foot of the first screen; on a laptop it stands beside the photograph and nothing scrolls (wide.css).
+   The page's name as its grey label; the photograph with four texts from artists round it; one credit. ONE SCREEN, NO SCROLL: the photograph takes the height that is left
+   (the script works it out and puts each text in its place). His bio is on the press kit page, not here (his word, 24 Nov 2026).
    The photograph is narrower than the column so the texts can stand out past its sides. Each text is pinned at one corner, partly on the photograph where it is empty
    (the ceiling, the desk in front), never on a face or a hand. No text is wider than just under half the column, so two never meet. */
 .abt-wall{position:relative;margin:14px auto 0}
@@ -176,15 +176,11 @@ body[data-page="about"] .dest{padding-top:18px}
 .abt-wall .bub path{fill:rgb(var(--bgc))}       /* solid here, not the home screen's nine-tenths: a text lies half on the photograph and half off it, and must be one tone */
 .abt-wall .msg.out{width:1px;height:1px;max-width:none;overflow:hidden;clip-path:inset(50%);white-space:nowrap}       /* a text left out on a screen too short for four: out of sight, still read out */
 .abt-c{margin:8px 0 0;padding-left:.06em;font-size:11px;line-height:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}
-/* HIS BIO, word for word as he sent it: running words on the centre line, set as the press kit's are */
-.abt-bio{max-width:334px;margin:22px auto 0;text-align:left}
-.abt-bio p{margin:0 0 14px;font-size:14px;line-height:20px;color:var(--ink)}
-.abt-bio p:last-child{margin-bottom:0}
 /* until the script has given the photograph its size and each text its place, the wall is held back, so nothing is seen jumping */
 .js .abt-wall:not(.set){visibility:hidden}
 
 /* ------------------------------------------------------------------ 8 · PRESS KIT
-   A short bio in Anthony's words, set as running text on the centre line. Until he sends it the page shows ruled blanks, as a typed sheet waiting for its words. */
+   Anthony's bio, word for word, set as running text on the centre line, set left. (Were it ever empty, the page would show ruled blanks, as a typed sheet waiting for its words.) */
 .pk{margin:22px auto 0;max-width:334px;text-align:left}
 .pk-p{margin:0 0 14px;font-size:14px;line-height:20px;color:var(--ink)}
 .pk-blank{position:relative;padding:4px 0}

@@ -51,14 +51,13 @@
   .bk-done p,.bk-fail{font-size:16px;line-height:24px}
 
   /* ABOUT */
-  body[data-page="about"] .dest{padding-top:30px}
-  .abt{max-width:clamp(720px,50vw,1000px)}       /* the photograph is this less 165 px a side (OUT in site/js/pages.js) */
+  body[data-page="about"] .dest{padding-top:30px;padding-bottom:14px}
+  .abt{max-width:clamp(720px,50vw,1000px)}       /* the photograph is this less 165 px a side (OUT in site/js/pages.js): up to 390 px wide on a laptop, 670 on a large monitor */
   .abt-wall{margin-top:18px}
   .abt-wall .msg{max-width:238px}
   .abt-wall .msg blockquote{padding:8px 12px 9px;font-size:12px;line-height:16px}
   .abt-c{margin-top:12px;font-size:12px;line-height:14px}
-  .abt-bio{max-width:520px;margin-top:30px}
-  .abt-bio p{margin-bottom:18px;font-size:16px;line-height:25px}
+  body[data-page="about"] .dest>a.back{margin-top:6px}
   /* THE TEXTS LEAN TO THE MOUSE (his words, 24 Nov 2026: "a little bit of gravity like movement from the bubbles toward the cursor as I get closer to the bubbles", as the photographs
      on humanperson.com's home screen do: "Copy that architecture exactly"). Theirs, read from their page that day: the script turns the mouse's place in the window into two numbers
      (--fx and --fy, each from 5 to -5 across the window), eased to over a second and a half, and the stylesheet moves each photograph by those numbers times a share of its own
@@ -105,14 +104,4 @@
   .bk-go,.bk-fail{grid-column:1 / -1}
   .bk-go{margin-top:calc(8px + .5 * var(--u))}
   body[data-page="production"] .dest>a.back{margin-top:calc(4px + var(--u))}
-}
-
-/* ABOUT ON ONE SCREEN: on a laptop the bio stands beside the photograph, and nothing scrolls. The script gives the photograph and its texts their width (site/js/pages.js);
-   the pair is kept on the centre line. Narrower or shorter than this, the bio goes under the photograph as on a phone. The same two numbers are in pages.js (BESIDE). */
-@media (min-width:1180px) and (min-height:640px){
-  body[data-page="about"] .dest{padding-bottom:14px}
-  .abt{display:flex;justify-content:center;align-items:center;gap:56px;max-width:none}
-  .abt-show{flex:none;width:clamp(640px,50vw,1000px)}
-  .abt-bio{flex:none;width:clamp(340px,29vw,460px);max-width:none;margin:0}
-  body[data-page="about"] .dest>a.back{margin-top:6px}
 }

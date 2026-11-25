@@ -80,20 +80,18 @@ export function production(t, data) {
     bookingForm(t, data && data.booking) + '</div>';
 }
 
-/* ------------------------------------------------------------------ ABOUT: the photograph with the artists' texts round it and their credit under it, then his bio */
+/* ------------------------------------------------------------------ ABOUT: the photograph with the artists' texts round it, and their credit */
 export function about(t) {
   var p = ABOUT.photo, sizes = '(min-width: 1600px) 740px, (min-width: 700px) 460px, 78vw', set = function (ext) { return p.widths.map(function (w) { return t.asset('about/' + p.name + '-' + w + '.' + ext) + ' ' + w + 'w'; }).join(', '); };
   var img = t.inlineImg ? '<img src="' + t.asset('about/' + p.name + '-800.jpg') + '" width="' + p.w + '" height="' + p.h + '" alt="' + esc(p.alt) + '" decoding="async">'
     : '<picture><source type="image/webp" srcset="' + set('webp') + '" sizes="' + sizes + '"><img src="' + t.asset('about/' + p.name + '-800.jpg') + '" srcset="' + set('jpg') + '" sizes="' + sizes + '" width="' + p.w + '" height="' + p.h + '" alt="' + esc(p.alt) + '" decoding="async"></picture>';
-  var bio = ABOUT.bio || [];
   return '<h1 class="pg-h">' + esc(PAGES.about.label) + '</h1>' +
-    '<div class="abt" id="abt"><div class="abt-show"><div class="abt-wall"><figure class="abt-pic">' + img + '</figure>' +
+    '<div class="abt" id="abt"><div class="abt-wall"><figure class="abt-pic">' + img + '</figure>' +
     ABOUT.texts.map(function (x) { return '<figure class="msg"><blockquote>' + esc(x[0]) + '</blockquote></figure>'; }).join('') +
-    '</div><p class="abt-c">' + esc(ABOUT.credit) + '</p></div>' +
-    (bio.length ? '<div class="abt-bio">' + bio.map(function (para) { return '<p>' + esc(para) + '</p>'; }).join('') + '</div>' : '') + '</div>';
+    '</div><p class="abt-c">' + esc(ABOUT.credit) + '</p></div>';
 }
 
-/* ------------------------------------------------------------------ PRESS KIT: a short bio in his words; ruled blanks until he sends it */
+/* ------------------------------------------------------------------ PRESS KIT: his bio, in his words (ruled blanks if it were ever empty) */
 export function pressKit() {
   var bio = PRESS_KIT.bio || [], blanks = [100, 96, 100, 62, 0, 100, 93, 100, 98, 41, 0, 100, 97, 70];
   return '<h1 class="pg-h">' + esc(PAGES['press-kit'].label) + '</h1><div class="pk" id="pk">' +
