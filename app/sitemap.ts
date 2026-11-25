@@ -1,31 +1,22 @@
 import type { MetadataRoute } from "next";
-import { projectIndex } from "@/data/projects.data";
-import { performanceIndex } from "@/data/performance.data";
+import { PAGES, SITE } from "@/site/content.mjs";
 
-// Hardcoded lastmod for routes whose content isn't tied to a data file.
-// Bump these manually when the page's content meaningfully changes.
-const ROUTE_LASTMOD: Record<string, string> = {
-  "/": "2026-05-19",
-  "/epk": "2026-05-19",
-  "/about": "2026-05-02",
+// The pages a search engine should know: the ones with an address of their
+// own, less the store (unlisted until there is something real to sell).
+// Bump a date when that page's content meaningfully changes.
+const LAST_CHANGED: Record<string, string> = {
+  home: "2026-11-24",
+  production: "2026-11-24",
+  about: "2026-11-24",
+  "press-kit": "2026-11-24",
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.anthonydakemusic.com";
-
-  // Placements/performance are curated lists; tie to the route's hardcoded date.
-  const placementsLast = new Date(
-    `${(projectIndex[0]?.year ?? 2026)}-12-31T12:00:00`
-  );
-  const performanceLast = new Date(
-    `${(performanceIndex[0]?.year ?? 2026)}-12-31T12:00:00`
-  );
-
-  return [
-    { url: `${siteUrl}/`, lastModified: new Date(`${ROUTE_LASTMOD["/"]}T12:00:00`), changeFrequency: "weekly", priority: 1 },
-    { url: `${siteUrl}/placements`, lastModified: placementsLast, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${siteUrl}/epk`, lastModified: new Date(`${ROUTE_LASTMOD["/epk"]}T12:00:00`), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${siteUrl}/performance`, lastModified: performanceLast, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${siteUrl}/about`, lastModified: new Date(`${ROUTE_LASTMOD["/about"]}T12:00:00`), changeFrequency: "monthly", priority: 0.7 },
-  ];
+  const pages = PAGES as Record<string, { path: string | null }>;
+  return Object.keys(LAST_CHANGED).map((name) => ({
+    url: `${SITE.origin}${pages[name].path === "/" ? "/" : pages[name].path}`,
+    lastModified: new Date(`${LAST_CHANGED[name]}T12:00:00Z`),
+    changeFrequency: "monthly",
+    priority: name === "home" ? 1 : 0.8,
+  }));
 }

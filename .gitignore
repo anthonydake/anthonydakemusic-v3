@@ -46,3 +46,7 @@ reports/
 
 # local staging for raw media before upload — never committed
 /media/
+
+# the site's built files: made by site/build.mjs before every dev run and build, never edited
+/public/site/
+/lib/site/manifest.generated.ts

@@ -1,0 +1,118 @@
+/* THE WIDE SCREEN (site/css/wide.css): a laptop, a desk monitor, a tablet. Written after the phone's rules in site.css; it only changes what a wide screen needs.
+   THE IDEA: the same page, with air. What is wide goes edge to edge (the drawing, the frame, the belt of covers); what is read stays in a narrow column on the centre line.
+   The name grows to a poster's size; every other style steps up a size so it reads at a desk's distance. One door, one blue, two faces, as on the phone.
+   "Wide" is at least 700 px across and 560 px tall: a tablet held upright is wide; a phone turned on its side is wide but short, and keeps the phone's rules.
+   The same two numbers are in site/js/pages.js (WIDE) and in the pictures' sizes in site/templates.mjs: change them together. */
+@media (min-width:700px) and (min-height:560px){
+  /* words you press */
+  .tx{font-size:13px}
+  #hdr .tx.l{left:28px}#hdr .tx.r{right:28px}
+  .choice{height:52px;font-size:15px;line-height:52px}
+  .choice i{font-size:22px}
+
+  /* THE HOME SCREEN */
+  .edge{left:10px;right:10px;bottom:10px}
+  #name,#roll{font-size:clamp(92px,min(9.6vw,19vh),156px);line-height:.97;letter-spacing:-.012em}
+  .lock{top:47%}
+  .lock::before{width:min(92%,1120px);height:190%}
+  .mon{margin-top:12px;padding-left:.14em;font-size:14px;line-height:18px}
+  .pills{margin-top:18px}
+  .base{bottom:max(26px,calc(13% - 50px))}
+  .base::before{left:50%;right:auto;width:640px;margin-left:-320px;top:-40px;bottom:-34px;-webkit-mask-image:linear-gradient(to right,transparent,#000 120px,#000 calc(100% - 120px),transparent);mask-image:linear-gradient(to right,transparent,#000 120px,#000 calc(100% - 120px),transparent)}
+  .said blockquote{max-width:344px;padding:13px 18px 14px;font-size:15px;line-height:22px}
+  .said figcaption{margin-top:16px;font-size:12px;line-height:14px}
+  .foot{gap:30px;margin-top:14px}
+
+  /* A PAGE */
+  .dest{padding:52px 40px 32px}
+  .pg-h{font-size:13px;line-height:17px}
+  .dest>a.back{margin-top:20px}
+
+  /* PRODUCTION */
+  /* a cover grows with the screen, by its width and by its height, so the offer under the belt is still in the first screenful */
+  .cvs{margin:0 -40px;padding:0 40px;--b:clamp(164px,min(14.6vw,26vh),280px);--gap:36px}
+  .belt{margin:0 -40px}
+  /* EQUAL SPACE ABOVE AND BELOW THE BELT, as on the phone: 36 px from the foot of the capitals of "Recent releases" to the covers, and 36 px from the foot of the artists'
+     capitals to the top of the capitals of "A Full Build". (A 13 px line of 17 leaves 5.8 px under its capitals, one of 18 leaves 6.3; a 28 px line of 34 leaves 5.7 over them.) */
+  .belt-label{margin-bottom:30px;font-size:13px;line-height:17px}
+  .belt-t,.belt-by{font-size:13px;line-height:18px}
+  .belt-t{margin-top:10px}
+  .offer{margin-top:24px}
+  .offer-name{font-size:28px;line-height:34px}
+  .offer-what{margin-top:6px;font-size:13px;line-height:17px}
+  .offer,.bk,.bk-done{max-width:440px}
+  .bk{margin-top:30px}
+  .bk-f{margin-top:18px}
+  .bk-l{font-size:12px;line-height:14px}
+  .bk-f input,.bk-f textarea{padding:8px 0 7px;font-size:17px;line-height:24px}
+  .bk-f input:focus,.bk-f textarea:focus,.bk-f [aria-invalid="true"]{padding-bottom:6px}
+  .bk-go{margin-top:16px}
+  .bk-done h2{font-size:28px;line-height:34px}
+  .bk-done p,.bk-fail{font-size:16px;line-height:24px}
+
+  /* ABOUT */
+  body[data-page="about"] .dest{padding-top:30px}
+  .abt{max-width:clamp(720px,50vw,1000px)}       /* the photograph is this less 165 px a side (OUT in site/js/pages.js) */
+  .abt-wall{margin-top:18px}
+  .abt-wall .msg{max-width:238px}
+  .abt-wall .msg blockquote{padding:8px 12px 9px;font-size:12px;line-height:16px}
+  .abt-c{margin-top:12px;font-size:12px;line-height:14px}
+  .abt-bio{max-width:520px;margin-top:30px}
+  .abt-bio p{margin-bottom:18px;font-size:16px;line-height:25px}
+  /* THE TEXTS LEAN TO THE MOUSE (his words, 24 Nov 2026: "a little bit of gravity like movement from the bubbles toward the cursor as I get closer to the bubbles", as the photographs
+     on humanperson.com's home screen do: "Copy that architecture exactly"). Theirs, read from their page that day: the script turns the mouse's place in the window into two numbers
+     (--fx and --fy, each from 5 to -5 across the window), eased to over a second and a half, and the stylesheet moves each photograph by those numbers times a share of its own
+     (0.8, 1.5, 1, 1 …): whichever way the mouse goes they go the other way, so the one you are moving toward comes to meet you. The same here: the script (site/js/pages.js) sets --fx and --fy
+     on the wall and each text's share (--k, px for each step of the number, since a text is too small for a share of its own size to show). No mouse, no lean. */
+  .abt-wall .msg{transform:translate3d(clamp(var(--lo,-99px),calc(var(--fx,0) * var(--k,4) * 1px),var(--hi,99px)),calc(var(--fy,0) * var(--k,4) * 1px),0)}       /* --lo and --hi: how far a text may be carried sideways before it would leave the photograph */
+
+  /* PRESS KIT, PRODUCTS, YOUR ORDER, NOT FOUND
+     A page of a few lines stands in the middle of a wide screen (a little above it, where the eye rests), not up under the header with the screen empty below.
+     It is centred by the spare room above and below it, so a page that grows past the screen (a long bio, many products) starts at the top and scrolls like any other. */
+  body[data-page="press-kit"] .dest:not([hidden]),body[data-page="products"] .dest:not([hidden]),body[data-page="order"] .dest:not([hidden]),body[data-page="missing"] .dest:not([hidden]){display:flex;flex-direction:column;padding-bottom:calc(32px + 9vh)}
+  body[data-page="press-kit"] .dest>.pg,body[data-page="products"] .dest>.pg,body[data-page="order"] .dest>.pg,body[data-page="missing"] .dest>.pg{flex:none;margin-top:auto}
+  body[data-page="press-kit"] .dest>a.back,body[data-page="products"] .dest>a.back,body[data-page="order"] .dest>a.back,body[data-page="missing"] .dest>a.back{flex:none;margin-bottom:auto}
+  .pk{max-width:520px;margin-top:30px}
+  .pk-p{margin-bottom:18px;font-size:16px;line-height:25px}
+  .pk-blank span{margin-bottom:24px}
+  .pk-blank i{height:14px}
+  .pk-c,.pd-mode,.pd-c,.od-c{font-size:12px;line-height:16px}
+  .pd,.od,.ms{max-width:440px;margin-top:30px}
+  .pd-item{margin-top:34px}
+  .pd-t,.od-h{font-size:28px;line-height:34px}
+  .pd-price{margin-top:6px;font-size:13px;line-height:17px}
+  .pd-b,.pd-err,.pd-none,.od-l,.ms-l{font-size:16px;line-height:24px}
+  .pd-b{margin-top:14px}
+  .pd-f,.od-go{margin-top:14px}
+  .od-q{font-size:13px;line-height:18px}
+}
+
+/* PRODUCTION ON ONE SCREEN (his words, 24 Nov 2026: "I need all of that to fit on one page right now I have to scroll a little bit to see the bottom of the form").
+   On a screen wide enough for it the form's four fields stand two by two, and everything from the two words over the belt to Back is in view at once, with no scrolling.
+   Every part of the page has a fixed height but the covers and the gaps. So the gaps open with the window's height (--u: nothing at 640 px tall, 16 px from 900 up) and the covers
+   take what is left, between 112 px and what the width allows.
+   THE SUM, top to foot, in px: header 56 · gap 28 · label 17 · gap 22 · THE COVERS · the two rows under them 46 · gap 16 · the offer 57 · gap 20 · two rows of fields 54 + 14 + 54 ·
+   gap 8 · Send 52 · gap 4 · Back 44 · gap 12 = 504 and the covers. The gaps open by 1.5, .5, .5, .625, .25, .5, 1 and 1.25 of --u: 6.125 in all. 6 px are kept spare.
+   Change a height on this page and change the sum. Below 630 px of height the covers are at their smallest and the page scrolls the little that is over. */
+@media (min-width:900px) and (min-height:560px){
+  body[data-page="production"] .dest{--u:clamp(0px,(100vh - 640px) * .0615,16px);padding-top:calc(28px + 1.5 * var(--u));padding-bottom:calc(12px + 1.25 * var(--u))}
+  .cvs{--b:clamp(112px,min(14.6vw,100vh - 510px - 6.125 * var(--u)),280px)}
+  .belt-label{margin-bottom:calc(22px + .5 * var(--u))}
+  .offer{margin-top:calc(16px + .5 * var(--u))}
+  .bk{display:grid;grid-template-columns:1fr 1fr;column-gap:40px;max-width:640px;margin-top:calc(20px + .625 * var(--u))}
+  .bk-f,.bk-f:first-child{margin-top:0}
+  .bk-f:nth-child(n+3){margin-top:calc(14px + .25 * var(--u))}
+  .bk-go,.bk-fail{grid-column:1 / -1}
+  .bk-go{margin-top:calc(8px + .5 * var(--u))}
+  body[data-page="production"] .dest>a.back{margin-top:calc(4px + var(--u))}
+}
+
+/* ABOUT ON ONE SCREEN: on a laptop the bio stands beside the photograph, and nothing scrolls. The script gives the photograph and its texts their width (site/js/pages.js);
+   the pair is kept on the centre line. Narrower or shorter than this, the bio goes under the photograph as on a phone. The same two numbers are in pages.js (BESIDE). */
+@media (min-width:1180px) and (min-height:640px){
+  body[data-page="about"] .dest{padding-bottom:14px}
+  .abt{display:flex;justify-content:center;align-items:center;gap:56px;max-width:none}
+  .abt-show{flex:none;width:clamp(640px,50vw,1000px)}
+  .abt-bio{flex:none;width:clamp(340px,29vw,460px);max-width:none;margin:0}
+  body[data-page="about"] .dest>a.back{margin-top:6px}
+}

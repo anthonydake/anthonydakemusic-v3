@@ -3,33 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "gen:projects": "node scripts/generate-projects.mjs",
-    "predev": "npm run gen:projects",
-    "prebuild": "npm run gen:projects",
+    "site": "node site/build.mjs",
+    "site:file": "node site/build.mjs --file out/anthony-dake-site-prototype.html",
+    "predev": "node site/build.mjs",
+    "prebuild": "node site/build.mjs",
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "check:links": "node scripts/check-external-links.mjs",
+    "test:store": "node scripts/store-selftest.mjs",
     "upload-media": "node scripts/upload-media.mjs"
   },
   "dependencies": {
-    "@vercel/analytics": "^2.0.1",
     "@vercel/postgres": "^0.9.0",
-    "framer-motion": "^12.23.0",
     "next": "^16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vercel/blob": "^2.8.2",
+    "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
-    "tailwindcss": "^4",
     "typescript": "^5"
   }
 }

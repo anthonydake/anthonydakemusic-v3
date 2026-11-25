@@ -1,350 +1,195 @@
 # CLAUDE.md — anthonydakemusic-v3
 
-## Project Overview
+Read this before touching anything. It describes the site as it stands on `main`, which is what is live.
 
-Personal website for Anthony Dake — drummer and producer based in Columbus, OH. The site sells exactly two offers: **Drummer** (live shows, tours, fly dates, session drums remote or in-room) and **Producer** (drum programming and production for records). Built with Next.js 16 (App Router, Turbopack) + Tailwind CSS v4, deployed on Vercel (auto-deploy on push to `main`).
+## What this is
 
-**Production**: https://www.anthonydakemusic.com
-**Repo**: https://github.com/anthonydake/anthonydakemusic-v3
-**Hosting**: Vercel project `anthonydakemusic-v3` (auto-deploy on push to main)
+The website of Anthony Dake, music producer in Columbus, OH. Brand line: **Architect of Sound**. The site is about production only and sells one offer, **A Full Build** (production, vocals, mix, and master). It also has a small store for digital downloads, paid through Square.
 
-## Architecture
+- **Live site**: https://www.anthonydakemusic.com (Vercel project `anthonydakemusic-v3`, auto-deploys `main`)
+- **Repo**: https://github.com/anthonydake/anthonydakemusic-v3 (public: never put a secret or a private file's address in it)
+- **State**: this site went live on 24 Nov 2026, at Anthony's word ("push it and go live"), replacing the earlier drummer-and-producer design. The branch `new-site` is where it was built and holds the same code as `main` at that moment; the tag `earlier-site` is the last commit of the old site.
 
-Next.js App Router. Every public route uses the `page.tsx` (server, exports `metadata`) + `page.client.tsx` (`"use client"`) split. No server components render UI — all UI lives in the client files.
+## Rules that come with the work (Anthony's)
 
-### Pages (routes under `app/`)
+1. **Never push to `main` without his go-ahead.** `main` is the live site. Work on a branch; a Vercel preview is the place to show it, and he says when it goes live.
+2. **The site's words are his.** Do not write lines for him. A gap stays a marked blank until he fills it (see the press kit). Do not "improve" copy.
+3. **A client text is the client's real words**, never reworded, never shown twice on the site.
+4. **Titles and artists are spelled the way each release spells them** (`AR!YAH`, `BittyOTW`, `AURA`).
+5. **Payments are Square only.** Not Stripe, not PayPal, and nothing that runs on their rails (Lemon Squeezy, Gumroad, Shopify Payments, Polar, Payhip, Ko-fi).
+6. **Never copy cover art from Spotify or any store.** A cover comes from the artist or from Anthony.
+7. **Every design decision is logged the turn it is made**, in the Design System artifact ("Anthony Dake", on claude.ai) and in `claude/site-prototype-log.md` in the claude.ai project. The Design System must describe the newest draft.
+8. He reacts to what he sees, not to descriptions. Show a picture or a working page early.
+9. Build and push for him; do not hand him commands to run. Run the checks below before every commit.
 
-- `/` — Home. Three stacked sections (`hero → services → proof`) rendered by `HomeClient.tsx` as a normal scrolling page. The Proof section is a **Full productions** rows list of six songs Anthony produced start to finish (`<ProductionRows items={PRODUCTIONS} />`, data in `data/productions.data.ts`) — tap a row to expand a YouTube player inline. Inline header lives here, not `SiteHeader`. Hero is an **evidence hero**: the ComFest stage photo (`/photos/epk-comfest-2024.jpg`, `priority`, `aspect-[4/5] object-cover object-[center_20%]`, full-bleed on mobile / `md:rounded-2xl` left column on desktop), `Anthony Dake` in `.font-display grad` (Gill Sans Light / Cabin fallback), the uppercase moniker `Architect of Sound` (`#9A9A9A` 12/13 px `tracking-[0.32em]`, sentence case in source), the role label `Producer / Drummer` (22/26 px `font-semibold` `#F2F2F2` — the line Anthony's business partner needed to see at a glance), then **two** labelled `.epk-cta` pills side by side: `Book production →` (presets `Production / drum programming`) + `Book drums →` (presets `Live show / tour date`), stacked on mobile and inline on `sm+`. Then `<HeroTexts />` — four client-text bubbles rendered **inside the right-hand text column** (horizontal snap-scroll on mobile, 2×2 grid on desktop so the whole hero fits in exactly one viewport). On desktop the hero `<section>` is `md:min-h-[calc(100svh-3.5rem)]` with `md:flex md:flex-col md:justify-center`, so its bottom edge aligns with the bottom of the first screen and the `(scroll)` hint is pinned to that edge in bright `#F2F2F2` 12 px — the one allowed exception to the Calm-pass no-motion rule. The numbers headline (`400+ shows. 50+ records.`) is no longer in the hero; the counts now live on the offer-card titles below. The short description and the "Let's build…" invitation that briefly sat between the roles and the Book pills were removed too — the hero now goes roles → pills directly, and the closing ask carries the only full-sentence pitch on the page. Listen was removed from the home page in an earlier pass; audio clips still live on `/epk`. `/portrait.jpg` is no longer referenced anywhere (kept on disk).
-- `/about` — Bio/story: church drummer → DCI/WGI → conservatory → rebuild. The current headshot (`/portrait-about.jpg`, `rounded-2xl`, caption `Columbus, OH`) renders at the top; the childhood first-kit photo (`/anthony-dake-drums.jpg`, `rounded-2xl`, caption `First kit · Topeka, KS`) is lazy-loaded inline inside the story, immediately after the "I grew up in Topeka, Kansas" paragraph. Three live-performance photos (`/photos/about-blue-knights-2018.jpg`, `.../about-duality-2022.jpg`, `.../about-main-street-2022.jpg`) are lazy-loaded inline at later beats in the story (after the "Blue Knights in 2018", "day one", and "The receipts:" paragraphs respectively) using the same `my-8 … rounded-2xl` figure pattern. Testimonials component mounted below the article (renders nothing until `data/testimonials.data.ts` is populated).
-- `/epk` — Press kit. `One-sheet (PDF) →` pill points at `/Anthony_Dake_One-Sheet.pdf` (`download` + `target="_blank"`). YouTube demo reel (no autoplay), then a three-up row of live performance photos (`EPK_PHOTOS` module-level const — ComFest, Whitehall Food Truck Festival, hybrid rig) rendered as a `grid grid-cols-3` of `aspect-[4/5] rounded-2xl` tiles with `#5C5C5C` captions, `Listen` heading + `<AudioShowcase />`, `Contact` heading + email + `Columbus, OH · fly dates nationwide` + `785.608.2604` as a `tel:` link. No social icons — those live in the site-wide footer line. `Anthony_Dake_Resume.pdf` is kept on disk but no longer linked from anywhere.
-- `/placements` — Record credits index. Starts with a **Full productions** section (`<ProductionRows items={PRODUCTIONS} />` from `data/productions.data.ts`), then a `Drums & drum programming` heading over the existing year-grouped list from `data/projects.data.ts`. The four entries whose `youtubeUrl` matches a `PRODUCTIONS` `youtubeId` (Aura, Pray For Me, Back & Forth, Repercussions) are filtered out of the drum list so nothing is listed twice — `data/projects.data.ts` itself is untouched. `Selected · N of ~total` counts the union.
-- `/performance` — Live performance credits index. Data from `data/performance.data.ts`.
-- `/practice` — "Open Practice Room". Reverse-chronological practice log with per-day groups, search, and optional video clips. Data from `data/practice.data.ts`. **Not linked from the header any more** (removed from nav in Batch 2); the only entry point is the `Practice journal →` link at the bottom of `/about`. The page itself remains live at `/practice`.
-- `/admin/bookings`, `/admin/archive` — **Removed 2026-11-24**, with `/api/bookings/auth` and `/api/bookings/list`. The login check in front of the bookings list was not strong enough to protect it, and the list is no longer needed: every request is emailed. Requests are still written to the `bookings` table; read stored rows in the Neon console.
-- `/not-found.tsx` — Custom 404 (uses `SiteHeader`).
-- `/robots.txt`, `/sitemap.xml` — generated by `app/robots.ts` and `app/sitemap.ts`.
+## The one idea behind the code
 
-### API routes (`app/api/`)
+**The prototype is the front end.** The site was designed as one self-contained HTML file, and that same source now builds two things:
 
-- `POST /api/book` — Booking form submission. Writes to Neon Postgres `bookings` table only (the `archive_emails` write was dropped — see Booking System). Origin check, honeypot, ISO-date validation, fire-and-forget Resend notification.
+- `node site/build.mjs` makes what the Next app serves: `public/site/app.css`, `public/site/app.js`, fonts and pictures, plus `lib/site/manifest.generated.ts` (a mark of their contents for cache-busting). `npm run dev` and `npm run build` run it first. All of it is git-ignored: made, never edited.
+- `npm run site:file` makes the whole site as **one file** (`out/anthony-dake-site-prototype.html`): fonts, pictures, styles and script inside, addresses as `#names`, nothing sent anywhere, a TEST chip for the two grounds. This is what Anthony opens to judge a design before it goes to a preview.
 
-### Key Components (`app/components/`)
+**No React on a public page.** Every public address answers with one whole HTML document from a route handler (`app/**/route.ts`), built by `lib/site/render.ts` from the same templates the browser uses. The browser's script then moves between pages without a reload and keeps the address in step. So every page is whole with scripts off: its words are in the document, its links are real links, Buy and the booking form are plain forms. There is no React page left at all (the `/admin` pages went on 24 Nov 2026), so there is no `app/layout.tsx`, no Tailwind and no global stylesheet: do not add one for a public page.
 
-- `HomeClient.tsx` — The stacked sections of the home page (hero → services → reel → proof → what people say → closing ask): **hero** (ComFest stage photo + `<LogoArchitectOfSound />` which carries `Anthony Dake` + the `Architect of Sound` moniker + a `Producer / Drummer` role label + **two** labelled `.epk-cta` pills side by side — `Book production →` presets `Production / drum programming`, `Book drums →` presets `Live show / tour date` (both via `openBooking(preset)` from `lib/booking.ts`, no `onOpenBooking` prop any more) — + `<HeroTexts />` all stacked inside the right-hand text block. The hero no longer carries the standalone description or the "Let's build…" invitation — the Book pills sit directly under the role label; mobile = full-bleed photo with a `.hero-fade` gradient over its bottom 45 %, desktop = the section is a flex column pinned to the first viewport (`md:flex md:min-h-[calc(100svh-3.5rem)] md:flex-col md:justify-center md:pb-12`) wrapping a two-column `minmax(0,5fr)_minmax(0,7fr)` grid (`md:max-w-[1200px] md:gap-12 md:py-10 short:py-4`), with a bright `(scroll)` hint pinned at `bottom-4` of the section on desktop only), **services** (heading `What I do` + a `md:grid-cols-2` row of two offer cards from `OFFER_CARDS` — each card's title row is `flex items-baseline justify-between gap-4` with the title on the left and the count on the right in `#9A9A9A` 15 px `tabular-nums` (Drummer `{Math.floor(STATS.performances / 10) * 10}+ shows`, Producer `{Math.floor(STATS.placements / 10) * 10}+ records`). Drummer photo `/photos/epk-whitehall-2025.jpg` at `center 35%` → `openBooking("Live show / tour date")`; Producer photo `/photos/epk-hybrid-rig-2025.jpg` at `top` → `openBooking("Production / drum programming")`), **reel** (renders `<HomeReel />` — see below), **proof** (heading `Full productions` + `#5C5C5C` 12 px caption `Songs I produced start to finish. Tap to play.` + `<ProductionRows items={PRODUCTIONS} />` reading from `data/productions.data.ts`; three cross-links follow at `mt-10` — no stages/orgs line, no derived artist line), **what people say** (no `data-id`, not a scroll target — three-column `md:grid-cols-3` row of real-text bubbles from `HOME_TESTIMONIALS` in `data/testimonials.data.ts`; see Anatomy §5), **closing ask** (`Got a date? Tell me about it.` headline + `#9A9A9A` descriptor + **two** labelled `.epk-cta` pills side by side — same `Book production →` / `Book drums →` pair as the hero, wired directly via `openBooking(preset)`). Normal scrolling, no fades.
-- `ProductionRows.tsx` — `"use client"` list of full productions used on both the home Proof section and the top of `/placements`. Props: `items: Production[]`. Renders a `<ul>` of `border-t border-white/[0.08] last:border-b` rows; each row is a progressive-enhancement `<a href="https://www.youtube.com/watch?v=…" target="_blank" rel="noopener">` (works without JS) that `preventDefault()`s and toggles the row open with JS. Layout per row: `h-14 w-14 sm:h-16 sm:w-16` rounded cover (`next/image` 600×600, `sizes="64px"`, `loading="lazy"`), title (`#F2F2F2` 15/16 px) + `artist · year` (`#9A9A9A` 13 px), duration (`#5C5C5C` 12 px tabular-nums), and a 36 px circle (`border-white/[0.16]`, hover/focus `white/40`) with a white play triangle that flips to a × when open. Only **one** row open at a time — opening another closes the previous, which unmounts its iframe and stops audio. The open panel is an `aspect-video rounded-xl bg-black` box with a `youtube-nocookie.com/embed/<id>?autoplay=1&playsinline=1&rel=0&modestbranding=1` iframe. Also emits a single `ItemList` of `MusicRecording` JSON-LD (`producer: Anthony Dake`). No height animation (Calm rules).
-- `HomeReel.tsx` — `"use client"` click-to-load YouTube facade on the home page. Server HTML is an anchor (`https://www.youtube.com/watch?v=gwNaFJyhTXo`) wrapping the `maxresdefault.jpg` thumbnail in an `aspect-video rounded-2xl` box with a centered 64 px white play button (hover `#E6E6E6`, no other motion). `onClick` → `preventDefault()` + swap in the autoplay iframe. Caption underneath: `Demo reel · live and studio`. Works without JS (falls back to opening YouTube in a new tab).
-- `HeroTexts.tsx` — Static (server) component rendered as the last child of the hero text block (directly under the two labelled Book pills). Reads `HERO_TESTIMONIALS` from `data/testimonials.data.ts` and renders the four bubbles as an `<ul aria-label="What people say">`. Mobile: escapes the parent `px-6` padding with `-mx-6 px-6` so the strip is still full-bleed — `snap-x snap-mandatory overflow-x-auto` with bubbles at `w-[72vw] max-w-[300px]` and `[scroll-padding-left:1.5rem]`, so one bubble sits on the page margin and the next peeks in. Desktop (`md+`): a 2×2 grid sized to the text column — `md:w-full md:max-w-[500px] md:grid md:grid-cols-2 md:gap-x-5 md:gap-y-4`, with a `short:max-w-[440px] short:mt-5` tightening for 13"-class laptops (`min-width:48rem` and `max-height:860px`). Bubbles top-aligned (the live-show bubble is tallest; row 1 = the two short ones, row 2 = tall + one-liner). Each bubble is `next/image` at its native `width`/`height` with `loading="lazy"`, `sizes="(max-width: 768px) 72vw, 260px"`, and an 11 px `#5C5C5C` caption below.
-- `AudioShowcase.tsx` — Credits-style vertical list on `/epk`. Each row is a 36 px circular play/pause icon + `title · artist` in sentence case + `0:MM` duration, separated by hairline `border-white/[0.08]` top/bottom rules. A 1 px `#F2F2F2` progress hairline sits on the row's bottom edge and grows from 0 → 100 % while that row plays; no ring, no gradient, no glow. One `<audio preload="none">` per clip; only one plays at a time; unmount pauses everything; respects `prefers-reduced-motion`. Renders `null` while `AUDIO_CLIPS` is empty.
-- `BookingModal.tsx` — Booking inquiry dialog. Focus trap, Esc-to-close, honeypot, body-scroll lock, auto-close on success. Sentence-case labels, one primary pill (`Send inquiry →`), no glow.
-- `FooterLine.tsx` — Site-wide single-row footer mounted on every page: `Columbus, OH · Email · YouTube · TikTok · Press kit`. `#5C5C5C` 12 px, hairline `border-t`, `py-10`. This is where the social links live now (they were removed from the hero and `/epk`).
-- `SiteHeader.tsx` — Shared header for every subpage. Symmetric 3-column grid (Placements/Performance · HomeMark · About + Book CTA). Uppercase nav at `tracking-[0.18em]` — the one allowed uppercase surface outside of year headers. Mobile hamburger overlay. Owns its own `BookingModal` state and listens for the `open-booking` event.
-- `HomeMark.tsx` — Inline SVG of the AD serif monogram (Source Serif 4 outlines, solid `#E5EEFF` fill; the standalone `public/mark.svg` adds a thin `#3B82F6` ring, dropped here because the header pill already draws a ring). Rendered at 25×14 inside the 44px pill. The source SVGs live in `public/mark.svg` (with ring), `public/letters.svg` (no ring, same one inlined here), `public/mark-white.svg` (monochrome fallback).
-- `LogoArchitectOfSound.tsx` — Identity lockup for the home hero: the `Anthony Dake` h1 (Title case, `font-display` — Gill Sans Light where the visitor has it, Cabin 400 otherwise; carries the page's single `.grad` gradient — every other instance of the gradient on a page is a deliberate violation) + the `Architect of Sound` moniker directly below as a `#9A9A9A` 12/13 px line with `tracking-[0.32em]` and CSS `uppercase` (source stays sentence case). The h1 sizes are `text-[46px] sm:text-[60px] md:text-[64px] short:text-[54px]`. Everything after the moniker (roles, description, invitation, pills, `<HeroTexts />`) lives in `HomeClient.tsx`. The hero photo is rendered by `HomeClient.tsx` directly above this component (no `showPortrait` prop any more).
-- `JsonLd.tsx` — `<script type="application/ld+json">` helper.
-- `TransitionProvider.tsx` — Thin wrapper preserving the `useTransition()` API shape (`triggerTransition`, `isTransitioning`, `prefersReducedMotion`, `isMobileFallback`) so pre-existing callers compile. `triggerTransition` is now just `router.push`; the curtain overlay and the page fade were both removed. Pages render fully visible on first paint — nothing is gated on JS.
-- `Testimonials.tsx` — Renders real client texts as cleaned iMessage bubble screenshots on About. Each entry is a transparent PNG from `/public/reviews/` rendered via `next/image` (its native width/height, capped at `max-w-[380px]`, centered, `select-none`) with a `#5C5C5C` sentence-case caption line below it. Reads the `testimonials` export from `data/testimonials.data.ts` (the three About entries — `review-12.png` produced-track quote, `review-1.png` mix, `review-5.png` ideas). The home hero reads `HERO_TESTIMONIALS` via `<HeroTexts />`; the home offer cards read `OFFER_TESTIMONIALS.{drummer,producer}` inline inside `HomeClient.tsx`; the new home "What people say" row reads `HOME_TESTIMONIALS` inline too. The full quote text is in the image `alt`. Renders `null` while `testimonials` is empty.
+## Where things are
 
-There is **a site-wide footer line** again (`<FooterLine />`), reintroduced in the Calm pass. `TextScramble`, `CurtainOverlay`, `ColumbusTime`, `SiteFooter`, `FloatingCards`, `CustomCursor`, `LenisProvider`, `ArchiveModal`, `ScribbleLink`, `ScrambleText` are all gone.
+```
+site/                     THE SITE'S SOURCE (edit here)
+  content.mjs             every word and every list: pages, releases, the offer, the form, About texts, press kit, store words
+  templates.mjs           the pages as HTML strings; runs on the server AND is packed for the browser (window.ADSite)
+  css/site.css            the phone's rules (the design was made phone-first)
+  css/wide.css            what a wide screen changes (at least 700 px across and 560 px tall)
+  css/test.css, test-panel.html   the TEST chip of the one-file prototype only
+  js/engine.js            the drawing (WebGL 2), the flight between home and a page, the routing, the hand-made details on words
+  js/pages.js             each page's own behaviour: the belt of covers, the booking form, About's photo and texts, Buy
+  js/chalk.js             the chalk mark (window.ChalkMark)
+  js/structure.js         works the drawing's pieces out of the drum part in data/
+  data/drums.json, arr.json       Anthony's own drum part: what the drawing is made from
+  fonts/, img/            the four font files; covers, the About photo, the mark
+  build.mjs               the two builds described above
+lib/site/render.ts        server: renderDocument(page, data), htmlResponse(), notFoundResponse(), storefront()
+app/route.ts              /            (static)
+app/production/           /production, /production/sent, /production/not-sent   (static)
+app/about/, app/press-kit/                                                      (static)
+app/products/             /products (per request), /products/thanks/[order] (per request: the order page)
+app/[...missing]/         any other address: the site's own "Not found", as a 404
+app/llms.txt/             /llms.txt, made from content.mjs
+app/api/book              the booking form's endpoint
+app/api/store/*, app/api/square/webhook   the store's endpoints
+lib/store/*, data/store.data.ts            the store (see Store)
+scripts/                  the checks (see Checks) and upload-media.mjs
+next.config.ts            redirects from the old addresses; long caching for /site/*
+archive/earlier-site/     the earlier site's pictures and downloads, kept for reference; not served, not built (see archive/README.md)
+```
 
-### Data Files
+### How a document is put together
 
-- `data/credits.data.ts` — Two plain string arrays consumed by the Drummer offer card in `HomeClient.tsx`: `STAGE_ARTISTS` (14 names of artists Anthony has shared the stage with) and `ORGANIZATIONS` (10 corps / ensembles / venues / producers he's performed with). Array order is display order; edit here and the home card updates.
-- `data/projects.data.ts` — Lightweight placements index (title/artist pairs) used by the `/placements` route. The home Proof section no longer reads it; the drum-list section of `/placements` filters out entries whose `youtubeUrl` matches a `PRODUCTIONS` `youtubeId` so nothing is listed twice.
-- `data/productions.data.ts` — `Production` type + `PRODUCTIONS` array: six songs Anthony produced start to finish, each with `title`, `artist`, `year`, `youtubeId`, `cover` (square 600×600 JPEG in `public/covers/`), and `duration`. Order in the array = display order on home and on `/placements` (`Cycles → Aura → Pray For Me → Back & Forth → Repercussions → Missin U`). Consumed by `<ProductionRows />`.
-- `data/performance.data.ts` — Live performance credits list.
-- `data/practice.data.ts` — Practice log entries + exported `practiceEntries`, `totalSessions`, `firstSessionDate`. Current log goes through Session #7 (2026-05-18).
-- `data/testimonials.data.ts` — Four exports, all sharing one `Testimonial` interface. **Nothing repeats across the four surfaces** — the data file is the only place the dedup contract is enforced.
-  - `HERO_TESTIMONIALS` — the four bubbles rendered in the home hero text column by `<HeroTexts />`, ordered for the desktop 2×2 (row 1: `review-3.png` track quote + `review-2.png` beat quote; row 2: `review-7.png` live-show quote + `review-8.png` "Broooooo. This is fireeeeeeeee").
-  - `OFFER_TESTIMONIALS` — `{ drummer, producer }` shape, one bubble per offer card in `HomeClient.tsx` (`drummer` = `review-10.png` live-show thanks; `producer` = `review-11.png` song quote).
-  - `HOME_TESTIMONIALS` — the three bubbles rendered in the new "What people say" row between proof and the closing ask on home, in display order: `review-4.png` production quote ("I am DROOLING!"), `review-9.png` live-show quote, `review-13.png` beat one-liner.
-  - `testimonials` — the three bubbles shown on About by `<Testimonials />`: `review-12.png` produced-track quote, `review-1.png` mix quote, `review-5.png` ideas quote.
-  Each entry is a real client text screenshot in `/public/reviews/` with the full quote verbatim in `alt` and a short attribution in `caption`.
-- `data/stats.ts` — `STATS.performances` and `STATS.placements` — approximate career totals displayed in the hero proof strip and the `Selected · N of ~total` subheader on `/placements` and `/performance`. Edit here and both the hero and index pages update together.
-- `lib/booking.ts` — `openBooking()` helper that dispatches a `window` `CustomEvent('open-booking')`. Both headers listen for it, so any component can trigger the booking modal without lifting state. See Gotcha #6.
-- `lib/projects.ts` — Project type definitions + re-export of `projects` from the generated file.
-- `lib/projects.generated.ts` — Generated at build time by `scripts/generate-projects.mjs` from `content/projects.json`. Do NOT edit by hand; the `predev` / `prebuild` npm scripts regenerate it.
+`renderDocument(page, data)` calls `documentHtml()` in `site/templates.mjs`. Every document carries: the header (first in the document, so the keyboard meets it first), the home screen's words (in every document, because Back flies home without a reload; hidden unless the page is home), `<main id="dest">` with the page's own section, and `window.__AD`, the document's note to the script: `{ mode: 'site', v, base, products, sandbox }`.
 
-## Home Page Anatomy
+The engine reads `body[data-page]`. Header words carry `data-jump` (fly from home, turn straight from another page, do nothing on their own page), home's door and links `data-go`, Back `data-back`, and the mark in the header `data-home` (the home button from every page: it does what Back does, and on the home screen it moves nothing). A link marked `data-plain` is the browser's own (a download, a re-check). On a page that exists only as a server document (`order`, `missing`) every link is the browser's own, so the order page keeps its place in the history.
 
-`app/page.client.tsx` is a thin wrapper that owns the inline header + `BookingModal` state. The stacked sections live in `HomeClient.tsx` (final order: hero → services → reel → proof → what people say → closing ask → `FooterLine`):
+### Recipes
 
-1. **hero** (`data-id="hero"`) — Evidence hero. On desktop the section itself is a flex column pinned to exactly the first viewport: `relative -mt-14 bg-black md:mt-0 md:flex md:min-h-[calc(100svh-3.5rem)] md:flex-col md:justify-center md:pb-12`. The `3.5rem` matches the fixed header height (`h-14`) and the `pt-14` on `#main-content`; the content is vertically centred by `md:justify-center`, and because the section is ≥ one screen tall, an absolutely-positioned child at `bottom-4` lands on the bottom edge of the viewport. It contains two children: (a) a grid wrapper `md:mx-auto md:grid md:w-full md:max-w-[1200px] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-12 md:px-8 md:py-10 short:py-4 tiny:py-2` with the photo column + the text block column; (b) a `(scroll)` hint absolutely positioned at `bottom-4`, desktop-only (`hidden md:flex`, `animate-scrollFlash`), rendered as `<span className="text-[12px] uppercase tracking-[0.28em] text-[#F2F2F2]">(scroll)</span>` so the flash reads as a deliberate white pulse (`0%,100% {opacity:.2} 50% {opacity:1}`, 2.4 s), with the `prefers-reduced-motion` fallback holding it at `opacity:.6`. On mobile the section is `-mt-14` so the ComFest stage photo (`/photos/epk-comfest-2024.jpg`, `next/image`, `priority`, `aspect-[4/5] w-full object-cover object-[center_20%]`) starts at y = 0 behind the translucent fixed header; the `.hero-fade` div is pinned to the bottom 45 % of the photo and fades it to black; the text block that follows uses `relative -mt-28 px-6 text-center` to sit over that fade. On desktop (`md+`) the inner wrapper is the two-column grid — photo left (`md:rounded-2xl`, no fade), text block centered in the right column. **Text block**, top to bottom: `<LogoArchitectOfSound />` (contains the `Anthony Dake` h1 — the single page `.grad`, `md:text-[64px] short:text-[54px] tiny:text-[48px]` — and the `Architect of Sound` moniker in `#9A9A9A` 12/13 px `tracking-[0.32em]` uppercase), then the role label `Producer / Drummer` (22/26 px `font-semibold leading-[1.2] text-[#F2F2F2]`, `mt-3`), then the actions row (`mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center short:mt-5`) holding **two** `.epk-cta min-w-[220px]` pills in the same order as the role label: `Book production →` → `openBooking("Production / drum programming")` first, `Book drums →` → `openBooking("Live show / tour date")` second. Both pills are wired directly through `openBooking(preset)` from `lib/booking.ts`; `HomeClient` no longer takes an `onOpenBooking` prop. The standalone description ("Drummer and producer for live shows, sessions, and records. Columbus, OH.") and the "Let's build your next record or show." invitation that briefly sat between the role label and the pills were removed — the hero goes roles → pills directly, and the closing ask carries the only full-sentence pitch on the page. Listen used to sit next to the pill — it was removed; audio still lives on `/epk` via `<AudioShowcase />`. Then `<HeroTexts />` (mobile: full-bleed snap strip that escapes the `px-6` with `-mx-6`; desktop: 2×2 grid capped at `md:max-w-[500px]` inside the column, `short:max-w-[440px] short:mt-5 tiny:max-w-[420px] tiny:mt-4` on shorter viewports). **Fit rules (desktop) — change in one pass or the hint falls off the fold:** keep the `md:min-h-[calc(100svh-3.5rem)]` + `md:flex md:flex-col md:justify-center` on the section (it is what places `(scroll)` at the screen edge, not the hero edge); keep the grid wrapper on `md:py-10` + `short:py-4` + `tiny:py-2`; do not widen `md:max-w-[500px]` on `HeroTexts` for `md+`; keep the pills row at `mt-6 short:mt-5` so there's enough air between the role label and the first pill; and keep the `short`/`tiny` tightening on the h1 (`short:text-[54px] tiny:text-[48px]`) and `HeroTexts` (`short:mt-5 short:max-w-[440px] tiny:mt-4 tiny:max-w-[420px]`). The variants are defined in `app/globals.css` — `@custom-variant short (@media (min-width: 48rem) and (max-height: 860px))` catches 13"-class laptops, and `@custom-variant tiny (@media (min-width: 48rem) and (max-height: 760px))` catches ~700 px-tall viewports (1280×720, 1280×800, 1536×864 at 125 %); `tiny` is declared **after** `short` so its utilities sort later and win where both apply — if you ever add a third tier, keep it defined in increasing-specificity order. Mobile layout is independent of all of this (both variants gate on `min-width: 48rem`).
-2. **services** (`data-id="services"`, `max-w-[960px]`, `py-16 sm:py-24`) — Heading `What I do` + a `grid gap-10 md:grid-cols-2 md:gap-8` of two offer cards from the `OFFER_CARDS` module-level array. Each card is a plain `<article>` (no border/background): `next/image` at `aspect-[4/3] w-full rounded-2xl object-cover`, `loading="lazy"`, `sizes="(max-width: 768px) 100vw, 460px"`, with a per-card `object-position` so faces are not cropped — Drummer uses `/photos/epk-whitehall-2025.jpg` at `center 35%`, Producer uses `/photos/epk-hybrid-rig-2025.jpg` at `top` (an earlier `center 30%` cropped his head off). Below the photo, a title row rendered as `mt-5 flex items-baseline justify-between gap-4`: the `h3` title on the left (20 px, `#F2F2F2`) and a `count` on the right in `#9A9A9A` 15 px `tabular-nums` — Drummer renders `${Math.floor(STATS.performances / 10) * 10}+ shows`, Producer renders `${Math.floor(STATS.placements / 10) * 10}+ records` (this is where the hero's old numbers headline moved to). Then one of two generically-rendered body shapes, then an **optional inline testimonial figure** — rendered as `<figure className="mt-6 max-w-[320px]">` with the bubble `next/image` (native `width`/`height`, `sizes="320px"`, `loading="lazy"`, `className="h-auto w-full select-none"`) and an 11 px `#5C5C5C` caption underneath, aligned to the card's left edge (no border, no center alignment — the figure sits inside the card's left-aligned text flow). Drummer renders `OFFER_TESTIMONIALS.drummer` (`review-10.png`), Producer renders `OFFER_TESTIMONIALS.producer` (`review-11.png`). Then a text-link button in `#F2F2F2` (hover `#9A9A9A`) that calls `openBooking(preset)` from `lib/booking.ts` — `Book a date →` presets `Live show / tour date`; `Send a brief →` presets `Production / drum programming`. The link's top margin is `mt-5` when a testimonial is present, otherwise `mt-4`, so the breathing room above it is consistent whether or not a bubble is in the card. Card data shape is `OfferCard` (local to the file): shared fields `id, title, count, photo, alt, objectPosition, linkLabel, preset`, plus optional `lead, artists[], orgsLead, orgs[], close` (Drummer), optional `copy, scrollLink, copyAfter` (Producer), and optional `testimonial?: Testimonial`. The Drummer card reads as a résumé's best line: `lead` ("I've had the honor of opening for En Vogue, playing the main stages at Columbus Pride and ComFest, and sharing the stage with", `#9A9A9A` 15 px `leading-[1.6]`), `artists[]` from `data/credits.data.ts` → `STAGE_ARTISTS` (`#F2F2F2` 15 px `leading-[1.75]`, rendered by the local `NameList` helper with each name in a `whitespace-nowrap` `<span>` and separators `<span aria-hidden className="text-[#5C5C5C]"> · </span>`), `orgsLead` ("and performing with"), `orgs[]` from `ORGANIZATIONS` (same NameList style), then `close` ("Tours, fly dates, and sessions — remote or in your room."). The Producer card uses `copy` ("Whole songs start to finish, or just the drums. ") + a scroll link `scrollLink` ("Hear the released records below", styled `text-[#F2F2F2] underline-offset-4 hover:underline`) that calls the local `scrollToProof()` — `proofRef.current.scrollIntoView` with `behavior: "smooth"` unless `prefers-reduced-motion` — + `copyAfter` (" — I work remote and deliver release-ready stems."). There is no section-level `Send a brief →` link any more; the CTAs live on the cards. The two name arrays live in `data/credits.data.ts` so they're easy to edit later.
-3. **reel** (no `data-id`) — Rendered by `<HomeReel />` (`app/components/HomeReel.tsx`, `"use client"`). Section `mx-auto max-w-[960px] px-6 pb-16 sm:pb-24`, heading `Watch`. Click-to-load YouTube facade: default state is a plain `<a href="https://www.youtube.com/watch?v=gwNaFJyhTXo" target="_blank" rel="noopener">` wrapping `<img src="https://i.ytimg.com/vi/gwNaFJyhTXo/maxresdefault.jpg" alt="Anthony Dake — demo reel" loading="lazy">` in an `aspect-video w-full overflow-hidden rounded-2xl bg-black` box, with a centered 64 px `#F2F2F2` circle + black play triangle (hover `bg-[#E6E6E6]`, no other motion). `onClick` → `preventDefault()` + swap in `<iframe src="https://www.youtube.com/embed/gwNaFJyhTXo?autoplay=1&playsinline=1&rel=0&modestbranding=1">` (title `Anthony Dake — demo reel`, standard `allow` list including `autoplay`, `allowFullScreen`). Caption underneath: `<p className="mt-3 text-[12px] text-[#5C5C5C]">Demo reel · live and studio</p>`. The server HTML still has the thumbnail + play button as an anchor, so visitors without JS get a working link to the YouTube watch page — nothing gated on JS.
-4. **proof** (`id="proof"`, `data-id="proof"`, `max-w-[640px]`) — Heading `Full productions` (15 px `#F2F2F2`) + a `#5C5C5C` 12 px caption `Songs I produced start to finish. Tap to play.`, then `<ProductionRows items={PRODUCTIONS} />` (see Key Components) at `mt-5`. Three text links at `mt-10`: `Placements →   Performance →   Press kit →`. The stages/orgs line that used to sit above these links (`Columbus Pride · ComFest · Short North Stage · …`) was removed when the Drummer offer card absorbed that content — don't re-add it. The section also carries the plain `id="proof"` anchor so the Producer offer card's "Hear the released records below" link can `scrollIntoView` here. No testimonial is inlined (the four bubbles live in the hero strip). The old auto-built artist line derived from `data/projects.data.ts` is gone.
-5. **what people say** (no `data-id`, not a scroll target — the section-id union stays closed at `"hero" | "services" | "proof"`; see Gotcha #8) — `<section className="mx-auto max-w-[960px] px-6 pb-16 sm:pb-24">` with heading `What people say` (same 15 px `#F2F2F2` style as `What I do`), then `<ul className="mt-8 grid gap-10 md:grid-cols-3 md:items-start md:gap-8">` mapping `HOME_TESTIMONIALS` from `data/testimonials.data.ts`. Each `<li>` is `mx-auto w-full max-w-[340px] md:max-w-none` wrapping a plain `<figure>` with the bubble `next/image` at its native `width`/`height` (`loading="lazy"`, `sizes="(max-width: 768px) 340px, 300px"`, `h-auto w-full select-none`) and an 11 px `#5C5C5C` centered caption. Currently three bubbles: `review-4.png` (production quote), `review-9.png` (live show), `review-13.png` (beat one-liner). No borders, no motion, nothing gated on JS — same Calm rules as `<HeroTexts />`. Vertical rhythm `pb-16 sm:pb-24` matches the reel section above it.
-6. **closing ask** (no `data-id`) — `<section className="mx-auto max-w-[640px] border-t border-white/[0.08] px-6 py-20 text-center sm:py-28">` with headline `Got a date? Tell me about it.` (26/30 px `#F2F2F2`), a `#9A9A9A` descriptor (`Live shows, sessions, and records. Columbus, OH, and fly dates nationwide.`), and the same **two** labelled `.epk-cta min-w-[220px]` pills as the hero — `Book production →` (presets `Production / drum programming`) and `Book drums →` (presets `Live show / tour date`), stacked on mobile and inline on `sm+` inside an `mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center` wrapper. Repeats the offer so visitors who scroll past the hero still see what's being booked, with the same presets wired straight through `openBooking(preset)` — no `onOpenBooking` prop. The `border-t` is what visually separates this section from the what-people-say row above.
+- **Change a word**: `site/content.mjs`. Nothing else. (Then `npm run site`, or just run dev.)
+- **Fill the press kit**: put his paragraphs in `PRESS_KIT.bio` (one string per paragraph). The ruled blanks and "Bio to come" go away on their own.
+- **His bio on About**: `ABOUT.bio` in `content.mjs`, one string per paragraph, word for word as he sent it (24 Nov 2026). A change comes from him; do not edit or tidy it.
+- **Add or reorder a release**: `RELEASES` in `content.mjs`, in his order (the first leads the belt), with `youtube` set to the id of the release's own video or audio on YouTube (the cover is a link to it). Put `<key>-240.jpg` and `<key>-480.jpg` in `site/img/covers/` (square, sRGB, from the artist's own file) and set `art: [240, 480]`. While there is no cover, `art: null` shows an empty frame. **Waiting on three covers**: Get Down full size (held 400 px wide, `art: [240, 400]`), Sparkles and Forever (`art: null`).
+- **The About photo**: `site/img/about/studio-{480,800,1200,1600}.{jpg,webp}`, resized from his 1718 x 2576 original (Lanczos; jpg q 84 to 88, webp q 80). Where each text sits on it is in `ABOUT.texts`.
+- **Add a product**: see Store.
 
-Then `<FooterLine />` (site-wide).
+## The design, in short
 
-Routing: `HomeClient` accepts `initialSection?: "hero" | "services" | "proof"` and `scrollIntoView`s the matching ref on mount. The section-id union is a **closed type** (Gotcha #8) — adding a value means updating the union and the refs in one pass. The reel and closing-ask sections intentionally have no `data-id` and are not scroll targets.
+The full rules and every decision are in the Design System artifact. What code must not break:
 
-No fades: every section renders fully visible in the server HTML on first paint. There is no `IntersectionObserver`, no `visible` state, no `opacity-0` default, and nothing is gated on hydration. Content must never depend on JS to appear — the reel degrades to a plain link to the YouTube watch page without JS.
+- One screen, one door (the only blue thing on a screen, in brackets), one drawing behind everything, two typefaces (Instrument Serif for the name only; Courier Prime for everything else, with its own two arrows font), one blue.
+- Two grounds: black and soft white. The visitor's system picks (`prefers-color-scheme`); there is no switch.
+- Words you press are 44 px tall; the door 46 (52 on wide). Typed text in a field is 16 px or more, or a phone zooms the page.
+- **Wide** means at least 700 px across and 560 px tall (a tablet held upright is wide; a phone on its side is not). Those two numbers are in `css/wide.css`, `js/pages.js` and the pictures' `sizes` in `templates.mjs`: change them together. On wide the idea is the same page with air: what is wide goes edge to edge (drawing, frame, belt), what is read keeps to a narrow centre column, short pages stand mid-screen.
+- **The belt**: seven covers travelling left to right, the first in his order in front. A cover is never on screen twice: the gap between covers opens until one run is a screen and a cover long. **Each cover is a link to its release on YouTube** (new tab), and over it the mouse stays the plain arrow, not the hand (his words: "It should just be a normal cursor"). A press that does not move opens the link; a pull along the belt moves the belt and opens nothing.
+- **Production is one screen on a laptop** (at least 900 px across): the form's fields stand two by two, the gaps open with the window's height and the covers take the height that is left. The sum of every height on the page is written out at the foot of `css/wide.css`: change a height there and change the sum. The checks hold it at 1280 x 720, 1440 x 900 and 1920 x 1080.
+- **About**: the photograph with four texts round it fills the first screen (the script gives the photograph the height that is left and pins each text); his bio stands beside it on a laptop (at least 1180 x 640: nothing scrolls) and under it everywhere else (the page scrolls to it). On a screen too short for four texts, the last two are left out (still read out to screen readers). On a wide screen the texts stand 165 px out from the photograph's sides and **lean against the mouse**, copied from the photographs on humanperson.com's home screen: the numbers and what was fitted to this page are in the comment over `PULL` in `js/pages.js`.
+- **The mark in the header is the home button** from every page. Its ring lights up under a mouse and while pressed, as the old site's did (a tenth of white to a fifth).
+- **Less motion**: with `prefers-reduced-motion` there is no flight and the belt is one still row.
+- **No WebGL 2**: the engine stops at once and marks `body[data-ready="no-gl"]`; the stylesheet gives the home text a ruled bubble and the mark a picture. Every page still works.
 
-## Booking System
+## Booking
 
-- UI: `BookingModal.tsx` opened from the Book → button in `SiteHeader.tsx` (subpages, no preset), `app/page.client.tsx` (home-page inline header, no preset), the hero's two labelled pills in `HomeClient.tsx` (`Book production →` presets `Production / drum programming`; `Book drums →` presets `Live show / tour date`; both via `openBooking(preset)` from `lib/booking.ts`), the closing-ask's two labelled pills (same pair, same presets, same wiring), the two offer cards in `HomeClient.tsx` (also via `openBooking(preset)`), and anywhere else via the `open-booking` `window` event (`openBooking(eventType?)` from `lib/booking.ts`, dispatched with `detail: { eventType }`). `HomeClient` no longer accepts an `onOpenBooking` prop — every CTA inside the home page dispatches the event directly. Both headers listen for the event, read `detail?.eventType` into a `bookingPreset` state, and pass it to `<BookingModal initialEventType={bookingPreset} />`. The modal state is **duplicated** in both headers; see Gotcha 7.
-- Fields: `name` (required), `email` (required, regex-validated), `eventDate` (optional, `type="date"`, `min={todayIso}`, ISO-validated on the server), `eventType` (required, select), `message` (optional). Hidden honeypot `website` field.
-- Event type options (`EVENT_TYPES` in `BookingModal.tsx`): `Live show / tour date`, `Session drums (remote)`, `Session drums (in person)`, `Production / drum programming`, `Church / worship`, `Corporate event`, `Other`. The server does **not** whitelist values — it stores whatever non-empty string is sent, so the list can evolve without a schema change.
-- Endpoint: `POST /api/book`.
-  - Origin check: rejects POSTs whose `Origin` host does not match `NEXT_PUBLIC_SITE_URL`.
-  - Honeypot: if `body.website` is non-empty, the route returns `{ ok: true }` without writing — bots think it worked, no retry.
-  - Validation: trims strings, lowercases email, validates email regex, validates date as `YYYY-MM-DD`.
-  - Storage: `bookings` table (Neon Postgres via `@vercel/postgres`). Idempotent `CREATE TABLE IF NOT EXISTS` + `ALTER TABLE … ADD COLUMN IF NOT EXISTS` on every request (schema evolves without migrations). The `archive_emails` write was dropped in Batch 2 (the table still exists in the DB — do not drop it manually; no code writes to or reads from it any more).
-  - Notification: fire-and-forget Resend POST (`notifyBooking`). Never blocks the response. Falls back to `console.warn` when `RESEND_API_KEY` is missing.
-- DB provider: **Neon Postgres** provisioned through the Vercel Neon marketplace integration. Uses `POSTGRES_URL` / `POSTGRES_URL_NON_POOLING` etc. injected by Vercel.
-- Env vars used:
-  - `POSTGRES_URL` (+ friends) — Neon connection, auto-provisioned.
-  - `NEXT_PUBLIC_SITE_URL` — origin-check target.
-  - `BOOKING_NOTIFY_EMAIL` — recipient of notification (default `adakemusic@gmail.com`).
-  - `BOOKING_NOTIFY_FROM` — notification From address (default `noreply@anthonydakemusic.com`).
-  - `RESEND_API_KEY` — injected automatically by the **Resend native integration** from the Vercel Marketplace (resource `resend-email-apricot-harbor`, Free plan, Production + Preview, marked Sensitive). Never set it by hand; manage it from Vercel → Integrations → Resend.
-  - `RESEND_EMAIL_DOMAIN` — also injected by the integration (`anthonydakemusic.com`). The domain is **not verified yet**: DNS for anthonydakemusic.com is on Cloudflare, and the DKIM TXT + `rsend`/`send` CNAMEs listed at resend.com/domains still need to be added there.
-  - `BOOKING_NOTIFY_FROM` — currently `onboarding@resend.dev` (Resend's test sender, set 2026-11-03). It only delivers to the Resend account owner (adakemusic@gmail.com), which is fine for notifications. Switch to `noreply@anthonydakemusic.com` once the domain is verified.
-- Verified 2026-11-03: a test POST to `/api/book` produced a "Delivered" email in the Resend log (subject `New booking inquiry — <type> (<name>)`). Resend's email log at resend.com/emails is the first place to look if notifications stop.
+The form on `/production` has four fields: name and email (needed), a link to released music, a note. It posts to `POST /api/book`:
 
-## Media assets (Vercel Blob)
+- With scripts on, the page sends JSON and gets `{ ok: true }`; the form gives way in place to "Sent." If it fails, the form stays and says so with the email address.
+- With scripts off, the browser posts the plain form and is redirected to `/production/sent` or `/production/not-sent`. The browser's own checks stand in for the page's (the script sets `noValidate` itself).
+- Same-origin only, compared with the host that served the request (so previews work). A hidden `website` field catches scripts that fill everything; they are told all went well.
+- Stored in the `bookings` table (Neon Postgres through `@vercel/postgres`), made idempotently on each request: `name`, `email`, `event_type` ("Production: A Full Build"), `message` (the note), `music_link`. It is a second copy only: no page lists it (the list and its login were removed on 24 Nov 2026, at his word, once the email was reliable). To read it, open the table in the Neon console.
+- Anthony is emailed through Resend **after** the answer is sent, with `after()` so the platform keeps the function alive until it has gone.
 
-The site streams media straight from Vercel Blob (public store). The existing practice clips live under `practice/2026-05-12/` on a blob store named `practice-videos`. The newer `hero/` and `audio/` paths are the convention for the home-page reel and `AudioShowcase` clips.
+Env: `POSTGRES_URL` and friends (Neon integration), `RESEND_API_KEY` (Resend integration: never set by hand), `BOOKING_NOTIFY_EMAIL` (default `adakemusic@gmail.com`), `BOOKING_NOTIFY_FROM` (today `onboarding@resend.dev`, Resend's test sender, which only delivers to the account owner; switch to `noreply@anthonydakemusic.com` once the domain is verified).
 
-### Photos (local to the repo)
+## Store (Square)
 
-Live performance photos ship in `public/photos/` as web-sized JPEGs — do not upscale, do not add borders / shadows / filters / hover effects. EPK uses `epk-*.jpg` (1200×1500 portraits) in the three-up row; About uses `about-*.jpg` (mixed 1600×1067, 1439×809, 1200×1774) inline at specific story beats. Captions sit in `#5C5C5C` 12 px sentence case under each figure — same visual language as the two existing About figures (`portrait-about.jpg`, `anthony-dake-drums.jpg`).
+One-off digital downloads, paid on Square's hosted checkout page. Card details never touch this site.
 
-### Hero reel — parked
+**Flow.** `/products` lists what is for sale. Buy is a plain HTML form (`POST /api/store/checkout`) → the route asks Square's Checkout API for a payment link (`quick_pay`: name + price) and saves a `pending` row in `store_orders` → `303` to Square → after paying, Square sends the buyer to `/products/thanks/<order id>` and posts `payment.updated` to `/api/square/webhook`. Either path can mark the order paid: the webhook (signature-checked), or the order page, which asks Square directly (`RetrieveOrder` → tender → `GetPayment`) because the redirect usually beats the webhook. Both go through one function, `settlePayment()` in `lib/store/fulfill.ts`, which is safe to run any number of times for the same payment. Once paid, the order page shows `Download →`, the buyer is emailed a receipt whose button goes back to that page, and `BOOKING_NOTIFY_EMAIL` gets a sale notice.
 
-The home hero is intentionally still after the Calm pass (a reel on top of busy text made the page feel busy). Only re-introduce behind a feature flag with clean, truly ambient footage at `opacity-20` or lower; otherwise it will fight the name block. Upload CLI still works:
+**The order page** (`app/products/thanks/[order]/route.ts`) has five states, decided by `orderPageState()` in `lib/store/orders.ts`: `ready`, `pending` (re-checks itself every 4 s with a meta refresh, `?n=` counts the tries), `stalled` (after 12 tries), `refunded`, `expired`. Its address is the buyer's key to the download, so it is never cached, never indexed, sends no referrer, and carries no analytics. If the database cannot be reached it shows the `stalled` words with a 503.
+
+**When the store is open.** `storefront()` in `lib/site/render.ts`: open only when Square's keys are set **and** something is sellable. Closed means the header shows no Products link and `/products` is a 404. The static pages bake this in at build time (an env change needs a new deployment anyway).
+
+**Files.**
+- `data/store.data.ts`: the catalog (`STORE_PRODUCTS`): `id`, `title`, `blurb`, `priceCents`, optional `downloadName`, `placeholder`. Public info only. Array order = display order.
+- `lib/store/config.ts`: env → Square config. `catalog.ts`: which products are sellable right now. `square.ts`: the three Square calls + the webhook signature check (plain `fetch`, no SDK). `orders.ts`: the `store_orders` table. `fulfill.ts`: paid transition + emails. `files.ts`: where a product's file comes from. `email.ts`: Resend. `receipt.ts`: builds the buyer's receipt email; its five images live in `public/email/` (**do not move or rename them: sent emails point at them**).
+- The fixed words round a product (Buy, the order page's lines) are in `STORE` in `site/content.mjs`.
+
+**Env vars** (Vercel; on 24 Nov 2026 only the two sandbox values are set, in Preview only):
+- `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`: without both the store is closed.
+- `SQUARE_WEBHOOK_SIGNATURE_KEY`: without it the webhook answers `503`.
+- `SQUARE_ENVIRONMENT`: `production` means real money; anything else (or unset) is sandbox. Sandbox keys belong in Vercel's Preview environment, production keys in Production.
+- `STORE_FILE_<PRODUCT_ID>`: the address of a real product's file.
+- Optional: `SQUARE_WEBHOOK_URL`, `STORE_EMAIL_FROM` (defaults to `BOOKING_NOTIFY_FROM`).
+
+**Adding a real product.** (1) Upload the file (Vercel Blob is fine: `npm run upload-media`). (2) Add an entry to `STORE_PRODUCTS`, with his words for the title and the line under it. (3) Set `STORE_FILE_<ID>` in Vercel to the file's address: product `groove-pack-1` reads `STORE_FILE_GROOVE_PACK_1`. **This repository is public: never write a file's address in code or in this document.** A product with no file configured is not listed and cannot be bought. Files are streamed through `/api/store/download`, so the address never reaches the buyer; above roughly 50 MB, move to a private Blob store with short-lived signed URLs.
+
+**Rules that are easy to break.**
+- Placeholder products (`placeholder: true`) are listed only in sandbox. `test-download` ($1) is the only product today, so **the live site shows no Products link and no Products page**. That is correct until there is a real product and live keys.
+- Every `store_orders` row carries `environment` (`sandbox` / `production`): Preview and Production share one database, and an order is only ever confirmed with keys from its own environment.
+- The webhook must keep ignoring payments it does not recognise: the same Square account also takes invoice and in-person payments.
+- Download links: 30 days, 10 downloads (`DOWNLOAD_WINDOW_DAYS`, `DOWNLOAD_LIMIT` in `orders.ts`). A refund closes the download.
+- Buyer emails only deliver once `anthonydakemusic.com` is a verified Resend domain. Until then the order page is the delivery path; email failures are logged and never block an order.
+- The receipt email is Anthony's own design (v3, 23 Nov 2026), copied tag for tag from his file. It still uses the earlier two faces (Gill Sans capitals, a serif for reading). Change the design in a new template first, then in `receipt.ts`. The chalk mark in it is a render of `ChalkMark`: never redraw it by hand.
+
+**Testing in Square's sandbox.** The sandbox never shows a card form for a payment link. Buy lands on Square's "Checkout API Sandbox Testing Panel": `Next` → `Test Payment` simulates a buyer paying (once per link). The panel does not send the browser back by itself: follow its "Customer redirected to" link, or keep the order page open, which re-checks. The simulated payment has no buyer (no email, no card), so in sandbox only the receipt goes to the store inbox (`BOOKING_NOTIFY_EMAIL`). Preview deployments sit behind Vercel login, so Square's webhook cannot reach them; on a preview the order page's own check is what marks the order paid, and the receipt's images are read from GitHub at the deployed commit (`receiptAssetBase()`). An env var change only reaches a new deployment.
+
+## Checks (run before every commit)
 
 ```bash
-npx vercel env pull .env.local           # once, to get BLOB_READ_WRITE_TOKEN
-npm run upload-media -- ./media/reel.mp4 hero/reel.mp4
+npm run build                                   # site build + Next build + TypeScript
+npx eslint .                                    # lint (the site's browser scripts are not linted)
+npm install --no-save @electric-sql/pglite playwright   # once; neither is a project dependency
+node scripts/store-selftest.mjs                 # 63 checks on the store's route handlers
+node scripts/site-check.mjs                     # a real browser through the whole site (about 650 checks, a few minutes)
 ```
 
-### To add a clip
+- `scripts/local-site.mjs [port]` is **the whole site on this machine with nothing real behind it**: the real route handlers, a stand-in for Square's checkout page, an in-memory Postgres, emails printed. Use it to walk Buy → pay → order page → Download by hand.
+- `scripts/site-check.mjs` drives Chromium through that: every page at six sizes and both grounds (nothing spills, the header clears the mark, the mark is a link home, the belt never shows a cover twice, every cover links to YouTube, Production and About each fit one screen on a laptop), the moves between pages and the browser's Back and Forward, a press and a pull on the belt, the lean on About, the booking form (and that the request is kept and emailed, and that nothing answers at the old list's addresses), the store from Buy to Download with all five order states, then again with scripts off, with reduced motion, and without WebGL. Groups: `layout moves form store plain calm nogl head`. With `SITE_URL=http://localhost:3000` it runs the groups that need no database against a running `npm run start` (build it with `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` set to anything, or the static pages have no Products link and those checks fail).
+- What only the real thing proves: Square's sandbox on a Vercel preview, email delivery, a real phone's toolbars, a real card.
 
-```bash
-npm run upload-media -- ./media/new-track.mp3 audio/new-track.mp3
-```
+After editing anything under `site/`, run `npm run site` (dev and build do it for you) and, if a picture for Anthony is wanted, `npm run site:file`.
 
-The script prints the public URL; paste a new entry into `AUDIO_CLIPS` in `app/components/AudioShowcase.tsx`:
+## Search and link previews
 
-```ts
-{ id: "new-track", title: "New track", artist: "Artist name", duration: "0:27", src: "https://…/audio/new-track.mp3" },
-```
+Each document carries its own title, description, canonical address and Open Graph card (`/og-image.jpg`, made from the home screen; `/favicon.ico`, `/favicon.png`, `/apple-touch-icon.png`, `/icon-512.png` are the chalk mark). The descriptions in `PAGES` are put together from his own phrases. Home and About carry a small JSON-LD block (Person + WebSite). `/sitemap.xml` lists home, production, about and the press kit; the store, the order page and the two form landings are `noindex`. `/llms.txt` is generated from `content.mjs`.
 
-Omit `artist` when the clip is Anthony's own (unreleased beat, instrumental). Recommended specs: MP3 ~160 kbps, 17–30s, −14 LUFS / −1 dBTP, clean fade-in/fade-out (no tail noise).
+Old addresses are redirected in `next.config.ts`, **permanently** (308) since 24 Nov 2026, when Anthony decided the earlier pages are gone for good: `/store` → `/products`, `/epk` → `/press-kit`, `/placements`, `/projects`, `/demoreel` → `/production`, `/performance`, `/practice` → `/`. The two old downloads (`/Anthony_Dake_One-Sheet.pdf`, `/Anthony_Dake_Resume.pdf`) go to the press kit with a temporary (307) redirect, in case a new one-sheet ever takes the name.
 
-### To add a testimonial
+Vercel Web Analytics is loaded as a plain script (`/_vercel/insights/script.js`) on a deployment, never locally and never on the order page.
 
-Drop a cleaned bubble PNG into `public/reviews/` (transparent background, 1× capture — never upscale past its pixel width), then add an entry to `data/testimonials.data.ts` under exactly one of the four exports: `HERO_TESTIMONIALS` (home hero 2×2 — currently full; replacing one changes the hero), `OFFER_TESTIMONIALS.drummer` / `.producer` (one bubble per offer card — swap only, don't add), `HOME_TESTIMONIALS` (the "What people say" row on home — order in the array is display order), or `testimonials` (About — order in the array is display order; `<Testimonials />` renders the whole list). Every entry needs the image path, native `width`/`height`, the full quote text verbatim in `alt`, and a short attribution in `caption`. **Never duplicate a bubble across exports** — the no-overlap contract is only enforced by this file.
+## The earlier site
 
-## Critical Gotchas
+Anthony's decision (24 Nov 2026): the earlier pages are removed from the site so they do not exist, and their pictures and downloads are saved for reference.
 
-### 1. HOME PAGE HAS ITS OWN INLINE HEADER
-`app/page.client.tsx` renders its own header (hamburger, nav, HomeMark pill, Book CTA) — it does NOT use `SiteHeader.tsx`. This is because the home page couples navigation/scroll behavior to the header. When changing header markup (nav items, Book CTA styling, skip-to-content, mobile overlay), update BOTH files:
-- `app/components/SiteHeader.tsx` (all subpages + 404)
-- `app/page.client.tsx` (home page)
+- **`archive/earlier-site/`** holds everything the old pages served from `public/` (cover art, live photos, review screenshots, portraits, the two PDFs, the old serif mark), under the same names. Nothing there is served, built or linked. `archive/README.md` says what is what. **Do not delete it without asking.**
+- **The old pages themselves** (code, words, data) are in the repository's history; the tag `earlier-site` marks the last commit that had them.
+- `public/` now holds only what the new site uses: `email/` (the receipt's images: never move or rename), the favicons, `og-image.jpg`, and `site/` (made by the build).
+- The bookings list and its password login (`/admin/bookings`, `/api/bookings/*`) are gone, from this branch and from `main`.
 
-### 2. GRADIENT TEXT IS OPT-IN (`.grad` only)
-The Calm pass removed the global gradient-text machinery. `body { color: #F2F2F2; background: #000 }`; there is no `-webkit-text-fill-color: transparent` on anywhere but one utility class. The gradient is a single opt-in: `.grad` in `globals.css`. Apply it to the hero name on `/` and the page title on each subpage — **one instance per page, never more**. Every other text element paints its own color (default `#F2F2F2`, meta `#9A9A9A`, tertiary/caption `#5C5C5C`). Links: `#F2F2F2` with `#9A9A9A` on hover (or the reverse for meta text).
+## Still open, now that it is live
 
-### 3. JSX `.map()` PATTERN
-Don't use a ternary inside a parenthesized arrow return inside `.map()`. Use the if/return pattern:
-```jsx
-items.map((p) => {
-  const Row = (<>…</>);
-  if (p.url) return <a key={p.id}>{Row}</a>;
-  return <div key={p.id}>{Row}</div>;
-})
-```
+1. From him or the artists: cover files for Sparkles and Forever (empty frames until then) and Get Down at full size; the press kit bio (it shows ruled blanks; the bio he sent was for About).
+2. To sell for real (the live site shows no Products link and no Products page until all of this is done): a real product and its file; production `SQUARE_ACCESS_TOKEN` + `SQUARE_LOCATION_ID` with `SQUARE_ENVIRONMENT=production` in Vercel's Production environment (his to enter); a webhook subscription to `payment.updated` and `refund.updated` at `https://www.anthonydakemusic.com/api/square/webhook` and its key in `SQUARE_WEBHOOK_SIGNATURE_KEY`; the Resend domain verified (DKIM TXT + `rsend`/`send` CNAMEs at Cloudflare) and `BOOKING_NOTIFY_FROM` switched; a sales-tax decision (quick-pay links charge the listed price with no tax line); the site off Vercel's free plan (commercial use). Then buy the cheapest product with a real card and refund it.
+3. Vercel housekeeping he listed: two-factor sign-in, rotating the Neon database secrets together, reconnecting the Vercel connector.
+4. Not proven yet: a real phone (the form with the keyboard up, About with Safari's toolbars), Download on a preview order, a real card with the webhook and a refund, a receipt to a buyer's own address, link previews, the receipt email's typefaces.
 
-### 4. TYPESCRIPT TIMERS
-`window.setInterval` returns `number`, but `ReturnType<typeof setInterval>` resolves to `NodeJS.Timeout`. Type timer IDs explicitly: `let intervalId: number | null = null`.
+## Local environment (Anthony's Mac)
 
-### 5. VIEWPORT + SAFE AREAS
-`app/layout.tsx` ships `viewport-fit=cover` so `env(safe-area-inset-*)` is available on iOS. Safe-area padding is applied inline per-component (practice page modal, main-content wrappers) — there is no global rule for it.
+- **Active clone**: `~/anthonydakemusic-v3`. Always work there.
+- **Do not use**: `~/Documents/GitHub/anthonydakemusic-v3` (stale GitHub Desktop clone with a divergent history) or `~/anthonydakemusic` (the old v1 project, linked to the wrong Vercel project).
+- Node, npm and `claude` come from **fnm**; they are on PATH in a normal Terminal login shell. Non-login contexts (`osascript do shell script`, cron) need `export PATH=$PATH:/opt/homebrew/bin` and will not see fnm shims.
+- A second Vercel project, `anthonydakemusic-v3-mxrl`, also builds every push to this repo. It is a leftover; ask before removing it.
 
-### 6. BOOKING MODAL STATE IS DUPLICATED (shared via `open-booking` event, with optional `eventType` preset)
-Both `SiteHeader.tsx` and `app/page.client.tsx` keep their own `bookingOpen` + `bookingPreset` state and render their own `<BookingModal initialEventType={bookingPreset} />`. Only one header is ever mounted at a time, so there is no conflict. Entry points:
-- The Book → button inside the header itself (both desktop nav and the mobile pill) — clears the preset.
-- A site-wide `window` `CustomEvent('open-booking', { detail: { eventType } })`. Both headers listen for it on mount, write `detail?.eventType` into `bookingPreset`, and open the modal; `BookingModal` preselects the `eventType` when it is one of `EVENT_TYPES`. Any component can call `openBooking(eventType?)` from `lib/booking.ts` — the home hero pills, the home closing-ask pills, and the home offer cards all use the preset form (`"Live show / tour date"` or `"Production / drum programming"`); the About closing row calls it with no argument.
+## History, briefly
 
-`HomeClient` used to take an `onOpenBooking` callback for its untyped hero / closing-ask pills — that prop was removed when both surfaces got labelled two-pill pairs that dispatch the event directly. There is no prop-callback path into the booking modal any more; everything flows through `openBooking()`.
-
-There is no shared React context — the event (with its `detail`) is the shared channel.
-
-### 7. ASSET-GATED FEATURES — EMPTY IS CORRECT
-Two features render **nothing** in production when their data is empty:
-- `AUDIO_CLIPS` (`AudioShowcase.tsx`, now mounted on `/epk`) — empty → component returns `null`.
-- `testimonials` (`data/testimonials.data.ts`) — empty → `<Testimonials />` returns `null`.
-
-The home hero intentionally no longer carries a video reel (Calm pass parked it — if it comes back, gate it behind a feature flag, use clean footage, and run it at `opacity-20` or lower). `HERO_VIDEO_URL` is a dead constant; leave it `null`.
-
-**Current state:** `AUDIO_CLIPS` holds five finished clips (−14 LUFS, −1 dBTP, MP3 160 kbps, faded) on Vercel Blob under `audio/`: `back-and-forth` (Madelyn Leona), `cycles` (BittyOTW), `mr-nice-guy` (unreleased demo), `the-thought-of-you`, and `untitled-beat`. The `/epk` Listen section carries a single caption under the heading — "Drums and production on every track." — so individual rows don't need per-track role labels. Twelve real-text bubbles live in `/public/reviews/` as transparent PNGs, split across four exports in `data/testimonials.data.ts` with **zero overlap**:
-- `HERO_TESTIMONIALS` (4 — home hero 2×2): `review-3.png` (512×172), `review-2.png` (528×205), `review-7.png` (502×364), `review-8.png` (444×76).
-- `OFFER_TESTIMONIALS.drummer` + `.producer` (2 — inside the two offer cards): `review-10.png` (506×359) + `review-11.png` (475×167).
-- `HOME_TESTIMONIALS` (3 — "What people say" row on home): `review-4.png` (503×300), `review-9.png` (496×199), `review-13.png` (506×103).
-- `testimonials` (3 — About): `review-12.png` (506×327), `review-1.png` (484×236), `review-5.png` (512×140).
-
-All twelve bubbles are sent with permission. Do not invent new placeholder content, do not reorder across exports, and do not "clean up" by emptying any export unless Anthony asks.
-
-### 8. CLOSED SECTION-ID UNION
-`HomeClient`'s `initialSection` uses the type `"hero" | "services" | "proof"`. Adding a new section means updating the type and the refs in one pass.
-
-### 9. HOME HERO BLEEDS UNDER THE HEADER (`-mt-14` + `.hero-fade`)
-The home hero section is `-mt-14` on mobile so the ComFest photo starts at y = 0 behind the translucent fixed header. That value is paired to the header height (`h-14`) and to the `#main-content pt-14` wrapper in `app/page.client.tsx` — if the header height changes, update all three. On mobile a `.hero-fade` div is pinned to the bottom 45 % of the photo (`globals.css`, `linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 45%, #000 100%)`) and the text block that follows uses `relative -mt-28` to sit over that fade, so copy reads cleanly on top of the image. Both the negative margin and the fade are `md:hidden`/reset on desktop, where the hero is a two-column grid with no overlap. If a face-crop issue appears, nudge `object-[center_20%]` toward `center_28%`.
-
-## Video Infrastructure
-
-- Vercel Blob public store, connected to the `anthonydakemusic-v3` Vercel project.
-- Token: `BLOB_READ_WRITE_TOKEN` (Vercel env; pull locally with `npx vercel env pull .env.local`).
-- Path conventions:
-  - `practice/<YYYY-MM-DD>/<name>` — practice clips (currently raw `.mov`, ~900 MB total across 9 clips).
-  - `hero/<name>.mp4` — home-page background reel.
-  - `audio/<name>.mp3` — `AudioShowcase` clips.
-- Upload CLI: `npm run upload-media -- <local-file> <blob-path>` (see `scripts/upload-media.mjs`). Prints the public URL + the exact line to paste.
-- Transcoding/compression is a future optimization; raw files are acceptable today.
-
-## Mobile Design / Header
-
-Header height: `h-14` (56px), `fixed inset-x-0 top-0 z-[9999]`, `bg-black/70 backdrop-blur`.
-
-Layout: `grid grid-cols-[1fr_auto_1fr]`. On `md+`: left half has Placements / Performance, center has the HomeMark pill, right half has About + a `Book →` button (Practice was dropped from the nav in Batch 2). On `<md`: left cell holds a hamburger button; the right cell holds a compact `Book →` pill (same style, `text-[10px] px-3 py-1.5`, `min-h-11` for tap target) so booking is one tap away without opening the hamburger. The desktop nav is hidden. Hamburger opens a fullscreen overlay (`fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm md:hidden`) with three links (Placements, Performance, About) + Book button, each with `onClick={() => setMenuOpen(false)}`.
-
-**Home page scroll (all devices):** normal document flow. No snap, no wheel-hijack, no `no-scroll`, no `overflow-y-hidden`. Calm pass removed the leftover `.no-scroll` CSS too.
-
-Per-page top padding (verified from the code):
-- `/` (home) — `pt-14` on the `#main-content` wrapper (header is translucent, hero bleeds behind).
-- `/about` — `pt-24` (96 px).
-- `/epk` — `pt-20 sm:pt-24`.
-- `/placements`, `/performance` — read from their `page.client.tsx`.
-- `/practice` — read from its `page.client.tsx`.
-
-## SEO / AI discoverability
-
-- `app/layout.tsx` sets `metadataBase`, default OG + Twitter cards, and a `JsonLd` block at the root with `@graph` containing Person (`jobTitle: "Drummer and producer"`), Organization, WebSite. Default title: `Anthony Dake — Drummer & Producer · Columbus, OH`. Default description: `Drummer and producer in Columbus, OH. Live shows, tours and fly dates, remote and in-room session drums, drum programming and production. Book direct.` Each subpage re-declares its own OG/Twitter metadata.
-- `app/page.tsx` sets the home-specific title/description (same copy as the layout defaults but as an absolute title) and OG/Twitter images.
-- `public/llms.txt` + `public/llms-full.txt` — LLM-focused site summary + full bio snapshot. Updated to the drummer + producer positioning and link to the one-sheet PDF.
-- `public/og-image.jpg` — 1200×630 social card, now carries the portrait. OG/Twitter `alt`: `Anthony Dake — drummer and producer, Columbus, OH`.
-- Favicons + touch icons: `/favicon.ico`, `/favicon-32.png`, `/favicon.png` (192), `/apple-touch-icon.png` (180), `/icon-512.png` — all generated from the AD monogram with heavier 500-weight glyphs on black for small-size legibility.
-- `app/sitemap.ts` emits every static route; `app/robots.ts` emits `/robots.txt` with the sitemap URL.
-- Placements and performance rows render inline `MusicRecording` / `MusicEvent` JSON-LD (`1cb39d6`).
-
-## Practice Page Vision
-
-The `/practice` page is an "open practice room" — a daily log of real sessions, not a lesson platform:
-- No categories, no filter bar — pure chronological timeline with search.
-- Every exercise works timing, alignment, coordination, and sound together; categories are artificial.
-- Free layer today: the daily log. The streak IS the content.
-- Paid layer later: video access + downloadable materials via NextAuth.js + Stripe.
-- Self-hosted video via Vercel Blob (no YouTube embeds).
-- Current log: through Session #7 on 2026-05-18.
-
-## Design System ("Calm" — current)
-
-One idea per screen. One primary CTA style. One gradient per page. Solid text, no decoration, no motion for its own sake.
-
-**Color.** `#F2F2F2` primary, `#9A9A9A` meta, `#5C5C5C` tertiary / captions, `rgba(255,255,255,0.08)` hairlines. Black background. Links: `#F2F2F2` with `#9A9A9A` on hover (reverse for meta text). The blue→white gradient (`#3B82F6 → #8EC5FF → #FFFFFF`) is opt-in via `.grad` — exactly one instance per page (hero name on `/`, page title elsewhere).
-
-**Type.** One family site-wide: Gill Sans with Cabin fallback. The CSS stack is `"Gill Sans Nova", "Gill Sans", "Gill Sans MT", var(--font-cabin), ui-sans-serif, system-ui, sans-serif` — macOS/iOS visitors get Gill Sans, Windows 10+ gets Gill Sans Nova, everyone else gets **Cabin** (loaded via `next/font/google` in `app/layout.tsx`, exposed as `--font-cabin`; same Johnston/Gill skeleton, OFL). The stack is wired into both `--font-sans` on `:root` and the Tailwind v4 `@theme` block in `app/globals.css`, so `body { font-family: var(--font-sans) }` and `font-sans` utilities resolve to the same list. Display sizes (hero name + page titles) use `.font-display` — `font-family: var(--font-sans); font-weight: 300; letter-spacing: -0.015em` — which picks up Gill Sans Light where the visitor has it and Cabin 400 otherwise. One `.font-display` per page, always paired with `.grad`. Body text stays at two sizes: 15–16 px `leading-[1.6]`/`[1.75]`, 12 px meta. Uppercase is reserved for three surfaces: the header nav, the year-group micro-labels on the index pages (`text-[11px] tracking-[0.18em] text-[#5C5C5C]`), and the home hero's **`Architect of Sound` moniker** (`text-[12px] sm:text-[13px] uppercase tracking-[0.32em] text-[#9A9A9A]`, source sentence case, CSS uppercase) — the moniker is a deliberate allowed uppercase surface because it names the brand directly under the h1. Sentence case everywhere else. Gill Sans Light is thinner than Fraunces 300 was, so page-title sizes were bumped ~10 % (`text-[44px] sm:text-[58px]` on subpage titles, `text-[36px] sm:text-[48px]` on About, `text-[46px] sm:text-[60px] md:text-[64px] short:text-[54px]` on the hero name) and tracking standardized at `-0.015em`.
-
-**Buttons.** One primary: `.epk-cta` — white pill, black text, no shadow, no glow, no hover-lift, hover-only `background-color: #E6E6E6`. One secondary: a plain text link with ` →`. No bordered pills, no outlined buttons — except the header `Book →` pill, which keeps its thin border (the single exception). **Pairing rule:** two labelled `.epk-cta` pills side by side (`flex-col` on mobile, `sm:flex-row` with `gap-3`, each at `min-w-[220px]`) are allowed on exactly two surfaces — the home hero and the home closing ask — to make the two offers impossible to miss (`Book production →` / `Book drums →`, in that order to mirror the `Producer / Drummer` role label). Elsewhere, stay on one primary pill.
-
-**Viewport height variants.** Two custom Tailwind variants in `app/globals.css` tighten the home hero so the first screen stays whole on short laptop displays — `short` for 13"-class laptops and `tiny` for ~700 px-tall viewports. Both gate on `min-width: 48rem` so mobile is untouched.
-```css
-@custom-variant short (@media (min-width: 48rem) and (max-height: 860px));
-@custom-variant tiny (@media (min-width: 48rem) and (max-height: 760px));
-```
-Declaration order matters: `tiny` must come after `short` so its utilities sort later and win where both apply. Current `tiny:` classes (four total): `tiny:py-2` on the hero grid wrapper (`HomeClient.tsx`), `tiny:text-[48px]` on the `Anthony Dake` h1 (`LogoArchitectOfSound.tsx`), `tiny:mt-4 tiny:max-w-[420px]` on the `HeroTexts` `<ul>`. Adding a third tier? Keep the file in increasing-specificity order (loosest `max-height` first).
-
-**Motion.** No scramble, no curtain, no `-translate-y` hover lifts, no shadow pulses. No page fade, no section fade-ins — every page is fully visible in the server HTML on first paint, because content must never be gated on JS (phones held pages invisible for seconds). Only motion left is link/color hover transitions **and the one explicit exception**: the pulsing `(scroll)` hint pinned to the bottom edge of the first viewport on the home hero, desktop only (`.animate-scrollFlash`, keyframes in `globals.css`; the label is `#F2F2F2` 12 px uppercase, flashes between `opacity:.2` and `opacity:1` on a 2.4 s loop). All animations respect `prefers-reduced-motion`.
-
-**Decoration.** Removed: eyebrows (`(02) — services`, `(IDX·01)`, `(BIO·01)`, `(LOG·01)`, `(EPK·01)`), corner labels (`INDEX OF 9`, `RECENT HIGHLIGHTS`, `ELECTRONIC PRESS KIT`), sub-captions under CTAs (`PDF · credits, reel, contact`), and card borders around content. Sections get at most one short heading in sentence case (`What I do`, `Proof`, `Listen`, `Contact`). Separate groups with whitespace (`py-16 sm:py-24`) and a single hairline `border-t` where needed.
-
-**Density.** Reading column `max-w-[640px]` centered. Index pages `max-w-[960px]`. One group per screen at 375 px.
-
-## Commit History (most recent first)
-
-- `702f7ab` — Credits: add Columbus Children's Choir to the stage list
-- `87a7128` — Chore: ignore .next at any depth
-- `6c0f2db` — Chore: remove stray public/reviews/.next/ trace files accidentally committed in 5e6381e
-- `5e6381e` — Texts: five more client texts — under the offer cards, a What people say row on home, and About
-- `d79caf4` — Hero: drop the description and invitation line
-- `16abc79` — Hero: tiny variant keeps the first screen whole on ~700px-tall laptops
-- `07fe162` — Hero: Architect of Sound + Producer / Drummer, stronger description, labelled Book buttons; counts move to offer cards
-- `099b3d4` — Calm 4/5: EPK, About, Practice, 404, modal, headers
-- `5d2615f` — Calm 3/5: index pages — two columns, no labels, no stagger
-- `115840f` — Calm 2/5: home — still hero, one button, services as a list, proof line, footer line
-- `306444a` — Calm 1/5: solid text, opt-in gradient, no glow/scramble/curtain
-- `1fa7fc5` — Brand: revised AD mark — text serif, solid fill
-- `60e6c9d` — Brand: AD monogram replaces the drum emoji — header mark, favicons, apple-touch-icon, branded OG card
-- `f00e069` — Fix: hero visible by default; fail-open section reveals
-- `3deabdb` — Fix: section fade-in threshold + CTA label shadow
-- `aea40b8` — EPK: one-sheet label + contact line; admin: bookings inbox replaces email list
-- `b2bdd08` — Services: add Music Direction card
-- `078dcfa` — Nav: drop Practice from main navigation; remove RSS; About keeps the only link
-- `81198c0` — Hero: lead with the reel — portrait moved to About
-- `2dd4b06` — Home: natural scrolling on all devices — remove wheel-snap and swipe navigation
-- `ed60f94` — Docs: batch 1 design fixes — mobile scroll, hero shade, open-booking event, stats data
-- `72b7ae4` — Copy: reconcile proof numbers with index pages; Book CTA in section 03; About closing row; practice label
-- `77e5a90` — Fix: practice dates invisible (time tag), submit label box, headline balance
-- `c89ae3c` — Hero: working shade layer + vignette; reel dimmed to 25–30%
-- `ba4af88` — Mobile: home page scrolls natively on touch; Book pill in mobile header; scroll hint fixes
-- `4fc6337` — Tooling: scripts/upload-media.mjs for Vercel Blob uploads
-- `e3e3aa0` — About: Testimonials component (renders only when real quotes are added)
-- `20a216a` — Hero: asset-gated background reel + AudioShowcase (inactive until media is uploaded)
-- `b0edf04` — A11y+SEO: restore skip-to-content, fix hero alt text
-- `f844701` — Booking: notify on submit, origin check, honeypot, date min
-- `72ab81b` — SEO+UX: sr-only prose intros, cross-link footers, 404 nav
-- `72ce827` — SEO+AI: llms.txt, MusicRecording/MusicEvent schema, RSS, real metadata
-- `12821b8` — Revert "Home hero: staggered fly-in intro with kick shakes on landing"
-- `7693b23` — Home hero: staggered fly-in intro with kick shakes on landing
-- `c802467` — Home hero: lift content back up — pt-14 pushed it too low
-- `5a38cd3` — Home hero: balance vertical rhythm, clear the header
-- `8796a6c` — Placements: add Madelyn Leona "Back & Forth" + 'recent highlights' subheader
-- `a22b296` — Performance: add 'recent highlights' subheader under page title
-- `9828d66` — Home hero: tone down text sizes
-- `166349d` — Home hero: scrambled proof strip
-- `877b7a5` — Home hero: scale up on lg/xl to use desktop viewport
-- `38053e7` — Performance: trim 4 off-brand entries
-- `c64055f` — EPK: mobile polish
-- `f8f8040` — Header overhaul: symmetric nav, drop Columbus time + skip-to-content
-- `2d039d2` — Performance: pull list to viewport edges
-- `662f006` — Placements: curate to top 8
-- `2bbee9f` — Placements: pull list to viewport edges
-- `08c3b27` — EPK polish + remove site-wide footer
-- `1bb336a` — Add practice sessions #4-7
-- `1cb39d6` — Tag-run schema + render on placements / performance rows
-- `9e40549` — Add Fraunces serif on 3 signature headlines
-- `8146e75` — Numbered editorial eyebrows on subpage tops
-- `1b274b0` — Microcopy pass + link-hover polish
-- `7d0eb79` — Image discipline: OG resized, portrait → next/image
-- `5c0259c` — Fix: BookingModal text was invisible due to gradient text-fill cascade
-- `c50c2a9` — .gitignore: exclude .env*.local
-- `02f2a68` — Home: cut services to 2 cards, restore Work With Me, add placements strip
-- `08e648d` — Home: replace EPK section with Services breakdown
-- `b4a86fd` — Add booking inquiry form with /api/book integration + Book CTA in headers
-- `79caea5` — Cleanup: remove dead components (CustomCursor, FloatingCards, LenisProvider, ArchiveModal, ScribbleLink, ScrambleText, re-export stubs)
-- `a25e9fb` — Add CLAUDE.md with project context for Claude Code
-- `245ab18` — Fix SiteHeader bullet character (literal → actual •)
-
-## Future Work
-
-- Finish the Cloudflare DNS for Resend (DKIM TXT + `rsend`/`send` CNAMEs) so `anthonydakemusic.com` becomes a verified sender; then flip `BOOKING_NOTIFY_FROM` from `onboarding@resend.dev` to `noreply@anthonydakemusic.com`.
-- Brand assets (AD monogram + favicons + OG card) are shipped. Source files live in `public/` and in `~/Claude-Workspace/4-architect/brand/` for the generation scripts.
-- Practice page: paid access layer (Square — see Working Preferences).
-- Practice page: CMS/admin panel for adding entries without a code push.
-- Practice page: transcode the raw `.mov` clips → H.264 MP4 + VP9 WebM.
-
-## Local Environment (Anthony's Mac)
-
-- **Active clone**: `~/anthonydakemusic-v3` — the one Claude Code runs in (has `.claude/settings.local.json` with pre-approved `git add/commit/push`, `npx next *`, `node *`, `npm install *`). Always work here.
-- **Do NOT use**: `~/Documents/GitHub/anthonydakemusic-v3` (stale GitHub Desktop clone with a divergent history) or `~/anthonydakemusic` (old v1 project, linked to the wrong Vercel project). An empty `anthonydakemusic-v3/` folder also sits in `~/Claude-Workspace/4-architect/` — ignore it.
-- Node/npm/`claude` come from **fnm**; they are on PATH in a normal Terminal login shell. Non-login contexts (`osascript do shell script`, cron) need `export PATH=$PATH:/opt/homebrew/bin` and will not see fnm shims.
-- A copy of this file is kept in sync at `~/Claude-Workspace/4-architect/CLAUDE.md` for Cowork sessions. Edit the repo copy, then `cp` it over.
-
-## Working Preferences
-
-**Payments: do NOT use Stripe or PayPal** (Anthony's standing decision, 2026-11-03). That also rules out platforms that run on their rails (Lemon Squeezy, Gumroad, Shopify Payments, Polar, Payhip, Ko-fi). The planned processor for digital downloads and the practice-room membership is Square (Checkout API + Subscriptions API + webhooks → Neon → Resend delivery).
-
-Anthony prefers automated, zero-manual-step workflows. Build and push directly — don't ask him to run commands. When making changes, always run `npx next build` to verify before committing. The site should look polished and professional on mobile (iPhone, 375 px viewport) and desktop.
+- Before Nov 2026: the drummer-and-producer site ("Calm" design, Gill Sans). It was `main` and live until 24 Nov 2026; the tag `earlier-site` keeps it.
+- 23 Nov 2026: the Square store built and proven in sandbox on branch `square-store`.
+- Nov 2026: the new design made as a one-file prototype over some fifty rounds with Anthony (the drawing from his drum part, the flight, the belt, the booking form, About).
+- 24 Nov 2026: the prototype became the site (`new-site`): one source tree for the prototype and the real pages, desktop and tablet layouts, Products and the order page in the new design, the booking form wired to `/api/book`, the browser checks.
+- 24 Nov 2026, later: the bookings list and its login removed from `main` (commit `5510c8f`, live) because the login check did not protect the list, and from `new-site`. On `new-site`, from Anthony's notes on the first preview: his bio on About, the texts further out and leaning against the mouse, Production on one laptop screen, covers as links to YouTube with a plain cursor, Sparkles and Forever added, the mark as the home button, the earlier pages' files moved to `archive/`, old addresses redirected for good.
+- 24 Nov 2026, evening: **live.** Anthony: "looks great. push it and go live." `new-site` was merged into `main` as one merge commit whose files are exactly the branch's.

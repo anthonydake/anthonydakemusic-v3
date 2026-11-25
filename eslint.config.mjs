@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The site's own browser scripts are plain ES5-style files, packed by
+    // site/build.mjs and checked by the browser tests, not by this linter.
+    "site/js/**",
+    "public/site/**",
   ]),
 ]);
 
