@@ -1,6 +1,6 @@
 # CLAUDE.md — anthonydakemusic-v3
 
-Read this before touching anything. It describes the site as it stands on the branch `new-site`.
+Read this before touching anything. It describes the site as it stands on `main`, which is what is live.
 
 ## What this is
 
@@ -8,11 +8,11 @@ The website of Anthony Dake, music producer in Columbus, OH. Brand line: **Archi
 
 - **Live site**: https://www.anthonydakemusic.com (Vercel project `anthonydakemusic-v3`, auto-deploys `main`)
 - **Repo**: https://github.com/anthonydake/anthonydakemusic-v3 (public: never put a secret or a private file's address in it)
-- **State on 24 Nov 2026**: `main` still holds the earlier drummer-and-producer design and is what is live (less its bookings list and login, removed that day: see History). The new site described here is on `new-site` and has only been on a private Vercel preview. **Nothing here is live until Anthony says so.**
+- **State**: this site went live on 24 Nov 2026, at Anthony's word ("push it and go live"), replacing the earlier drummer-and-producer design. The branch `new-site` is where it was built and holds the same code as `main` at that moment; the tag `earlier-site` is the last commit of the old site.
 
 ## Rules that come with the work (Anthony's)
 
-1. **Never push to `main` without his go-ahead.** Work on a branch; a Vercel preview is the place to show it.
+1. **Never push to `main` without his go-ahead.** `main` is the live site. Work on a branch; a Vercel preview is the place to show it, and he says when it goes live.
 2. **The site's words are his.** Do not write lines for him. A gap stays a marked blank until he fills it (see the press kit). Do not "improve" copy.
 3. **A client text is the client's real words**, never reworded, never shown twice on the site.
 4. **Titles and artists are spelled the way each release spells them** (`AR!YAH`, `BittyOTW`, `AURA`).
@@ -171,11 +171,12 @@ Anthony's decision (24 Nov 2026): the earlier pages are removed from the site so
 - `public/` now holds only what the new site uses: `email/` (the receipt's images: never move or rename), the favicons, `og-image.jpg`, and `site/` (made by the build).
 - The bookings list and its password login (`/admin/bookings`, `/api/bookings/*`) are gone, from this branch and from `main`.
 
-## Before the new site goes live
+## Still open, now that it is live
 
-1. Anthony's go-ahead, then merge `new-site` into `main`, and tag the last old commit `earlier-site`.
-2. From him or the artists: cover files for Sparkles and Forever (empty frames until then) and Get Down at full size; the press kit bio (it still shows ruled blanks; the bio he sent was for About).
-3. To sell for real: a real product and its file; production `SQUARE_ACCESS_TOKEN` + `SQUARE_LOCATION_ID` with `SQUARE_ENVIRONMENT=production` in Vercel's Production environment (his to enter); a webhook subscription to `payment.updated` and `refund.updated` at `https://www.anthonydakemusic.com/api/square/webhook` and its key in `SQUARE_WEBHOOK_SIGNATURE_KEY`; the Resend domain verified (DKIM TXT + `rsend`/`send` CNAMEs at Cloudflare) and `BOOKING_NOTIFY_FROM` switched; a sales-tax decision (quick-pay links charge the listed price with no tax line); the site off Vercel's free plan (commercial use). Then buy the cheapest product with a real card and refund it.
+1. From him or the artists: cover files for Sparkles and Forever (empty frames until then) and Get Down at full size; the press kit bio (it shows ruled blanks; the bio he sent was for About).
+2. To sell for real (the live site shows no Products link and no Products page until all of this is done): a real product and its file; production `SQUARE_ACCESS_TOKEN` + `SQUARE_LOCATION_ID` with `SQUARE_ENVIRONMENT=production` in Vercel's Production environment (his to enter); a webhook subscription to `payment.updated` and `refund.updated` at `https://www.anthonydakemusic.com/api/square/webhook` and its key in `SQUARE_WEBHOOK_SIGNATURE_KEY`; the Resend domain verified (DKIM TXT + `rsend`/`send` CNAMEs at Cloudflare) and `BOOKING_NOTIFY_FROM` switched; a sales-tax decision (quick-pay links charge the listed price with no tax line); the site off Vercel's free plan (commercial use). Then buy the cheapest product with a real card and refund it.
+3. Vercel housekeeping he listed: two-factor sign-in, rotating the Neon database secrets together, reconnecting the Vercel connector.
+4. Not proven yet: a real phone (the form with the keyboard up, About with Safari's toolbars), Download on a preview order, a real card with the webhook and a refund, a receipt to a buyer's own address, link previews, the receipt email's typefaces.
 
 ## Local environment (Anthony's Mac)
 
@@ -186,8 +187,9 @@ Anthony's decision (24 Nov 2026): the earlier pages are removed from the site so
 
 ## History, briefly
 
-- Before Nov 2026: the drummer-and-producer site ("Calm" design, Gill Sans). That is `main`, and it is what is live.
+- Before Nov 2026: the drummer-and-producer site ("Calm" design, Gill Sans). It was `main` and live until 24 Nov 2026; the tag `earlier-site` keeps it.
 - 23 Nov 2026: the Square store built and proven in sandbox on branch `square-store`.
 - Nov 2026: the new design made as a one-file prototype over some fifty rounds with Anthony (the drawing from his drum part, the flight, the belt, the booking form, About).
 - 24 Nov 2026: the prototype became the site (`new-site`): one source tree for the prototype and the real pages, desktop and tablet layouts, Products and the order page in the new design, the booking form wired to `/api/book`, the browser checks.
 - 24 Nov 2026, later: the bookings list and its login removed from `main` (commit `5510c8f`, live) because the login check did not protect the list, and from `new-site`. On `new-site`, from Anthony's notes on the first preview: his bio on About, the texts further out and leaning against the mouse, Production on one laptop screen, covers as links to YouTube with a plain cursor, Sparkles and Forever added, the mark as the home button, the earlier pages' files moved to `archive/`, old addresses redirected for good.
+- 24 Nov 2026, evening: **live.** Anthony: "looks great. push it and go live." `new-site` was merged into `main` as one merge commit whose files are exactly the branch's.
