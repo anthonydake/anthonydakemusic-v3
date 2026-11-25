@@ -64,7 +64,7 @@
      (--fx and --fy, each from 5 to -5 across the window), eased to over a second and a half, and the stylesheet moves each photograph by those numbers times a share of its own
      (0.8, 1.5, 1, 1 …): whichever way the mouse goes they go the other way, so the one you are moving toward comes to meet you. The same here: the script (site/js/pages.js) sets --fx and --fy
      on the wall and each text's share (--k, px for each step of the number, since a text is too small for a share of its own size to show). No mouse, no lean. */
-  .abt-wall .msg{transform:translate3d(calc(var(--fx,0) * var(--k,4) * 1px),calc(var(--fy,0) * var(--k,4) * 1px),0)}
+  .abt-wall .msg{transform:translate3d(clamp(var(--lo,-99px),calc(var(--fx,0) * var(--k,4) * 1px),var(--hi,99px)),calc(var(--fy,0) * var(--k,4) * 1px),0)}       /* --lo and --hi: how far a text may be carried sideways before it would leave the photograph */
 
   /* PRESS KIT, PRODUCTS, YOUR ORDER, NOT FOUND
      A page of a few lines stands in the middle of a wide screen (a little above it, where the eye rests), not up under the header with the screen empty below.

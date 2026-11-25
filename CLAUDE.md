@@ -145,7 +145,7 @@ npm run build                                   # site build + Next build + Type
 npx eslint .                                    # lint (the site's browser scripts are not linted)
 npm install --no-save @electric-sql/pglite playwright   # once; neither is a project dependency
 node scripts/store-selftest.mjs                 # 63 checks on the store's route handlers
-node scripts/site-check.mjs                     # a real browser through the whole site (about 640 checks, a few minutes)
+node scripts/site-check.mjs                     # a real browser through the whole site (about 650 checks, a few minutes)
 ```
 
 - `scripts/local-site.mjs [port]` is **the whole site on this machine with nothing real behind it**: the real route handlers, a stand-in for Square's checkout page, an in-memory Postgres, emails printed. Use it to walk Buy → pay → order page → Download by hand.

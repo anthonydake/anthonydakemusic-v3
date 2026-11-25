@@ -141,17 +141,18 @@ async function layoutAt(size, scheme) {
     const d = document.querySelector("#dest"), pic = document.querySelector(".abt-pic img").getBoundingClientRect(), W = innerWidth;
     const texts = [...document.querySelectorAll(".abt-wall .msg:not(.out)")].map((f) => { const b = f.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom }; });
     let clash = 0; for (let i = 0; i < texts.length; i++) for (let j = i + 1; j < texts.length; j++) { const a = texts[i], b = texts[j]; if (a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b) clash++; }
-    const hold = texts.filter((t) => t.l < pic.right && t.r > pic.left).length;
+    const hold = texts.filter((t) => t.l < pic.right && t.r > pic.left).length, over = texts.map((t) => +(Math.min(t.r, pic.right) - Math.max(t.l, pic.left)).toFixed(1));
     const bio = document.querySelector(".abt-bio"), bb = bio.getBoundingClientRect(), wall = document.querySelector(".abt-wall").getBoundingClientRect(), paras = [...bio.querySelectorAll("p")].map((p) => p.textContent);
     const out = { scroll: d.scrollHeight - d.clientHeight, shown: texts.length, clash, hold, inside: texts.every((t) => t.l >= 0 && t.r <= W), pic: { w: pic.width, h: pic.height, t: pic.top, b: pic.bottom }, img: document.querySelector(".abt-pic img").naturalWidth,
       credit: document.querySelector(".abt-c").getBoundingClientRect().bottom, H: innerHeight, W, back: document.querySelector("#dest a.back").getBoundingClientRect().bottom, visible: Math.min(innerHeight, d.getBoundingClientRect().bottom),
-      beside: window.__abt.state().beside, bio: { l: bb.left, r: bb.right, t: bb.top, b: bb.bottom }, wallRight: wall.right, paras: paras.length, first: paras[0].slice(0, 28), last: paras[paras.length - 1].slice(-27), size: parseFloat(getComputedStyle(bio.querySelector("p")).fontSize) };
+      over, beside: window.__abt.state().beside, bio: { l: bb.left, r: bb.right, t: bb.top, b: bb.bottom }, wallRight: wall.right, paras: paras.length, first: paras[0].slice(0, 28), last: paras[paras.length - 1].slice(-27), size: parseFloat(getComputedStyle(bio.querySelector("p")).fontSize) };
     d.scrollTop = d.scrollHeight; out.backAtEnd = d.querySelector("a.back").getBoundingClientRect().bottom; d.scrollTop = 0;
     return out;
   });
   check(`${tag} about: the photograph is loaded`, abt.img > 0 && abt.pic.w > 100, abt.pic);
   check(`${tag} about: ${short ? "two or four" : "four"} texts, none over another, all on screen`, (short ? abt.shown >= 2 : abt.shown === 4) && abt.clash === 0 && abt.inside, abt);
   check(`${tag} about: every text keeps a hold on the photograph`, abt.hold === abt.shown, abt);
+  if (abt.W >= 700 && abt.H >= 560) check(`${tag} about: on a wide screen each text lies at least 24 px over the photograph`, abt.over.every((o) => o >= 23.5), abt.over);
   check(`${tag} about: his bio is there, word for word, three paragraphs`, abt.paras === 3 && abt.first === "I promise to bring honesty, " && abt.last === "sounds like no one but you." && abt.size >= 14, abt);
   check(`${tag} about: the bio stands beside the photograph on a laptop and under it elsewhere`, abt.beside === (abt.W >= 1180 && abt.H >= 640), { beside: abt.beside, W: abt.W, H: abt.H });
   if (abt.beside) check(`${tag} about: one screen, no scroll: the bio clear of the texts, Back on screen`, abt.scroll <= 1 && abt.back <= abt.H + 1 && abt.bio.l >= abt.wallRight + 40 && abt.bio.r <= abt.W && abt.bio.b <= abt.H, abt);
@@ -259,7 +260,10 @@ async function moves(size) {
     const rest = await lefts();
     await page.mouse.move(W / 2, H / 2); await page.mouse.move(W - 1, H / 2, { steps: 5 }); await page.waitForTimeout(1900);
     const lean = await page.evaluate(() => { const pic = document.querySelector(".abt-pic img").getBoundingClientRect(); return { n: window.__abt.state().lean, t: [...document.querySelectorAll(".abt-wall .msg")].map((f) => f.getBoundingClientRect()).map((b) => ({ l: b.left, hold: b.left < pic.right && b.right > pic.left })) }; });
-    check(`${tag}: on About the texts lean against the mouse (at the right edge, 16 to 30 px to the left), each still on the photograph`, Math.abs(lean.n[0] + 5) < .1 && lean.t.every((b, i) => { const d = b.l - rest[i]; return d < -15 && d > -31 && b.hold; }), { n: lean.n, moved: lean.t.map((b, i) => +(b.l - rest[i]).toFixed(1)) });
+    check(`${tag}: on About the texts lean against the mouse (at the right edge, up to 30 px to the left), each still on the photograph`, Math.abs(lean.n[0] + 5) < .1 && lean.t.every((b, i) => { const d = b.l - rest[i]; return d < -7 && d > -31 && b.hold; }), { n: lean.n, moved: lean.t.map((b, i) => +(b.l - rest[i]).toFixed(1)) });
+    await page.mouse.move(1, H / 2, { steps: 5 }); await page.waitForTimeout(1900);
+    const other = await page.evaluate(() => { const pic = document.querySelector(".abt-pic img").getBoundingClientRect(); return [...document.querySelectorAll(".abt-wall .msg")].map((f) => f.getBoundingClientRect()).map((b) => Math.round(Math.min(b.right, pic.right) - Math.max(b.left, pic.left))); });
+    check(`${tag}: and at the left edge the same the other way: no text is carried off the photograph (8 px of each always stay on it)`, other.every((o) => o >= 8), other);
     await page.mouse.move(W / 2, H / 2, { steps: 5 }); await page.waitForTimeout(1900);
     const back = await lefts();
     check(`${tag}: with the mouse at the middle of the window they are back in their places`, back.every((l, i) => Math.abs(l - rest[i]) < .6), back.map((l, i) => +(l - rest[i]).toFixed(2)));

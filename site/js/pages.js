@@ -151,7 +151,9 @@
      screen); too short even then, it keeps MIN2 px and the page scrolls. The screen's visible height is used, so a phone's toolbars are allowed for.
      On a phone the photograph is never wider than 78% of the column, and the texts are pinned to the column's sides. On a wide screen the wall the texts are pinned to is drawn in
      to the photograph: it is the photograph and OUT px more on each side (and never too narrow for a text from each side to stand side by side), so the texts keep the same hold on
-     the photograph's sides whether a short window makes it small or a large monitor makes it big. OUT was 130; at 165 each text still lies 24 to 55 px over the photograph.
+     the photograph's sides whether a short window makes it small or a large monitor makes it big. OUT was 130; at 165 each text still lies some 24 to 55 px over the photograph.
+     How wide a text is depends on the visitor's own fonts (an emoji is not the same width on every machine), so the overlap is not left to chance: a text that would lie less than
+     OVER px on the photograph is drawn in until it does.
      Where each text is pinned is in site/content.mjs (ABOUT.texts). */
   function wireAbout(sec) {
     var abt = sec.querySelector('.abt'), show = sec.querySelector('.abt-show'), wall = sec.querySelector('.abt-wall'), credit = sec.querySelector('.abt-c'), bio = sec.querySelector('.abt-bio'),
@@ -159,6 +161,7 @@
     var A = SITE.ABOUT || { texts: [], photo: { w: 2, h: 3 } }, TEXTS = A.texts, RATIO = A.photo.h / A.photo.w, MIN4 = 220, MIN2 = 200, shown = figs.length, im = pf && pf.querySelector('img'), two = false;
     if (!pf) wall.classList.add('plain');
     var OUT = 165;       /* a wide screen: how far the texts' outer edges stand from the photograph's sides, px */
+    var OVER = 24, HOLD = 8;       /* a wide screen: the least a text lies over the photograph where it stands, and the least the lean may ever leave it, px */
     var GAP = 56, PEEK = 30;       /* beside: the space between the texts and the bio (the same number as the stylesheet's gap). under: how much of the bio shows at the foot of the first screen, px */
     var besideMq = window.matchMedia ? window.matchMedia('(min-width: 1180px) and (min-height: 640px)') : null;       /* BESIDE: the same two numbers as site/css/wide.css */
     function beside() { return !!(bio && show && besideMq && besideMq.matches); }
@@ -187,7 +190,14 @@
       if (wide()) { for (i = 0; i < n; i++) { if (TEXTS[i][1] === 'l') lw = Math.max(lw, figs[i].offsetWidth); else rw = Math.max(rw, figs[i].offsetWidth); } ww = Math.min(W, Math.max(pw + 2 * OUT, lw + rw + 24)); wall.style.maxWidth = ww + 'px'; if (two) show.style.width = ww + 'px'; }
       r = room(pf.offsetHeight, n);
       wall.style.paddingTop = r.up + 'px'; wall.style.paddingBottom = r.down + 'px';
-      figs.forEach(function (f, i) { if (i >= n) { f.classList.add('out'); f.style.top = f.style.left = f.style.right = ''; return; } f.style.top = (r.up + r.ys[i]) + 'px'; f.style.left = TEXTS[i][1] === 'l' ? '0' : 'auto'; f.style.right = TEXTS[i][1] === 'r' ? '0' : 'auto'; });
+      var side = wide() ? (wall.clientWidth - pw) / 2 : 0;       /* a wide screen: the room beside the photograph */
+      figs.forEach(function (f, i) {
+        if (i >= n) { f.classList.add('out'); f.style.top = f.style.left = f.style.right = ''; return; }
+        var left = TEXTS[i][1] === 'l', over = f.offsetWidth - side, inn = wide() ? Math.max(0, Math.ceil(OVER - over)) : 0, lim = Math.max(0, over + inn - HOLD);
+        f.style.top = (r.up + r.ys[i]) + 'px'; f.style.left = left ? inn + 'px' : 'auto'; f.style.right = left ? 'auto' : inn + 'px';
+        /* the lean may carry a text further over the photograph as far as it likes, and away from it only until HOLD px of it are left there */
+        f.style.setProperty('--lo', (left && wide() ? -lim : -99) + 'px'); f.style.setProperty('--hi', (!left && wide() ? lim : 99) + 'px');
+      });
       wall.classList.add('set');
     }
     function all() { if (sec.hidden || body.getAttribute('data-page') !== 'about') return; figs.forEach(function (f) { f.classList.remove('out'); fit(f.querySelector('blockquote')); }); figs.forEach(cut); place(); }
@@ -199,7 +209,8 @@
        share of its own (0.8, 1.5, 1, 1 …), in hundredths of its own width and height.
        Whichever way the mouse goes, every photograph goes the other way: so one you are moving toward always comes toward you.
        HERE the same numbers, with two things fitted to this page. A text's share is in px (PULL, their 0.8 : 1 : 1.5 : 1 four times over), because a text is too small for a
-       hundredth of its own size to show: at the window's edge a text has moved 16 to 30 px, and none is ever drawn clear of the photograph (the widest has the largest share).
+       hundredth of its own size to show: at the window's edge a text has moved 16 to 30 px (the widest has the largest share), and none can be carried clear of the photograph:
+       each is stopped with HOLD px of it still there (--lo and --hi, set where the texts are placed).
        And the last move of a burst is kept, 120 ms after the one before it, where theirs lets it go: the texts settle for where the mouse came to rest.
        Only a mouse moves them, only on a wide screen, and not at all under Reduce Motion. */
     var PULL = [3.2, 4, 6, 4], g = { x: 0, y: 0, fx: 0, fy: 0, tx: 0, ty: 0, t0: 0, raf: 0, last: -1e9, late: 0, px: 0, py: 0, on: false };
