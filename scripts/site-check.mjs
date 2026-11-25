@@ -267,15 +267,10 @@ async function form() {
   check(`${tag}: an over-long entry is cut to size, not refused`, r.status === 200 && long.name.length === 200 && long.message.length === 5000, { name: long.name.length, note: long.message.length });
   r = await post({ name: "Line\nBreak", email: "lb@example.com" });
   check(`${tag}: a line break in a name never reaches an email's subject`, r.status === 200 && (await local.sql`SELECT name FROM bookings ORDER BY id DESC LIMIT 1;`).rows[0].name === "Line Break");
-  // the list of requests is for Anthony only
-  const list = (cookie) => fetch(SITE + "/api/bookings/list", { headers: cookie ? { Cookie: cookie } : {} });
-  check(`${tag}: the bookings list is closed without a pass`, (await list()).status === 401);
-  check(`${tag}: a cookie made up by hand opens nothing`, (await list("archive_admin=1")).status === 401 && (await list(`archive_admin=${Date.now() + 60000}.${"a".repeat(64)}`)).status === 401);
-  const login = (password) => fetch(SITE + "/api/bookings/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
-  check(`${tag}: a wrong password gets no pass`, (await login("guess")).status === 401);
-  const good = await login("local-admin-password"), pass = (good.headers.get("set-cookie") || "").split(";")[0];
-  const listed = await list(pass), rows = listed.status === 200 ? (await listed.json()).bookings : [];
-  check(`${tag}: the right password gets a signed pass, and the list shows the link each artist sent`, good.status === 200 && /^archive_admin=\d{13}\.[0-9a-f]{64}$/.test(pass) && /HttpOnly/i.test(good.headers.get("set-cookie")) && rows.some((b) => b.music_link === "https://example.com/song"), pass.slice(0, 30));
+  // the list of requests and its login are gone from the site (Anthony, 24 Nov 2026): nothing answers at their addresses, with or without the old cookie
+  const gone = await Promise.all([fetch(SITE + "/api/bookings/list"), fetch(SITE + "/api/bookings/list", { headers: { Cookie: "archive_admin=1" } }), fetch(SITE + "/admin/bookings"), fetch(SITE + "/admin/archive")]);
+  const login = await fetch(SITE + "/api/bookings/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: "anything" }) });
+  check(`${tag}: no bookings list and no login at the old addresses`, gone.every((r) => r.status === 404) && login.status >= 404 && login.status <= 405 && !(login.headers.get("set-cookie") || ""), gone.map((r) => r.status).concat(login.status));
   check(`${tag}: no errors`, page.problems.length === 0, page.problems);
   await ctx.close();
 }

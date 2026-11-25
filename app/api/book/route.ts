@@ -6,8 +6,9 @@ import { BOOKING } from "@/site/content.mjs";
 //   - with scripts on, the page sends JSON and gets JSON back ({ ok: true });
 //   - with scripts off, the browser posts the plain form and is sent on to
 //     /production/sent or /production/not-sent.
-// Either way the request is kept in the `bookings` table (the list is at
-// /admin/bookings) and Anthony is emailed.
+// Either way Anthony is emailed, and the request is also kept in the
+// `bookings` table as a second copy (there is no page that lists them any
+// more: read the table in the Neon console if an email ever goes missing).
 export const dynamic = "force-dynamic";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

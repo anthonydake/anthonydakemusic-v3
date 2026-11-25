@@ -81,7 +81,6 @@ Object.assign(process.env, {
   SQUARE_WEBHOOK_SIGNATURE_KEY: "local-signature-key",
   SQUARE_API_BASE: MOCK,
   RESEND_API_KEY: "local-resend-key",
-  ARCHIVE_ADMIN_PASSWORD: "local-admin-password",
 });
 if (process.env.LOCAL_STORE_CLOSED === "1") { delete process.env.SQUARE_ACCESS_TOKEN; delete process.env.SQUARE_LOCATION_ID; }
 
@@ -117,8 +116,6 @@ const orderPage = await route("products/thanks/[order]/route.ts");
 const missing = await route("[...missing]/route.ts");
 const api = {
   "POST /api/book": (await route("api/book/route.ts")).POST,
-  "POST /api/bookings/auth": (await route("api/bookings/auth/route.ts")).POST,
-  "GET /api/bookings/list": (await route("api/bookings/list/route.ts")).GET,
   "POST /api/store/checkout": (await route("api/store/checkout/route.ts")).POST,
   "GET /api/store/download": (await route("api/store/download/route.ts")).GET,
   "POST /api/square/webhook": (await route("api/square/webhook/route.ts")).POST,
