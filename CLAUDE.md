@@ -8,17 +8,17 @@ The website of Anthony Dake, music producer in Columbus, OH. Brand line: **Archi
 
 - **Live site**: https://www.anthonydakemusic.com (Vercel project `anthonydakemusic-v3`, auto-deploys `main`)
 - **Repo**: https://github.com/anthonydake/anthonydakemusic-v3 (public: never put a secret or a private file's address in it)
-- **State**: this site went live on 24 Nov 2026, at Anthony's word ("push it and go live"), replacing the earlier drummer-and-producer design. The branch `new-site` is where it was built and holds the same code as `main` at that moment; the tag `earlier-site` is the last commit of the old site.
+- **State**: this site went live on 24 Nov 2026, at Anthony's word ("push it and go live"), replacing the earlier drummer-and-producer design. The branch `new-site` is the preview branch: every change is made there first (see How a change reaches the site). The tag `earlier-site` is the last commit of the old site.
 
 ## Rules that come with the work (Anthony's)
 
-1. **Never push to `main` without his go-ahead.** `main` is the live site. Work on a branch; a Vercel preview is the place to show it, and he says when it goes live.
+1. **Never push to `main` without his go-ahead.** `main` is the live site. Changes are made on `new-site`, whose Vercel preview is where he sees them, and he says when they go live. A fix he has already decided (his typo, his file, his words) counts as his go-ahead once the visual check passes.
 2. **The site's words are his.** Do not write lines for him. A gap stays a marked blank until he fills it. Do not "improve" copy.
 3. **A client text is the client's real words**, never reworded, never shown twice on the site.
 4. **Titles and artists are spelled the way each release spells them** (`AR!YAH`, `BittyOTW`, `AURA`).
 5. **Payments are Square only.** Not Stripe, not PayPal, and nothing that runs on their rails (Lemon Squeezy, Gumroad, Shopify Payments, Polar, Payhip, Ko-fi).
 6. **Never copy cover art from Spotify or any store.** A cover comes from the artist or from Anthony.
-7. **Every design decision is logged the turn it is made**, in the Design System artifact ("Anthony Dake", on claude.ai) and in `claude/site-prototype-log.md` in the claude.ai project. The Design System must describe the newest draft.
+7. **Every decision is logged in this file, in the same commit as the change**: a dated line under History, briefly, with his words where he gave them, and the section the change touches (the design, a page, a rule) brought up to date. This file is the source of truth. The Design System artifact ("Anthony Dake", on claude.ai) and the claude.ai project log are refreshed from it by Claude in Cowork; nothing needs doing to them from here.
 8. He reacts to what he sees, not to descriptions. Show a picture or a working page early.
 9. Build and push for him; do not hand him commands to run. Run the checks below before every commit.
 
@@ -79,7 +79,7 @@ The engine reads `body[data-page]`. Header words carry `data-jump` (fly from hom
 
 ## The design, in short
 
-The full rules and every decision are in the Design System artifact. What code must not break:
+The decisions are logged in this file (History, briefly). The Design System artifact on claude.ai is the picture book of the design, refreshed from this file. What code must not break:
 
 - One screen, one door (the only blue thing on a screen, in brackets), one drawing behind everything, two typefaces (Instrument Serif for the name only; Courier Prime for everything else, with its own two arrows font), one blue.
 - Two grounds: black and soft white. The visitor's system picks (`prefers-color-scheme`); there is no switch.
@@ -154,9 +154,22 @@ node scripts/site-check.mjs                     # a real browser through the who
 
 After editing anything under `site/`, run `npm run site` (dev and build do it for you) and, if a picture for Anthony is wanted, `npm run site:file`.
 
+## How a change reaches the site (agreed 24 Nov 2026)
+
+Anthony's decision, 24 Nov 2026 ("i agree. do it."): **Claude Code on his Mac, in this folder, is the only thing that changes this repository.** Claude in Cowork no longer pushes here. It works on design options shown as pictures, the Design System, the Vercel, Cloudflare, Resend and Square dashboards, research and documents, and hands a site change over as a brief for Claude Code. Two builders on one repository collide, and the push guard below only sees Claude Code.
+
+- `main` is live: Vercel production builds every push to it. `new-site` is the preview branch: Vercel builds every push to it at https://anthonydakemusic-v3-git-new-site-anthonydakes-projects.vercel.app (behind Vercel login). That link never changes.
+- Start every change with `git fetch origin`, then on `new-site` bring in `origin/main` (`git merge origin/main`: normally nothing or a fast-forward). One change at a time on `new-site`.
+- Make the change, run the checks (Checks), then follow Before every push: it commits, looks at the site at phone and laptop sizes and pushes `new-site`.
+- Two speeds:
+  - **A fix he has already decided** (a typo, a file or picture he sent, words he dictated) may go live as soon as the visual check passes.
+  - **Anything that changes how the site looks or reads** waits: push `new-site`, give him the preview link and the phone and laptop screenshots, and go live only on his word. Screenshots catch broken layout, not taste.
+- Going live: `git push origin new-site:main`, a fast-forward only. If it is refused, `main` has moved: fetch, merge `origin/main` into `new-site`, check again. Never force-push `main`. Then wait for Vercel to show the production deployment Ready and look at the live pages the change touched at phone and laptop sizes.
+- Log it in this file, in the same commit as the change (rule 7).
+
 ## Before every push: visual check (required)
 
-`main` is live, so a push is a release. Before it, a real browser has to see the site at phone and laptop sizes. A committed hook (`scripts/guard-push.mjs`, wired in `.claude/settings.json`) blocks `git push` for a site-affecting commit until `.visual-check/passed` holds this commit's hash. Docs, `.claude/`, this script and `.gitignore` go through unguarded.
+A push to `main` is a release; a push to `new-site` is a preview he may look at on his phone. Before either, a real browser has to see the site at phone and laptop sizes. A committed hook (`scripts/guard-push.mjs`, wired in `.claude/settings.json`) blocks `git push` for a site-affecting commit until `.visual-check/passed` holds this commit's hash. Docs, `.claude/`, this script and `.gitignore` go through unguarded.
 
 1. `npm run build` (runs `site/build.mjs` first so `lib/site/manifest.generated.ts` and `/public/site/` are in place; a bare `npx next build` fails), then start `npx next start -p 3100` in the background.
 2. `git commit` (its own command).
@@ -167,7 +180,7 @@ After editing anything under `site/`, run `npm run site` (dev and build do it fo
    - home at laptop size: the door and the home words all sit inside the first screen (bottoms within `innerHeight`); if the hero changed, also check 1280 x 720 and 1440 x 900;
    - if `/production` changed, click the home door and confirm the form opens there with its four fields. **Never submit the form** (it writes to the live database and emails Anthony).
 4. If anything fails, fix it, commit again, redo the check.
-5. When everything passes: `git rev-parse HEAD > .visual-check/passed`, stop the server, then `git push` (its own command).
+5. When everything passes: `git rev-parse HEAD > .visual-check/passed`, stop the server, then `git push` (its own command): to `new-site`, and to `main` only as How a change reaches the site says.
 6. End the reply with a short pass/fail line per route and size.
 
 Where the pieces live: the MCP server in `claude mcp list` (local scope), the allow list in `.claude/settings.local.json`, the hook in `.claude/settings.json`, the guard in `scripts/guard-push.mjs`, the marker in `.visual-check/` (git-ignored). The visual check does not replace `scripts/site-check.mjs`; it is an extra pair of eyes on the live look.
@@ -198,6 +211,7 @@ Anthony's decision (24 Nov 2026): the earlier pages are removed from the site so
 ## Local environment (Anthony's Mac)
 
 - **Active clone**: `~/anthonydakemusic-v3`. Always work there.
+- Until 24 Nov 2026 Claude in Cowork pushed from its own sandbox through a git bundle in `~/Downloads` and a script run on this Mac. That route is retired; do not revive it.
 - **Do not use**: `~/Documents/GitHub/anthonydakemusic-v3` (stale GitHub Desktop clone with a divergent history) or `~/anthonydakemusic` (the old v1 project, linked to the wrong Vercel project).
 - Node, npm and `claude` come from **fnm**; they are on PATH in a normal Terminal login shell. Non-login contexts (`osascript do shell script`, cron) need `export PATH=$PATH:/opt/homebrew/bin` and will not see fnm shims.
 - A second Vercel project, `anthonydakemusic-v3-mxrl`, also builds every push to this repo. It is a leftover; ask before removing it.
@@ -213,3 +227,4 @@ Anthony's decision (24 Nov 2026): the earlier pages are removed from the site so
 - 24 Nov 2026, late: his covers for Sparkles and Forever and a larger Get Down on the belt (no empty frames left); his bio moved from About to the press kit, so About is one screen again at every size.
 - 24 Nov 2026, late: Anthony moved the Vercel team to Pro ($20 a month), so the site may now be used commercially.
 - 24 Nov 2026, night: at Anthony's word, `anthonydakemusic.com` verified at Resend (three records added at Cloudflare, nothing else touched there), `BOOKING_NOTIFY_FROM` set to `noreply@anthonydakemusic.com` in every Vercel environment, production redeployed. One labelled test through the live form arrived in his inbox from `noreply@anthonydakemusic.com`.
+- 24 Nov 2026, night: the push guard and the visual check came in from Claude Code on his Mac (commits `1d7f196`, `703d17f`, `bb201d6`). Then Anthony settled how changes are made ("i agree. do it."): Claude Code is the only builder, `new-site` is the preview and `main` is live, two speeds, and this file is the source of truth for every decision (How a change reaches the site; rules 1 and 7).
