@@ -34,15 +34,21 @@ export const HOME = {
   credit: 'Artist · via text'
 };
 
-/* THE BELT ON THE PRODUCTION PAGE: five, in Anthony's order (24 Nov 2026), not by date. The first leads. A song added later goes where he says.
-   key names the cover files in site/img/covers/ (<key>-<width>.jpg); art gives the two widths held. Get Down is only held 400 wide: ask Anthony for the full-size file. */
+/* THE BELT ON THE PRODUCTION PAGE: seven, in Anthony's order, not by date. The first five are in the order he set on 24 Nov 2026; Sparkles and Forever were added the same day,
+   after them, in the order he sent them. The first leads. A song added later goes where he says.
+   key names the cover files in site/img/covers/ (<key>-<width>.jpg); art gives the two widths held, or null while there is no cover: the belt then shows an empty frame.
+   A COVER COMES FROM THE ARTIST OR FROM ANTHONY, never from a store's page. Waiting on: Get Down full size (held 400 wide), Sparkles, Forever.
+   youtube is the release's own video or audio on YouTube: the cover is a link to it (his words: "hyperlink each album cover to that release on YouTube so that any end user can hear it"). */
 export const RELEASES = [
-  { key: 'get-down', art: [240, 400], title: 'Get Down', artist: 'Jae Esquire', released: '2025-12-10' },
-  { key: 'cycles', art: [240, 480], title: 'Cycles', artist: 'BittyOTW, WANYEH, J.Sol', released: '2025-09-26' },
-  { key: 'aura', art: [240, 480], title: 'AURA', artist: 'AR!YAH', released: '2025-10-08' },
-  { key: 'back-and-forth', art: [240, 480], title: 'Back & Forth', artist: 'Madelyn Leona', released: '2024-05-24' },
-  { key: 'pray-for-me', art: [240, 480], title: 'Pray For Me', artist: 'KJ The Cool Nerd', released: '2025-10-31' }
+  { key: 'get-down', art: [240, 400], title: 'Get Down', artist: 'Jae Esquire', released: '2025-12-10', youtube: 'PdBcj7DCSJA' },
+  { key: 'cycles', art: [240, 480], title: 'Cycles', artist: 'BittyOTW, WANYEH, J.Sol', released: '2025-09-26', youtube: 'igaxmP2tTU8' },
+  { key: 'aura', art: [240, 480], title: 'AURA', artist: 'AR!YAH', released: '2025-10-08', youtube: 'rygn058o5OM' },
+  { key: 'back-and-forth', art: [240, 480], title: 'Back & Forth', artist: 'Madelyn Leona', released: '2024-05-24', youtube: '6qLMNYQLHkw' },
+  { key: 'pray-for-me', art: [240, 480], title: 'Pray For Me', artist: 'KJ The Cool Nerd', released: '2025-10-31', youtube: '_oLkgRSg-ss' },
+  { key: 'sparkles', art: null, title: 'Sparkles', artist: 'AR!YAH', released: '2025-07-26', youtube: 'zqxpGR__WWk' },
+  { key: 'forever', art: null, title: 'Forever', artist: 'AR!YAH', released: '2026-02-20', youtube: 'GLV36D059m4' }
 ];
+export const YOUTUBE = 'https://www.youtube.com/watch?v=';
 export const BELT_LABEL = 'Recent releases';
 
 /* THE OFFER AND THE BOOKING FORM. The page states no price and no time (his decision, 24 Nov 2026). */
@@ -58,8 +64,8 @@ export const BOOKING = {
   failed: 'Something went wrong. Try emailing adakemusic@gmail.com directly.'
 };
 
-/* THE ABOUT PAGE: one photograph with four texts from artists round it. The page carries no words of Anthony's own yet: he had his two lines deleted on 24 Nov 2026
-   and is still to write what replaces them. Do not put lines here for him.
+/* THE ABOUT PAGE: one photograph with four texts from artists round it, and his bio.
+   bio is his, word for word as he sent it on 24 Nov 2026 ("Here is my bio for the about page"): three paragraphs, one string each. Do not edit it; a change comes from him.
    Each text: the words, the side it stands out on (l or r), which of its own edges is held (foot or top), how far down the photograph that edge sits (0 top, 1 foot), and a few px more.
    The places are the photograph's empty parts: the ceiling at the left, the corner above the man standing, the desk in front. No text lies on a face or a hand. */
 export const ABOUT = {
@@ -70,7 +76,12 @@ export const ABOUT = {
     ['This gave me a bunch of ideas. Reminds me of trying to find the calm in the midst of chaos. Hell yeah bro.', 'l', 'top', 0.845, 0],
     ['one of the tracks you produced for her sounds great! Let’s text early next week and find a time!', 'r', 'top', 0.845, 14]
   ],
-  credit: 'Artists · via text'
+  credit: 'Artists · via text',
+  bio: [
+    'I promise to bring honesty, curiosity, and real care to everything we make together. I’m not here to chase trends or sand the edges off until it sounds like everyone else — I’m here for what feels true in your music, and that’s what we’ll build around.',
+    'Working together is an open experiment. Bold ideas, real constraints, and a lot of trying things until we land on the sound that could only be yours.',
+    'I show up, I put the work in, and I don’t settle for my own best — I keep pushing past it. What I want for you is simple: something real, something memorable, and something that sounds like no one but you.'
+  ]
 };
 
 /* THE PRESS KIT: a short bio, in his words. Each string is one paragraph. EMPTY UNTIL HE SENDS IT: the page then shows ruled blanks and the line below. */

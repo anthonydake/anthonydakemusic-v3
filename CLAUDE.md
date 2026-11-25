@@ -8,7 +8,7 @@ The website of Anthony Dake, music producer in Columbus, OH. Brand line: **Archi
 
 - **Live site**: https://www.anthonydakemusic.com (Vercel project `anthonydakemusic-v3`, auto-deploys `main`)
 - **Repo**: https://github.com/anthonydake/anthonydakemusic-v3 (public: never put a secret or a private file's address in it)
-- **State on 24 Nov 2026**: `main` still holds the earlier drummer-and-producer design and is what is live. The new site described here is on `new-site` and has only been on a private Vercel preview. **Nothing here is live until Anthony says so.**
+- **State on 24 Nov 2026**: `main` still holds the earlier drummer-and-producer design and is what is live (less its bookings list and login, removed that day: see History). The new site described here is on `new-site` and has only been on a private Vercel preview. **Nothing here is live until Anthony says so.**
 
 ## Rules that come with the work (Anthony's)
 
@@ -29,7 +29,7 @@ The website of Anthony Dake, music producer in Columbus, OH. Brand line: **Archi
 - `node site/build.mjs` makes what the Next app serves: `public/site/app.css`, `public/site/app.js`, fonts and pictures, plus `lib/site/manifest.generated.ts` (a mark of their contents for cache-busting). `npm run dev` and `npm run build` run it first. All of it is git-ignored: made, never edited.
 - `npm run site:file` makes the whole site as **one file** (`out/anthony-dake-site-prototype.html`): fonts, pictures, styles and script inside, addresses as `#names`, nothing sent anywhere, a TEST chip for the two grounds. This is what Anthony opens to judge a design before it goes to a preview.
 
-**No React on a public page.** Every public address answers with one whole HTML document from a route handler (`app/**/route.ts`), built by `lib/site/render.ts` from the same templates the browser uses. The browser's script then moves between pages without a reload and keeps the address in step. So every page is whole with scripts off: its words are in the document, its links are real links, Buy and the booking form are plain forms. `/admin` is the only React left.
+**No React on a public page.** Every public address answers with one whole HTML document from a route handler (`app/**/route.ts`), built by `lib/site/render.ts` from the same templates the browser uses. The browser's script then moves between pages without a reload and keeps the address in step. So every page is whole with scripts off: its words are in the document, its links are real links, Buy and the booking form are plain forms. There is no React page left at all (the `/admin` pages went on 24 Nov 2026), so there is no `app/layout.tsx`, no Tailwind and no global stylesheet: do not add one for a public page.
 
 ## Where things are
 
@@ -56,24 +56,24 @@ app/[...missing]/         any other address: the site's own "Not found", as a 40
 app/llms.txt/             /llms.txt, made from content.mjs
 app/api/book              the booking form's endpoint
 app/api/store/*, app/api/square/webhook   the store's endpoints
-app/admin/bookings        the list of booking requests (React, password: ARCHIVE_ADMIN_PASSWORD)
 lib/store/*, data/store.data.ts            the store (see Store)
 scripts/                  the checks (see Checks) and upload-media.mjs
 next.config.ts            redirects from the old addresses; long caching for /site/*
+archive/earlier-site/     the earlier site's pictures and downloads, kept for reference; not served, not built (see archive/README.md)
 ```
 
 ### How a document is put together
 
 `renderDocument(page, data)` calls `documentHtml()` in `site/templates.mjs`. Every document carries: the header (first in the document, so the keyboard meets it first), the home screen's words (in every document, because Back flies home without a reload; hidden unless the page is home), `<main id="dest">` with the page's own section, and `window.__AD`, the document's note to the script: `{ mode: 'site', v, base, products, sandbox }`.
 
-The engine reads `body[data-page]`. Header words carry `data-jump` (fly from home, turn straight from another page, do nothing on their own page), home's door and links `data-go`, Back `data-back`. A link marked `data-plain` is the browser's own (a download, a re-check). On a page that exists only as a server document (`order`, `missing`) every link is the browser's own, so the order page keeps its place in the history.
+The engine reads `body[data-page]`. Header words carry `data-jump` (fly from home, turn straight from another page, do nothing on their own page), home's door and links `data-go`, Back `data-back`, and the mark in the header `data-home` (the home button from every page: it does what Back does, and on the home screen it moves nothing). A link marked `data-plain` is the browser's own (a download, a re-check). On a page that exists only as a server document (`order`, `missing`) every link is the browser's own, so the order page keeps its place in the history.
 
 ### Recipes
 
 - **Change a word**: `site/content.mjs`. Nothing else. (Then `npm run site`, or just run dev.)
 - **Fill the press kit**: put his paragraphs in `PRESS_KIT.bio` (one string per paragraph). The ruled blanks and "Bio to come" go away on their own.
-- **Words of his own on About**: he had his two lines deleted on 24 Nov 2026 and has not written what replaces them. `ABOUT` has no field for a line yet; add one in `content.mjs` and `templates.mjs` when he sends it. Do not draft it.
-- **Add or reorder a release**: `RELEASES` in `content.mjs`, in his order (the first leads the belt). Put `<key>-240.jpg` and `<key>-480.jpg` in `site/img/covers/` (square, sRGB, from the artist's own file). **Get Down is only held 400 px wide** (`art: [240, 400]`): when the full-size cover arrives, export 240 and 480 and set `art: [240, 480]`.
+- **His bio on About**: `ABOUT.bio` in `content.mjs`, one string per paragraph, word for word as he sent it (24 Nov 2026). A change comes from him; do not edit or tidy it.
+- **Add or reorder a release**: `RELEASES` in `content.mjs`, in his order (the first leads the belt), with `youtube` set to the id of the release's own video or audio on YouTube (the cover is a link to it). Put `<key>-240.jpg` and `<key>-480.jpg` in `site/img/covers/` (square, sRGB, from the artist's own file) and set `art: [240, 480]`. While there is no cover, `art: null` shows an empty frame. **Waiting on three covers**: Get Down full size (held 400 px wide, `art: [240, 400]`), Sparkles and Forever (`art: null`).
 - **The About photo**: `site/img/about/studio-{480,800,1200,1600}.{jpg,webp}`, resized from his 1718 x 2576 original (Lanczos; jpg q 84 to 88, webp q 80). Where each text sits on it is in `ABOUT.texts`.
 - **Add a product**: see Store.
 
@@ -85,8 +85,10 @@ The full rules and every decision are in the Design System artifact. What code m
 - Two grounds: black and soft white. The visitor's system picks (`prefers-color-scheme`); there is no switch.
 - Words you press are 44 px tall; the door 46 (52 on wide). Typed text in a field is 16 px or more, or a phone zooms the page.
 - **Wide** means at least 700 px across and 560 px tall (a tablet held upright is wide; a phone on its side is not). Those two numbers are in `css/wide.css`, `js/pages.js` and the pictures' `sizes` in `templates.mjs`: change them together. On wide the idea is the same page with air: what is wide goes edge to edge (drawing, frame, belt), what is read keeps to a narrow centre column, short pages stand mid-screen.
-- **The belt**: five covers travelling left to right, the first in his order in front. A cover is never on screen twice: the gap between covers opens until one run is a screen and a cover long.
-- **About is one screen, no scroll**: the script gives the photograph the height that is left and pins each text. On a screen too short for four texts, the last two are left out (still read out to screen readers).
+- **The belt**: seven covers travelling left to right, the first in his order in front. A cover is never on screen twice: the gap between covers opens until one run is a screen and a cover long. **Each cover is a link to its release on YouTube** (new tab), and over it the mouse stays the plain arrow, not the hand (his words: "It should just be a normal cursor"). A press that does not move opens the link; a pull along the belt moves the belt and opens nothing.
+- **Production is one screen on a laptop** (at least 900 px across): the form's fields stand two by two, the gaps open with the window's height and the covers take the height that is left. The sum of every height on the page is written out at the foot of `css/wide.css`: change a height there and change the sum. The checks hold it at 1280 x 720, 1440 x 900 and 1920 x 1080.
+- **About**: the photograph with four texts round it fills the first screen (the script gives the photograph the height that is left and pins each text); his bio stands beside it on a laptop (at least 1180 x 640: nothing scrolls) and under it everywhere else (the page scrolls to it). On a screen too short for four texts, the last two are left out (still read out to screen readers). On a wide screen the texts stand 165 px out from the photograph's sides and **lean against the mouse**, copied from the photographs on humanperson.com's home screen: the numbers and what was fitted to this page are in the comment over `PULL` in `js/pages.js`.
+- **The mark in the header is the home button** from every page. Its ring lights up under a mouse and while pressed, as the old site's did (a tenth of white to a fifth).
 - **Less motion**: with `prefers-reduced-motion` there is no flight and the belt is one still row.
 - **No WebGL 2**: the engine stops at once and marks `body[data-ready="no-gl"]`; the stylesheet gives the home text a ruled bubble and the mark a picture. Every page still works.
 
@@ -97,10 +99,10 @@ The form on `/production` has four fields: name and email (needed), a link to re
 - With scripts on, the page sends JSON and gets `{ ok: true }`; the form gives way in place to "Sent." If it fails, the form stays and says so with the email address.
 - With scripts off, the browser posts the plain form and is redirected to `/production/sent` or `/production/not-sent`. The browser's own checks stand in for the page's (the script sets `noValidate` itself).
 - Same-origin only, compared with the host that served the request (so previews work). A hidden `website` field catches scripts that fill everything; they are told all went well.
-- Stored in the `bookings` table (Neon Postgres through `@vercel/postgres`), made idempotently on each request: `name`, `email`, `event_type` ("Production: A Full Build"), `message` (the note), `music_link`. Listed at `/admin/bookings`.
+- Stored in the `bookings` table (Neon Postgres through `@vercel/postgres`), made idempotently on each request: `name`, `email`, `event_type` ("Production: A Full Build"), `message` (the note), `music_link`. It is a second copy only: no page lists it (the list and its login were removed on 24 Nov 2026, at his word, once the email was reliable). To read it, open the table in the Neon console.
 - Anthony is emailed through Resend **after** the answer is sent, with `after()` so the platform keeps the function alive until it has gone.
 
-Env: `POSTGRES_URL` and friends (Neon integration), `RESEND_API_KEY` (Resend integration: never set by hand), `BOOKING_NOTIFY_EMAIL` (default `adakemusic@gmail.com`), `BOOKING_NOTIFY_FROM` (today `onboarding@resend.dev`, Resend's test sender, which only delivers to the account owner; switch to `noreply@anthonydakemusic.com` once the domain is verified), `ARCHIVE_ADMIN_PASSWORD`.
+Env: `POSTGRES_URL` and friends (Neon integration), `RESEND_API_KEY` (Resend integration: never set by hand), `BOOKING_NOTIFY_EMAIL` (default `adakemusic@gmail.com`), `BOOKING_NOTIFY_FROM` (today `onboarding@resend.dev`, Resend's test sender, which only delivers to the account owner; switch to `noreply@anthonydakemusic.com` once the domain is verified).
 
 ## Store (Square)
 
@@ -143,11 +145,11 @@ npm run build                                   # site build + Next build + Type
 npx eslint .                                    # lint (the site's browser scripts are not linted)
 npm install --no-save @electric-sql/pglite playwright   # once; neither is a project dependency
 node scripts/store-selftest.mjs                 # 63 checks on the store's route handlers
-node scripts/site-check.mjs                     # a real browser through the whole site (about 550 checks, a few minutes)
+node scripts/site-check.mjs                     # a real browser through the whole site (about 640 checks, a few minutes)
 ```
 
 - `scripts/local-site.mjs [port]` is **the whole site on this machine with nothing real behind it**: the real route handlers, a stand-in for Square's checkout page, an in-memory Postgres, emails printed. Use it to walk Buy → pay → order page → Download by hand.
-- `scripts/site-check.mjs` drives Chromium through that: every page at six sizes and both grounds (nothing spills, the header clears the mark, the belt never shows a cover twice, About fits one screen), the moves between pages and the browser's Back and Forward, the booking form (and that the request is kept and emailed), the store from Buy to Download with all five order states, then again with scripts off, with reduced motion, and without WebGL. Groups: `layout moves form store plain calm nogl head`. With `SITE_URL=http://localhost:3000` it runs the groups that need no database against a running `npm run start`.
+- `scripts/site-check.mjs` drives Chromium through that: every page at six sizes and both grounds (nothing spills, the header clears the mark, the mark is a link home, the belt never shows a cover twice, every cover links to YouTube, Production and About each fit one screen on a laptop), the moves between pages and the browser's Back and Forward, a press and a pull on the belt, the lean on About, the booking form (and that the request is kept and emailed, and that nothing answers at the old list's addresses), the store from Buy to Download with all five order states, then again with scripts off, with reduced motion, and without WebGL. Groups: `layout moves form store plain calm nogl head`. With `SITE_URL=http://localhost:3000` it runs the groups that need no database against a running `npm run start` (build it with `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` set to anything, or the static pages have no Products link and those checks fail).
 - What only the real thing proves: Square's sandbox on a Vercel preview, email delivery, a real phone's toolbars, a real card.
 
 After editing anything under `site/`, run `npm run site` (dev and build do it for you) and, if a picture for Anthony is wanted, `npm run site:file`.
@@ -156,22 +158,24 @@ After editing anything under `site/`, run `npm run site` (dev and build do it fo
 
 Each document carries its own title, description, canonical address and Open Graph card (`/og-image.jpg`, made from the home screen; `/favicon.ico`, `/favicon.png`, `/apple-touch-icon.png`, `/icon-512.png` are the chalk mark). The descriptions in `PAGES` are put together from his own phrases. Home and About carry a small JSON-LD block (Person + WebSite). `/sitemap.xml` lists home, production, about and the press kit; the store, the order page and the two form landings are `noindex`. `/llms.txt` is generated from `content.mjs`.
 
-Old addresses are redirected in `next.config.ts` with **temporary** (307) redirects, on purpose: `/store` → `/products`, `/epk` → `/press-kit`, `/placements`, `/projects` → `/production`, `/performance`, `/practice` → `/`. Whether any of those old pages comes back is Anthony's decision; make the redirects permanent only when he has made it.
+Old addresses are redirected in `next.config.ts`, **permanently** (308) since 24 Nov 2026, when Anthony decided the earlier pages are gone for good: `/store` → `/products`, `/epk` → `/press-kit`, `/placements`, `/projects`, `/demoreel` → `/production`, `/performance`, `/practice` → `/`. The two old downloads (`/Anthony_Dake_One-Sheet.pdf`, `/Anthony_Dake_Resume.pdf`) go to the press kit with a temporary (307) redirect, in case a new one-sheet ever takes the name.
 
 Vercel Web Analytics is loaded as a plain script (`/_vercel/insights/script.js`) on a deployment, never locally and never on the order page.
 
-## What is left over from the earlier site
+## The earlier site
 
-- `public/photos`, `public/performance`, `public/placements`, `public/reviews`, `public/covers`, the two PDFs, `portrait*.jpg`, `mark*.svg`, `letters.svg` and the Next starter SVGs are no longer used by any page. They are still served at their old addresses. **Do not delete them without asking**: Anthony is deciding what to keep, archive or delete from a list.
-- `app/globals.css` (Tailwind) now only styles `/admin`.
-- The earlier pages and components were removed on this branch; they are in the history of `main`.
+Anthony's decision (24 Nov 2026): the earlier pages are removed from the site so they do not exist, and their pictures and downloads are saved for reference.
+
+- **`archive/earlier-site/`** holds everything the old pages served from `public/` (cover art, live photos, review screenshots, portraits, the two PDFs, the old serif mark), under the same names. Nothing there is served, built or linked. `archive/README.md` says what is what. **Do not delete it without asking.**
+- **The old pages themselves** (code, words, data) are in the repository's history; the tag `earlier-site` marks the last commit that had them.
+- `public/` now holds only what the new site uses: `email/` (the receipt's images: never move or rename), the favicons, `og-image.jpg`, and `site/` (made by the build).
+- The bookings list and its password login (`/admin/bookings`, `/api/bookings/*`) are gone, from this branch and from `main`.
 
 ## Before the new site goes live
 
-1. Anthony's go-ahead, then merge `new-site` into `main`.
-2. His words: a line of his own on About (optional), the press kit bio, the full-size Get Down cover.
-3. His decision on the old pages (placements, performance, EPK, practice): gone for good, or back in the new design. Then make the redirects permanent or remove them.
-4. To sell for real: a real product and its file; production `SQUARE_ACCESS_TOKEN` + `SQUARE_LOCATION_ID` with `SQUARE_ENVIRONMENT=production` in Vercel's Production environment (his to enter); a webhook subscription to `payment.updated` and `refund.updated` at `https://www.anthonydakemusic.com/api/square/webhook` and its key in `SQUARE_WEBHOOK_SIGNATURE_KEY`; the Resend domain verified (DKIM TXT + `rsend`/`send` CNAMEs at Cloudflare) and `BOOKING_NOTIFY_FROM` switched; a sales-tax decision (quick-pay links charge the listed price with no tax line); the site off Vercel's free plan (commercial use). Then buy the cheapest product with a real card and refund it.
+1. Anthony's go-ahead, then merge `new-site` into `main`, and tag the last old commit `earlier-site`.
+2. From him or the artists: cover files for Sparkles and Forever (empty frames until then) and Get Down at full size; the press kit bio (it still shows ruled blanks; the bio he sent was for About).
+3. To sell for real: a real product and its file; production `SQUARE_ACCESS_TOKEN` + `SQUARE_LOCATION_ID` with `SQUARE_ENVIRONMENT=production` in Vercel's Production environment (his to enter); a webhook subscription to `payment.updated` and `refund.updated` at `https://www.anthonydakemusic.com/api/square/webhook` and its key in `SQUARE_WEBHOOK_SIGNATURE_KEY`; the Resend domain verified (DKIM TXT + `rsend`/`send` CNAMEs at Cloudflare) and `BOOKING_NOTIFY_FROM` switched; a sales-tax decision (quick-pay links charge the listed price with no tax line); the site off Vercel's free plan (commercial use). Then buy the cheapest product with a real card and refund it.
 
 ## Local environment (Anthony's Mac)
 
@@ -186,3 +190,4 @@ Vercel Web Analytics is loaded as a plain script (`/_vercel/insights/script.js`)
 - 23 Nov 2026: the Square store built and proven in sandbox on branch `square-store`.
 - Nov 2026: the new design made as a one-file prototype over some fifty rounds with Anthony (the drawing from his drum part, the flight, the belt, the booking form, About).
 - 24 Nov 2026: the prototype became the site (`new-site`): one source tree for the prototype and the real pages, desktop and tablet layouts, Products and the order page in the new design, the booking form wired to `/api/book`, the browser checks.
+- 24 Nov 2026, later: the bookings list and its login removed from `main` (commit `5510c8f`, live) because the login check did not protect the list, and from `new-site`. On `new-site`, from Anthony's notes on the first preview: his bio on About, the texts further out and leaning against the mouse, Production on one laptop screen, covers as links to YouTube with a plain cursor, Sparkles and Forever added, the mark as the home button, the earlier pages' files moved to `archive/`, old addresses redirected for good.

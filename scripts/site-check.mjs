@@ -76,13 +76,15 @@ async function shell(page, label, storeOpen = true) {
     const r = (s) => { const e = document.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom, w: b.width, h: b.height }; };
     const dest = document.querySelector("#dest");
     return { W: innerWidth, H: innerHeight, sw: document.documentElement.scrollWidth, dsw: dest.hidden ? 0 : dest.scrollWidth, dcw: dest.clientWidth, h1: document.querySelectorAll("h1").length,
-      left: r("#hdr .tx.l"), right: r("#hdr .tx.r"), pin: r("#hdr .pin"), lang: document.documentElement.lang, main: !!document.querySelector("main") };
+      left: r("#hdr .tx.l"), right: r("#hdr .tx.r"), pin: r("#hdr .pin"), lang: document.documentElement.lang, main: !!document.querySelector("main"),
+      mark: (() => { const a = document.querySelector("#hdr .pin"); return { tag: a.tagName, href: a.getAttribute("href"), name: a.getAttribute("aria-label") }; })() };
   });
   check(`${label}: nothing spills sideways`, m.sw <= m.W && m.dsw <= m.dcw + 1, m);
   check(`${label}: one main heading`, m.h1 === 1, m.h1);
   check(`${label}: Book is right of the mark, 44 px tall`, m.right && m.right.l > m.pin.r && m.right.h >= 44 && m.right.r <= m.W, m.right);
   if (storeOpen) check(`${label}: Products is left of the mark, 44 px tall`, m.left && m.left.r < m.pin.l && m.left.h >= 44 && m.left.l >= 0, m.left);
   check(`${label}: the document says its language and has a main part`, m.lang === "en" && m.main);
+  check(`${label}: the mark is a link home, 44 px across, with a name`, m.mark.tag === "A" && m.mark.href === "/" && m.pin.w >= 44 && m.pin.h >= 44 && /home/i.test(m.mark.name || ""), m.mark);
 }
 async function layoutAt(size, scheme) {
   const { ctx, page } = await open(size, { colorScheme: scheme });
@@ -112,11 +114,19 @@ async function layoutAt(size, scheme) {
     const x0 = window.__cvs.state().belt.x; let twice = seen();
     for (let i = 0; i < 4; i++) { await new Promise((r) => setTimeout(r, 350)); twice = Math.max(twice, seen()); }
     const f = [...document.querySelectorAll("#bk .bk-f input, #bk .bk-f textarea")];
+    const links = real.map((li) => li.querySelector("a.belt-a")), d = document.querySelector("#dest"), cols = (() => { const b = [...document.querySelectorAll("#bk .bk-f")].map((e) => e.getBoundingClientRect().top); return b[0] === b[1] ? 2 : 1; })();
     return { covers: real.length, loaded: all.every((i) => i.complete && i.naturalWidth > 0), moved: window.__cvs.state().belt.x - x0, twice, still: belt.classList.contains("still"),
+      links: links.map((a) => (a ? a.getAttribute("href") : null)), newTab: links.every((a) => a && a.target === "_blank" && a.rel === "noopener"), ghosts: [...document.querySelectorAll(".belt-item[aria-hidden] a")].every((a) => a.tabIndex === -1),
+      cursors: [...new Set([belt, links[0], links[0] && links[0].querySelector(".belt-art")].map((e) => (e ? getComputedStyle(e).cursor : "?")))].join(), empty: document.querySelectorAll(".belt-item:not([aria-hidden]) .belt-none").length,
+      scroll: d.scrollHeight - d.clientHeight, back: d.querySelector("a.back").getBoundingClientRect().bottom, W: innerWidth, H: innerHeight, cols,
       fields: f.map((e) => e.name), font: Math.min(...f.map((e) => parseFloat(getComputedStyle(e).fontSize))), offer: document.querySelector(".offer-name")?.textContent, label: document.querySelector(".belt-label")?.textContent,
       send: document.querySelector(".bk-send")?.getBoundingClientRect().height, action: document.querySelector("#bk").getAttribute("action"), method: document.querySelector("#bk").method };
   });
-  check(`${tag} production: five covers, all loaded`, prod.covers === 5 && prod.loaded, prod);
+  const YT = ["PdBcj7DCSJA", "igaxmP2tTU8", "rygn058o5OM", "6qLMNYQLHkw", "_oLkgRSg-ss", "zqxpGR__WWk", "GLV36D059m4"].map((id) => "https://www.youtube.com/watch?v=" + id);
+  check(`${tag} production: seven covers in his order, every picture there is loaded`, prod.covers === 7 && prod.loaded && prod.empty === 2, prod);
+  check(`${tag} production: each cover is a link to its release on YouTube, in a new tab`, prod.links.join() === YT.join() && prod.newTab && prod.ghosts, prod.links);
+  check(`${tag} production: over a cover the pointer stays the plain arrow`, /^(auto,)?default$/.test(prod.cursors), prod.cursors);
+  if (prod.W >= 900 && prod.H >= 630) check(`${tag} production: one screen, no scroll, the form two by two, Back on screen`, prod.scroll <= 1 && prod.back <= prod.H + 1 && prod.cols === 2, prod);
   check(`${tag} production: the belt is moving`, prod.moved > 5 && !prod.still, prod.moved);
   check(`${tag} production: no cover is on screen twice`, prod.twice <= 1, prod.twice);
   check(`${tag} production: the form has its four fields, typed at 16 px or more`, prod.fields.join() === "name,email,link,note" && prod.font >= 16, prod);
@@ -132,13 +142,20 @@ async function layoutAt(size, scheme) {
     const texts = [...document.querySelectorAll(".abt-wall .msg:not(.out)")].map((f) => { const b = f.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom }; });
     let clash = 0; for (let i = 0; i < texts.length; i++) for (let j = i + 1; j < texts.length; j++) { const a = texts[i], b = texts[j]; if (a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b) clash++; }
     const hold = texts.filter((t) => t.l < pic.right && t.r > pic.left).length;
-    return { scroll: d.scrollHeight - d.clientHeight, shown: texts.length, clash, hold, inside: texts.every((t) => t.l >= 0 && t.r <= W), pic: { w: pic.width, h: pic.height, t: pic.top, b: pic.bottom }, img: document.querySelector(".abt-pic img").naturalWidth,
-      credit: document.querySelector(".abt-c").getBoundingClientRect().bottom, H: innerHeight, back: document.querySelector("#dest a.back").getBoundingClientRect().bottom };
+    const bio = document.querySelector(".abt-bio"), bb = bio.getBoundingClientRect(), wall = document.querySelector(".abt-wall").getBoundingClientRect(), paras = [...bio.querySelectorAll("p")].map((p) => p.textContent);
+    const out = { scroll: d.scrollHeight - d.clientHeight, shown: texts.length, clash, hold, inside: texts.every((t) => t.l >= 0 && t.r <= W), pic: { w: pic.width, h: pic.height, t: pic.top, b: pic.bottom }, img: document.querySelector(".abt-pic img").naturalWidth,
+      credit: document.querySelector(".abt-c").getBoundingClientRect().bottom, H: innerHeight, W, back: document.querySelector("#dest a.back").getBoundingClientRect().bottom, visible: Math.min(innerHeight, d.getBoundingClientRect().bottom),
+      beside: window.__abt.state().beside, bio: { l: bb.left, r: bb.right, t: bb.top, b: bb.bottom }, wallRight: wall.right, paras: paras.length, first: paras[0].slice(0, 28), last: paras[paras.length - 1].slice(-27), size: parseFloat(getComputedStyle(bio.querySelector("p")).fontSize) };
+    d.scrollTop = d.scrollHeight; out.backAtEnd = d.querySelector("a.back").getBoundingClientRect().bottom; d.scrollTop = 0;
+    return out;
   });
   check(`${tag} about: the photograph is loaded`, abt.img > 0 && abt.pic.w > 100, abt.pic);
   check(`${tag} about: ${short ? "two or four" : "four"} texts, none over another, all on screen`, (short ? abt.shown >= 2 : abt.shown === 4) && abt.clash === 0 && abt.inside, abt);
   check(`${tag} about: every text keeps a hold on the photograph`, abt.hold === abt.shown, abt);
-  check(`${tag} about: one screen, no scroll, Back on screen`, abt.scroll <= 1 && abt.back <= abt.H + 1, abt);
+  check(`${tag} about: his bio is there, word for word, three paragraphs`, abt.paras === 3 && abt.first === "I promise to bring honesty, " && abt.last === "sounds like no one but you." && abt.size >= 14, abt);
+  check(`${tag} about: the bio stands beside the photograph on a laptop and under it elsewhere`, abt.beside === (abt.W >= 1180 && abt.H >= 640), { beside: abt.beside, W: abt.W, H: abt.H });
+  if (abt.beside) check(`${tag} about: one screen, no scroll: the bio clear of the texts, Back on screen`, abt.scroll <= 1 && abt.back <= abt.H + 1 && abt.bio.l >= abt.wallRight + 40 && abt.bio.r <= abt.W && abt.bio.b <= abt.H, abt);
+  else check(`${tag} about: the photograph and its credit fill the first screen, the bio starts in it and Back ends the page`, abt.credit <= abt.visible + 1 && abt.bio.t < abt.visible - 20 && abt.bio.t >= abt.credit && abt.backAtEnd <= abt.visible + 1, abt);
 
   await go(page, "/press-kit");
   await shell(page, `${tag} press kit`);
@@ -172,7 +189,30 @@ async function moves(size) {
   check(`${tag}: reading starts from the new page`, await page.evaluate(() => document.activeElement === document.querySelector("#dest")));
   await page.click("#dest a.back"); await at(page, "home");
   check(`${tag}: Back flies home`, path(page) === "/" && (await page.title()) === "Anthony Dake · Architect of Sound", path(page));
+  // the mark is the home button from every page, and on the home screen it moves nothing
+  const hist = await page.evaluate(() => history.length);
+  await page.click("#hdr .pin"); await page.waitForTimeout(400);
+  check(`${tag}: the mark on the home screen moves nothing`, path(page) === "/" && (await page.evaluate(() => window.__home.state().mode)) === "home" && (await page.evaluate(() => history.length)) === hist);
   await page.click("#hdr .tx.r"); await at(page, "production");
+  await page.click("#hdr .pin"); await at(page, "home");
+  check(`${tag}: the mark flies home from a page, leaving no pencil cross on itself`, path(page) === "/" && (await page.title()) === "Anthony Dake · Architect of Sound" && (await page.evaluate(() => document.querySelectorAll("#hdr .tick, .pin .tick").length)) === 0, path(page));
+  await page.click("#hdr .tx.r"); await at(page, "production");
+  // a cover: a press opens its release in a new tab, a pull along the belt moves the belt and opens nothing
+  await ctx.route("https://www.youtube.com/**", (r) => r.fulfill({ status: 200, contentType: "text/html", body: "<title>stand-in for YouTube</title>" }));
+  await page.waitForTimeout(900);
+  const spot = () => page.evaluate(() => { const a = [...document.querySelectorAll(".belt a.belt-a")].map((x) => ({ r: x.querySelector(".belt-art").getBoundingClientRect(), h: x.href })).filter((o) => o.r.left > 30 && o.r.right < innerWidth - 30)[0]; return { x: a.r.left + a.r.width / 2, y: a.r.top + a.r.height / 2, h: a.h }; });
+  let s0 = await spot(); const tabs0 = ctx.pages().length;
+  if (SIZES[size].hasTouch) {
+    const [pop] = await Promise.all([page.waitForEvent("popup"), page.touchscreen.tap(s0.x, s0.y)]); await pop.waitForLoadState().catch(() => {});
+    check(`${tag}: a tap on a cover opens its release on YouTube in a new tab`, pop.url() === s0.h && /youtube\.com\/watch\?v=/.test(s0.h) && path(page) === "/production", pop.url()); await pop.close();
+  } else {
+    await page.mouse.move(s0.x, s0.y); await page.waitForTimeout(120); const bx0 = await page.evaluate(() => window.__cvs.state().belt.x);       // the belt waits under the mouse
+    await page.mouse.down(); await page.mouse.move(s0.x + 150, s0.y + 4, { steps: 8 }); await page.mouse.up(); await page.waitForTimeout(400);
+    check(`${tag}: a pull along the belt moves it and opens nothing`, Math.abs((await page.evaluate(() => window.__cvs.state().belt.x)) - bx0 - 150) < 2 && ctx.pages().length === tabs0, { moved: (await page.evaluate(() => window.__cvs.state().belt.x)) - bx0, tabs: ctx.pages().length - tabs0 });
+    s0 = await spot();
+    const [pop] = await Promise.all([page.waitForEvent("popup"), page.mouse.click(s0.x, s0.y)]); await pop.waitForLoadState().catch(() => {});
+    check(`${tag}: a press on a cover opens its release on YouTube in a new tab`, pop.url() === s0.h && /youtube\.com\/watch\?v=/.test(s0.h) && path(page) === "/production", pop.url()); await pop.close();
+  }
   const top = await page.evaluate(() => { const d = document.querySelector("#dest"); d.scrollTop = 40; return d.scrollTop; });
   await page.click("#hdr .tx.r"); await page.waitForTimeout(300);
   check(`${tag}: Book on its own page moves nothing`, path(page) === "/production" && (await page.evaluate(() => document.querySelector("#dest").scrollTop)) === top);
@@ -183,7 +223,13 @@ async function moves(size) {
     check(`${tag}: held with the keyboard, the belt waits`, held.a === held.b && !held.moving && held.pitch > 100, held);
     const x0 = held.b; await page.keyboard.press("ArrowLeft");
     check(`${tag}: an arrow key moves it one cover`, Math.abs((await page.evaluate(() => window.__cvs.state().belt.x)) - (x0 - held.pitch)) < 1);
-    await page.setViewportSize({ width: 1280, height: 620 }); await page.goto(SITE + "/production"); await ready(page); await page.waitForTimeout(300);
+    // Tab goes on to each cover in his order; the one the keyboard is on is brought into view and the belt waits
+    await page.keyboard.press("Tab"); await page.keyboard.press("Tab"); await page.keyboard.press("Tab"); await page.waitForTimeout(500);
+    // (a cover stands on the belt twice; the keyboard is on the first, and the mark of it is on both, so the one on screen shows it)
+    const tabbed = await page.evaluate(() => { const a = document.activeElement, seen = [...document.querySelectorAll(".belt-item.kb")].map((li) => ({ r: li.querySelector(".belt-art").getBoundingClientRect(), t: li.querySelector(".belt-t").textContent, ring: getComputedStyle(li.querySelector(".belt-art")).outlineStyle })).filter((o) => o.r.left >= 0 && o.r.right <= innerWidth);
+      return { title: a.querySelector(".belt-t")?.textContent, tag: a.tagName, marked: document.querySelectorAll(".belt-item.kb").length, seen: seen.map((o) => o.t + ":" + o.ring + ":" + Math.round(o.r.left + o.r.width / 2 - innerWidth / 2)), moving: window.__cvs.state().belt.moving }; });
+    check(`${tag}: Tab reaches the covers in his order; the one in hand is at the middle of the screen, marked, and the belt waits`, tabbed.title === "AURA" && tabbed.tag === "A" && tabbed.marked === 2 && tabbed.seen.length >= 1 && tabbed.seen.some((s) => /^AURA:solid:-?[01]$/.test(s)) && !tabbed.moving, tabbed);
+    await page.setViewportSize({ width: 880, height: 620 }); await page.goto(SITE + "/production"); await ready(page); await page.waitForTimeout(300);       // narrower than 900 px the form is one column and the page is longer than this window
     await page.keyboard.press("PageDown");
     check(`${tag}: a page opened by its address scrolls with the keyboard`, (await page.evaluate(() => document.querySelector("#dest").scrollTop)) > 100);
     // the browser bringing something into view (Tab to the last field, find in page) must never slide the header off
@@ -206,6 +252,18 @@ async function moves(size) {
   }
   // straight to a page by its address, then Back
   await go(page, "/about"); await at(page, "about");
+  if (!SIZES[size].hasTouch) {
+    // the texts lean against the mouse, as the photographs on the reference's home screen do, and settle again with the mouse at the middle of the window
+    await page.waitForFunction(() => document.querySelector(".abt-wall")?.classList.contains("set"), null, { timeout: 15000 });
+    const { width: W, height: H } = SIZES[size].viewport, lefts = () => page.evaluate(() => [...document.querySelectorAll(".abt-wall .msg")].map((f) => f.getBoundingClientRect().left));
+    const rest = await lefts();
+    await page.mouse.move(W / 2, H / 2); await page.mouse.move(W - 1, H / 2, { steps: 5 }); await page.waitForTimeout(1900);
+    const lean = await page.evaluate(() => { const pic = document.querySelector(".abt-pic img").getBoundingClientRect(); return { n: window.__abt.state().lean, t: [...document.querySelectorAll(".abt-wall .msg")].map((f) => f.getBoundingClientRect()).map((b) => ({ l: b.left, hold: b.left < pic.right && b.right > pic.left })) }; });
+    check(`${tag}: on About the texts lean against the mouse (at the right edge, 16 to 30 px to the left), each still on the photograph`, Math.abs(lean.n[0] + 5) < .1 && lean.t.every((b, i) => { const d = b.l - rest[i]; return d < -15 && d > -31 && b.hold; }), { n: lean.n, moved: lean.t.map((b, i) => +(b.l - rest[i]).toFixed(1)) });
+    await page.mouse.move(W / 2, H / 2, { steps: 5 }); await page.waitForTimeout(1900);
+    const back = await lefts();
+    check(`${tag}: with the mouse at the middle of the window they are back in their places`, back.every((l, i) => Math.abs(l - rest[i]) < .6), back.map((l, i) => +(l - rest[i]).toFixed(2)));
+  }
   await page.click("#dest a.back"); await at(page, "home");
   check(`${tag}: Back on a page opened by its address flies home`, path(page) === "/");
   await page.goBack(); await at(page, "about");
@@ -355,7 +413,7 @@ async function plain() {
   await page.goto(SITE + "/");
   check(`${tag}: home shows the name, the door and the client text in a ruled bubble`, (await page.isVisible("#name")) && (await page.isVisible(".pills .choice")) && (await page.evaluate(() => getComputedStyle(document.querySelector(".said blockquote")).borderTopWidth)) === "1px");
   await Promise.all([page.waitForURL(SITE + "/production"), page.click(".pills .choice")]);
-  check(`${tag}: the door is a link to Production, and the page is whole`, (await page.isVisible("#bk")) && (await page.locator(".belt-item").count()) === 5 && (await page.isVisible(".offer-name")));
+  check(`${tag}: the door is a link to Production, and the page is whole`, (await page.isVisible("#bk")) && (await page.locator(".belt-item").count()) === 7 && (await page.locator('.belt-item a.belt-a[href^="https://www.youtube.com/watch?v="][target="_blank"]').count()) === 7 && (await page.isVisible(".offer-name")));
   await bookingsTable();
   const n = Number((await local.sql`SELECT count(*)::int AS n FROM bookings;`).rows[0].n);
   await page.fill("#bk [name=name]", "Plain Poster"); await page.fill("#bk [name=email]", "plain@example.com"); await page.fill("#bk [name=note]", "No scripts here.");
@@ -367,7 +425,9 @@ async function plain() {
   await page.goto(SITE + "/production/not-sent");
   check(`${tag}: and that page shows the form again with the address to write to`, (await page.isVisible("#bk")) && (await page.isVisible(".bk-fail")));
   await page.goto(SITE + "/about");
-  check(`${tag}: About shows the photograph and all four texts`, (await page.isVisible(".abt-pic img")) && (await page.locator(".abt-wall .msg").count()) === 4 && (await page.evaluate(() => [...document.querySelectorAll(".abt-wall .msg")].every((m) => m.getBoundingClientRect().height > 20 && getComputedStyle(m).position === "static"))));
+  check(`${tag}: About shows the photograph, all four texts and his bio`, (await page.isVisible(".abt-pic img")) && (await page.locator(".abt-wall .msg").count()) === 4 && (await page.evaluate(() => [...document.querySelectorAll(".abt-wall .msg")].every((m) => m.getBoundingClientRect().height > 20 && getComputedStyle(m).position === "static"))) && (await page.locator(".abt-bio p").count()) === 3 && (await page.isVisible(".abt-bio p")));
+  await Promise.all([page.waitForURL(SITE + "/"), page.click("#hdr .pin")]);
+  check(`${tag}: the mark is a link home`, (await page.isVisible("#name")));
   await page.goto(SITE + "/products");
   await Promise.all([page.waitForURL(/\/__square\//), page.click(".pd-buy")]);
   await Promise.all([page.waitForURL(ORDER), page.click("#pay")]);
@@ -389,7 +449,10 @@ async function calm() {
   await at(page, "production");
   const belt = await page.evaluate(async () => { const x = document.querySelector(".belt-track").getBoundingClientRect().left; await new Promise((r) => setTimeout(r, 600)); return { still: document.querySelector(".belt").classList.contains("still"), moved: document.querySelector(".belt-track").getBoundingClientRect().left - x, items: document.querySelectorAll(".belt-item").length }; });
   check(`${tag}: no flight, the page is there at once`, took < 100, took);
-  check(`${tag}: the belt stands still as one row of five`, belt.still && belt.moved === 0 && belt.items === 5, belt);
+  check(`${tag}: the belt stands still as one row of seven`, belt.still && belt.moved === 0 && belt.items === 7, belt);
+  await page.goto(SITE + "/about"); await ready(page); await page.waitForFunction(() => document.querySelector(".abt-wall")?.classList.contains("set"), null, { timeout: 15000 });
+  await page.mouse.move(40, 40); await page.mouse.move(1300, 700, { steps: 4 }); await page.waitForTimeout(700);
+  check(`${tag}: the texts on About do not lean to the mouse`, (await page.evaluate(() => window.__abt.state().lean.join())) === "0,0,0,0");
   check(`${tag}: no errors`, page.problems.length === 0, page.problems);
   await ctx.close();
 }

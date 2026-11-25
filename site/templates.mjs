@@ -11,7 +11,7 @@
      products          the products on sale right now (or null: then the header shows no Products link)
      head, tail        what the document needs at the end of its head and of its body (the stylesheet and the script, as links or in full)
      test              true only in the one-file prototype: adds the workshop panel */
-import { SITE, PAGES, HOME, RELEASES, BELT_LABEL, OFFER, BOOKING, ABOUT, PRESS_KIT, STORE, MISSING, BACK } from './content.mjs';
+import { SITE, PAGES, HOME, RELEASES, YOUTUBE, BELT_LABEL, OFFER, BOOKING, ABOUT, PRESS_KIT, STORE, MISSING, BACK } from './content.mjs';
 
 export function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -37,19 +37,24 @@ export function homeWords(t, page) {
     '</div>';
 }
 
-/* ------------------------------------------------------------------ the header: Products at the left (only while there is something to buy), the mark in the middle, Book at the right */
+/* ------------------------------------------------------------------ the header: Products at the left (only while there is something to buy), the mark in the middle, Book at the right.
+   THE MARK IS THE WAY HOME FROM EVERY PAGE (his words, 24 Nov 2026: "the AD logo up top should be the home button to everywhere"). It is a real link to the home address;
+   the engine turns a press on it into the flight back (data-home), and on the home screen it moves nothing. */
 export function header(t) {
   return '<header id="hdr">' + (t.products && t.products.length ? word(PAGES.products.label, t.href('products'), { cls: 'l', data: 'data-jump="products"' }) : '') +
-    '<span class="pin"><canvas id="mk" width="68" height="68" role="img" aria-label="' + esc(SITE.name) + '"></canvas></span>' +
+    '<a class="pin" href="' + esc(t.href('home')) + '" data-home aria-label="' + esc(SITE.name) + ', home"><canvas id="mk" width="68" height="68" aria-hidden="true"></canvas></a>' +
     word('Book', t.href('production'), { cls: 'r', data: 'data-jump="production"' }) + '</header>';
 }
 
 /* ------------------------------------------------------------------ PRODUCTION: the two words, the belt of covers, the offer, the booking form */
-function cover(t, r, ghost) {
-  var small = t.asset('covers/' + r.key + '-240.jpg'), big = r.art && r.art[1] ? t.asset('covers/' + r.key + '-' + r.art[1] + '.jpg') : '';
-  return '<div class="belt-item" role="listitem"' + (ghost ? ' aria-hidden="true"' : '') + '><img class="belt-art" src="' + small + '"' + (big && !t.inlineImg ? ' srcset="' + small + ' 240w, ' + big + ' ' + r.art[1] + 'w" sizes="(min-width: 700px) 280px, 124px"' : '') +
-    ' width="240" height="240" alt="' + (ghost ? '' : esc('Cover of ' + r.title + ' by ' + r.artist)) + '" draggable="false" decoding="async">' +
-    '<span class="belt-t">' + esc(r.title) + '</span><span class="belt-by" data-full="' + esc(r.artist) + '" title="' + esc(r.artist) + '">' + esc(r.artist) + '</span></div>';
+/* A cover, its title and its artist are one link to that release on YouTube, opened in a new tab so the site stays where it was. The picture's own description is left empty:
+   the title and the artist stand right under it inside the same link, and saying them twice helps nobody. A release with no cover yet (art: null) shows an empty frame. */
+function cover(t, r) {
+  var has = !!(r.art && r.art.length), small = has ? t.asset('covers/' + r.key + '-240.jpg') : '', big = has && r.art[1] ? t.asset('covers/' + r.key + '-' + r.art[1] + '.jpg') : '';
+  var pic = has ? '<img class="belt-art" src="' + small + '"' + (big && !t.inlineImg ? ' srcset="' + small + ' 240w, ' + big + ' ' + r.art[1] + 'w" sizes="(min-width: 700px) 280px, 124px"' : '') + ' width="240" height="240" alt="" draggable="false" decoding="async">'
+    : '<span class="belt-art belt-none"></span>';
+  var words = '<span class="belt-t">' + esc(r.title) + '</span><span class="belt-by" data-full="' + esc(r.artist) + '" title="' + esc(r.artist) + '">' + esc(r.artist) + '</span>';
+  return '<div class="belt-item" role="listitem">' + (r.youtube ? '<a class="belt-a" href="' + esc(YOUTUBE + r.youtube) + '" target="_blank" rel="noopener" draggable="false">' + pic + words + '<span class="vh">, on YouTube</span></a>' : pic + words) + '</div>';
 }
 function field(name, label, attrs, need) {
   return '<label class="bk-f"><span class="bk-l"><span>' + esc(label) + '</span><span class="bk-e"' + (need ? ' aria-live="polite"' : '') + '>' + (need ? '' : esc(BOOKING.optional)) + '</span></span>' +
@@ -70,20 +75,22 @@ export function bookingForm(t, state) {
 export function production(t, data) {
   return '<h1 class="pg-h vh">' + esc(PAGES.production.label) + '</h1>' +
     '<div class="cvs" id="cvs"><p class="belt-label">' + esc(BELT_LABEL) + '</p>' +
-    '<div class="belt" role="group" aria-label="' + esc(countWord(RELEASES.length) + ' productions') + '"><div class="belt-track" role="list">' + RELEASES.map(function (r) { return cover(t, r, false); }).join('') + '</div></div>' +
+    '<div class="belt" role="group" aria-label="' + esc(countWord(RELEASES.length) + ' productions') + '"><div class="belt-track" role="list">' + RELEASES.map(function (r) { return cover(t, r); }).join('') + '</div></div>' +
     '<div class="offer" id="offer"><h2 class="offer-name">' + esc(OFFER.name) + '</h2><p class="offer-what">' + esc(OFFER.what) + '</p></div>' +
     bookingForm(t, data && data.booking) + '</div>';
 }
 
-/* ------------------------------------------------------------------ ABOUT: the photograph with the artists' texts round it */
+/* ------------------------------------------------------------------ ABOUT: the photograph with the artists' texts round it and their credit under it, then his bio */
 export function about(t) {
   var p = ABOUT.photo, sizes = '(min-width: 1600px) 740px, (min-width: 700px) 460px, 78vw', set = function (ext) { return p.widths.map(function (w) { return t.asset('about/' + p.name + '-' + w + '.' + ext) + ' ' + w + 'w'; }).join(', '); };
   var img = t.inlineImg ? '<img src="' + t.asset('about/' + p.name + '-800.jpg') + '" width="' + p.w + '" height="' + p.h + '" alt="' + esc(p.alt) + '" decoding="async">'
     : '<picture><source type="image/webp" srcset="' + set('webp') + '" sizes="' + sizes + '"><img src="' + t.asset('about/' + p.name + '-800.jpg') + '" srcset="' + set('jpg') + '" sizes="' + sizes + '" width="' + p.w + '" height="' + p.h + '" alt="' + esc(p.alt) + '" decoding="async"></picture>';
+  var bio = ABOUT.bio || [];
   return '<h1 class="pg-h">' + esc(PAGES.about.label) + '</h1>' +
-    '<div class="abt" id="abt"><div class="abt-wall"><figure class="abt-pic">' + img + '</figure>' +
+    '<div class="abt" id="abt"><div class="abt-show"><div class="abt-wall"><figure class="abt-pic">' + img + '</figure>' +
     ABOUT.texts.map(function (x) { return '<figure class="msg"><blockquote>' + esc(x[0]) + '</blockquote></figure>'; }).join('') +
-    '</div><p class="abt-c">' + esc(ABOUT.credit) + '</p></div>';
+    '</div><p class="abt-c">' + esc(ABOUT.credit) + '</p></div>' +
+    (bio.length ? '<div class="abt-bio">' + bio.map(function (para) { return '<p>' + esc(para) + '</p>'; }).join('') + '</div>' : '') + '</div>';
 }
 
 /* ------------------------------------------------------------------ PRESS KIT: a short bio in his words; ruled blanks until he sends it */

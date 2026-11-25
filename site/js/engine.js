@@ -436,7 +436,7 @@ function startHome() {
     if (mode === 'leaving') { tMode = performance.now() - LEAVE; return; }       /* a second press skips the flight */
     var el = ev.target.closest('.loop'), finger = ev.pointerType !== 'mouse';
     if (el && finger) { scramble(el); downEl = el; tDown = performance.now(); }                                                /* a finger gets the scrambling letters and no circle: circles are for a mouse */
-    if (calm || ev.target.closest('#panel') || (el && finger)) return;           /* and no cross beside a word that has no circle */
+    if (calm || ev.target.closest('#panel') || ev.target.closest('.pin') || (el && finger)) return;           /* and no cross beside a word that has no circle, nor across the mark */
     /* on a word the cross goes at the shoulder of its circle, on the side with room, and travels with the word: it must never strike a letter out.
        On bare paper it goes where you pressed. */
     var host = el || stage, r = host.getBoundingClientRect(), sr = stage.getBoundingClientRect(), NS = 'http://www.w3.org/2000/svg', sv = doc.createElementNS(NS, 'svg'), rot = (Math.random() - .5) * 50, s1 = 5 + Math.random() * 2, tx, ty;
@@ -453,14 +453,17 @@ function startHome() {
     if (mode === 'home' || mode === 'returning') { leaveTo(name, true); return; }
     pending = name; side = PAGES[name].side; try { history.replaceState({ page: name }, '', ROUTE.url(name)); } catch (e) {} if (hoverEl && !hoverEl.closest('#hdr')) unhover(true); show(name); tArrive = performance.now();
   }
-  /* the doors, the links, Back, and the browser's own back button. A link marked data-plain is the browser's own to follow (a download, a re-check). */
+  /* the doors, the links, Back, the mark, and the browser's own back button. A link marked data-plain is the browser's own to follow (a download, a re-check).
+     THE MARK IN THE HEADER IS THE HOME BUTTON (data-home; his words, 24 Nov 2026: "the AD logo up top should be the home button to everywhere"): from a page it does what Back does,
+     the short flight home; on the home screen, or on the way to or from it, it moves nothing. */
   stage.addEventListener('click', function (ev) {
-    var a = ev.target.closest('[data-go],[data-back],[data-jump]'); if (!a || !stage.contains(a) || a.hasAttribute('data-plain')) return;
+    var a = ev.target.closest('[data-go],[data-back],[data-jump],[data-home]'); if (!a || !stage.contains(a) || a.hasAttribute('data-plain')) return;
     if (!HASH && here && PAGES[here] && !PAGES[here].fly) return;       /* on a page that exists only as a document from the server (Your order, Not found) every link is the browser's own: the page keeps its place in the history and is fetched fresh when you come back */
     if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey || ev.button) return;       /* a new tab or window is the visitor's choice */
     ev.preventDefault();
     if (a.hasAttribute('data-jump')) jump(a.getAttribute('data-jump'));
     else if (a.hasAttribute('data-go')) leaveTo(a.getAttribute('data-go'), true);       /* no beat before you go: the answer to a press starts at once */
+    else if (a.hasAttribute('data-home') && mode !== 'page') return;
     else if (pushed) { pushed = false; byLink = true; try { history.back(); } catch (e) { byLink = false; goHome(); } }
     else { try { history.pushState({ page: null }, '', ROUTE.url(null)); } catch (e) {} goHome(); }       /* arrived straight on a page: Back still flies home, and the address follows */
   });

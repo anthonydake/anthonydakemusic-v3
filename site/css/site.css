@@ -11,10 +11,10 @@
    --bgc is the ground as three numbers, for washes of it. --lead is the one blue. */
 :root{--serif:"Instrument Serif","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;--mono:"Courier Prime","Courier New",monospace}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
-body{--bg:#000;--bgc:0,0,0;--ink:#f2f2f2;--sub:#9a9a9a;--lead:#8ec5ff;--hdr:rgba(0,0,0,.72);--g0:#3b82f6;--g1:#8ec5ff;--g2:#fff;--pin:#000;--pinedge:rgba(255,255,255,.1);--edge:#9a9a9a;
+body{--bg:#000;--bgc:0,0,0;--ink:#f2f2f2;--sub:#9a9a9a;--lead:#8ec5ff;--hdr:rgba(0,0,0,.72);--g0:#3b82f6;--g1:#8ec5ff;--g2:#fff;--pin:#000;--pinedge:rgba(255,255,255,.1);--pinlit:rgba(255,255,255,.2);--edge:#9a9a9a;
   background:var(--bg);color:var(--ink);font-family:var(--mono);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
-@media (prefers-color-scheme:light){body:not(.black){--bg:#f7f6f2;--bgc:247,246,242;--ink:#181611;--sub:#49453c;--lead:#1d4ed8;--hdr:rgba(247,246,242,.8);--g0:#1d4ed8;--g1:#2563eb;--g2:#181611;--pin:#181611;--pinedge:rgba(0,0,0,.2);--edge:#3b372f}}
-body.soft{--bg:#f7f6f2;--bgc:247,246,242;--ink:#181611;--sub:#49453c;--lead:#1d4ed8;--hdr:rgba(247,246,242,.8);--g0:#1d4ed8;--g1:#2563eb;--g2:#181611;--pin:#181611;--pinedge:rgba(0,0,0,.2);--edge:#3b372f}
+@media (prefers-color-scheme:light){body:not(.black){--bg:#f7f6f2;--bgc:247,246,242;--ink:#181611;--sub:#49453c;--lead:#1d4ed8;--hdr:rgba(247,246,242,.8);--g0:#1d4ed8;--g1:#2563eb;--g2:#181611;--pin:#181611;--pinedge:rgba(0,0,0,.2);--pinlit:rgba(0,0,0,.4);--edge:#3b372f}}
+body.soft{--bg:#f7f6f2;--bgc:247,246,242;--ink:#181611;--sub:#49453c;--lead:#1d4ed8;--hdr:rgba(247,246,242,.8);--g0:#1d4ed8;--g1:#2563eb;--g2:#181611;--pin:#181611;--pinedge:rgba(0,0,0,.2);--pinlit:rgba(0,0,0,.4);--edge:#3b372f}
 .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 
 /* ------------------------------------------------------------------ 2 · STAGE AND HEADER
@@ -22,8 +22,14 @@ body.soft{--bg:#f7f6f2;--bgc:247,246,242;--ink:#181611;--sub:#49453c;--lead:#1d4
 #stage{position:fixed;top:0;left:0;width:100%;height:100vh;height:100lvh;overflow:hidden;overflow:clip;background:var(--bg)}       /* clip, not just hidden: a hidden box can still be scrolled by the browser itself (Tab to a field, find in page), which would slide the header off; a clipped one cannot. Older browsers get hidden and the script's guard (site/js/pages.js) */
 #gl{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 #hdr{position:absolute;left:0;top:0;width:100%;height:56px;background:var(--hdr);z-index:4}
-.pin{position:absolute;left:50%;top:6px;width:44px;height:44px;margin-left:-22px;border-radius:50%;background:var(--pin);box-shadow:0 0 0 1px var(--pinedge)}
+/* THE MARK IS THE HOME BUTTON, from every page (his words, 24 Nov 2026). Its circle lights up while a mouse rests on it, as the old site's did (the ring went from a tenth of
+   white to a fifth, over .15 s), and the same while it is pressed, by a mouse or a finger. On a touch screen there is no resting, so only the press shows. */
+.pin{position:absolute;left:50%;top:6px;width:44px;height:44px;margin-left:-22px;border-radius:50%;background:var(--pin);box-shadow:0 0 0 1px var(--pinedge);transition:box-shadow .15s ease;-webkit-tap-highlight-color:transparent}
 .pin canvas{position:absolute;left:5px;top:5px;width:34px;height:34px}
+@media (hover:hover){.pin:hover{box-shadow:0 0 0 1px var(--pinlit)}}
+.pin:active{box-shadow:0 0 0 1px var(--pinlit)}
+.pin:focus{outline:none}
+.pin:focus-visible{box-shadow:0 0 0 1px var(--pinlit);outline:2px solid var(--ink);outline-offset:2px}
 #hdr .tx{position:absolute;top:6px}
 #hdr .tx.l{left:16px}#hdr .tx.r{right:16px}
 
@@ -92,13 +98,12 @@ body:not([data-page="home"]) #first{visibility:hidden}       /* on a page the ho
 .pg-h.vh{margin:-1px;padding:0}
 .dest>a.back{display:block;width:max-content;margin:14px auto 0}
 /* a wash of the ground behind a page's running words, feathered above and below, so they read over the drawing (the booking form has the same) */
-.pk,.pd,.od,.ms{position:relative}
-.pk::before,.pd::before,.od::before,.ms::before{content:"";position:absolute;left:-28px;right:-28px;top:-18px;bottom:-14px;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(var(--bgc),0),rgba(var(--bgc),.88) 20px,rgba(var(--bgc),.88) calc(100% - 20px),rgba(var(--bgc),0))}
+.pk,.pd,.od,.ms,.abt-bio{position:relative}
+.pk::before,.pd::before,.od::before,.ms::before,.abt-bio::before{content:"";position:absolute;left:-28px;right:-28px;top:-18px;bottom:-14px;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,rgba(var(--bgc),0),rgba(var(--bgc),.88) 20px,rgba(var(--bgc),.88) calc(100% - 20px),rgba(var(--bgc),0))}
 /* past a phone's width a page's words keep to the phone's column (374 px), on the centre line; the drawing and the belt of covers still run edge to edge */
 .offer,.bk,.bk-done,.abt{max-width:374px;margin-left:auto;margin-right:auto}
-@media (min-width:431px){.bk::before,.bk-done::before,.pk::before,.pd::before,.od::before,.ms::before{left:-56px;right:-56px;-webkit-mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent)}}
-body[data-page="about"] .dest{padding-top:18px;padding-bottom:8px}
-body[data-page="about"] .dest>a.back{margin-top:2px}
+@media (min-width:431px){.bk::before,.bk-done::before,.pk::before,.pd::before,.od::before,.ms::before,.abt-bio::before{left:-56px;right:-56px;-webkit-mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(to right,transparent,#000 56px,#000 calc(100% - 56px),transparent)}}
+body[data-page="about"] .dest{padding-top:18px}
 
 /* ------------------------------------------------------------------ 6 · PRODUCTION
    The two words "Recent releases", the belt of covers, the one offer, the booking form. The page shows no heading: its name is there for screen readers and search. */
@@ -107,13 +112,18 @@ body[data-page="about"] .dest>a.back{margin-top:2px}
    capitals of "A Full Build". In this face a 12 px line of 16 leaves 5.5 px under its capitals and a 21 px line of 27 leaves 5 px over them: so 22 px here, and 17 px over the offer. */
 .belt-label{margin:0 0 22px;padding-left:.14em;font-size:12px;line-height:16px;letter-spacing:.14em;text-transform:uppercase;text-align:center;color:var(--sub)}
 /* THE BELT: the covers travel across the page, left to right, the first in his order in front. It bleeds to both edges of the screen. */
-.belt{position:relative;margin:0 -28px;overflow:hidden;overflow:clip;touch-action:pan-y;cursor:grab;text-align:left;-webkit-user-select:none;user-select:none}
-.belt.drag{cursor:grabbing}
+.belt{position:relative;margin:0 -28px;overflow:hidden;overflow:clip;touch-action:pan-y;text-align:left;-webkit-user-select:none;user-select:none}
 .belt:focus{outline:none}
 .belt:focus-visible{outline:1px solid var(--sub);outline-offset:-1px}       /* reached with the keyboard: a hairline inside its own box (it runs to both edges of the screen, so nothing can be drawn round it) */
 .belt-track{display:flex;flex-direction:row-reverse;width:max-content;margin:0;padding:0;list-style:none;will-change:transform}
 .belt-item{flex:none;width:var(--b);margin:0 calc(var(--gap) / 2)}
 .belt-art{display:block;width:var(--b);height:var(--b);box-sizing:border-box;border:1px solid var(--ink);background-color:var(--bg);object-fit:cover;-webkit-user-drag:none}
+/* A COVER IS A LINK TO ITS RELEASE ON YOUTUBE (his words, 24 Nov 2026: "so that any end user can hear it"), and over it the mouse stays the plain arrow, not the hand
+   ("It should just be a normal cursor"). So nothing at the pointer says it can be pressed: the belt stopping under the mouse is the only answer it gives.
+   Reached with the keyboard, the cover gets a line inside its own edge (the belt cuts off anything drawn outside it) and its title is underlined. */
+.belt-a{display:block;color:inherit;text-decoration:none;cursor:default;outline:none;-webkit-tap-highlight-color:transparent;-webkit-user-drag:none;-webkit-touch-callout:none}
+.belt-a:focus-visible .belt-art,.belt-item.kb .belt-art{outline:2px solid var(--ink);outline-offset:-5px}
+.belt-a:focus-visible .belt-t,.belt-item.kb .belt-t{text-decoration:underline;text-underline-offset:3px}
 /* two rows of text under a cover and never three: each on one row, which may run past its cover into the gap, stopping a letter short of the next cover's words */
 .belt-t,.belt-by{display:block;width:calc(var(--b) + var(--gap) - 8px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;line-height:16px;letter-spacing:0;text-transform:uppercase}
 .belt-t{margin-top:8px;color:var(--ink)}
@@ -153,9 +163,11 @@ body[data-page="about"] .dest>a.back{margin-top:2px}
 .bk[hidden],.bk-done[hidden],.bk-fail[hidden]{display:none}
 
 /* ------------------------------------------------------------------ 7 · ABOUT
-   The page's name as its grey label; the photograph with four texts from artists round it; one credit. ONE SCREEN, NO SCROLL: the photograph takes the height that is left
-   (the script works it out and puts each text in its place). The photograph is narrower than the column so the texts can stand out past its sides. Each text is pinned at one corner,
-   partly on the photograph where it is empty (the ceiling, the desk in front), never on a face or a hand. No text is wider than just under half the column, so two never meet. */
+   The page's name as its grey label; the photograph with four texts from artists round it; one credit; then his bio.
+   THE PHOTOGRAPH AND ITS TEXTS FILL THE FIRST SCREEN: the photograph takes the height that is left (the script works it out and puts each text in its place). On a phone the bio
+   comes under it and the page scrolls to it, its first words showing at the foot of the first screen; on a laptop it stands beside the photograph and nothing scrolls (wide.css).
+   The photograph is narrower than the column so the texts can stand out past its sides. Each text is pinned at one corner, partly on the photograph where it is empty
+   (the ceiling, the desk in front), never on a face or a hand. No text is wider than just under half the column, so two never meet. */
 .abt-wall{position:relative;margin:14px auto 0}
 .abt-pic{margin:0 auto;padding:0;width:78%}
 .abt-pic img{display:block;width:100%;height:auto;box-sizing:border-box;border:1px solid var(--ink)}
@@ -164,6 +176,10 @@ body[data-page="about"] .dest>a.back{margin-top:2px}
 .abt-wall .bub path{fill:rgb(var(--bgc))}       /* solid here, not the home screen's nine-tenths: a text lies half on the photograph and half off it, and must be one tone */
 .abt-wall .msg.out{width:1px;height:1px;max-width:none;overflow:hidden;clip-path:inset(50%);white-space:nowrap}       /* a text left out on a screen too short for four: out of sight, still read out */
 .abt-c{margin:8px 0 0;padding-left:.06em;font-size:11px;line-height:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}
+/* HIS BIO, word for word as he sent it: running words on the centre line, set as the press kit's are */
+.abt-bio{max-width:334px;margin:22px auto 0;text-align:left}
+.abt-bio p{margin:0 0 14px;font-size:14px;line-height:20px;color:var(--ink)}
+.abt-bio p:last-child{margin-bottom:0}
 /* until the script has given the photograph its size and each text its place, the wall is held back, so nothing is seen jumping */
 .js .abt-wall:not(.set){visibility:hidden}
 

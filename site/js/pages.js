@@ -15,12 +15,13 @@
      The covers travel across the page like a conveyor belt, from left to right, the first in Anthony's order leading and the others following it (he asked for the belt, liked it,
      and set the order himself: 24 Nov 2026). Two runs of the covers stand end to end, so the belt has no seam. It waits while a mouse rests on it or a finger holds it, can be pulled
      either way by hand, and stands still off screen. For visitors who ask for reduced motion it does not move: one plain row, in his order, scrolled by hand.
-     In the page the covers are listed in his order; the row is laid out right to left so the first is the one in front. */
+     In the page the covers are listed in his order; the row is laid out right to left so the first is the one in front.
+     EACH COVER IS A LINK to its release on YouTube (his words, 24 Nov 2026). A press that does not move opens it; a pull along the belt moves the belt and opens nothing. */
   function wireBelt(sec) {
     var cvs = sec.querySelector('.cvs'), belt = sec.querySelector('.belt'), track = belt && belt.querySelector('.belt-track'); if (!track || !track.children.length) return null;
-    var N = track.children.length, on = false, bx = 0, period = 0, raf = 0, last = 0, hold = false, hover = false, keys = false, seen = true, wait = 0, drag = null, speed = 30, pitch = 0;
+    var N = track.children.length, on = false, bx = 0, period = 0, raf = 0, last = 0, hold = false, hover = false, keys = false, seen = true, wait = 0, drag = null, speed = 30, pitch = 0, pulled = false;
     if (calm) belt.classList.add('still');
-    else Array.prototype.slice.call(track.children).forEach(function (li) { var c = li.cloneNode(true), im = c.querySelector('img'); c.setAttribute('aria-hidden', 'true'); if (im) im.alt = ''; track.appendChild(c); });
+    else Array.prototype.slice.call(track.children).forEach(function (li) { var c = li.cloneNode(true), a = c.querySelector('a'); c.setAttribute('aria-hidden', 'true'); if (a) a.tabIndex = -1; track.appendChild(c); });       /* the second run is for the eye only: the keyboard and a screen reader meet each cover once */
     /* TWO ROWS OF TEXT UNDER A COVER AND NEVER THREE (his words: "two rows of text only, change if needed"): the title, then the artist on one row. A credit with several names that
        does not fit drops names from the end and says so with an ellipsis; the cover's own name keeps the whole credit. */
     function fitNames() {
@@ -50,10 +51,17 @@
       bx = 0; place(); var lead = track.children[0].getBoundingClientRect(), box = belt.getBoundingClientRect(); bx = (box.right - (wide() ? 40 : 16)) - (lead.right - period); place();
       hold = false; hover = false; wait = performance.now() + 600; if (!raf) { last = 0; raf = requestAnimationFrame(tick); }
     }
-    belt.addEventListener('pointerdown', function (ev) { ev.stopPropagation(); if (calm || (ev.pointerType === 'mouse' && ev.button !== 0)) return; hold = true; drag = { id: ev.pointerId, x: ev.clientX, bx: bx, moved: false }; try { belt.setPointerCapture(ev.pointerId); } catch (e) {} belt.classList.add('drag'); });       /* the page's own press marks stay off the covers */
-    belt.addEventListener('pointermove', function (ev) { if (!drag || ev.pointerId !== drag.id) return; var dx = ev.clientX - drag.x; if (!drag.moved && Math.abs(dx) < 6) return; drag.moved = true; bx = drag.bx + dx; place(); });
-    function up(ev) { if (!drag || (ev && ev.pointerId !== drag.id)) return; hold = false; wait = performance.now() + (drag.moved ? 900 : 0); drag = null; belt.classList.remove('drag'); }
-    belt.addEventListener('pointerup', up); belt.addEventListener('pointercancel', up);
+    /* A PRESS OR A PULL. The belt takes hold of the pointer only once it has moved 6 px along the belt: until then a press belongs to the cover under it, which is a link.
+       After a pull, the click that the browser sends when the pointer lifts is swallowed, so letting go of the belt never opens a cover. */
+    belt.addEventListener('pointerdown', function (ev) { ev.stopPropagation(); pulled = false; if (calm || (ev.pointerType === 'mouse' && ev.button !== 0)) return; hold = true; drag = { id: ev.pointerId, x: ev.clientX, bx: bx, moved: false }; });       /* the page's own press marks stay off the covers */
+    belt.addEventListener('pointermove', function (ev) {
+      if (!drag || ev.pointerId !== drag.id) return; var dx = ev.clientX - drag.x;
+      if (!drag.moved) { if (Math.abs(dx) < 6) return; drag.moved = true; try { belt.setPointerCapture(ev.pointerId); } catch (e) {} belt.classList.add('drag'); }
+      bx = drag.bx + dx; place();
+    });
+    function up(ev) { if (!drag || (ev && ev.pointerId !== drag.id)) return; hold = false; pulled = drag.moved; wait = performance.now() + (drag.moved ? 900 : 0); drag = null; belt.classList.remove('drag'); }
+    window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);       /* on the window: a press that began on the belt may end anywhere */
+    belt.addEventListener('click', function (ev) { if (pulled) { pulled = false; ev.preventDefault(); ev.stopPropagation(); } }, true);
     belt.addEventListener('pointerenter', function (ev) { if (ev.pointerType === 'mouse') hover = true; }); belt.addEventListener('pointerleave', function () { hover = false; });
     belt.addEventListener('dragstart', function (ev) { ev.preventDefault(); });
     belt.addEventListener('scroll', function () { if (!calm && belt.scrollLeft) belt.scrollLeft = 0; });       /* travelling, the belt is moved by the script alone */
@@ -63,8 +71,21 @@
     belt.addEventListener('focus', function () { var kb = true; try { kb = belt.matches(':focus-visible'); } catch (e) {} keys = kb; });
     belt.addEventListener('blur', function () { keys = false; wait = performance.now() + 600; });
     belt.addEventListener('keydown', function (ev) { var step = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0; if (!step || ev.altKey || ev.ctrlKey || ev.metaKey) return; ev.preventDefault(); if (calm) { belt.scrollLeft -= step * (pitch || 150); return; } keys = true; bx += step * pitch; place(); });
+    /* Tab goes on from the belt to each cover in his order. The belt waits while the keyboard is on one, and brings that cover to the middle of the screen (it may have been out
+       of sight). Each cover stands on the belt twice, once in each run, and the keyboard is only ever on the first: so the mark of the keyboard (the class kb) is put on both, and
+       whichever of the two is nearer is the one brought to the middle. */
+    function unmark() { Array.prototype.forEach.call(track.querySelectorAll('.belt-item.kb'), function (li) { li.classList.remove('kb'); }); }
+    track.addEventListener('focusin', function (ev) {
+      var a = ev.target && ev.target.closest ? ev.target.closest('.belt-a') : null, kb = true, li, i, twin, box, mid, d1, d2; if (!a) return; try { kb = a.matches(':focus-visible'); } catch (e) {} unmark(); if (!kb) return;
+      li = a.parentNode; i = Array.prototype.indexOf.call(track.children, li); twin = track.children[i + N] || null; li.classList.add('kb'); if (twin) twin.classList.add('kb');
+      keys = true; if (calm || !period) return;
+      box = belt.getBoundingClientRect(); mid = box.left + box.width / 2; d1 = li.getBoundingClientRect(); d1 = mid - (d1.left + d1.width / 2); d2 = d1;
+      if (twin) { d2 = twin.getBoundingClientRect(); d2 = mid - (d2.left + d2.width / 2); }
+      bx += Math.abs(d2) < Math.abs(d1) ? d2 : d1; place();
+    });
+    track.addEventListener('focusout', function (ev) { unmark(); if (!belt.contains(ev.relatedTarget)) { keys = false; wait = performance.now() + 600; } });
     if (window.IntersectionObserver) new IntersectionObserver(function (es) { seen = es[es.length - 1].isIntersecting; }, { threshold: .05 }).observe(belt);
-    hooks.cvs = { order: (SITE.RELEASES || []).map(function (r) { return r.title + ' ' + r.released; }),
+    hooks.cvs = { order: (SITE.RELEASES || []).map(function (r) { return r.title + ' ' + r.released; }), links: Array.prototype.map.call(track.querySelectorAll('.belt-item:not([aria-hidden]) a.belt-a'), function (a) { return a.getAttribute('href'); }),
       state: function () { var now = performance.now(); return { on: on, belt: { x: +bx.toFixed(1), period: +period.toFixed(1), pitch: +pitch.toFixed(1), moving: !!raf && !hold && !hover && !keys && seen && now >= wait, speed: +speed.toFixed(1) } }; } };
     window.__cvs = hooks.cvs;
     return {
@@ -119,21 +140,30 @@
     sv.firstChild.setAttribute('d', 'M' + r + ' 0H' + (w - r) + 'Q' + w + ' 0 ' + w + ' ' + r + 'V' + (h - r) + 'Q' + w + ' ' + h + ' ' + (w - r) + ' ' + h + 'H' + t(20) + 'C' + t(13) + ' ' + h + ' ' + t(5) + ' ' + (h + t(5)) + ' ' + (-t(7)) + ' ' + (h + t(6)) + 'C0 ' + (h + t(2)) + ' 0 ' + (h - t(4)) + ' 0 ' + (h - t(15)) + 'V' + r + 'Q0 0 ' + r + ' 0Z');
   }
 
-  /* ================================================================== ABOUT · THE PHOTOGRAPH AND ITS TEXTS, ON ONE SCREEN
-     (his words: "I kind of want the texts to be much smaller and then surround the photo maybe?" and then "it cant scroll its all got to fit on one page", 24 Nov 2026)
-     Everything on the page but the photograph is measured as it stands; the height left on the screen goes to the photograph, with the room its texts need above and below it.
-     On a screen too short to give it MIN4 px of height with four texts round it, the two at the foot are left out (as the home screen
-     leaves out its text on a short screen); too short even then, it keeps MIN2 px and the page scrolls. The screen's visible height is used, so a phone's toolbars are allowed for.
+  /* ================================================================== ABOUT · THE PHOTOGRAPH AND ITS TEXTS, THEN HIS BIO
+     (his words: "I kind of want the texts to be much smaller and then surround the photo maybe?" and "it cant scroll its all got to fit on one page", 24 Nov 2026; later that day he
+     sent his bio for this page, asked for the texts "spread out just a little bit more laterally", each still overlapping the photograph "just a little bit", and for them to lean
+     to the mouse.)
+     THE PHOTOGRAPH TAKES THE HEIGHT THAT IS LEFT. What must share the screen with it is measured as it stands, and the photograph gets the rest, with the room its texts need above
+     and below it. On a laptop (BESIDE) the bio stands beside the photograph, so label, photograph, credit and Back share one screen and nothing scrolls. Anywhere else the bio is
+     under the photograph: the first screen is the label, the photograph and the credit, with PEEK px kept at its foot so the bio's first words show and say there is more below.
+     On a screen too short to give the photograph MIN4 px of height with four texts round it, the two at the foot are left out (as the home screen leaves out its text on a short
+     screen); too short even then, it keeps MIN2 px and the page scrolls. The screen's visible height is used, so a phone's toolbars are allowed for.
      On a phone the photograph is never wider than 78% of the column, and the texts are pinned to the column's sides. On a wide screen the wall the texts are pinned to is drawn in
      to the photograph: it is the photograph and OUT px more on each side (and never too narrow for a text from each side to stand side by side), so the texts keep the same hold on
-     the photograph's sides whether a short window makes it small or a large monitor makes it big.
+     the photograph's sides whether a short window makes it small or a large monitor makes it big. OUT was 130; at 165 each text still lies 24 to 55 px over the photograph.
      Where each text is pinned is in site/content.mjs (ABOUT.texts). */
   function wireAbout(sec) {
-    var wall = sec.querySelector('.abt-wall'), pf = wall && wall.querySelector('.abt-pic'), figs = wall ? Array.prototype.slice.call(wall.querySelectorAll('.msg')) : []; if (!wall) return null;
-    var A = SITE.ABOUT || { texts: [], photo: { w: 2, h: 3 } }, TEXTS = A.texts, RATIO = A.photo.h / A.photo.w, MIN4 = 220, MIN2 = 200, shown = figs.length, im = pf && pf.querySelector('img');
+    var abt = sec.querySelector('.abt'), show = sec.querySelector('.abt-show'), wall = sec.querySelector('.abt-wall'), credit = sec.querySelector('.abt-c'), bio = sec.querySelector('.abt-bio'),
+        pf = wall && wall.querySelector('.abt-pic'), figs = wall ? Array.prototype.slice.call(wall.querySelectorAll('.msg')) : []; if (!wall) return null;
+    var A = SITE.ABOUT || { texts: [], photo: { w: 2, h: 3 } }, TEXTS = A.texts, RATIO = A.photo.h / A.photo.w, MIN4 = 220, MIN2 = 200, shown = figs.length, im = pf && pf.querySelector('img'), two = false;
     if (!pf) wall.classList.add('plain');
-    var OUT = 130;       /* a wide screen: how far the texts' outer edges stand from the photograph's sides, px */
+    var OUT = 165;       /* a wide screen: how far the texts' outer edges stand from the photograph's sides, px */
+    var GAP = 56, PEEK = 30;       /* beside: the space between the texts and the bio (the same number as the stylesheet's gap). under: how much of the bio shows at the foot of the first screen, px */
+    var besideMq = window.matchMedia ? window.matchMedia('(min-width: 1180px) and (min-height: 640px)') : null;       /* BESIDE: the same two numbers as site/css/wide.css */
+    function beside() { return !!(bio && show && besideMq && besideMq.matches); }
     function widest(W) { return wide() ? W - 2 * OUT : W * .78; }       /* the most width the photograph may take of a wall W wide */
+    function outer(el) { if (!el) return 0; var cs = getComputedStyle(el); return el.offsetHeight + (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0); }
     /* where the first n texts sit on a photograph Hp tall: their tops, measured from the photograph's top, and how far they stand out above it and below it */
     function room(Hp, n) {
       var ys = [], up = 0, down = 0, i, t, h, y;
@@ -141,18 +171,20 @@
       return { ys: ys, up: up, down: down ? down + TAIL : 0 };
     }
     function place() {
-      if (!pf) return; wall.style.maxWidth = '';
-      var W = wall.clientWidth, maxH = Math.round(widest(W) * RATIO), kids = dest.children, top = dest.getBoundingClientRect().top, foot = top, i, rc, others, avail, n = Math.min(4, figs.length), Hp, r, pw, lw = 0, rw = 0; if (!W) return;
+      if (!pf) return; wall.style.maxWidth = ''; if (show) show.style.width = '';
+      two = beside();
+      if (two) show.style.width = Math.max(0, Math.floor(Math.min(Math.max(720, Math.min(1000, window.innerWidth * .5)), abt.clientWidth - bio.offsetWidth - GAP))) + 'px';       /* the most room the photograph and its texts may have beside the bio */
+      var W = wall.clientWidth, maxH = Math.round(widest(W) * RATIO), back = dest.querySelector('a.back'), pad = parseFloat(getComputedStyle(dest).paddingBottom) || 0, above, below, avail, n = Math.min(4, figs.length), Hp, r, pw, lw = 0, rw = 0, i, ww; if (!W) return;
       figs.forEach(function (f) { f.classList.remove('out'); });
-      /* the page may still be sliding in when this first runs, so nothing is measured against the screen: the content's height is the distance between two things on the page,
+      /* the page may still be sliding in when this first runs, so nothing is measured against the screen: a height is the distance between two things on the page,
          to a part of a px, and the screen's height is the page box's own */
-      for (i = 0; i < kids.length; i++) { rc = kids[i].getClientRects(); if (rc.length && rc[0].bottom > foot) foot = rc[0].bottom; }
-      others = (foot - top) + dest.scrollTop + parseFloat(getComputedStyle(dest).paddingBottom) - wall.getBoundingClientRect().height;
-      avail = Math.min(dest.clientHeight, window.innerHeight - dest.offsetTop) - others - 2;
+      above = (abt.getBoundingClientRect().top - dest.getBoundingClientRect().top) + dest.scrollTop + (parseFloat(getComputedStyle(wall).marginTop) || 0);
+      below = outer(credit) + (two || !bio ? outer(back) + pad : (parseFloat(getComputedStyle(bio).marginTop) || 0) + PEEK);
+      avail = Math.min(dest.clientHeight, window.innerHeight - dest.offsetTop) - above - below - 2;
       function most(n, min) { var H, q; for (H = maxH; H >= min; H--) { q = room(H, n); if (q.up + H + q.down <= avail) return H; } return 0; }
       Hp = most(n, Math.min(MIN4, maxH)); if (!Hp && n > 2) { n = 2; Hp = most(2, Math.min(MIN2, maxH)) || Math.min(MIN2, maxH); } else if (!Hp) Hp = Math.min(MIN2, maxH);
       shown = n; pw = Math.round(Hp / RATIO); pf.style.width = pw + 'px';
-      if (wide()) { for (i = 0; i < n; i++) { if (TEXTS[i][1] === 'l') lw = Math.max(lw, figs[i].offsetWidth); else rw = Math.max(rw, figs[i].offsetWidth); } wall.style.maxWidth = Math.min(W, Math.max(pw + 2 * OUT, lw + rw + 24)) + 'px'; }
+      if (wide()) { for (i = 0; i < n; i++) { if (TEXTS[i][1] === 'l') lw = Math.max(lw, figs[i].offsetWidth); else rw = Math.max(rw, figs[i].offsetWidth); } ww = Math.min(W, Math.max(pw + 2 * OUT, lw + rw + 24)); wall.style.maxWidth = ww + 'px'; if (two) show.style.width = ww + 'px'; }
       r = room(pf.offsetHeight, n);
       wall.style.paddingTop = r.up + 'px'; wall.style.paddingBottom = r.down + 'px';
       figs.forEach(function (f, i) { if (i >= n) { f.classList.add('out'); f.style.top = f.style.left = f.style.right = ''; return; } f.style.top = (r.up + r.ys[i]) + 'px'; f.style.left = TEXTS[i][1] === 'l' ? '0' : 'auto'; f.style.right = TEXTS[i][1] === 'r' ? '0' : 'auto'; });
@@ -160,9 +192,30 @@
     }
     function all() { if (sec.hidden || body.getAttribute('data-page') !== 'about') return; figs.forEach(function (f) { f.classList.remove('out'); fit(f.querySelector('blockquote')); }); figs.forEach(cut); place(); }
     if (im && !im.complete) im.addEventListener('load', all);
-    hooks.abt = { state: function () { return { shown: shown, photo: pf ? [pf.offsetLeft, pf.offsetTop, pf.offsetWidth, pf.offsetHeight] : null, texts: figs.map(function (f) { return [f.offsetLeft, f.offsetTop, f.offsetWidth, f.offsetHeight]; }) }; } };
+    /* THE TEXTS LEAN TO THE MOUSE, the way the photographs on humanperson.com's home screen do (read from their page on 24 Nov 2026; he asked for that architecture exactly).
+       THEIRS: a mouse move, taken at most once every 120 ms (the first of a burst, never the last), starts a tween of 1.5 s, easing out (their "power1.out": 1 - (1 - t)^2),
+       of two numbers on every photograph: --fx = -50 x (x / window width - .5) x .2 and --fy the same with y and the window's height, so each runs from 5 to -5 across the window
+       and is nothing with the mouse at the middle. A new move starts again from wherever the numbers have got to. The stylesheet moves each photograph by its numbers times a
+       share of its own (0.8, 1.5, 1, 1 …), in hundredths of its own width and height.
+       Whichever way the mouse goes, every photograph goes the other way: so one you are moving toward always comes toward you.
+       HERE the same numbers, with two things fitted to this page. A text's share is in px (PULL, their 0.8 : 1 : 1.5 : 1 four times over), because a text is too small for a
+       hundredth of its own size to show: at the window's edge a text has moved 16 to 30 px, and none is ever drawn clear of the photograph (the widest has the largest share).
+       And the last move of a burst is kept, 120 ms after the one before it, where theirs lets it go: the texts settle for where the mouse came to rest.
+       Only a mouse moves them, only on a wide screen, and not at all under Reduce Motion. */
+    var PULL = [3.2, 4, 6, 4], g = { x: 0, y: 0, fx: 0, fy: 0, tx: 0, ty: 0, t0: 0, raf: 0, last: -1e9, late: 0, px: 0, py: 0, on: false };
+    figs.forEach(function (f, i) { f.style.setProperty('--k', String(PULL[i % PULL.length])); });
+    function vars() { wall.style.setProperty('--fx', g.x.toFixed(3)); wall.style.setProperty('--fy', g.y.toFixed(3)); }
+    function lean(now) { var u = Math.max(0, Math.min(1, (now - g.t0) / 1500)), e = 1 - (1 - u) * (1 - u); g.x = g.fx + (g.tx - g.fx) * e; g.y = g.fy + (g.ty - g.fy) * e; vars(); g.raf = u < 1 && g.on ? requestAnimationFrame(lean) : 0; }
+    function aim(x, y, now) { g.fx = g.x; g.fy = g.y; g.tx = -50 * (x / window.innerWidth - .5) * .2; g.ty = -50 * (y / window.innerHeight - .5) * .2; g.t0 = g.last = now; if (!g.raf) g.raf = requestAnimationFrame(lean); }
+    function mouse(ev) {
+      if (!g.on || ev.pointerType !== 'mouse' || !wide()) return; var now = performance.now();
+      if (now - g.last >= 120) { if (g.late) { clearTimeout(g.late); g.late = 0; } aim(ev.clientX, ev.clientY, now); return; }
+      g.px = ev.clientX; g.py = ev.clientY; if (!g.late) g.late = setTimeout(function () { g.late = 0; if (g.on) aim(g.px, g.py, performance.now()); }, 120 - (now - g.last));
+    }
+    if (!calm && window.PointerEvent) window.addEventListener('pointermove', mouse, { passive: true });
+    hooks.abt = { state: function () { return { shown: shown, beside: two, lean: [+g.x.toFixed(3), +g.y.toFixed(3), +g.tx.toFixed(3), +g.ty.toFixed(3)], photo: pf ? [pf.offsetLeft, pf.offsetTop, pf.offsetWidth, pf.offsetHeight] : null, texts: figs.map(function (f) { return [f.offsetLeft, f.offsetTop, f.offsetWidth, f.offsetHeight]; }) }; } };
     window.__abt = hooks.abt;
-    return { open: all, resize: all };
+    return { open: function () { g.on = true; g.x = g.y = g.tx = g.ty = 0; g.last = -1e9; vars(); all(); }, close: function () { g.on = false; if (g.raf) cancelAnimationFrame(g.raf); g.raf = 0; if (g.late) clearTimeout(g.late); g.late = 0; }, resize: all };
   }
 
   /* ================================================================== PRODUCTS · BUY

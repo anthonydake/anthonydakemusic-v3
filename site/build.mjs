@@ -38,7 +38,7 @@ const css = () => read('css/site.css') + '\n' + read('css/wide.css');
 function lib() {
   const plain = (s) => s.replace(/^import .*$/gm, '').replace(/^export /gm, '');
   return '/* the words and the page templates (site/content.mjs, site/templates.mjs) */\n(function () {\n' + plain(read('content.mjs')) + '\n' + plain(read('templates.mjs')) +
-    '\nwindow.ADSite = { SITE: SITE, PAGES: PAGES, HOME: HOME, RELEASES: RELEASES, OFFER: OFFER, BOOKING: BOOKING, ABOUT: ABOUT, PRESS_KIT: PRESS_KIT, STORE: STORE, section: section, documentHtml: documentHtml, esc: esc };\n})();\n';
+    '\nwindow.ADSite = { SITE: SITE, PAGES: PAGES, HOME: HOME, RELEASES: RELEASES, YOUTUBE: YOUTUBE, OFFER: OFFER, BOOKING: BOOKING, ABOUT: ABOUT, PRESS_KIT: PRESS_KIT, STORE: STORE, section: section, documentHtml: documentHtml, esc: esc };\n})();\n';
 }
 function engine() {
   const e = read('js/engine.js');
@@ -70,7 +70,7 @@ async function buildSite() {
 async function buildFile(dest) {
   const T = await import(pathToFileURL(path.join(HERE, 'templates.mjs')).href), C = await import(pathToFileURL(path.join(HERE, 'content.mjs')).href);
   const uri = (f, mime) => 'data:' + mime + ';base64,' + bytes(f).toString('base64'), img = {};
-  for (const r of C.RELEASES) img['covers/' + r.key + '-240.jpg'] = uri('img/covers/' + r.key + '-240.jpg', 'image/jpeg');
+  for (const r of C.RELEASES) if (r.art) img['covers/' + r.key + '-240.jpg'] = uri('img/covers/' + r.key + '-240.jpg', 'image/jpeg');       /* a release with no cover yet carries none */
   img['about/' + C.ABOUT.photo.name + '-800.jpg'] = uri('img/about/' + C.ABOUT.photo.name + '-800.jpg', 'image/jpeg');
   /* the one product a preview shows: the store's own placeholder (data/store.data.ts). Here Buy goes nowhere near Square. */
   const products = [{ id: 'test-download', title: 'Test download', blurb: 'A placeholder for checking the checkout flow. Sandbox only. It is never listed in live mode.', priceCents: 100 }];
