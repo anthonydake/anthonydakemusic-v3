@@ -54,5 +54,8 @@ reports/
 # visual-check marker (written by the Playwright routine before a push)
 /.visual-check/
 
+# Playwright MCP's transient captures (yaml snapshots), left behind by the server
+/.playwright-mcp/
+
 # per-machine Claude Code permissions (the committed hook lives in .claude/settings.json)
 .claude/settings.local.json
