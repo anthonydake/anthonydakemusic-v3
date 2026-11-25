@@ -76,22 +76,53 @@ export async function sendReceiptEmail(input: ReceiptInput): Promise<boolean> {
   });
 }
 
-/** Tells Anthony a sale landed. */
+/** Tells Anthony a sale landed. Carries the tax breakdown so a sales-tax
+ *  return has what it needs, and surfaces a buyer-state mismatch so Anthony
+ *  can review it. */
 export async function sendSaleNotice(input: {
   productTitle: string;
   amountCents: number;
   buyerEmail: string | null;
   orderId: string;
   test: boolean;
+  /** US two-letter state the buyer stated at checkout. Null = "outside the US". */
+  buyerState: string | null;
+  /** Items + shipping, before tax. */
+  subtotalCents: number;
+  shippingCents: number;
+  taxCents: number;
+  /** The state Square's collected shipping address reported, if any. */
+  squareShippingState: string | null;
+  /** True when buyerState and squareShippingState disagree. */
+  stateMismatch: boolean;
 }): Promise<boolean> {
+  const breakdown =
+    `Subtotal: ${formatPrice(input.subtotalCents)}\n` +
+    (input.shippingCents > 0 ? `Shipping: ${formatPrice(input.shippingCents)}\n` : "") +
+    (input.taxCents > 0 ? `Ohio sales tax: ${formatPrice(input.taxCents)}\n` : "") +
+    `Total: ${formatPrice(input.amountCents)}\n`;
+
+  const buyerStateLine = input.buyerState
+    ? `Buyer state (stated at checkout): ${input.buyerState}\n`
+    : `Buyer state (stated at checkout): outside the US\n`;
+
+  const mismatchLine = input.stateMismatch
+    ? `\n⚠ The buyer's stated state does not match the state on Square's shipping address` +
+      (input.squareShippingState ? ` (${input.squareShippingState}).` : ".") +
+      ` Review before accepting the tax figure above.\n`
+    : "";
+
   return send({
     to: storeInbox(),
     subject: `${input.test ? "[TEST] " : ""}New sale — ${input.productTitle} (${formatPrice(input.amountCents)})`,
     text:
       `Product: ${input.productTitle}\n` +
-      `Amount: ${formatPrice(input.amountCents)}\n` +
       `Buyer: ${input.buyerEmail ?? "(no email on the payment)"}\n` +
       `Order: ${input.orderId}\n` +
+      buyerStateLine +
+      `\n` +
+      breakdown +
+      mismatchLine +
       (input.test ? `\nSandbox order — no real money moved.\n` : ""),
   });
 }

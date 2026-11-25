@@ -1,0 +1,132 @@
+import {
+  htmlResponse,
+  notFoundResponse,
+  renderDocument,
+  storefront,
+} from "@/lib/site/render";
+import { findProduct } from "@/lib/store/catalog";
+import { getSquareConfig } from "@/lib/store/config";
+import { calculateOrderTotals } from "@/lib/store/square";
+import { computeTax, isAcceptedBuyerState, taxRateFor } from "@/lib/store/tax";
+
+export const dynamic = "force-dynamic";
+
+// The cart / confirm page. Two steps, so tax shows before Buy with no
+// JavaScript:
+// 1) /products/buy/<id>            → form asks for the buyer's state
+// 2) /products/buy/<id>?state=OH   → shows subtotal/tax/total + Confirm & pay
+//
+// The address itself is private (the item + state live in the URL), so it is
+// never cached and never indexed. Only the POST to /api/store/checkout
+// actually creates the Square payment link.
+const PRIVATE = {
+  cache: "private, no-store",
+  headers: {
+    "Referrer-Policy": "no-referrer",
+    "X-Robots-Tag": "noindex, nofollow",
+  },
+};
+
+export async function GET(
+  request: Request,
+  context: { params: Promise<{ productId: string }> }
+) {
+  const { productId } = await context.params;
+  const product = findProduct(productId);
+  const shop = storefront();
+  if (!product || !shop.open) return notFoundResponse();
+
+  const url = new URL(request.url);
+  const rawState = (url.searchParams.get("state") || "").trim().toUpperCase();
+  // Accept a real US state code or the catch-all "XX" ("Outside the United
+  // States"). Anything else drops back to step 1 (the state picker).
+  const state = isAcceptedBuyerState(rawState) ? rawState : "";
+
+  // Step 1 — no state picked yet.
+  if (!state) {
+    const html = renderDocument(
+      "buy",
+      {
+        step: "state",
+        product: {
+          id: product.id,
+          title: product.title,
+          priceCents: product.priceCents,
+        },
+        sandbox: shop.sandbox,
+      },
+      { shop }
+    );
+    return htmlResponse(html, PRIVATE);
+  }
+
+  // Step 2 — state is settled. Compute totals, and (if Square is reachable)
+  // ask Square to preview the same order so the cart's number matches what
+  // the buyer will be charged, rounding and all.
+  const rate = taxRateFor(state);
+  const local = computeTax({
+    buyerState: state,
+    lines: [
+      {
+        productId: product.id,
+        priceCents: product.priceCents,
+        quantity: 1,
+        category: product.taxCategory,
+      },
+    ],
+    shippingCents: 0,
+  });
+
+  let totals = {
+    subtotalCents: local.subtotalCents,
+    shippingCents: local.shippingCents,
+    taxCents: local.taxCents,
+    totalCents: local.totalCents,
+  };
+
+  const config = getSquareConfig();
+  if (config && rate > 0) {
+    const square = await calculateOrderTotals(config, {
+      idempotencyKey: `preview-${product.id}-${state}`,
+      currency: "USD",
+      lines: [
+        {
+          name: product.title,
+          priceCents: product.priceCents,
+          quantity: 1,
+          category: product.taxCategory,
+        },
+      ],
+      shippingCents: 0,
+      buyerState: state,
+      redirectUrl: `${url.origin}/products/thanks/preview`,
+      note: "preview",
+      supportEmail: "",
+    });
+    if (square) {
+      totals = {
+        subtotalCents: square.subtotalCents,
+        shippingCents: 0,
+        taxCents: square.taxCents,
+        totalCents: square.totalCents,
+      };
+    }
+  }
+
+  const html = renderDocument(
+    "buy",
+    {
+      step: "confirm",
+      product: {
+        id: product.id,
+        title: product.title,
+        priceCents: product.priceCents,
+      },
+      buyerState: state === "XX" ? "" : state,
+      totals,
+      sandbox: shop.sandbox,
+    },
+    { shop }
+  );
+  return htmlResponse(html, PRIVATE);
+}

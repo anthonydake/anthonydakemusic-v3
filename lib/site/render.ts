@@ -25,6 +25,7 @@ export type PageName =
   | "about"
   | "press-kit"
   | "products"
+  | "buy"
   | "order"
   | "missing";
 

@@ -15,7 +15,19 @@ const PRIVATE = { cache: "private, no-store", headers: { "Referrer-Policy": "no-
 
 function page(
   state: OrderPageState,
-  input: { id: string; title: string; token: string | null; sandbox: boolean; checks: number },
+  input: {
+    id: string;
+    title: string;
+    token: string | null;
+    sandbox: boolean;
+    checks: number;
+    totals?: {
+      subtotalCents: number;
+      shippingCents: number;
+      taxCents: number;
+      totalCents: number;
+    } | null;
+  },
   status = 200
 ): Response {
   const address = `/products/thanks/${input.id}`;
@@ -31,6 +43,7 @@ function page(
       downloadHref: state === "ready" && input.token ? `/api/store/download?token=${input.token}` : null,
       retryHref: address,
       sandbox: input.sandbox,
+      totals: input.totals ?? null,
     },
     { headExtra: refresh }
   );
@@ -53,12 +66,20 @@ export async function GET(request: Request, context: { params: Promise<{ order: 
       order = await confirmWithSquare(order, requestOrigin(request));
     }
 
+    const totals = {
+      subtotalCents: (order.taxable_amount_cents ?? 0) + (order.non_taxable_amount_cents ?? 0) - (order.shipping_cents ?? 0),
+      shippingCents: order.shipping_cents ?? 0,
+      taxCents: order.tax_cents ?? 0,
+      totalCents: order.amount_cents,
+    };
+
     return page(orderPageState(order, checks), {
       id: order.id,
       title: getProduct(order.product_id)?.title ?? "Your download",
       token: order.download_token,
       sandbox: order.environment !== "production",
       checks,
+      totals,
     });
   } catch (err) {
     // The database could not be reached. The buyer may well have paid, so say

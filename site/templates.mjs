@@ -11,7 +11,7 @@
      products          the products on sale right now (or null: then the header shows no Products link)
      head, tail        what the document needs at the end of its head and of its body (the stylesheet and the script, as links or in full)
      test              true only in the one-file prototype: adds the workshop panel */
-import { SITE, PAGES, HOME, RELEASES, YOUTUBE, BELT_LABEL, OFFER, BOOKING, ABOUT, PRESS_KIT, STORE, MISSING, BACK } from './content.mjs';
+import { SITE, PAGES, HOME, RELEASES, YOUTUBE, BELT_LABEL, OFFER, BOOKING, ABOUT, PRESS_KIT, STORE, US_STATES, MISSING, BACK } from './content.mjs';
 
 export function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -99,7 +99,7 @@ export function pressKit() {
       : '<div class="pk-blank" aria-hidden="true">' + blanks.map(function (w) { return w ? '<span style="width:' + w + '%"></span>' : '<i></i>'; }).join('') + '</div><p class="pk-c">' + esc(PRESS_KIT.toCome) + '</p>') + '</div>';
 }
 
-/* ------------------------------------------------------------------ PRODUCTS: what is for sale, each with its own Buy. Buy is a plain form, so it works with scripts off. */
+/* ------------------------------------------------------------------ PRODUCTS: what is for sale, each with its own Buy. Buy is a GET link to the cart confirm page, so it works with scripts off. */
 export function products(t, data) {
   var list = (data && data.products) || t.products || [], d = data || {};
   return '<h1 class="pg-h">' + esc(PAGES.products.label) + '</h1><div class="pd" id="pd">' +
@@ -107,18 +107,90 @@ export function products(t, data) {
     (d.error ? '<p class="pd-err" role="alert">' + esc(STORE.failed) + '</p>' : '') +
     (list.length ? '<ul class="pd-list">' + list.map(function (p) {
       return '<li class="pd-item"><h2 class="pd-t">' + esc(p.title) + '</h2><p class="pd-price">' + esc(price(p.priceCents)) + '</p><p class="pd-b">' + esc(p.blurb) + '</p>' +
-        '<form class="pd-f" method="post" action="' + (t.buyAction || '/api/store/checkout') + '"><input type="hidden" name="product" value="' + esc(p.id) + '">' + door(STORE.buy, 'button', { cls: 'pd-buy' }) + '</form></li>';
+        '<p class="pd-f">' + door(STORE.buy, 'a', { href: '/products/buy/' + encodeURIComponent(p.id), cls: 'pd-buy', data: 'data-plain' }) + '</p></li>';
     }).join('') + '</ul><p class="pd-c">' + esc(STORE.under) + '</p>' : '<p class="pd-none">' + esc(STORE.none) + '</p>') + '</div>';
 }
 
-/* ------------------------------------------------------------------ YOUR ORDER: where Square sends a buyer back to. Five states (lib/store/orders.ts decides which). */
+/* ------------------------------------------------------------------ CART / CONFIRM (/products/buy/<id>): ask for the buyer's state so tax is settled before the payment link is made.
+ * Two steps, no JavaScript: step 1 asks the state; step 2 (same URL, ?state=XX) shows subtotal + tax + total and a Confirm & pay button that POSTs to /api/store/checkout. */
+export function buy(t, data) {
+  var d = data || {}, product = d.product, step = d.step || 'state';
+  if (!product) return '<h1 class="pg-h">' + esc(STORE.cart.title) + '</h1><p class="pd-none">' + esc(STORE.none) + '</p>';
+
+  var headline = '<h1 class="pg-h">' + esc(STORE.cart.title) + '</h1>' +
+    (d.sandbox ? '<p class="pd-mode">' + esc(STORE.testMode) + '</p>' : '') +
+    (d.error ? '<p class="pd-err" role="alert">' + esc(d.error) + '</p>' : '');
+  var item =
+    '<div class="ct-item"><p class="ct-t">' + esc(product.title) + '</p>' +
+    '<p class="ct-p">' + esc(price(product.priceCents)) + '</p></div>';
+
+  if (step === 'state') {
+    // Step 1: pick a state. Plain GET form; submit sends the browser to the same URL with ?state=XX.
+    var opts = US_STATES.map(function (s) { return '<option value="' + esc(s[0]) + '">' + esc(s[1]) + '</option>'; }).join('');
+    return headline + '<div class="ct" id="ct">' + item +
+      '<form class="ct-f" method="get" action="' + esc('/products/buy/' + encodeURIComponent(product.id)) + '">' +
+      '<label class="ct-l"><span>' + esc(STORE.cart.stateLabel) + '</span>' +
+      '<select name="state" required>' +
+      '<option value="">' + esc(STORE.cart.statePlaceholder) + '</option>' +
+      opts +
+      '<option value="XX">' + esc(STORE.cart.outside) + '</option>' +
+      '</select></label>' +
+      '<p class="ct-h">' + esc(STORE.cart.stateHelp) + '</p>' +
+      '<p class="ct-go">' + door(STORE.cart.review, 'button', { cls: 'ct-rev' }) + '</p>' +
+      '</form>' +
+      '<p class="ct-back">' + word(STORE.cart.backToStore, '/products', { data: 'data-go="products"' }) + '</p>' +
+      '</div>';
+  }
+
+  // Step 2: state is settled. Show the breakdown and a Confirm & pay button.
+  var totals = d.totals || {};
+  var ohio = (d.buyerState || '').toUpperCase() === 'OH';
+  var row = function (label, cents, cls) {
+    return '<tr class="ct-row ct-' + cls + '"><th scope="row">' + esc(label) + '</th>' +
+      '<td>' + esc(price(cents)) + '</td></tr>';
+  };
+  var rows = row(STORE.cart.subtotal, totals.subtotalCents || 0, 'sub');
+  if ((totals.shippingCents || 0) > 0) rows += row(STORE.cart.shipping, totals.shippingCents, 'ship');
+  if (ohio && (totals.taxCents || 0) > 0) rows += row(STORE.cart.tax, totals.taxCents, 'tax');
+  rows += row(STORE.cart.total, totals.totalCents || 0, 'tot');
+
+  var buyerStateDisplay = ohio ? '' : '<p class="ct-notax">' + esc(STORE.cart.noTax) + '</p>';
+
+  return headline + '<div class="ct" id="ct">' + item +
+    '<table class="ct-tot"><tbody>' + rows + '</tbody></table>' +
+    buyerStateDisplay +
+    '<form class="ct-f" method="post" action="' + (t.buyAction || '/api/store/checkout') + '">' +
+    '<input type="hidden" name="product" value="' + esc(product.id) + '">' +
+    '<input type="hidden" name="state" value="' + esc(d.buyerState || '') + '">' +
+    '<p class="ct-go">' + door(STORE.cart.confirm, 'button', { cls: 'ct-pay' }) + '</p>' +
+    '<p class="ct-c">' + esc(STORE.under) + '</p>' +
+    '</form>' +
+    '<p class="ct-back">' + word(STORE.cart.backToStore, '/products', { data: 'data-go="products"' }) + '</p>' +
+    '</div>';
+}
+
+/* ------------------------------------------------------------------ YOUR ORDER: where Square sends a buyer back to. Five states (lib/store/orders.ts decides which).
+ * If a tax breakdown is present (an Ohio order always has one; a non-Ohio order has zero tax and the tax row is left out), show it under the download. */
 export function order(t, data) {
   var d = data || {}, s = d.state || 'pending', mail = '<a class="od-mail" href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + '</a>';
+  var totals = d.totals;
+  var row = function (label, cents, cls) {
+    return '<tr class="od-row od-' + cls + '"><th scope="row">' + esc(label) + '</th><td>' + esc(price(cents)) + '</td></tr>';
+  };
+  var breakdown = '';
+  if (totals && (s === 'ready' || s === 'refunded')) {
+    var tr = row(STORE.totals.subtotal, totals.subtotalCents || 0, 'sub');
+    if ((totals.shippingCents || 0) > 0) tr += row(STORE.totals.shipping, totals.shippingCents, 'ship');
+    if ((totals.taxCents || 0) > 0) tr += row(STORE.totals.tax, totals.taxCents, 'tax');
+    tr += row(STORE.totals.paid, totals.totalCents || 0, 'tot');
+    breakdown = '<table class="od-tot"><tbody>' + tr + '</tbody></table>';
+  }
   return '<p class="pg-h">' + esc(PAGES.order.label) + '</p><div class="od" id="od" data-state="' + esc(s) + '">' +
     '<h1 class="od-h">' + esc(STORE.heading[s]) + '</h1>' +
     '<p class="od-l">' + (s === 'ready' ? esc(d.title || 'Your download') + esc(STORE.line.ready) : esc(STORE.line[s])) + '</p>' +
     (s === 'ready' && d.downloadHref ? '<p class="od-go">' + door(STORE.download, 'a', { href: d.downloadHref, cls: 'od-dl', data: 'data-plain download' }) + '</p><p class="od-c">' + esc(STORE.keep) + '</p>' : '') +
     ((s === 'pending' || s === 'stalled') && d.retryHref ? '<p class="od-go">' + word(STORE.again, d.retryHref, { cls: 'od-again', data: 'data-plain' }) + '</p>' : '') +
+    breakdown +
     '<p class="od-q">' + esc(STORE.questions) + ' ' + mail + (d.sandbox ? ' · ' + esc(STORE.testTag) : '') + '</p></div>';
 }
 
@@ -126,14 +198,14 @@ export function missing() { return '<h1 class="pg-h">' + esc(PAGES.missing.label
 
 /* One page's section, by name. The engine calls this in the browser; the document below calls it on the server. */
 export function section(t, page, data) {
-  var inner = page === 'production' ? production(t, data) : page === 'about' ? about(t) : page === 'press-kit' ? pressKit() : page === 'products' ? products(t, data) : page === 'order' ? order(t, data) : page === 'missing' ? missing() : '';
+  var inner = page === 'production' ? production(t, data) : page === 'about' ? about(t) : page === 'press-kit' ? pressKit() : page === 'products' ? products(t, data) : page === 'buy' ? buy(t, data) : page === 'order' ? order(t, data) : page === 'missing' ? missing() : '';
   return '<section class="pg pg-' + page + '" data-pg="' + page + '">' + inner + '</section>';
 }
 
 /* ------------------------------------------------------------------ the whole document for one address */
 export function documentHtml(t, page, data) {
   var P = PAGES[page] || PAGES.missing, d = data || {}, home = page === 'home', url = P.path ? SITE.origin + (P.path === '/' ? '/' : P.path) : '';
-  var hidden = page === 'order' || page === 'missing' || page === 'products' || d.noindex;       /* the store stays out of search for now, as it was */
+  var hidden = page === 'order' || page === 'missing' || page === 'products' || page === 'buy' || d.noindex;       /* the store stays out of search for now, as it was */
   return '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
     '<title>' + esc(d.title || P.title) + '</title>\n' +
     (P.description ? '<meta name="description" content="' + esc(P.description) + '">\n' : '') +

@@ -51,9 +51,9 @@ export type ReceiptInput = {
   productTitle: string;
   /** The order page. The download lives there, so the email never carries the file. */
   pageUrl: string;
-  /** The product's price. */
+  /** The item's price before shipping and tax. */
   itemCents: number;
-  /** What Square says was paid. */
+  /** What Square says was paid (total: item + shipping + tax). */
   paidCents: number;
   currency: string;
   paidAt: Date;
@@ -69,6 +69,12 @@ export type ReceiptInput = {
    * See receiptAssetBase() in config.ts.
    */
   assetBase: string;
+  /** Shipping cents. Left out of the money table when 0. */
+  shippingCents?: number;
+  /** Tax cents. Left out of the money table when 0. */
+  taxCents?: number;
+  /** The line label for tax, e.g. "Ohio sales tax". Comes from the tax config. */
+  taxLabel?: string;
 };
 
 export type ReceiptEmail = {
@@ -314,6 +320,8 @@ ${rule(14)}
 <tr><td style="padding:14px 0 0;">
 ${TABLE}
 ${moneyRow(input.productTitle, item, "item")}
+${(input.shippingCents ?? 0) > 0 ? moneyRow("Shipping", formatReceiptMoney(input.shippingCents ?? 0, input.currency), "total") : ""}
+${(input.taxCents ?? 0) > 0 ? moneyRow(input.taxLabel ?? "Sales tax", formatReceiptMoney(input.taxCents ?? 0, input.currency), "total") : ""}
 ${moneyRow("Total", paid, "total")}
 ${moneyRow("Amount paid", paid, "paid")}
 </table>
@@ -343,6 +351,15 @@ ${input.test ? `${note(28, testLine)}\n${note(2, "Questions? Reply to this email
 </html>
 `;
 
+  const shippingLine =
+    (input.shippingCents ?? 0) > 0
+      ? `Shipping: ${formatReceiptMoney(input.shippingCents ?? 0, input.currency)}\n`
+      : "";
+  const taxLine =
+    (input.taxCents ?? 0) > 0
+      ? `${input.taxLabel ?? "Sales tax"}: ${formatReceiptMoney(input.taxCents ?? 0, input.currency)}\n`
+      : "";
+
   const text =
     `Your download is ready: ${input.pageUrl}\n` +
     `${window}\n\n` +
@@ -351,6 +368,8 @@ ${input.test ? `${note(28, testLine)}\n${note(2, "Questions? Reply to this email
     details.map(([label, value]) => `${label}: ${value}`).join("\n") +
     `\n\n` +
     `${input.productTitle}: ${item}\n` +
+    shippingLine +
+    taxLine +
     `Total: ${paid}\n` +
     `Amount paid: ${paid}\n\n` +
     (input.test ? `${testLine}\n` : "") +

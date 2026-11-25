@@ -4,13 +4,22 @@ import { findProduct } from "@/lib/store/catalog";
 import { getSquareConfig, SUPPORT_EMAIL } from "@/lib/store/config";
 import { createOrder, ensureStoreSchema } from "@/lib/store/orders";
 import { createPaymentLink } from "@/lib/store/square";
+import { computeTax, isAcceptedBuyerState } from "@/lib/store/tax";
 
 export const dynamic = "force-dynamic";
 
-// Plain HTML form target: POST product=<id>, answer with a redirect. Works
-// with JavaScript off — the Buy button on /products is a real form.
-function backToStore(request: Request, code: string) {
-  return NextResponse.redirect(new URL(`/products?error=${code}`, request.url), 303);
+// Plain HTML form target. The /products/buy/<id> cart POSTs here with:
+//   product=<id>&state=<US-two-letter or "XX">
+// On success: 303 to Square's payment page. On any problem: 303 back with
+// ?error=<code> so the UI can tell the buyer why without showing a server
+// error page. Known-good product → back to its cart. Unknown / hidden
+// product → back to /products (the cart for an unknown id would just 404).
+function backToCart(request: Request, productId: string, code: string, knownProduct: boolean) {
+  const to =
+    knownProduct && productId
+      ? `/products/buy/${encodeURIComponent(productId)}?error=${code}`
+      : `/products?error=${code}`;
+  return NextResponse.redirect(new URL(to, request.url), 303);
 }
 
 export async function POST(request: Request) {
@@ -30,19 +39,43 @@ export async function POST(request: Request) {
   }
 
   const config = getSquareConfig();
-  if (!config) return backToStore(request, "unavailable");
+  if (!config) return backToCart(request, "", "unavailable", false);
 
   let productId = "";
+  let rawState = "";
   try {
     const form = await request.formData();
-    const value = form.get("product");
-    if (typeof value === "string") productId = value.trim();
+    const pid = form.get("product");
+    const st = form.get("state");
+    if (typeof pid === "string") productId = pid.trim();
+    if (typeof st === "string") rawState = st.trim().toUpperCase();
   } catch {
     productId = "";
   }
 
   const product = findProduct(productId);
-  if (!product) return backToStore(request, "unavailable");
+  if (!product) return backToCart(request, productId, "unavailable", false);
+
+  // Accept a real US state code or the catch-all "XX" ("Outside the United
+  // States"). Anything else — "" or e.g. "ZZ" — is a step-1 error.
+  const buyerState = isAcceptedBuyerState(rawState) ? rawState : "";
+  if (!buyerState) return backToCart(request, product.id, "state", true);
+
+  // Compute tax locally; this is what gets stored on the order. Square will
+  // charge the same number because the Order sent to CreatePaymentLink carries
+  // the same percentage tax, applied to the same lines.
+  const breakdown = computeTax({
+    buyerState,
+    lines: [
+      {
+        productId: product.id,
+        priceCents: product.priceCents,
+        quantity: 1,
+        category: product.taxCategory,
+      },
+    ],
+    shippingCents: 0,
+  });
 
   const orderId = crypto.randomUUID();
   const downloadToken = crypto.randomBytes(32).toString("base64url");
@@ -52,9 +85,17 @@ export async function POST(request: Request) {
 
     const link = await createPaymentLink(config, {
       idempotencyKey: orderId,
-      name: product.title,
-      amountCents: product.priceCents,
       currency: "USD",
+      lines: [
+        {
+          name: product.title,
+          priceCents: product.priceCents,
+          quantity: 1,
+          category: product.taxCategory,
+        },
+      ],
+      shippingCents: 0,
+      buyerState,
       redirectUrl: `${self.origin}/products/thanks/${orderId}`,
       note: `anthonydakemusic.com order ${orderId}`,
       supportEmail: SUPPORT_EMAIL,
@@ -63,12 +104,19 @@ export async function POST(request: Request) {
     await createOrder({
       id: orderId,
       productId: product.id,
-      amountCents: product.priceCents,
+      amountCents: breakdown.totalCents,
       currency: "USD",
       environment: config.environment,
       squareOrderId: link.orderId,
       squarePaymentLinkId: link.id,
       downloadToken,
+      buyerState: buyerState === "XX" ? null : buyerState,
+      taxCategory: product.taxCategory,
+      taxableAmountCents: breakdown.taxableAmountCents,
+      nonTaxableAmountCents: breakdown.nonTaxableAmountCents,
+      shippingCents: breakdown.shippingCents,
+      taxCents: breakdown.taxCents,
+      taxRate: breakdown.rate,
     });
 
     return NextResponse.redirect(link.url, 303);
@@ -77,6 +125,6 @@ export async function POST(request: Request) {
       "[store] checkout failed:",
       err instanceof Error ? err.message : String(err)
     );
-    return backToStore(request, "checkout");
+    return backToCart(request, product.id, "checkout", true);
   }
 }

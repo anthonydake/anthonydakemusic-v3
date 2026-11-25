@@ -138,6 +138,21 @@ One-off digital downloads, paid on Square's hosted checkout page. Card details n
 
 **Testing in Square's sandbox.** The sandbox never shows a card form for a payment link. Buy lands on Square's "Checkout API Sandbox Testing Panel": `Next` → `Test Payment` simulates a buyer paying (once per link). The panel does not send the browser back by itself: follow its "Customer redirected to" link, or keep the order page open, which re-checks. The simulated payment has no buyer (no email, no card), so in sandbox only the receipt goes to the store inbox (`BOOKING_NOTIFY_EMAIL`). Preview deployments sit behind Vercel login, so Square's webhook cannot reach them; on a preview the order page's own check is what marks the order paid, and the receipt's images are read from GitHub at the deployed commit (`receiptAssetBase()`). An env var change only reaches a new deployment.
 
+## Sales tax (added 25 Nov 2026)
+
+Ohio is the one state Anthony is registered to collect sales tax in. The cart asks every buyer where they are before the payment link is made; an Ohio buyer pays 8% on taxable lines, everyone else pays none. The flat rate rests on Ohio sourcing an in-state seller's orders to where the order is received (Anthony's home in Franklin County). If an accountant later says the right answer is each buyer's county rate, change `taxRateFor()` in `lib/store/tax.ts` and nothing else.
+
+**Every item needs a tax category.** Pick one when you add or change a product or service:
+- `digital_good` — downloads of audio, video, or e-books (songs, stems, sample packs, drum loops, e-books). Taxed in Ohio.
+- `physical_good` — anything shipped or handed over (shirts, vinyl, CDs). Taxed in Ohio, and the shipping charge on them is taxed too.
+- `service` — session drumming, gigs, mixing, mastering, production, production deposits, lessons. Not taxed in Ohio.
+
+**If it does not fit cleanly — presets, MIDI packs, software, subscriptions, gift cards, bundles that mix categories, or anything not listed — stop and ask Anthony.** Do not guess, because Ohio's treatment of those is not settled for this store. The build fails if a product lacks a valid category (see the top of `data/store.data.ts`).
+
+**Where the tax lives.** The rate, the taxing state, the category rules and the math are all in `lib/store/tax.ts`. No rate and no category logic anywhere else. If Ohio or Franklin County changes its rate, change it there. Tax is charged **only** for Ohio buyers until Anthony says he is registered in another state.
+
+**What gets stored on each paid order** (`store_orders` table): the buyer's stated state, the item's category, taxable and non-taxable amounts, shipping, tax charged, the rate used, and that the order was received in Franklin, OH. If Square's collected shipping address later shows a different state than the buyer stated, the order is flagged and Anthony's sale notice says so; nothing auto-corrects.
+
 ## Checks (run before every commit)
 
 ```bash

@@ -5,6 +5,7 @@ import {
   attachBuyerEmail,
   claimDeliveryEmail,
   DOWNLOAD_WINDOW_DAYS,
+  flagBuyerStateMismatch,
   getOrderById,
   getOrderBySquareOrderId,
   markOrderPaid,
@@ -12,6 +13,7 @@ import {
   type StoreOrder,
 } from "./orders";
 import { describePaidWith, getPayment, retrieveOrder, type SquarePayment } from "./square";
+import { TAX } from "./tax";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -45,11 +47,16 @@ async function deliverByEmail(
     return;
   }
 
+  const subtotalCents =
+    (claimed.taxable_amount_cents ?? 0) +
+    (claimed.non_taxable_amount_cents ?? 0) -
+    (claimed.shipping_cents ?? 0);
+
   const ok = await sendReceiptEmail({
     to,
     productTitle: getProduct(claimed.product_id)?.title ?? "Your download",
     pageUrl: `${origin}/products/thanks/${claimed.id}`,
-    itemCents: claimed.amount_cents,
+    itemCents: subtotalCents,
     paidCents: payment.amount_money?.amount ?? claimed.amount_cents,
     currency: claimed.currency,
     paidAt: claimed.paid_at ? new Date(claimed.paid_at) : new Date(),
@@ -58,8 +65,31 @@ async function deliverByEmail(
     paidWith: describePaidWith(payment),
     test: claimed.environment !== "production",
     assetBase: receiptAssetBase(),
+    shippingCents: claimed.shipping_cents ?? 0,
+    taxCents: claimed.tax_cents ?? 0,
+    taxLabel: TAX.displayName,
   });
   if (!ok) await releaseDeliveryEmail(claimed.id);
+}
+
+/**
+ * If the buyer said one state at checkout and Square's collected shipping
+ * (or billing) address shows another, flag the order so the sale notice
+ * tells Anthony. We never auto-correct — that's a tax decision.
+ */
+async function reconcileBuyerState(
+  order: StoreOrder,
+  payment: SquarePayment
+): Promise<StoreOrder> {
+  if (order.buyer_state_mismatch) return order;
+  const stated = (order.buyer_state ?? "").trim().toUpperCase();
+  const shipState = (payment.shipping_address?.administrative_district_level_1 ?? "").trim().toUpperCase();
+  const billState = (payment.billing_address?.administrative_district_level_1 ?? "").trim().toUpperCase();
+  const squareStates = [shipState, billState].filter(Boolean);
+  if (!stated || squareStates.length === 0) return order;
+  if (squareStates.includes(stated)) return order;
+  await flagBuyerStateMismatch(order.id);
+  return { ...order, buyer_state_mismatch: true };
 }
 
 /**
@@ -103,12 +133,23 @@ export async function settlePayment(
     if (updated) {
       order = updated;
       result = "paid";
+      order = await reconcileBuyerState(order, payment);
       await sendSaleNotice({
         productTitle: getProduct(order.product_id)?.title ?? order.product_id,
         amountCents: order.amount_cents,
         buyerEmail: order.buyer_email,
         orderId: order.id,
         test: order.environment !== "production",
+        buyerState: order.buyer_state,
+        taxCents: order.tax_cents ?? 0,
+        shippingCents: order.shipping_cents ?? 0,
+        subtotalCents:
+          (order.taxable_amount_cents ?? 0) +
+          (order.non_taxable_amount_cents ?? 0) -
+          (order.shipping_cents ?? 0),
+        squareShippingState:
+          (payment.shipping_address?.administrative_district_level_1 ?? "").trim().toUpperCase() || null,
+        stateMismatch: order.buyer_state_mismatch,
       });
     } else {
       // Lost a race with another event for the same payment.

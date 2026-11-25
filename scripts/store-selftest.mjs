@@ -72,6 +72,32 @@ const mockServer = http.createServer(async (req, res) => {
       },
     });
   }
+  // CalculateOrder: compute subtotal/tax/total from the order the client sent.
+  // Matches what the real Square sandbox returns for the shape we send.
+  if (req.method === "POST" && pathname === "/v2/orders/calculate") {
+    const order = JSON.parse(body)?.order ?? {};
+    const taxes = order.taxes ?? [];
+    const pct = taxes[0] ? Number(taxes[0].percentage) / 100 : 0;
+    let subtotal = 0;
+    let taxCents = 0;
+    for (const li of order.line_items ?? []) {
+      const amount = (li.base_price_money?.amount ?? 0) * Number(li.quantity ?? "1");
+      subtotal += amount;
+      if ((li.applied_taxes ?? []).length > 0) taxCents += Math.round(amount * pct);
+    }
+    for (const sc of order.service_charges ?? []) {
+      const amount = sc.amount_money?.amount ?? 0;
+      subtotal += amount;
+      if ((sc.applied_taxes ?? []).length > 0) taxCents += Math.round(amount * pct);
+    }
+    const total = subtotal + taxCents;
+    return send(200, {
+      order: {
+        total_money: { amount: total, currency: "USD" },
+        total_tax_money: { amount: taxCents, currency: "USD" },
+      },
+    });
+  }
   let match = pathname.match(/^\/v2\/orders\/([^/]+)$/);
   if (req.method === "GET" && match) {
     const paid = mock.paid.has(match[1]);
@@ -140,6 +166,8 @@ const { receiptAssetBase } = await import("../lib/store/config.ts");
 const { ensureStoreSchema, getOrderById, downloadIsOpen, orderPageState } = await import(
   "../lib/store/orders.ts"
 );
+const { TAX, TAX_CATEGORIES, isTaxCategory, categoryIsTaxable, taxRateFor, shippingIsTaxable, computeTax, formatRatePercent } =
+  await import("../lib/store/tax.ts");
 
 // ------------------------------------------------------------------- helpers
 const results = [];
@@ -148,13 +176,18 @@ function check(name, ok, detail = "") {
   console.log(`${ok ? "PASS" : "FAIL"}  ${name}${ok || !detail ? "" : `  — ${detail}`}`);
 }
 
-async function checkout(product = "test-download", origin = SITE) {
+// state defaults to "XX" (outside the US → no tax) so most existing tests keep
+// their PRICE_CENTS math; tax-specific tests pass state: "OH" explicitly.
+async function checkout(product = "test-download", origin = SITE, state = "XX") {
   const before = mock.links.length;
+  const params = new URLSearchParams();
+  params.set("product", product);
+  params.set("state", state);
   const res = await checkoutRoute.POST(
     new Request(`${SITE}/api/store/checkout`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded", Origin: origin },
-      body: `product=${encodeURIComponent(product)}`,
+      body: params.toString(),
     })
   );
   const link = mock.links.length > before ? mock.links.at(-1) : null;
@@ -209,16 +242,22 @@ try {
     first.res.status === 303 && first.location.startsWith("https://sandbox.square.link/"),
     `${first.res.status} ${first.location}`
   );
+  const firstLine = sent?.order?.line_items?.[0];
   check(
-    "Square receives the item, price, location and return URL",
-    sent?.quick_pay?.name === "Test download" &&
-      sent?.quick_pay?.price_money?.amount === PRICE_CENTS &&
-      sent?.quick_pay?.price_money?.currency === "USD" &&
-      sent?.quick_pay?.location_id === "SELFTESTLOC" &&
+    "Square receives the item, price, location and return URL (order-based)",
+    firstLine?.name === "Test download" &&
+      firstLine?.base_price_money?.amount === PRICE_CENTS &&
+      firstLine?.base_price_money?.currency === "USD" &&
+      sent?.order?.location_id === "SELFTESTLOC" &&
       UUID_RE.test(first.ourId) &&
       sent?.idempotency_key === first.ourId &&
       sent?.checkout_options?.redirect_url === `${SITE}/products/thanks/${first.ourId}`,
     JSON.stringify(sent)
+  );
+  check(
+    "a non-Ohio order carries no tax line and no applied_taxes",
+    !sent?.order?.taxes && !firstLine?.applied_taxes,
+    JSON.stringify(sent?.order)
   );
   let order = await getOrderById(first.ourId);
   check(
@@ -235,13 +274,19 @@ try {
   attempt = await checkout("no-such-product");
   check("an unknown product is sent back to the store", attempt.location.endsWith("/products?error=unavailable") && !attempt.link);
 
+  // Missing/bad buyer state is the new validation. Use an empty state string.
+  attempt = await checkout("test-download", SITE, "");
+  check("a missing buyer state sends the buyer back to the cart", attempt.location.endsWith("/products/buy/test-download?error=state") && !attempt.link);
+  attempt = await checkout("test-download", SITE, "ZZ");
+  check("an unrecognised state string is refused the same way", attempt.location.endsWith("/products/buy/test-download?error=state") && !attempt.link);
+
   const token = process.env.SQUARE_ACCESS_TOKEN;
   delete process.env.SQUARE_ACCESS_TOKEN;
   attempt = await checkout();
   check("with no Square keys, checkout is unavailable", attempt.location.endsWith("/products?error=unavailable") && !attempt.link);
   process.env.SQUARE_ACCESS_TOKEN = "wrong-token";
   attempt = await checkout();
-  check("a Square error sends the buyer back unharmed", attempt.location.endsWith("/products?error=checkout"));
+  check("a Square error sends the buyer back unharmed", attempt.location.endsWith("/products/buy/test-download?error=checkout"));
   process.env.SQUARE_ACCESS_TOKEN = token;
 
   // --- before payment
@@ -553,6 +598,228 @@ try {
       !res.headers.has("location")
   );
   delete process.env.STORE_FILE_GROOVE_PACK_1;
+
+  // -------------------------------------------------- Sales tax (added 2026-11-25)
+  check(
+    "the tax config declares Ohio, 8%, and a display name",
+    TAX.state === "OH" && TAX.rate === 0.08 && TAX.displayName === "Ohio sales tax"
+  );
+  check(
+    "the three tax categories are the only ones accepted",
+    TAX_CATEGORIES.length === 3 &&
+      isTaxCategory("digital_good") &&
+      isTaxCategory("physical_good") &&
+      isTaxCategory("service") &&
+      !isTaxCategory("preset") &&
+      !isTaxCategory("") &&
+      !isTaxCategory(undefined) &&
+      !isTaxCategory(null)
+  );
+  check(
+    "digital and physical are taxable; services are not",
+    categoryIsTaxable("digital_good") &&
+      categoryIsTaxable("physical_good") &&
+      !categoryIsTaxable("service")
+  );
+  check(
+    "the rate is 8% for Ohio buyers and 0 for everyone else",
+    taxRateFor("OH") === 0.08 &&
+      taxRateFor("oh") === 0.08 &&
+      taxRateFor(" OH ") === 0.08 &&
+      taxRateFor("CA") === 0 &&
+      taxRateFor("") === 0 &&
+      taxRateFor(null) === 0 &&
+      taxRateFor(undefined) === 0
+  );
+  check(
+    "shipping is only taxable when both the buyer is in OH AND the cart has a physical item",
+    shippingIsTaxable("OH", ["physical_good"]) === true &&
+      shippingIsTaxable("OH", ["digital_good"]) === false &&
+      shippingIsTaxable("OH", ["physical_good", "service"]) === true &&
+      shippingIsTaxable("CA", ["physical_good"]) === false
+  );
+  check(
+    "formatRatePercent renders a whole percent as e.g. '8%'",
+    formatRatePercent(0.08) === "8%" && formatRatePercent(0.075) === "7.5%"
+  );
+  const ohDigital = computeTax({
+    buyerState: "OH",
+    lines: [{ productId: "x", priceCents: 1000, quantity: 1, category: "digital_good" }],
+  });
+  check(
+    "a download to an Ohio buyer is taxed at 8%",
+    ohDigital.taxCents === 80 &&
+      ohDigital.totalCents === 1080 &&
+      ohDigital.taxableAmountCents === 1000 &&
+      ohDigital.nonTaxableAmountCents === 0 &&
+      ohDigital.rate === 0.08
+  );
+  const ohPhysical = computeTax({
+    buyerState: "OH",
+    lines: [{ productId: "shirt", priceCents: 2000, quantity: 1, category: "physical_good" }],
+    shippingCents: 500,
+  });
+  check(
+    "merch with shipping to an Ohio buyer: item and shipping both taxed",
+    ohPhysical.taxCents === Math.round(2500 * 0.08) &&
+      ohPhysical.totalCents === 2500 + Math.round(2500 * 0.08) &&
+      ohPhysical.shippingCents === 500 &&
+      ohPhysical.taxableAmountCents === 2500
+  );
+  const ohService = computeTax({
+    buyerState: "OH",
+    lines: [{ productId: "deposit", priceCents: 50000, quantity: 1, category: "service" }],
+  });
+  check(
+    "a service or production deposit to an Ohio buyer is not taxed",
+    ohService.taxCents === 0 &&
+      ohService.totalCents === 50000 &&
+      ohService.nonTaxableAmountCents === 50000 &&
+      ohService.taxableAmountCents === 0
+  );
+  const ohMixed = computeTax({
+    buyerState: "OH",
+    lines: [
+      { productId: "d", priceCents: 1000, quantity: 1, category: "digital_good" },
+      { productId: "dep", priceCents: 50000, quantity: 1, category: "service" },
+    ],
+  });
+  check(
+    "a mixed Ohio cart (download + deposit): only the download is taxed",
+    ohMixed.taxCents === 80 &&
+      ohMixed.taxableAmountCents === 1000 &&
+      ohMixed.nonTaxableAmountCents === 50000 &&
+      ohMixed.totalCents === 51080
+  );
+  const outsideOH = computeTax({
+    buyerState: "CA",
+    lines: [
+      { productId: "d", priceCents: 1000, quantity: 1, category: "digital_good" },
+      { productId: "shirt", priceCents: 2000, quantity: 1, category: "physical_good" },
+    ],
+    shippingCents: 500,
+  });
+  check(
+    "a non-Ohio buyer pays no tax on anything, including physical+shipping",
+    outsideOH.taxCents === 0 &&
+      outsideOH.totalCents === 3500 &&
+      outsideOH.taxableAmountCents === 0 &&
+      outsideOH.nonTaxableAmountCents === 3500
+  );
+  check(
+    "a shipping charge on a download-only cart is never taxed, even in Ohio",
+    computeTax({
+      buyerState: "OH",
+      lines: [{ productId: "d", priceCents: 1000, quantity: 1, category: "digital_good" }],
+      shippingCents: 500,
+    }).taxCents === 80
+  );
+  check(
+    "data/store.data.ts throws on a product missing taxCategory (import is pure, so any bad product fails the build)",
+    typeof (await import("../data/store.data.ts")).STORE_PRODUCTS === "object"
+  );
+
+  // ----- Checkout + Square: an Ohio order carries the tax line and the full total
+  const ohCheckout = await checkout("test-download", SITE, "OH");
+  const ohSent = ohCheckout.link?.request;
+  const ohLine = ohSent?.order?.line_items?.[0];
+  check(
+    "an Ohio checkout sends Square an order with an 8% LINE_ITEM tax",
+    ohSent?.order?.taxes?.length === 1 &&
+      ohSent.order.taxes[0].percentage === "8" &&
+      ohSent.order.taxes[0].scope === "LINE_ITEM" &&
+      ohLine?.applied_taxes?.length === 1 &&
+      ohLine.applied_taxes[0].tax_uid === ohSent.order.taxes[0].uid,
+    JSON.stringify(ohSent?.order)
+  );
+  const ohOrder = await getOrderById(ohCheckout.ourId);
+  check(
+    "the saved order carries buyer state, category, tax facts and the Franklin, OH sourcing",
+    ohOrder.buyer_state === "OH" &&
+      ohOrder.tax_category === "digital_good" &&
+      ohOrder.tax_cents === 8 &&
+      ohOrder.taxable_amount_cents === 100 &&
+      ohOrder.non_taxable_amount_cents === 0 &&
+      ohOrder.shipping_cents === 0 &&
+      Number(ohOrder.tax_rate) === 0.08 &&
+      ohOrder.amount_cents === 108 &&
+      ohOrder.received_in_county === "Franklin, OH" &&
+      ohOrder.buyer_state_mismatch === false,
+    JSON.stringify(ohOrder)
+  );
+
+  // Pay the Ohio order (match the stored amount: 108 cents).
+  const ohBefore = emails.length;
+  res = await webhook(paymentEvent(ohCheckout.link.orderId, { amount_money: { amount: 108, currency: "USD" } }));
+  const ohFresh = emails.slice(ohBefore);
+  const ohNotice = ohFresh.find((e) => e.subject?.includes("New sale"));
+  const ohReceipt = ohFresh.find((e) => e.subject?.includes("receipt"));
+  check(
+    "the Ohio order pays and the receipt + notice carry the tax breakdown",
+    res.status === 200 &&
+      (await getOrderById(ohCheckout.ourId)).status === "paid" &&
+      ohReceipt?.html?.includes("Ohio sales tax") &&
+      ohReceipt?.text?.includes("Ohio sales tax: $0.08") &&
+      ohNotice?.text?.includes("Ohio sales tax: $0.08") &&
+      ohNotice?.text?.includes("Buyer state (stated at checkout): OH"),
+    JSON.stringify(ohReceipt?.text?.split("\n").slice(0, 15))
+  );
+
+  // ----- A non-Ohio order gets no tax line in the receipt and no "Ohio sales tax" line in the notice
+  const caCheckout = await checkout("test-download", SITE, "CA");
+  const caSent = caCheckout.link?.request;
+  check(
+    "a California checkout sends Square an order with no taxes",
+    !caSent?.order?.taxes && !caSent?.order?.line_items?.[0]?.applied_taxes
+  );
+  const caOrder = await getOrderById(caCheckout.ourId);
+  check(
+    "the saved California order has 0 tax and the buyer's state recorded",
+    caOrder.tax_cents === 0 && caOrder.amount_cents === 100 && caOrder.buyer_state === "CA"
+  );
+
+  // ----- State mismatch: Square's shipping address state differs from what the buyer stated
+  const mismatchCheckout = await checkout("test-download", SITE, "OH");
+  const mismBefore = emails.length;
+  res = await webhook(
+    paymentEvent(mismatchCheckout.link.orderId, {
+      amount_money: { amount: 108, currency: "USD" },
+      shipping_address: { administrative_district_level_1: "CA" },
+    })
+  );
+  const mismOrder = await getOrderById(mismatchCheckout.ourId);
+  const mismNotice = emails.slice(mismBefore).find((e) => e.subject?.includes("New sale"));
+  check(
+    "a buyer-state mismatch is flagged on the order and surfaced in the sale notice",
+    mismOrder.buyer_state_mismatch === true &&
+      mismNotice?.text?.includes("does not match the state on Square's shipping address") &&
+      mismNotice.text.includes("CA")
+  );
+
+  // ----- Cart-page tax matches Square's calculateOrder exactly
+  const { calculateOrderTotals } = await import("../lib/store/square.ts");
+  const { getSquareConfig } = await import("../lib/store/config.ts");
+  const cfg = getSquareConfig();
+  const calc = await calculateOrderTotals(cfg, {
+    idempotencyKey: "test-calc",
+    currency: "USD",
+    lines: [{ name: "Test download", priceCents: 100, quantity: 1, category: "digital_good" }],
+    shippingCents: 0,
+    buyerState: "OH",
+    redirectUrl: `${SITE}/products/thanks/preview`,
+    note: "preview",
+    supportEmail: "",
+  });
+  const localCalc = computeTax({
+    buyerState: "OH",
+    lines: [{ productId: "test-download", priceCents: 100, quantity: 1, category: "digital_good" }],
+  });
+  check(
+    "the local tax computation matches Square's calculateOrder exactly",
+    calc?.subtotalCents === localCalc.subtotalCents &&
+      calc?.taxCents === localCalc.taxCents &&
+      calc?.totalCents === localCalc.totalCents
+  );
 } catch (err) {
   failed = true;
   console.error("\nThe self-test crashed:", err);

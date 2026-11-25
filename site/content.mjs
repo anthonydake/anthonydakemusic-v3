@@ -23,6 +23,7 @@ export const PAGES = {
   about: { path: '/about', label: 'About', title: 'About · Anthony Dake', description: 'Anthony Dake, Architect of Sound, in the words of the artists he has produced.', side: -0.6 },
   'press-kit': { path: '/press-kit', label: 'Press kit', title: 'Press kit · Anthony Dake', description: 'Press kit for Anthony Dake, Architect of Sound.', side: 0.6 },
   products: { path: '/products', label: 'Products', title: 'Products · Anthony Dake', description: 'Downloads from Anthony Dake.', side: 1 },
+  buy: { path: null, label: 'Your cart', title: 'Your cart · Anthony Dake', description: '' },
   order: { path: null, label: 'Your order', title: 'Your order · Anthony Dake', description: '' },
   missing: { path: null, label: 'Not found', title: 'Not found · Anthony Dake', description: '' }
 };
@@ -109,8 +110,50 @@ export const STORE = {
   },
   keep: 'Keep this page. The link works for 30 days.',
   questions: 'Questions?',
-  testTag: 'Test mode'
+  testTag: 'Test mode',
+  /* THE CART CONFIRM PAGE (/products/buy/<id>). Two steps, so tax shows before Buy, with no JavaScript. */
+  cart: {
+    title: 'Your cart',
+    stateLabel: 'Where are you?',
+    statePlaceholder: 'Choose your state',
+    stateHelp: 'For a download, pick where you live. For something shipped, pick where it ships to. Ohio buyers pay Ohio sales tax; nobody else does.',
+    outside: 'Outside the United States',
+    review: 'Review total →',
+    confirm: 'Confirm & pay →',
+    subtotal: 'Subtotal',
+    shipping: 'Shipping',
+    tax: 'Ohio sales tax (8%)',
+    noTax: 'No Ohio sales tax for this order.',
+    total: 'Total',
+    backToStore: '← Back to products',
+    badState: 'Pick a state to see the total.'
+  },
+  /* THE ORDER PAGE (/products/thanks/<id>): the money breakdown, under the download button. */
+  totals: { subtotal: 'Subtotal', shipping: 'Shipping', tax: 'Ohio sales tax', paid: 'Amount paid' }
 };
+
+/*
+ * US STATES, for the cart's state selector. Postal code + display name.
+ * Alphabetical. "US" territories are not here on purpose: Anthony is not
+ * registered to collect sales tax anywhere but Ohio, so the only state that
+ * changes the total is Ohio. A buyer anywhere else can pick "Outside the
+ * United States" or the closest state and the total is the same.
+ */
+export const US_STATES = [
+  ['AL', 'Alabama'], ['AK', 'Alaska'], ['AZ', 'Arizona'], ['AR', 'Arkansas'],
+  ['CA', 'California'], ['CO', 'Colorado'], ['CT', 'Connecticut'], ['DE', 'Delaware'],
+  ['DC', 'District of Columbia'], ['FL', 'Florida'], ['GA', 'Georgia'], ['HI', 'Hawaii'],
+  ['ID', 'Idaho'], ['IL', 'Illinois'], ['IN', 'Indiana'], ['IA', 'Iowa'],
+  ['KS', 'Kansas'], ['KY', 'Kentucky'], ['LA', 'Louisiana'], ['ME', 'Maine'],
+  ['MD', 'Maryland'], ['MA', 'Massachusetts'], ['MI', 'Michigan'], ['MN', 'Minnesota'],
+  ['MS', 'Mississippi'], ['MO', 'Missouri'], ['MT', 'Montana'], ['NE', 'Nebraska'],
+  ['NV', 'Nevada'], ['NH', 'New Hampshire'], ['NJ', 'New Jersey'], ['NM', 'New Mexico'],
+  ['NY', 'New York'], ['NC', 'North Carolina'], ['ND', 'North Dakota'], ['OH', 'Ohio'],
+  ['OK', 'Oklahoma'], ['OR', 'Oregon'], ['PA', 'Pennsylvania'], ['RI', 'Rhode Island'],
+  ['SC', 'South Carolina'], ['SD', 'South Dakota'], ['TN', 'Tennessee'], ['TX', 'Texas'],
+  ['UT', 'Utah'], ['VT', 'Vermont'], ['VA', 'Virginia'], ['WA', 'Washington'],
+  ['WV', 'West Virginia'], ['WI', 'Wisconsin'], ['WY', 'Wyoming']
+];
 
 export const MISSING = { line: 'This page doesn’t exist.' };
 export const BACK = '( ← Back )';

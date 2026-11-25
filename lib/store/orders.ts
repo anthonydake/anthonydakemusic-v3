@@ -1,4 +1,5 @@
 import { sql } from "@vercel/postgres";
+import { TAX, type TaxCategory } from "./tax";
 
 export const DOWNLOAD_WINDOW_DAYS = 30;
 export const DOWNLOAD_LIMIT = 10;
@@ -23,6 +24,29 @@ export type StoreOrder = {
   paid_at: Date | null;
   refunded_at: Date | null;
   created_at: Date;
+  // ---- Sales-tax columns (added 2026-11-25; see lib/store/tax.ts) --------
+  /** The buyer's stated state (US two-letter), e.g. "OH". Null for orders written before this column existed. */
+  buyer_state: string | null;
+  /** The item's tax category at the time of purchase, snapshotted on the order. */
+  tax_category: TaxCategory | null;
+  /** Of amount_cents + shipping, how much was in a taxable line. */
+  taxable_amount_cents: number;
+  /** Of amount_cents + shipping, how much was NOT in a taxable line (services, out-of-state, etc). */
+  non_taxable_amount_cents: number;
+  /** Shipping charge in cents, 0 for downloads. */
+  shipping_cents: number;
+  /** Tax charged in cents. 0 outside the taxing state. */
+  tax_cents: number;
+  /** The rate used, e.g. 0.08. 0 outside the taxing state. */
+  tax_rate: number;
+  /** Where the order was received, for Ohio's sourcing rule — "Franklin, OH" by default. */
+  received_in_county: string | null;
+  /**
+   * A buyer who said one state but whose Square shipping address later showed
+   * another gets this flag on the order, and the sale notice mentions it.
+   * Anthony reviews; the agent never auto-corrects.
+   */
+  buyer_state_mismatch: boolean;
 };
 
 // Same convention as the bookings table: created idempotently, no migrations.
@@ -52,6 +76,17 @@ export function ensureStoreSchema(): Promise<void> {
           created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         );
       `;
+      // Idempotent additive migration for sales-tax columns (added 2026-11-25).
+      await sql`ALTER TABLE store_orders ADD COLUMN IF NOT EXISTS buyer_state TEXT;`;
+      await sql`ALTER TABLE store_orders ADD COLUMN IF NOT EXISTS tax_category TEXT;`;
+      await sql`ALTER TABLE store_orders ADD COLUMN IF NOT EXISTS taxable_amount_cents INTEGER NOT NULL DEFAULT 0;`;
+      await sql`ALTER TABLE store_orders ADD COLUMN IF NOT EXISTS non_taxable_amount_cents INTEGER NOT NULL DEFAULT 0;`;
+      await sql`ALTER TABLE store_orders ADD COLUMN IF NOT EXISTS shipping_cents INTEGER NOT NULL DEFAULT 0;`;
+      await sql`ALTER TABLE store_orders ADD COLUMN IF NOT EXISTS tax_cents INTEGER NOT NULL DEFAULT 0;`;
+      // numeric(6,5) holds 0.08000 and any plausible US combined rate.
+      await sql`ALTER TABLE store_orders ADD COLUMN IF NOT EXISTS tax_rate NUMERIC(6,5) NOT NULL DEFAULT 0;`;
+      await sql`ALTER TABLE store_orders ADD COLUMN IF NOT EXISTS received_in_county TEXT;`;
+      await sql`ALTER TABLE store_orders ADD COLUMN IF NOT EXISTS buyer_state_mismatch BOOLEAN NOT NULL DEFAULT FALSE;`;
       await sql`CREATE UNIQUE INDEX IF NOT EXISTS store_orders_square_order_id_key ON store_orders (square_order_id);`;
       await sql`CREATE UNIQUE INDEX IF NOT EXISTS store_orders_download_token_key ON store_orders (download_token);`;
     })().catch((err) => {
@@ -65,22 +100,54 @@ export function ensureStoreSchema(): Promise<void> {
 export async function createOrder(input: {
   id: string;
   productId: string;
+  /** The total the buyer will be charged, in cents (subtotal + shipping + tax). */
   amountCents: number;
   currency: string;
   environment: string;
   squareOrderId: string;
   squarePaymentLinkId: string;
   downloadToken: string;
+  /** US two-letter postal code the buyer stated at checkout, e.g. "OH". */
+  buyerState: string | null;
+  /** The product's tax category at the time of purchase. */
+  taxCategory: TaxCategory;
+  taxableAmountCents: number;
+  nonTaxableAmountCents: number;
+  shippingCents: number;
+  taxCents: number;
+  /** The rate used (0.08 or 0). */
+  taxRate: number;
 }): Promise<void> {
+  // Ohio sourcing rule: an in-state seller's orders are sourced to where the
+  // order is received. The store always "receives" at Anthony's place, so the
+  // county/state are constants from the tax config.
+  const county = `${TAX.sourcedToCounty}, ${TAX.sourcedToState}`;
   await sql`
     INSERT INTO store_orders (
       id, product_id, amount_cents, currency, environment,
-      square_order_id, square_payment_link_id, download_token
+      square_order_id, square_payment_link_id, download_token,
+      buyer_state, tax_category,
+      taxable_amount_cents, non_taxable_amount_cents,
+      shipping_cents, tax_cents, tax_rate,
+      received_in_county
     ) VALUES (
       ${input.id}, ${input.productId}, ${input.amountCents}, ${input.currency}, ${input.environment},
-      ${input.squareOrderId}, ${input.squarePaymentLinkId}, ${input.downloadToken}
+      ${input.squareOrderId}, ${input.squarePaymentLinkId}, ${input.downloadToken},
+      ${input.buyerState}, ${input.taxCategory},
+      ${input.taxableAmountCents}, ${input.nonTaxableAmountCents},
+      ${input.shippingCents}, ${input.taxCents}, ${input.taxRate},
+      ${county}
     );
   `;
+}
+
+/**
+ * Called after Square reports a payment that includes a shipping address.
+ * If the buyer's stated state differs from the shipping address's state, we
+ * flag the order (and the sale notice surfaces it). We never auto-correct.
+ */
+export async function flagBuyerStateMismatch(id: string): Promise<void> {
+  await sql`UPDATE store_orders SET buyer_state_mismatch = TRUE WHERE id = ${id};`;
 }
 
 export async function getOrderById(id: string): Promise<StoreOrder | null> {

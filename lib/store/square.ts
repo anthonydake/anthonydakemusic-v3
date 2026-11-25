@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import type { SquareConfig } from "./config";
+import { TAX, type TaxCategory, categoryIsTaxable } from "./tax";
 
 // Thin fetch wrapper around the three Square endpoints the store needs. No
 // SDK — same plain-fetch convention as the Resend call in /api/book. The
@@ -7,6 +8,18 @@ import type { SquareConfig } from "./config";
 // version pinned on the Square application.
 
 export type SquareMoney = { amount?: number; currency?: string };
+
+/**
+ * A postal address as Square models it. We only ever look at the state
+ * (administrative_district_level_1) for the mismatch check. Every field is
+ * optional — a sandbox test payment often has no address at all.
+ */
+export type SquareAddress = {
+  administrative_district_level_1?: string;
+  locality?: string;
+  postal_code?: string;
+  country?: string;
+};
 
 export type SquarePayment = {
   id?: string;
@@ -19,6 +32,8 @@ export type SquarePayment = {
   source_type?: string;
   card_details?: { card?: { card_brand?: string; last_4?: string } };
   wallet_details?: { brand?: string };
+  shipping_address?: SquareAddress;
+  billing_address?: SquareAddress;
 };
 
 const CARD_BRANDS: Record<string, string> = {
@@ -108,18 +123,168 @@ async function squareRequest<T>(
   return json as T;
 }
 
-/** Creates a Square-hosted checkout page for one item and returns its URL. */
+/** One line in an order sent to Square. */
+export type OrderLineInput = {
+  /** The product's id in our catalog. Square sees it as the line's "name". */
+  name: string;
+  /** Unit price, cents. */
+  priceCents: number;
+  /** Count of the item. */
+  quantity: number;
+  /** Our category — decides whether Square's order applies tax to this line. */
+  category: TaxCategory;
+};
+
+export type OrderInput = {
+  idempotencyKey: string;
+  currency: string;
+  lines: readonly OrderLineInput[];
+  /** Shipping charge in cents, 0 for downloads. Taxed only when at least one line is physical AND the buyer is in a taxing state. */
+  shippingCents?: number;
+  /** US two-letter state the buyer stated — decides whether a tax line is applied. */
+  buyerState: string | null;
+  redirectUrl: string;
+  note: string;
+  supportEmail: string;
+};
+
+/**
+ * Builds the `order` payload for Square's CreatePaymentLink and the
+ * CalculateOrder endpoint. One function so the "preview the total" call and
+ * the "actually create the link" call describe the same order byte for byte.
+ */
+function buildSquareOrder(
+  config: SquareConfig,
+  input: OrderInput
+): {
+  location_id: string;
+  reference_id: string;
+  line_items: Array<{
+    name: string;
+    quantity: string;
+    base_price_money: SquareMoney;
+    applied_taxes?: Array<{ tax_uid: string }>;
+  }>;
+  taxes?: Array<{
+    uid: string;
+    name: string;
+    percentage: string;
+    scope: "LINE_ITEM" | "ORDER";
+    type: "ADDITIVE";
+  }>;
+  service_charges?: Array<{
+    name: string;
+    amount_money: SquareMoney;
+    calculation_phase: "SUBTOTAL_PHASE";
+    taxable: boolean;
+    applied_taxes?: Array<{ tax_uid: string }>;
+  }>;
+} {
+  const buyerState = (input.buyerState ?? "").trim().toUpperCase();
+  const taxable = buyerState === TAX.state;
+  const hasPhysical = input.lines.some((l) => l.category === "physical_good");
+  const shippingCents = Math.max(0, Math.round(input.shippingCents ?? 0));
+  const taxUid = "tax-sales";
+
+  const lineItems = input.lines.map((line) => {
+    const lineItem = {
+      name: line.name,
+      quantity: String(Math.max(1, Math.round(line.quantity))),
+      base_price_money: {
+        amount: Math.max(0, Math.round(line.priceCents)),
+        currency: input.currency,
+      },
+      ...(taxable && categoryIsTaxable(line.category)
+        ? { applied_taxes: [{ tax_uid: taxUid }] }
+        : {}),
+    };
+    return lineItem;
+  });
+
+  const taxes = taxable
+    ? [
+        {
+          uid: taxUid,
+          name: TAX.displayName,
+          // Square expects percentage as a decimal string ("8.0", not "0.08").
+          percentage: (TAX.rate * 100).toFixed(1).replace(/\.0$/, ""),
+          scope: "LINE_ITEM" as const,
+          type: "ADDITIVE" as const,
+        },
+      ]
+    : undefined;
+
+  const shippingTaxable = taxable && hasPhysical;
+  const serviceCharges = shippingCents > 0
+    ? [
+        {
+          name: "Shipping",
+          amount_money: { amount: shippingCents, currency: input.currency },
+          calculation_phase: "SUBTOTAL_PHASE" as const,
+          taxable: shippingTaxable,
+          ...(shippingTaxable ? { applied_taxes: [{ tax_uid: taxUid }] } : {}),
+        },
+      ]
+    : undefined;
+
+  return {
+    location_id: config.locationId,
+    reference_id: input.idempotencyKey,
+    line_items: lineItems,
+    ...(taxes ? { taxes } : {}),
+    ...(serviceCharges ? { service_charges: serviceCharges } : {}),
+  };
+}
+
+/**
+ * Calls Square's CalculateOrder to preview what the order will cost without
+ * creating anything. We use it so the cart's displayed tax and total exactly
+ * match what Square will charge, rounding and all.
+ */
+export async function calculateOrderTotals(
+  config: SquareConfig,
+  input: OrderInput
+): Promise<{ subtotalCents: number; taxCents: number; totalCents: number } | null> {
+  try {
+    const json = await squareRequest<{
+      order?: {
+        total_money?: SquareMoney;
+        total_tax_money?: SquareMoney;
+        net_amounts?: {
+          total_money?: SquareMoney;
+          tax_money?: SquareMoney;
+        };
+      };
+    }>(config, "/v2/orders/calculate", {
+      method: "POST",
+      body: {
+        order: buildSquareOrder(config, input),
+      },
+    });
+    const order = json?.order;
+    if (!order) return null;
+    const total = order.total_money?.amount ?? order.net_amounts?.total_money?.amount ?? 0;
+    const tax = order.total_tax_money?.amount ?? order.net_amounts?.tax_money?.amount ?? 0;
+    return {
+      subtotalCents: total - tax,
+      taxCents: tax,
+      totalCents: total,
+    };
+  } catch {
+    // CalculateOrder is a confidence check. If it fails (network blip, old
+    // sandbox), fall back to our own computeTax() number — the caller has it
+    // already and will use it as the display total.
+    return null;
+  }
+}
+
+/**
+ * Creates a Square-hosted checkout page for the given order and returns its
+ * URL. Order-based (not quick_pay), so Square can carry a tax line.
+ */
 export async function createPaymentLink(
   config: SquareConfig,
-  input: {
-    idempotencyKey: string;
-    name: string;
-    amountCents: number;
-    currency: string;
-    redirectUrl: string;
-    note: string;
-    supportEmail: string;
-  }
+  input: OrderInput
 ): Promise<{ id: string; url: string; orderId: string }> {
   const json = await squareRequest<{
     payment_link?: { id?: string; url?: string; order_id?: string };
@@ -127,14 +292,11 @@ export async function createPaymentLink(
     method: "POST",
     body: {
       idempotency_key: input.idempotencyKey,
-      quick_pay: {
-        name: input.name,
-        price_money: { amount: input.amountCents, currency: input.currency },
-        location_id: config.locationId,
-      },
+      order: buildSquareOrder(config, input),
       checkout_options: {
         redirect_url: input.redirectUrl,
-        ask_for_shipping_address: false,
+        // Physical goods make Square collect a real ship-to. Downloads do not.
+        ask_for_shipping_address: input.lines.some((l) => l.category === "physical_good"),
         merchant_support_email: input.supportEmail,
       },
       payment_note: input.note,
