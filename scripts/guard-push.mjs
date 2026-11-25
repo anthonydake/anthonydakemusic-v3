@@ -33,7 +33,7 @@ if (/\bgit\s+commit\b/.test(cmd)) {
 const repo = payload?.cwd || process.env.CLAUDE_PROJECT_DIR || process.cwd();
 const sh = (c) => execSync(c, { cwd: repo, stdio: ['ignore', 'pipe', 'pipe'] }).toString().trim();
 
-const SITE_RE = /^(app|public|data|lib|content|components|styles)\/|^(next\.config\.|package\.json$|package-lock\.json$|postcss\.config\.|tailwind\.config\.|middleware\.|tsconfig\.json$)/;
+const SITE_RE = /^(app|public|data|lib|content|components|styles|site)\/|^(next\.config\.|package\.json$|package-lock\.json$|postcss\.config\.|tailwind\.config\.|middleware\.|tsconfig\.json$)/;
 
 let files = [];
 let baseResolved = true;

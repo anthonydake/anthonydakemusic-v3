@@ -158,7 +158,7 @@ After editing anything under `site/`, run `npm run site` (dev and build do it fo
 
 `main` is live, so a push is a release. Before it, a real browser has to see the site at phone and laptop sizes. A committed hook (`scripts/guard-push.mjs`, wired in `.claude/settings.json`) blocks `git push` for a site-affecting commit until `.visual-check/passed` holds this commit's hash. Docs, `.claude/`, this script and `.gitignore` go through unguarded.
 
-1. `npx next build`, then start `npx next start -p 3100` in the background.
+1. `npm run build` (runs `site/build.mjs` first so `lib/site/manifest.generated.ts` and `/public/site/` are in place; a bare `npx next build` fails), then start `npx next start -p 3100` in the background.
 2. `git commit` (its own command).
 3. With the Playwright MCP, open every page the change touches (if unsure, all four: `/`, `/production`, `/about`, `/press-kit`) at **phone 375 x 812** and **laptop 1512 x 827**:
    - the page loads with no error overlay and no console errors;
