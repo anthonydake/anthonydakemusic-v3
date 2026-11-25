@@ -50,3 +50,9 @@ reports/
 # the site's built files: made by site/build.mjs before every dev run and build, never edited
 /public/site/
 /lib/site/manifest.generated.ts
+
+# visual-check marker (written by the Playwright routine before a push)
+/.visual-check/
+
+# per-machine Claude Code permissions (the committed hook lives in .claude/settings.json)
+.claude/settings.local.json

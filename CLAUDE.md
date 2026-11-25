@@ -154,6 +154,24 @@ node scripts/site-check.mjs                     # a real browser through the who
 
 After editing anything under `site/`, run `npm run site` (dev and build do it for you) and, if a picture for Anthony is wanted, `npm run site:file`.
 
+## Before every push: visual check (required)
+
+`main` is live, so a push is a release. Before it, a real browser has to see the site at phone and laptop sizes. A committed hook (`scripts/guard-push.mjs`, wired in `.claude/settings.json`) blocks `git push` for a site-affecting commit until `.visual-check/passed` holds this commit's hash. Docs, `.claude/`, this script and `.gitignore` go through unguarded.
+
+1. `npx next build`, then start `npx next start -p 3100` in the background.
+2. `git commit` (its own command).
+3. With the Playwright MCP, open every page the change touches (if unsure, all four: `/`, `/production`, `/about`, `/press-kit`) at **phone 375 x 812** and **laptop 1512 x 827**:
+   - the page loads with no error overlay and no console errors;
+   - no sideways scroll: `document.body.scrollWidth <= innerWidth` (the body is the scroll container);
+   - screenshot each to `.visual-check/<route>-<size>.png` and look at it for broken layout, overlapping text, missing pictures;
+   - home at laptop size: the door and the home words all sit inside the first screen (bottoms within `innerHeight`); if the hero changed, also check 1280 x 720 and 1440 x 900;
+   - if `/production` changed, click the home door and confirm the form opens there with its four fields. **Never submit the form** (it writes to the live database and emails Anthony).
+4. If anything fails, fix it, commit again, redo the check.
+5. When everything passes: `git rev-parse HEAD > .visual-check/passed`, stop the server, then `git push` (its own command).
+6. End the reply with a short pass/fail line per route and size.
+
+Where the pieces live: the MCP server in `claude mcp list` (local scope), the allow list in `.claude/settings.local.json`, the hook in `.claude/settings.json`, the guard in `scripts/guard-push.mjs`, the marker in `.visual-check/` (git-ignored). The visual check does not replace `scripts/site-check.mjs`; it is an extra pair of eyes on the live look.
+
 ## Search and link previews
 
 Each document carries its own title, description, canonical address and Open Graph card (`/og-image.jpg`, made from the home screen; `/favicon.ico`, `/favicon.png`, `/apple-touch-icon.png`, `/icon-512.png` are the chalk mark). The descriptions in `PAGES` are put together from his own phrases. Home and About carry a small JSON-LD block (Person + WebSite). `/sitemap.xml` lists home, production, about and the press kit; the store, the order page and the two form landings are `noindex`. `/llms.txt` is generated from `content.mjs`.
