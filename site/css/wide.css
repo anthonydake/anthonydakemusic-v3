@@ -68,15 +68,15 @@
   /* PRESS KIT, PRODUCTS, YOUR ORDER, NOT FOUND
      A page of a few lines stands in the middle of a wide screen (a little above it, where the eye rests), not up under the header with the screen empty below.
      It is centred by the spare room above and below it, so a page that grows past the screen (a long bio, many products) starts at the top and scrolls like any other. */
-  body[data-page="press-kit"] .dest:not([hidden]),body[data-page="products"] .dest:not([hidden]),body[data-page="order"] .dest:not([hidden]),body[data-page="missing"] .dest:not([hidden]){display:flex;flex-direction:column;padding-bottom:calc(32px + 9vh)}
-  body[data-page="press-kit"] .dest>.pg,body[data-page="products"] .dest>.pg,body[data-page="order"] .dest>.pg,body[data-page="missing"] .dest>.pg{flex:none;margin-top:auto}
-  body[data-page="press-kit"] .dest>a.back,body[data-page="products"] .dest>a.back,body[data-page="order"] .dest>a.back,body[data-page="missing"] .dest>a.back{flex:none;margin-bottom:auto}
+  body[data-page="press-kit"] .dest:not([hidden]),body[data-page="products"] .dest:not([hidden]),body[data-page="buy"] .dest:not([hidden]),body[data-page="order"] .dest:not([hidden]),body[data-page="missing"] .dest:not([hidden]){display:flex;flex-direction:column;padding-bottom:calc(32px + 9vh)}
+  body[data-page="press-kit"] .dest>.pg,body[data-page="products"] .dest>.pg,body[data-page="buy"] .dest>.pg,body[data-page="order"] .dest>.pg,body[data-page="missing"] .dest>.pg{flex:none;margin-top:auto}
+  body[data-page="press-kit"] .dest>a.back,body[data-page="products"] .dest>a.back,body[data-page="buy"] .dest>a.back,body[data-page="order"] .dest>a.back,body[data-page="missing"] .dest>a.back{flex:none;margin-bottom:auto}
   .pk{max-width:520px;margin-top:30px}
   .pk-p{margin-bottom:18px;font-size:16px;line-height:25px}
   .pk-blank span{margin-bottom:24px}
   .pk-blank i{height:14px}
   .pk-c,.pd-mode,.pd-c,.od-c{font-size:12px;line-height:16px}
-  .pd,.od,.ms{max-width:440px;margin-top:30px}
+  .pd,.od,.ms,.ct{max-width:440px;margin-top:30px}
   .pd-item{margin-top:34px}
   .pd-t,.od-h{font-size:28px;line-height:34px}
   .pd-price{margin-top:6px;font-size:13px;line-height:17px}
@@ -84,6 +84,14 @@
   .pd-b{margin-top:14px}
   .pd-f,.od-go{margin-top:14px}
   .od-q{font-size:13px;line-height:18px}
+  /* The cart's sizing on a wide screen matches the products column, bumped to desk-reading sizes. */
+  .ct-item .ct-t{font-size:28px;line-height:34px}
+  .ct-item .ct-p{font-size:13px;line-height:17px}
+  .ct-s{font-size:17px;line-height:24px;padding-top:8px;padding-bottom:7px}
+  .ct-h{font-size:14px;line-height:21px}
+  .ct-c,.ct-notax{font-size:12px;line-height:16px}
+  .ct-tot th,.od-tot th{font-size:12px;line-height:16px}
+  .ct-tot td,.od-tot td{font-size:16px;line-height:24px}
 }
 
 /* PRODUCTION ON ONE SCREEN (his words, 24 Nov 2026: "I need all of that to fit on one page right now I have to scroll a little bit to see the bottom of the form").

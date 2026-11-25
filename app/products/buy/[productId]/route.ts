@@ -19,10 +19,14 @@ export const dynamic = "force-dynamic";
 // The address itself is private (the item + state live in the URL), so it is
 // never cached and never indexed. Only the POST to /api/store/checkout
 // actually creates the Square payment link.
+// Referrer-Policy is same-origin (not no-referrer): no-referrer makes Chrome
+// send Origin: null on the Confirm & pay POST to /api/store/checkout, and the
+// route's same-origin check then rejects the submission as a 403. same-origin
+// still sends no referrer to Square or any other site.
 const PRIVATE = {
   cache: "private, no-store",
   headers: {
-    "Referrer-Policy": "no-referrer",
+    "Referrer-Policy": "same-origin",
     "X-Robots-Tag": "noindex, nofollow",
   },
 };

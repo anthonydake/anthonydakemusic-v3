@@ -125,12 +125,16 @@ export function buy(t, data) {
     '<p class="ct-p">' + esc(price(product.priceCents)) + '</p></div>';
 
   if (step === 'state') {
-    // Step 1: pick a state. Plain GET form; submit sends the browser to the same URL with ?state=XX.
+    // Step 1: pick a state. Plain GET form; submit sends the browser to the
+    // same URL with ?state=XX. The label follows the booking form's shape
+    // (bk-l / bk-e) so the dropdown reads as a site field, not a browser one.
+    // oninvalid/oninput give the native "please select" popup the site's
+    // terser phrasing without needing scripts.
     var opts = US_STATES.map(function (s) { return '<option value="' + esc(s[0]) + '">' + esc(s[1]) + '</option>'; }).join('');
     return headline + '<div class="ct" id="ct">' + item +
-      '<form class="ct-f" method="get" action="' + esc('/products/buy/' + encodeURIComponent(product.id)) + '">' +
-      '<label class="ct-l"><span>' + esc(STORE.cart.stateLabel) + '</span>' +
-      '<select name="state" required>' +
+      '<form class="ct-f ct-f-state" method="get" action="' + esc('/products/buy/' + encodeURIComponent(product.id)) + '">' +
+      '<label class="bk-f ct-field"><span class="bk-l"><span>' + esc(STORE.cart.stateLabel) + '</span><span class="bk-e" aria-live="polite"></span></span>' +
+      '<select class="ct-s" name="state" required oninvalid="this.setCustomValidity(\'Pick a state.\')" oninput="this.setCustomValidity(\'\')">' +
       '<option value="">' + esc(STORE.cart.statePlaceholder) + '</option>' +
       opts +
       '<option value="XX">' + esc(STORE.cart.outside) + '</option>' +
@@ -138,11 +142,13 @@ export function buy(t, data) {
       '<p class="ct-h">' + esc(STORE.cart.stateHelp) + '</p>' +
       '<p class="ct-go">' + door(STORE.cart.review, 'button', { cls: 'ct-rev' }) + '</p>' +
       '</form>' +
-      '<p class="ct-back">' + word(STORE.cart.backToStore, '/products', { data: 'data-go="products"' }) + '</p>' +
       '</div>';
   }
 
   // Step 2: state is settled. Show the breakdown and a Confirm & pay button.
+  // The totals table is one tbody of 2–4 rows: subtotal, shipping (if any),
+  // tax (if OH and > 0), total. The TOTAL ROW's class is ct-tr-tot to keep
+  // it distinct from the table's own ct-tot (they would clash in CSS).
   var totals = d.totals || {};
   var ohio = (d.buyerState || '').toUpperCase() === 'OH';
   var row = function (label, cents, cls) {
@@ -152,20 +158,19 @@ export function buy(t, data) {
   var rows = row(STORE.cart.subtotal, totals.subtotalCents || 0, 'sub');
   if ((totals.shippingCents || 0) > 0) rows += row(STORE.cart.shipping, totals.shippingCents, 'ship');
   if (ohio && (totals.taxCents || 0) > 0) rows += row(STORE.cart.tax, totals.taxCents, 'tax');
-  rows += row(STORE.cart.total, totals.totalCents || 0, 'tot');
+  rows += row(STORE.cart.total, totals.totalCents || 0, 'tr-tot');
 
-  var buyerStateDisplay = ohio ? '' : '<p class="ct-notax">' + esc(STORE.cart.noTax) + '</p>';
+  var noTaxLine = ohio ? '' : '<p class="ct-notax">' + esc(STORE.cart.noTax) + '</p>';
 
   return headline + '<div class="ct" id="ct">' + item +
     '<table class="ct-tot"><tbody>' + rows + '</tbody></table>' +
-    buyerStateDisplay +
-    '<form class="ct-f" method="post" action="' + (t.buyAction || '/api/store/checkout') + '">' +
+    noTaxLine +
+    '<form class="ct-f ct-f-pay" method="post" action="' + (t.buyAction || '/api/store/checkout') + '">' +
     '<input type="hidden" name="product" value="' + esc(product.id) + '">' +
     '<input type="hidden" name="state" value="' + esc(d.buyerState || '') + '">' +
     '<p class="ct-go">' + door(STORE.cart.confirm, 'button', { cls: 'ct-pay' }) + '</p>' +
     '<p class="ct-c">' + esc(STORE.under) + '</p>' +
     '</form>' +
-    '<p class="ct-back">' + word(STORE.cart.backToStore, '/products', { data: 'data-go="products"' }) + '</p>' +
     '</div>';
 }
 
@@ -182,7 +187,8 @@ export function order(t, data) {
     var tr = row(STORE.totals.subtotal, totals.subtotalCents || 0, 'sub');
     if ((totals.shippingCents || 0) > 0) tr += row(STORE.totals.shipping, totals.shippingCents, 'ship');
     if ((totals.taxCents || 0) > 0) tr += row(STORE.totals.tax, totals.taxCents, 'tax');
-    tr += row(STORE.totals.paid, totals.totalCents || 0, 'tot');
+    // "od-tr-tot" on the total row (not "od-tot", which is the table itself — same clash the cart had).
+    tr += row(STORE.totals.paid, totals.totalCents || 0, 'tr-tot');
     breakdown = '<table class="od-tot"><tbody>' + tr + '</tbody></table>';
   }
   return '<p class="pg-h">' + esc(PAGES.order.label) + '</p><div class="od" id="od" data-state="' + esc(s) + '">' +

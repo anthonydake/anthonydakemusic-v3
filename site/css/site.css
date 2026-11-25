@@ -204,6 +204,28 @@ body[data-page="about"] .dest>a.back{margin-top:2px}
 .pd-c{margin-top:14px}
 .pd-none{margin:26px 0 0;font-size:14px;line-height:20px;color:var(--ink)}
 
+/* ------------------------------------------------------------------ 9.5 · THE CART (/products/buy/<id>)
+   Two steps, no scripts needed. Step 1 (data-step="state"): the item at the top, then the state picker as a field (shape copied from .bk-f), then a help line, then Review total.
+   Step 2 (data-step="confirm"): the item at the top, then the money table, then Confirm & pay. The table's total row is ct-tr-tot (distinct from the table's own class). */
+.ct{position:relative;margin:26px auto 0;max-width:334px}
+.ct-item{text-align:center;margin:0 0 22px}
+.ct-item .ct-t{margin:0;font-size:21px;line-height:27px;font-weight:400;color:var(--ink)}
+.ct-item .ct-p{margin:4px 0 0;padding-left:.14em;font-size:12px;line-height:16px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub)}
+.ct-f{margin:0}
+.ct-field{display:block;margin:0}
+.ct-s{display:block;width:100%;box-sizing:border-box;margin:0;padding:7px 24px 6px 0;border:0;border-bottom:1px solid var(--ink);border-radius:0;background:none;color:var(--ink);font-family:inherit;font-size:16px;line-height:22px;letter-spacing:0;appearance:none;-webkit-appearance:none;outline:none;box-shadow:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 13px) 15px,calc(100% - 7px) 15px;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+.ct-s:focus{border-bottom-width:2px;padding-bottom:5px}
+.ct-h{margin:14px 0 0;font-size:13px;line-height:19px;text-wrap:balance;color:var(--sub);text-align:center}
+.ct-go{margin:18px 0 0;text-align:center}
+.ct-c,.ct-notax{margin:12px 0 0;padding-left:.06em;font-size:11px;line-height:15px;letter-spacing:.06em;text-transform:uppercase;text-wrap:balance;color:var(--sub);text-align:center}
+.ct-tot{width:100%;margin:18px 0 0;border-collapse:collapse;table-layout:fixed}
+.ct-tot th,.ct-tot td{padding:7px 0;font-weight:400;color:var(--ink);vertical-align:baseline}
+.ct-tot th{text-align:left;padding-right:12px;font-size:11px;line-height:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);width:auto}
+.ct-tot td{text-align:right;font-size:14px;line-height:20px;white-space:nowrap}
+.ct-tot .ct-tr-tot th,.ct-tot .ct-tr-tot td{border-top:1px solid var(--ink);padding-top:11px}
+.ct-tot .ct-tr-tot th{color:var(--ink);font-weight:600}
+.ct-f-pay{margin-top:18px}
+
 /* ------------------------------------------------------------------ 10 · YOUR ORDER, NOT FOUND
    Where Square sends a buyer back to: the state as the bright line, one line of what it means, and when the payment is confirmed the one blue door, Download. */
 .od,.ms{position:relative;margin:26px auto 0;max-width:334px}
@@ -213,6 +235,13 @@ body[data-page="about"] .dest>a.back{margin-top:2px}
 .od-c{margin-top:6px}
 .od-q{margin-top:26px;text-transform:none;letter-spacing:0;font-size:12px}
 .od-mail{color:var(--ink);text-decoration:underline;text-underline-offset:3px;pointer-events:auto}
+/* The order page's money table: same shape as the cart's, scoped to the order page. */
+.od-tot{width:100%;margin:16px 0 0;border-collapse:collapse;table-layout:fixed}
+.od-tot th,.od-tot td{padding:6px 0;font-weight:400;color:var(--ink);vertical-align:baseline}
+.od-tot th{text-align:left;padding-right:12px;font-size:11px;line-height:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}
+.od-tot td{text-align:right;font-size:14px;line-height:20px;white-space:nowrap}
+.od-tot .od-tr-tot th,.od-tot .od-tr-tot td{border-top:1px solid var(--ink);padding-top:10px}
+.od-tot .od-tr-tot th{color:var(--ink);font-weight:600}
 
 /* ------------------------------------------------------------------ 11 · NO SCRIPTS, NO DRAWING, LESS MOTION
    Every page is whole without scripts: its words are in the document, its links are real links, Buy and the booking form are plain forms. These rules cover what the scripts would have done. */
