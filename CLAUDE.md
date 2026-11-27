@@ -8,11 +8,11 @@ The website of Anthony Dake, music producer in Columbus, OH. Brand line: **Archi
 
 - **Live site**: https://www.anthonydakemusic.com (Vercel project `anthonydakemusic-v3`, auto-deploys `main`)
 - **Repo**: https://github.com/anthonydake/anthonydakemusic-v3 (public: never put a secret or a private file's address in it)
-- **State**: this site went live on 24 Nov 2026, at Anthony's word ("push it and go live"), replacing the earlier drummer-and-producer design. The branch `new-site` is the preview branch: every change is made there first (see How a change reaches the site). The tag `earlier-site` is the last commit of the old site.
+- **State**: this site went live on 24 Nov 2026, at Anthony's word ("push it and go live"), replacing the earlier drummer-and-producer design. The tag `earlier-site` is the last commit of the old site. Every change is made on its own branch (see How a change reaches the site); there is no standing preview branch.
 
 ## Rules that come with the work (Anthony's)
 
-1. **Never push to `main` without his go-ahead.** `main` is the live site. Changes are made on `new-site`, whose Vercel preview is where he sees them, and he says when they go live. A fix he has already decided (his typo, his file, his words) counts as his go-ahead once the visual check passes.
+1. **Never push to `main` without his go-ahead.** `main` is the live site. Each change is made on its own branch; its Vercel preview is where he sees it, and he says when it goes live. A fix he has already decided (his typo, his file, his words) counts as his go-ahead once the visual check passes. Once a branch is merged, delete it (locally and on origin) so nobody builds off a stale one.
 2. **The site's words are his.** Do not write lines for him. A gap stays a marked blank until he fills it. Do not "improve" copy.
 3. **A client text is the client's real words**, never reworded, never shown twice on the site.
 4. **Titles and artists are spelled the way each release spells them** (`AR!YAH`, `BittyOTW`, `AURA`).
@@ -173,18 +173,19 @@ After editing anything under `site/`, run `npm run site` (dev and build do it fo
 
 Anthony's decision, 24 Nov 2026 ("i agree. do it."): **Claude Code on his Mac, in this folder, is the only thing that changes this repository.** Claude in Cowork no longer pushes here. It works on design options shown as pictures, the Design System, the Vercel, Cloudflare, Resend and Square dashboards, research and documents, and hands a site change over as a brief for Claude Code. Two builders on one repository collide, and the push guard below only sees Claude Code.
 
-- `main` is live: Vercel production builds every push to it. `new-site` is the preview branch: Vercel builds every push to it at https://anthonydakemusic-v3-git-new-site-anthonydakes-projects.vercel.app (behind Vercel login). That link never changes.
-- Start every change with `git fetch origin`, then on `new-site` bring in `origin/main` (`git merge origin/main`: normally nothing or a fast-forward). One change at a time on `new-site`.
-- Make the change, run the checks (Checks), then follow Before every push: it commits, looks at the site at phone and laptop sizes and pushes `new-site`.
+- `main` is live: Vercel production builds every push to it. Every other change is made on its own branch; Vercel builds a preview URL for each branch push (the URL carries the branch name and the commit, and is behind Vercel login). There is no standing preview branch.
+- One branch per change. Name it for the thing being changed (`store/ohio-sales-tax`, `copy/about-rewrite`), start it from a current `origin/main` (`git fetch origin && git checkout -b <name> origin/main`), do all the work for that change on it.
+- Make the change, run the checks (Checks), then follow Before every push: it commits, looks at the site at phone and laptop sizes and pushes the branch. Share the preview URL with Anthony.
 - Two speeds:
   - **A fix he has already decided** (a typo, a file or picture he sent, words he dictated) may go live as soon as the visual check passes.
-  - **Anything that changes how the site looks or reads** waits: push `new-site`, give him the preview link and the phone and laptop screenshots, and go live only on his word. Screenshots catch broken layout, not taste.
-- Going live: `git push origin new-site:main`, a fast-forward only. If it is refused, `main` has moved: fetch, merge `origin/main` into `new-site`, check again. Never force-push `main`. Then wait for Vercel to show the production deployment Ready and look at the live pages the change touched at phone and laptop sizes.
+  - **Anything that changes how the site looks or reads** waits: push the branch, give him the preview link and the phone and laptop screenshots, and go live only on his word. Screenshots catch broken layout, not taste.
+- Going live: on `main`, `git merge --ff-only <branch>` then `git push origin main`. Fast-forward only — if main has moved, fetch, rebase or re-merge `origin/main` into the branch, run the checks again, push the branch, then try the fast-forward again. Never force-push `main`. Wait for Vercel to show the production deployment Ready and look at the live pages the change touched at phone and laptop sizes.
+- **Delete the branch once it is merged**: `git branch -d <name>` locally and `git push origin --delete <name>` on origin. A stale branch invites someone (or future-Claude) to build off old code.
 - Log it in this file, in the same commit as the change (rule 7).
 
 ## Before every push: visual check (required)
 
-A push to `main` is a release; a push to `new-site` is a preview he may look at on his phone. Before either, a real browser has to see the site at phone and laptop sizes. A committed hook (`scripts/guard-push.mjs`, wired in `.claude/settings.json`) blocks `git push` for a site-affecting commit until `.visual-check/passed` holds this commit's hash. Docs, `.claude/`, this script and `.gitignore` go through unguarded.
+A push to `main` is a release; a push to a change branch is a preview he may look at on his phone. Before either, a real browser has to see the site at phone and laptop sizes. A committed hook (`scripts/guard-push.mjs`, wired in `.claude/settings.json`) blocks `git push` for a site-affecting commit until `.visual-check/passed` holds this commit's hash. Docs, `.claude/`, this script and `.gitignore` go through unguarded.
 
 1. `npm run build` (runs `site/build.mjs` first so `lib/site/manifest.generated.ts` and `/public/site/` are in place; a bare `npx next build` fails), then start `npx next start -p 3100` in the background.
 2. `git commit` (its own command).
@@ -195,7 +196,7 @@ A push to `main` is a release; a push to `new-site` is a preview he may look at 
    - home at laptop size: the door and the home words all sit inside the first screen (bottoms within `innerHeight`); if the hero changed, also check 1280 x 720 and 1440 x 900;
    - if `/production` changed, click the home door and confirm the form opens there with its four fields. **Never submit the form** (it writes to the live database and emails Anthony).
 4. If anything fails, fix it, commit again, redo the check.
-5. When everything passes: `git rev-parse HEAD > .visual-check/passed`, stop the server, then `git push` (its own command): to `new-site`, and to `main` only as How a change reaches the site says.
+5. When everything passes: `git rev-parse HEAD > .visual-check/passed`, stop the server, then `git push` (its own command): to the change branch, and to `main` only as How a change reaches the site says.
 6. End the reply with a short pass/fail line per route and size.
 
 Where the pieces live: the MCP server in `claude mcp list` (local scope), the allow list in `.claude/settings.local.json`, the hook in `.claude/settings.json`, the guard in `scripts/guard-push.mjs`, the marker in `.visual-check/` (git-ignored). The visual check does not replace `scripts/site-check.mjs`; it is an extra pair of eyes on the live look.
@@ -243,3 +244,5 @@ Anthony's decision (24 Nov 2026): the earlier pages are removed from the site so
 - 24 Nov 2026, late: Anthony moved the Vercel team to Pro ($20 a month), so the site may now be used commercially.
 - 24 Nov 2026, night: at Anthony's word, `anthonydakemusic.com` verified at Resend (three records added at Cloudflare, nothing else touched there), `BOOKING_NOTIFY_FROM` set to `noreply@anthonydakemusic.com` in every Vercel environment, production redeployed. One labelled test through the live form arrived in his inbox from `noreply@anthonydakemusic.com`.
 - 24 Nov 2026, night: the push guard and the visual check came in from Claude Code on his Mac (commits `1d7f196`, `703d17f`, `bb201d6`). Then Anthony settled how changes are made ("i agree. do it."): Claude Code is the only builder, `new-site` is the preview and `main` is live, two speeds, and this file is the source of truth for every decision (How a change reaches the site; rules 1 and 7).
+- 25 Nov 2026: Ohio sales tax in the store checkout (`store/ohio-sales-tax`, merged to `main` the same day). Every item needs a `taxCategory`; the cart asks for the buyer's state before Square creates the payment link; `lib/store/tax.ts` holds the rate, the state, the categories and the math. Follow-up polish (`store/cart-polish`, 27 Nov 2026): the state picker's "Needed" badge, column-wide cents, the tax label kept on one line at 320 px, and `scripts/local-site.mjs` + `scripts/site-check.mjs` now walk the whole cart.
+- 27 Nov 2026: changed how branches are kept: one branch per change (named for the thing), deleted once merged. `new-site` retired (deleted locally and on origin) — it was already in `main`, and a standing branch was confusing the convention (the two "store/*" branches went through here cleanly and this file now names that as the rule). See rule 1 and How a change reaches the site.
