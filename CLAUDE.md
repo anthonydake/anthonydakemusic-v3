@@ -207,7 +207,7 @@ Each document carries its own title, description, canonical address and Open Gra
 
 Old addresses are redirected in `next.config.ts`, **permanently** (308) since 24 Nov 2026, when Anthony decided the earlier pages are gone for good: `/store` → `/products`, `/epk` → `/press-kit`, `/placements`, `/projects`, `/demoreel` → `/production`, `/performance`, `/practice` → `/`. The two old downloads (`/Anthony_Dake_One-Sheet.pdf`, `/Anthony_Dake_Resume.pdf`) go to the press kit with a temporary (307) redirect, in case a new one-sheet ever takes the name.
 
-Vercel Web Analytics is loaded as a plain script (`/_vercel/insights/script.js`) on a deployment, never locally and never on the order page.
+Vercel Web Analytics is on (turned on in the Vercel dashboard 27 Nov 2026, counting visits from then). The one plain script in `lib/site/render.ts` (`/_vercel/insights/script.js`, served on a deployment, never locally and never on the order page) is all it needs — **do not add the `@vercel/analytics` npm package**; it is React-only and would re-introduce React to pages that have none.
 
 ## The earlier site
 
