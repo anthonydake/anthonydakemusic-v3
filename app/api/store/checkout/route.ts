@@ -12,13 +12,18 @@ export const dynamic = "force-dynamic";
 //   product=<id>&state=<US-two-letter or "XX">
 // On success: 303 to Square's payment page. On any problem: 303 back with
 // ?error=<code> so the UI can tell the buyer why without showing a server
-// error page. Known-good product → back to its cart. Unknown / hidden
-// product → back to /products (the cart for an unknown id would just 404).
-function backToCart(request: Request, productId: string, code: string, knownProduct: boolean) {
-  const to =
-    knownProduct && productId
-      ? `/products/buy/${encodeURIComponent(productId)}?error=${code}`
-      : `/products?error=${code}`;
+// error page. Known-good product + known-good state → back to the step-2 cart
+// (state kept in the URL so the breakdown is still shown). Known-good product
+// without a usable state → back to step 1 of the cart. Unknown product →
+// back to /products (the cart for an unknown id would 404).
+function backToCart(request: Request, productId: string, code: string, knownProduct: boolean, keepState?: string) {
+  if (!knownProduct || !productId) {
+    return NextResponse.redirect(new URL(`/products?error=${code}`, request.url), 303);
+  }
+  const params = new URLSearchParams();
+  if (keepState) params.set("state", keepState);
+  params.set("error", code);
+  const to = `/products/buy/${encodeURIComponent(productId)}?${params.toString()}`;
   return NextResponse.redirect(new URL(to, request.url), 303);
 }
 
@@ -125,6 +130,6 @@ export async function POST(request: Request) {
       "[store] checkout failed:",
       err instanceof Error ? err.message : String(err)
     );
-    return backToCart(request, product.id, "checkout", true);
+    return backToCart(request, product.id, "checkout", true, buyerState);
   }
 }

@@ -45,9 +45,15 @@ export async function GET(
   // Accept a real US state code or the catch-all "XX" ("Outside the United
   // States"). Anything else drops back to step 1 (the state picker).
   const state = isAcceptedBuyerState(rawState) ? rawState : "";
+  // The checkout POST can bounce the buyer back here with ?error=<code>
+  // ("state" if the state field was missing or invalid; "checkout" if the
+  // Square call failed). The template maps the code to a visible message.
+  const rawError = (url.searchParams.get("error") || "").trim();
+  const error = rawError === "state" || rawError === "checkout" ? rawError : null;
 
-  // Step 1 — no state picked yet.
-  if (!state) {
+  // Step 1 — no state picked yet, or step 2 with an error worth re-asking
+  // the state after.
+  if (!state || error === "state") {
     const html = renderDocument(
       "buy",
       {
@@ -58,6 +64,7 @@ export async function GET(
           priceCents: product.priceCents,
         },
         sandbox: shop.sandbox,
+        error,
       },
       { shop }
     );
@@ -126,9 +133,14 @@ export async function GET(
         title: product.title,
         priceCents: product.priceCents,
       },
-      buyerState: state === "XX" ? "" : state,
+      // Pass the raw state through (including the catch-all "XX") so the
+      // hidden input in the Confirm & pay form carries a value the checkout
+      // route will accept. The template's "is this Ohio?" check still works
+      // for XX (it is not OH, so no tax row).
+      buyerState: state,
       totals,
       sandbox: shop.sandbox,
+      error,
     },
     { shop }
   );

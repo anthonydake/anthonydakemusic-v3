@@ -36,6 +36,28 @@ execFileSync(process.execPath, [path.join(ROOT, "site", "build.mjs")], { stdio: 
 // ---------------------------------------------------------------- mock Square
 // Each payment link the site asks for becomes a page here with two buttons.
 const mock = { links: [], paid: new Set() };
+
+// The site's checkout now sends a full Square Order (line items, applied
+// taxes). Compute what the buyer owes the same way Square does: sum the
+// lines, sum the service charges, add tax where the line/charge has an
+// applied_tax, round the tax amount per line to whole cents.
+function computeOrderTotals(order) {
+  const taxPct = Number((order?.taxes ?? [])[0]?.percentage ?? 0) / 100;
+  let subtotal = 0;
+  let taxCents = 0;
+  for (const li of order?.line_items ?? []) {
+    const amount = (li.base_price_money?.amount ?? 0) * Number(li.quantity ?? "1");
+    subtotal += amount;
+    if ((li.applied_taxes ?? []).length > 0) taxCents += Math.round(amount * taxPct);
+  }
+  for (const sc of order?.service_charges ?? []) {
+    const amount = sc.amount_money?.amount ?? 0;
+    subtotal += amount;
+    if ((sc.applied_taxes ?? []).length > 0) taxCents += Math.round(amount * taxPct);
+  }
+  return { subtotalCents: subtotal, taxCents, totalCents: subtotal + taxCents };
+}
+
 const payment = (squareOrderId) => ({
   id: `PAY_${squareOrderId}`,
   status: "COMPLETED",
@@ -56,9 +78,32 @@ const squareApi = http.createServer(async (req, res) => {
   if (process.env.LOCAL_SQUARE_DOWN === "1") return send(503, { errors: [{ category: "API_ERROR", code: "SERVICE_UNAVAILABLE" }] });
   if (req.method === "POST" && pathname === "/v2/online-checkout/payment-links") {
     const request = JSON.parse(body);
+    const totals = computeOrderTotals(request?.order ?? {});
     const orderId = `LOCALORDER${crypto.randomBytes(6).toString("hex")}`;
-    mock.links.push({ orderId, request, amount: request?.quick_pay?.price_money?.amount ?? 100, redirect: request?.checkout_options?.redirect_url ?? `${SITE}/` });
+    mock.links.push({
+      orderId,
+      request,
+      // The fake Square charges the full total (line items + tax), matching
+      // what the site's checkout stored on the order row (amount_cents).
+      amount: totals.totalCents,
+      subtotalCents: totals.subtotalCents,
+      taxCents: totals.taxCents,
+      name: request?.order?.line_items?.[0]?.name ?? "Item",
+      taxLabel: (request?.order?.taxes ?? [])[0]?.name ?? "",
+      redirect: request?.checkout_options?.redirect_url ?? `${SITE}/`,
+    });
     return send(200, { payment_link: { id: `LOCALLINK${mock.links.length}`, version: 1, order_id: orderId, url: `${SITE}/__square/${orderId}` } });
+  }
+  if (req.method === "POST" && pathname === "/v2/orders/calculate") {
+    // Preview totals — the cart's step-2 page calls this so the displayed
+    // tax matches what the fake Square will charge. Same math as above.
+    const totals = computeOrderTotals(JSON.parse(body)?.order ?? {});
+    return send(200, {
+      order: {
+        total_money: { amount: totals.totalCents, currency: "USD" },
+        total_tax_money: { amount: totals.taxCents, currency: "USD" },
+      },
+    });
   }
   let match = pathname.match(/^\/v2\/orders\/([^/]+)$/);
   if (req.method === "GET" && match) {
@@ -113,6 +158,7 @@ const pages = {
   "/llms.txt": await route("llms.txt/route.ts"),
 };
 const orderPage = await route("products/thanks/[order]/route.ts");
+const buyPage = await route("products/buy/[productId]/route.ts");
 const missing = await route("[...missing]/route.ts");
 const api = {
   "POST /api/book": (await route("api/book/route.ts")).POST,
@@ -124,12 +170,24 @@ const { sql } = await import("./store-selftest/postgres-shim.mjs");
 
 const TYPES = { ".css": "text/css; charset=utf-8", ".js": "application/javascript; charset=utf-8", ".woff2": "font/woff2", ".woff": "font/woff", ".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".svg": "image/svg+xml", ".ico": "image/x-icon", ".pdf": "application/pdf", ".txt": "text/plain; charset=utf-8" };
 
-// The stand-in for Square's checkout page.
+// The stand-in for Square's checkout page. Shows the breakdown the site sent
+// us (subtotal + tax + total), so a walk-through sees the tax number from end
+// to end.
 function squarePage(link) {
+  const safe = (s) => String(s ?? "").replace(/[<&]/g, "");
+  const dollars = (c) => `$${(c / 100).toFixed(2)}`;
+  const taxRow = link.taxCents > 0
+    ? `<tr><th style="text-align:left;font-weight:400;padding:4px 16px 4px 0;color:#555">${safe(link.taxLabel || "Sales tax")}</th><td style="text-align:right">${dollars(link.taxCents)}</td></tr>`
+    : "";
   return `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Stand-in for Square checkout</title>
 <body style="font:16px/1.5 system-ui;max-width:28rem;margin:4rem auto;padding:0 1rem">
 <h1 style="font-size:1.25rem">Stand-in for Square's checkout page</h1>
-<p>${String(link.request?.quick_pay?.name ?? "Item").replace(/[<&]/g, "")} · $${(link.amount / 100).toFixed(2)}</p>
+<p>${safe(link.name)}</p>
+<table style="width:100%;border-collapse:collapse;margin:1rem 0">
+  <tr><th style="text-align:left;font-weight:400;padding:4px 16px 4px 0;color:#555">Subtotal</th><td style="text-align:right">${dollars(link.subtotalCents)}</td></tr>
+  ${taxRow}
+  <tr><th style="text-align:left;font-weight:600;padding:8px 16px 4px 0;border-top:1px solid #ccc">Total</th><td style="text-align:right;font-weight:600;padding-top:8px;border-top:1px solid #ccc">${dollars(link.amount)}</td></tr>
+</table>
 <p style="color:#555">Nothing real happens here. This page only exists in scripts/local-site.mjs.</p>
 <form method="post" action="/__square/${link.orderId}/pay"><button id="pay" style="font:inherit;padding:.6rem 1.2rem">Pay (pretend)</button></form>
 <p><a id="leave" href="${link.redirect}">Go back without paying</a></p></body>`;
@@ -155,8 +213,10 @@ async function handle(req, res) {
     response = await api[`${req.method} ${url.pathname}`](request);
   } else if (req.method === "GET" || req.method === "HEAD") {
     const order = url.pathname.match(/^\/products\/thanks\/([^/]+)$/);
+    const buy = url.pathname.match(/^\/products\/buy\/([^/]+)$/);
     const file = path.join(ROOT, "public", decodeURIComponent(url.pathname));
     if (pages[url.pathname.replace(/(.)\/$/, "$1")]) response = await pages[url.pathname.replace(/(.)\/$/, "$1")].GET(request);
+    else if (buy) response = await buyPage.GET(request, { params: Promise.resolve({ productId: decodeURIComponent(buy[1]) }) });
     else if (order) response = await orderPage.GET(request, { params: Promise.resolve({ order: order[1] }) });
     else if (file.startsWith(path.join(ROOT, "public") + path.sep) && fs.existsSync(file) && fs.statSync(file).isFile()) {
       response = new Response(fs.readFileSync(file), { headers: { "Content-Type": TYPES[path.extname(file).toLowerCase()] ?? "application/octet-stream" } });

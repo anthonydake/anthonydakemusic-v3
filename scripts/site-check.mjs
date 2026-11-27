@@ -166,9 +166,9 @@ async function layoutAt(size, scheme) {
 
   await go(page, "/products");
   await shell(page, `${tag} products`);
-  const pd = await page.evaluate(() => { const f = document.querySelector(".pd-f"), b = document.querySelector(".pd-buy").getBoundingClientRect(); return { title: document.querySelector(".pd-t")?.textContent, price: document.querySelector(".pd-price")?.textContent, action: f.getAttribute("action"), method: f.method, product: f.elements.product.value, buy: b.height, onScreen: b.bottom <= innerHeight, mode: document.querySelector(".pd-mode")?.textContent }; });
+  const pd = await page.evaluate(() => { const a = document.querySelector(".pd-buy"), b = a.getBoundingClientRect(); return { title: document.querySelector(".pd-t")?.textContent, price: document.querySelector(".pd-price")?.textContent, buyHref: a.getAttribute("href"), buyIsLink: a.tagName === "A", buy: b.height, onScreen: b.bottom <= innerHeight, mode: document.querySelector(".pd-mode")?.textContent }; });
   check(`${tag} products: the $1 placeholder with its own Buy, on the first screen`, pd.title === "Test download" && pd.price === "$1" && pd.buy >= 46 && pd.onScreen, pd);
-  check(`${tag} products: Buy is a plain form to checkout`, pd.action === "/api/store/checkout" && pd.method === "post" && pd.product === "test-download", pd);
+  check(`${tag} products: Buy is a link to the cart (so the state picker sees the buyer before Square does)`, pd.buyIsLink && pd.buyHref === "/products/buy/test-download", pd);
   check(`${tag} products: says it is in test mode`, pd.mode === "Test mode. No real charges.", pd.mode);
 
   page.expect = (r) => r.status() === 404;
@@ -343,36 +343,105 @@ async function store(size) {
   const { ctx, page } = await open(size);
   const tag = `${size} store`;
   const ORDER = /\/products\/thanks\/([0-9a-f-]{36})/;
-  const mails = local.emails.length;
+  const BUY = /\/products\/buy\/test-download/;
 
-  // pay, come back, download
-  await go(page, "/products");
-  await Promise.all([page.waitForURL(/\/__square\//), page.click(".pd-buy")]);
-  check(`${tag}: Buy opens the checkout page`, /\/__square\/LOCALORDER/.test(page.url()), page.url());
-  await Promise.all([page.waitForURL(ORDER), page.click("#pay")]);
+  // Helpers that walk /products → Buy → state picker (step 1) → Review →
+  // step 2 (totals shown) → Confirm & pay → fake Square. `through` keeps
+  // walking: "pay" clicks Pay (pretend), "leave" clicks Go back without
+  // paying, "stop" leaves the browser on the fake Square page.
+  async function cart(state) {
+    await go(page, "/products");
+    await Promise.all([page.waitForURL(BUY), page.click(".pd-buy")]);
+    const step1 = await page.evaluate(() => ({
+      pg: document.body.dataset.page,
+      hasSelect: !!document.querySelector("select[name=state]"),
+      hasNeeded: !!document.querySelector(".ct-f-state .bk-e"),
+      item: document.querySelector(".ct-item .ct-t")?.textContent,
+      itemPrice: document.querySelector(".ct-item .ct-p")?.textContent,
+    }));
+    await page.selectOption("select[name=state]", state);
+    await Promise.all([page.waitForURL(BUY), page.click(".ct-rev")]);
+    const step2 = await page.evaluate(() => {
+      const rows = [...document.querySelectorAll(".ct-tot tr")].map((r) => [r.querySelector("th").textContent.trim(), r.querySelector("td").textContent.trim()]);
+      return {
+        pg: document.body.dataset.page,
+        rows,
+        noTax: document.querySelector(".ct-notax")?.textContent ?? null,
+        hiddenState: document.querySelector("form.ct-f-pay input[name=state]")?.value,
+        hiddenProduct: document.querySelector("form.ct-f-pay input[name=product]")?.value,
+      };
+    });
+    return { step1, step2 };
+  }
+  async function pay() { await Promise.all([page.waitForURL(ORDER), page.click("#pay")]); return page.url().match(ORDER)[1]; }
+  async function leave() { const s = page.url().split("/__square/")[1]; await Promise.all([page.waitForURL(ORDER), page.click("#leave")]); return { squareOrder: s, orderId: page.url().match(ORDER)[1] }; }
+
+  // Ohio buyer: tax row shows, Square's fake charges $1.08, the order page
+  // breakdown carries the same, the receipt and the sale notice too.
+  let mails = local.emails.length;
+  let { step1, step2 } = await cart("OH");
+  check(`${tag} OH: step 1 shows the cart page with the state picker and a Needed badge slot`, step1.pg === "buy" && step1.hasSelect && step1.hasNeeded && step1.item === "Test download" && step1.itemPrice === "$1", step1);
+  check(`${tag} OH: step 2 shows Subtotal / Ohio sales tax (8%) / Total, all on their own rows, in cents`, JSON.stringify(step2.rows) === JSON.stringify([["Subtotal", "$1.00"], ["Ohio sales tax (8%)", "$0.08"], ["Total", "$1.08"]]) && step2.noTax === null && step2.hiddenState === "OH" && step2.hiddenProduct === "test-download", step2);
+  await Promise.all([page.waitForURL(/\/__square\//), page.click(".ct-pay")]);
+  check(`${tag} OH: Confirm & pay opens Square's checkout page`, /\/__square\/LOCALORDER/.test(page.url()), page.url());
+  const sqAmount = await page.evaluate(() => [...document.querySelectorAll("tr")].map((r) => [r.querySelector("th")?.textContent, r.querySelector("td")?.textContent]));
+  check(`${tag} OH: Square's fake page shows the same breakdown (Subtotal $1.00 · tax $0.08 · Total $1.08)`, sqAmount.some((r) => r[0] === "Subtotal" && r[1] === "$1.00") && sqAmount.some((r) => /tax/i.test(r[0]) && r[1] === "$0.08") && sqAmount.some((r) => r[0] === "Total" && r[1] === "$1.08"), sqAmount);
+  const idOH = await pay();
   await ready(page);
-  const id = page.url().match(ORDER)[1];
-  const ok = await page.evaluate(() => ({ state: document.querySelector(".od").dataset.state, head: document.querySelector(".od-h").textContent, line: document.querySelector(".od-l").textContent, dl: document.querySelector(".od-dl")?.getAttribute("href"), keep: document.querySelector(".od-c")?.textContent,
-    refresh: !!document.querySelector('meta[http-equiv="refresh"]'), robots: document.querySelector('meta[name="robots"]')?.content, referrer: document.querySelector('meta[name="referrer"]')?.content, test: document.querySelector(".od-q").textContent, analytics: !!document.querySelector('script[src*="insights"]') }));
-  check(`${tag}: paid, the order page says thank you and offers the download`, ok.state === "ready" && ok.head === "Thank you" && ok.line === "Test download is ready." && /^\/api\/store\/download\?token=/.test(ok.dl || "") && ok.keep === "Keep this page. The link works for 30 days.", ok);
-  check(`${tag}: the order page is private (not indexed, no referrer, no refresh once paid, no analytics)`, ok.robots === "noindex, nofollow" && ok.referrer === "no-referrer" && !ok.refresh && !ok.analytics, ok);
-  const res = await page.request.get(SITE + ok.dl);
+  const okOH = await page.evaluate(() => ({
+    state: document.querySelector(".od").dataset.state,
+    head: document.querySelector(".od-h").textContent,
+    line: document.querySelector(".od-l").textContent,
+    dl: document.querySelector(".od-dl")?.getAttribute("href"),
+    keep: document.querySelector(".od-c")?.textContent,
+    rows: [...document.querySelectorAll(".od-tot tr")].map((r) => [r.querySelector("th").textContent.trim(), r.querySelector("td").textContent.trim()]),
+    refresh: !!document.querySelector('meta[http-equiv="refresh"]'),
+    robots: document.querySelector('meta[name="robots"]')?.content,
+    referrer: document.querySelector('meta[name="referrer"]')?.content,
+    analytics: !!document.querySelector('script[src*="insights"]'),
+  }));
+  check(`${tag} OH: order page says thank you and offers the download`, okOH.state === "ready" && okOH.head === "Thank you" && okOH.line === "Test download is ready." && /^\/api\/store\/download\?token=/.test(okOH.dl || "") && okOH.keep === "Keep this page. The link works for 30 days.", okOH);
+  check(`${tag} OH: the order page shows Subtotal / Ohio sales tax / Amount paid, in cents`, JSON.stringify(okOH.rows) === JSON.stringify([["Subtotal", "$1.00"], ["Ohio sales tax", "$0.08"], ["Amount paid", "$1.08"]]), okOH.rows);
+  check(`${tag} OH: the order page is private (not indexed, no referrer, no refresh once paid, no analytics)`, okOH.robots === "noindex, nofollow" && okOH.referrer === "no-referrer" && !okOH.refresh && !okOH.analytics, okOH);
+  const res = await page.request.get(SITE + okOH.dl);
   const file = await res.text();
-  check(`${tag}: Download gives the file as an attachment`, res.status() === 200 && /attachment; filename="anthony-dake-test-download.txt"/.test(res.headers()["content-disposition"] || "") && file.includes(id), res.headers()["content-disposition"]);
+  check(`${tag} OH: Download gives the file as an attachment`, res.status() === 200 && /attachment; filename="anthony-dake-test-download.txt"/.test(res.headers()["content-disposition"] || "") && file.includes(idOH), res.headers()["content-disposition"]);
   await page.waitForTimeout(300);
-  const sent = local.emails.slice(mails);
-  check(`${tag}: the buyer is emailed a receipt with the order page's address, and Anthony a notice`, sent.some((m) => String(m.to).includes("local-buyer@example.com") && (m.html || "").includes(`${SITE}/products/thanks/${id}`)) && sent.length === 2, sent.map((m) => [m.to, m.subject]));
-  // from the order page a header word is the browser's own link, so the page keeps its place in the history
+  const sentOH = local.emails.slice(mails);
+  const receiptOH = sentOH.find((m) => String(m.to).includes("local-buyer@example.com"));
+  const noticeOH = sentOH.find((m) => String(m.subject).includes("New sale"));
+  check(`${tag} OH: the buyer is emailed a receipt with the order page's address, and Anthony a notice`, sentOH.length === 2 && receiptOH && (receiptOH.html || "").includes(`${SITE}/products/thanks/${idOH}`), sentOH.map((m) => [m.to, m.subject]));
+  check(`${tag} OH: the receipt carries the Ohio sales tax line`, (receiptOH?.text || "").includes("Ohio sales tax: $0.08") && (receiptOH?.html || "").includes("Ohio sales tax"), (receiptOH?.text || "").slice(0, 300));
+  check(`${tag} OH: the sale notice to Anthony names the state and the tax`, (noticeOH?.text || "").includes("Buyer state (stated at checkout): OH") && (noticeOH?.text || "").includes("Ohio sales tax: $0.08"), noticeOH?.text);
+
+  // Non-Ohio buyer (California): no tax row anywhere, no "Ohio sales tax" in
+  // the receipt or the notice.
+  mails = local.emails.length;
+  ({ step1, step2 } = await cart("CA"));
+  check(`${tag} CA: step 2 shows Subtotal and Total only, in dollars (no cents), and the "no tax" note`, JSON.stringify(step2.rows) === JSON.stringify([["Subtotal", "$1"], ["Total", "$1"]]) && step2.noTax === "No Ohio sales tax for this order." && step2.hiddenState === "CA", step2);
+  await Promise.all([page.waitForURL(/\/__square\//), page.click(".ct-pay")]);
+  const idCA = await pay();
+  await ready(page);
+  const okCA = await page.evaluate(() => ({ state: document.querySelector(".od").dataset.state, rows: [...document.querySelectorAll(".od-tot tr")].map((r) => [r.querySelector("th").textContent.trim(), r.querySelector("td").textContent.trim()]) }));
+  check(`${tag} CA: the non-Ohio order page shows Subtotal and Amount paid, no tax row`, okCA.state === "ready" && JSON.stringify(okCA.rows) === JSON.stringify([["Subtotal", "$1"], ["Amount paid", "$1"]]), okCA);
+  await page.waitForTimeout(300);
+  const sentCA = local.emails.slice(mails);
+  const receiptCA = sentCA.find((m) => String(m.to).includes("local-buyer@example.com"));
+  const noticeCA = sentCA.find((m) => String(m.subject).includes("New sale"));
+  check(`${tag} CA: no tax line on the receipt or the sale notice`, !(receiptCA?.text || "").includes("Ohio sales tax") && !(noticeCA?.text || "").includes("Ohio sales tax"), [receiptCA?.text?.slice(0, 180), noticeCA?.text?.slice(0, 180)]);
+  // Keep idCA alive (so the orders table still has it) and use it later as the "refunded" case.
+
+  // From the order page, a header word is the browser's own link so the page
+  // keeps its place in the history.
   await Promise.all([page.waitForURL(SITE + "/production"), page.click("#hdr .tx.r")]); await ready(page);
   await page.goBack(); await page.waitForURL(ORDER);
   check(`${tag}: after Book, the browser's Back returns to the order page`, (await page.evaluate(() => document.querySelector(".od")?.dataset.state)) === "ready");
 
-  // leave without paying: the page waits, re-checks on its own, and turns when the payment lands
-  await go(page, "/products");
-  await Promise.all([page.waitForURL(/\/__square\//), page.click(".pd-buy")]);
-  const squareOrder = page.url().split("/__square/")[1];
-  await Promise.all([page.waitForURL(ORDER), page.click("#leave")]);
-  const id2 = page.url().match(ORDER)[1];
+  // Leave without paying: the page waits, re-checks on its own, turns when
+  // the payment lands.
+  await cart("XX");
+  await Promise.all([page.waitForURL(/\/__square\//), page.click(".ct-pay")]);
+  const { squareOrder, orderId: id2 } = await leave();
   const wait = await page.evaluate(() => ({ state: document.querySelector(".od").dataset.state, head: document.querySelector(".od-h").textContent, refresh: document.querySelector('meta[http-equiv="refresh"]')?.content, again: document.querySelector(".od-again")?.getAttribute("href"), dl: !!document.querySelector(".od-dl") }));
   check(`${tag}: unpaid, the order page waits and re-checks itself`, wait.state === "pending" && wait.head === "One moment" && wait.refresh === `4;url=/products/thanks/${id2}?n=1` && wait.again === `/products/thanks/${id2}` && !wait.dl, wait);
   let r = await page.request.get(`${SITE}/api/store/download?token=${(await local.sql`SELECT download_token FROM store_orders WHERE id = ${id2};`).rows[0].download_token}`);
@@ -381,30 +450,35 @@ async function store(size) {
   await page.waitForFunction(() => document.querySelector(".od")?.dataset.state === "ready", null, { timeout: 20000 });
   check(`${tag}: when the payment lands the page turns to the download on its own`, /\?n=\d+$/.test(page.url()), page.url());
 
-  // the other states
-  await go(page, "/products");
-  await Promise.all([page.waitForURL(/\/__square\//), page.click(".pd-buy")]);
-  await Promise.all([page.waitForURL(ORDER), page.click("#leave")]);
-  const id3 = page.url().match(ORDER)[1];
+  // Stalled: after twelve tries the re-check stops.
+  await cart("XX");
+  await Promise.all([page.waitForURL(/\/__square\//), page.click(".ct-pay")]);
+  const { orderId: id3 } = await leave();
   await page.goto(`${SITE}/products/thanks/${id3}?n=12`);
-  check(`${tag}: after twelve tries it stops and says what to do`, (await page.evaluate(() => ({ s: document.querySelector(".od").dataset.state, r: !!document.querySelector('meta[http-equiv="refresh"]'), l: document.querySelector(".od-l").textContent }))).s === "stalled" && !(await page.$('meta[http-equiv="refresh"]')));
-  await local.sql`UPDATE store_orders SET status = 'refunded', refunded_at = NOW() WHERE id = ${id};`;
-  await page.goto(`${SITE}/products/thanks/${id}`);
+  check(`${tag}: after twelve tries it stops and says what to do`, (await page.evaluate(() => document.querySelector(".od").dataset.state)) === "stalled" && !(await page.$('meta[http-equiv="refresh"]')));
+
+  // Refunded + expired (reuse the Ohio and California orders).
+  await local.sql`UPDATE store_orders SET status = 'refunded', refunded_at = NOW() WHERE id = ${idOH};`;
+  await page.goto(`${SITE}/products/thanks/${idOH}`);
   check(`${tag}: a refunded order closes the download`, (await page.evaluate(() => document.querySelector(".od").dataset.state + "|" + !!document.querySelector(".od-dl"))) === "refunded|false");
-  r = await page.request.get(SITE + ok.dl);
+  r = await page.request.get(SITE + okOH.dl);
   check(`${tag}: and its old link is refused`, r.status() === 403, r.status());
-  await local.sql`UPDATE store_orders SET paid_at = NOW() - INTERVAL '31 days' WHERE id = ${id2};`;
-  await page.goto(`${SITE}/products/thanks/${id2}`);
+  await local.sql`UPDATE store_orders SET paid_at = NOW() - INTERVAL '31 days' WHERE id = ${idCA};`;
+  await page.goto(`${SITE}/products/thanks/${idCA}`);
   check(`${tag}: after 30 days the link is expired`, (await page.evaluate(() => document.querySelector(".od").dataset.state + "|" + document.querySelector(".od-l").textContent)) === "expired|This download link has expired. Email me for a fresh one.");
   page.expect = (res) => res.status() === 404;
   r = await page.goto(`${SITE}/products/thanks/11111111-2222-4333-8444-555555555555`);
   check(`${tag}: an order that does not exist is the site's own Not found`, r.status() === 404 && (await page.textContent(".ms-l")) === "This page doesn’t exist.");
 
-  // Square is down: back at Products, nothing charged
+  // Square is down: Confirm & pay sends the buyer back to the cart with the
+  // "nothing was charged" error.
   process.env.LOCAL_SQUARE_DOWN = "1";
   await go(page, "/products");
-  await Promise.all([page.waitForURL(/\/products\?error=checkout/), page.click(".pd-buy")]);
-  check(`${tag}: if checkout cannot open, the buyer is back at Products and told nothing was charged`, (await page.textContent(".pd-err")) === "Checkout did not open, and nothing was charged. Try again in a minute." && (await page.isVisible(".pd-buy")));
+  await Promise.all([page.waitForURL(BUY), page.click(".pd-buy")]);
+  await page.selectOption("select[name=state]", "OH");
+  await Promise.all([page.waitForURL(BUY), page.click(".ct-rev")]);
+  await Promise.all([page.waitForURL(/\/products\/buy\/test-download\?.*error=checkout/), page.click(".ct-pay")]);
+  check(`${tag}: if checkout cannot open, the buyer is back at the cart (step 2 with the state kept) and told nothing was charged`, (await page.textContent(".pd-err")) === "Checkout did not open, and nothing was charged. Try again in a minute." && (await page.isVisible(".ct-pay")));
   delete process.env.LOCAL_SQUARE_DOWN;
   check(`${tag}: no errors`, page.problems.length === 0, page.problems);
   await ctx.close();
@@ -437,11 +511,16 @@ async function plain() {
   await Promise.all([page.waitForURL(SITE + "/"), page.click("#hdr .pin")]);
   check(`${tag}: the mark is a link home`, (await page.isVisible("#name")));
   await page.goto(SITE + "/products");
-  await Promise.all([page.waitForURL(/\/__square\//), page.click(".pd-buy")]);
+  await Promise.all([page.waitForURL(/\/products\/buy\/test-download/), page.click(".pd-buy")]);
+  await page.selectOption("select[name=state]", "OH");
+  // Scripts off: the Review button submits a plain GET form to the same URL
+  // and the browser reloads with ?state=OH.
+  await Promise.all([page.waitForURL(/\/products\/buy\/test-download\?state=OH/), page.click(".ct-rev")]);
+  await Promise.all([page.waitForURL(/\/__square\//), page.click(".ct-pay")]);
   await Promise.all([page.waitForURL(ORDER), page.click("#pay")]);
   const dl = await page.getAttribute(".od-dl", "href");
   const res = await page.request.get(SITE + dl);
-  check(`${tag}: Buy to Download works end to end`, (await page.textContent(".od-h")) === "Thank you" && res.status() === 200);
+  check(`${tag}: Buy → state → confirm → pay → Download works end to end with no scripts`, (await page.textContent(".od-h")) === "Thank you" && res.status() === 200);
   await Promise.all([page.waitForURL(SITE + "/"), page.click("#dest a.back")]);
   check(`${tag}: Back is a link home`, (await page.isVisible("#name")));
   await ctx.close();

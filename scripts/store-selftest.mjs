@@ -286,7 +286,8 @@ try {
   check("with no Square keys, checkout is unavailable", attempt.location.endsWith("/products?error=unavailable") && !attempt.link);
   process.env.SQUARE_ACCESS_TOKEN = "wrong-token";
   attempt = await checkout();
-  check("a Square error sends the buyer back unharmed", attempt.location.endsWith("/products/buy/test-download?error=checkout"));
+  // The state field is kept in the redirect so the buyer lands on step 2 of the cart (with the error), not back on the state picker.
+  check("a Square error sends the buyer back unharmed, keeping their state", attempt.location.endsWith("/products/buy/test-download?state=XX&error=checkout"));
   process.env.SQUARE_ACCESS_TOKEN = token;
 
   // --- before payment

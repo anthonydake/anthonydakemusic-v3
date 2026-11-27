@@ -218,10 +218,11 @@ body[data-page="about"] .dest>a.back{margin-top:2px}
 .ct-h{margin:14px 0 0;font-size:13px;line-height:19px;text-wrap:balance;color:var(--sub);text-align:center}
 .ct-go{margin:18px 0 0;text-align:center}
 .ct-c,.ct-notax{margin:12px 0 0;padding-left:.06em;font-size:11px;line-height:15px;letter-spacing:.06em;text-transform:uppercase;text-wrap:balance;color:var(--sub);text-align:center}
-.ct-tot{width:100%;margin:18px 0 0;border-collapse:collapse;table-layout:fixed}
+/* The totals table is fluid: the amount column shrinks to its content (width:1% is the CSS trick) and the label column takes everything else. "Ohio sales tax (8%)" has to stay on one line down to a 320 px viewport, so the label is nowrap too. The two nowraps rule out any wrap whatsoever; if a label does ever grow longer than the column, the amount keeps its place and the label truncates with an ellipsis. */
+.ct-tot{width:100%;margin:18px 0 0;border-collapse:collapse}
 .ct-tot th,.ct-tot td{padding:7px 0;font-weight:400;color:var(--ink);vertical-align:baseline}
-.ct-tot th{text-align:left;padding-right:12px;font-size:11px;line-height:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);width:auto}
-.ct-tot td{text-align:right;font-size:14px;line-height:20px;white-space:nowrap}
+.ct-tot th{text-align:left;padding-right:12px;font-size:11px;line-height:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0}
+.ct-tot td{text-align:right;font-size:14px;line-height:20px;white-space:nowrap;width:1%}
 .ct-tot .ct-tr-tot th,.ct-tot .ct-tr-tot td{border-top:1px solid var(--ink);padding-top:11px}
 .ct-tot .ct-tr-tot th{color:var(--ink);font-weight:600}
 .ct-f-pay{margin-top:18px}
@@ -235,11 +236,11 @@ body[data-page="about"] .dest>a.back{margin-top:2px}
 .od-c{margin-top:6px}
 .od-q{margin-top:26px;text-transform:none;letter-spacing:0;font-size:12px}
 .od-mail{color:var(--ink);text-decoration:underline;text-underline-offset:3px;pointer-events:auto}
-/* The order page's money table: same shape as the cart's, scoped to the order page. */
-.od-tot{width:100%;margin:16px 0 0;border-collapse:collapse;table-layout:fixed}
+/* The order page's money table: same shape as the cart's (fluid, label-column nowrap, amount shrinks to fit). */
+.od-tot{width:100%;margin:16px 0 0;border-collapse:collapse}
 .od-tot th,.od-tot td{padding:6px 0;font-weight:400;color:var(--ink);vertical-align:baseline}
-.od-tot th{text-align:left;padding-right:12px;font-size:11px;line-height:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}
-.od-tot td{text-align:right;font-size:14px;line-height:20px;white-space:nowrap}
+.od-tot th{text-align:left;padding-right:12px;font-size:11px;line-height:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0}
+.od-tot td{text-align:right;font-size:14px;line-height:20px;white-space:nowrap;width:1%}
 .od-tot .od-tr-tot th,.od-tot .od-tr-tot td{border-top:1px solid var(--ink);padding-top:10px}
 .od-tot .od-tr-tot th{color:var(--ink);font-weight:600}
 

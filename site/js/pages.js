@@ -221,16 +221,47 @@
   }
 
   /* ================================================================== PRODUCTS · BUY
-     On the site Buy is a plain form: the server asks Square for a payment page and sends the visitor there. Here it is only kept from being pressed twice.
-     In the one-file prototype there is no server and no Square: Buy shows the order page as a buyer would find it after paying. */
+     On the site Buy is a link to the cart (/products/buy/<id>): the browser navigates there. In the one-file prototype there is no cart and no Square, so Buy shows the order
+     page as a buyer would find it after paying. */
   function wireProducts(sec) {
-    Array.prototype.forEach.call(sec.querySelectorAll('.pd-f'), function (f) {
-      f.addEventListener('submit', function (ev) {
-        if (AD.mode !== 'site') { ev.preventDefault(); var t = sec.querySelector('.pd-t'); if (window.__home && window.__home.order) window.__home.order({ state: 'ready', title: t ? t.textContent : '', downloadHref: '#', sandbox: true }); return; }
-        if (f.classList.contains('busy')) { ev.preventDefault(); return; } f.classList.add('busy');
+    if (AD.mode !== 'site') {
+      Array.prototype.forEach.call(sec.querySelectorAll('.pd-buy'), function (a) {
+        a.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          var t = sec.querySelector('.pd-t');
+          if (window.__home && window.__home.order) window.__home.order({ state: 'ready', title: t ? t.textContent : '', downloadHref: '#', sandbox: true });
+        });
       });
-    });
+    }
     return { open: function () { Array.prototype.forEach.call(sec.querySelectorAll('.pd-f.busy'), function (f) { f.classList.remove('busy'); }); } };
+  }
+
+  /* ================================================================== CART · THE STATE PICKER AND CONFIRM & PAY
+     Two forms share one page. The state picker (step 1) is a plain GET form; with scripts off the browser does the picking and Review total reloads with ?state=XX. With scripts on
+     the engine writes the site's own "Needed" badge beside the label when the select is empty (as the booking form does), so the message reads as the site's own, not the browser's.
+     Confirm & pay (step 2) is a POST form; the engine only keeps it from being pressed twice. */
+  function wireBuy(sec) {
+    var S = (SITE.STORE && SITE.STORE.cart) || {};
+    var stateForm = sec.querySelector('.ct-f-state');
+    if (stateForm) {
+      var sel = stateForm.querySelector('.ct-s');
+      var e = stateForm.querySelector('.bk-e');
+      function say(msg) { if (!e) return; e.textContent = msg || ''; e.classList.toggle('on', !!msg); if (msg) sel.setAttribute('aria-invalid', 'true'); else sel.removeAttribute('aria-invalid'); }
+      stateForm.noValidate = true;       /* the site says what is missing; with scripts off the browser's own check (required + the inline oninvalid message) stands in */
+      stateForm.addEventListener('submit', function (ev) {
+        if (!sel) return;
+        if (!sel.value) { ev.preventDefault(); say(S.needed || 'Needed'); try { sel.focus(); } catch (err) {} }
+      });
+      if (sel) sel.addEventListener('change', function () { if (sel.value) say(''); });
+    }
+    var payForm = sec.querySelector('.ct-f-pay');
+    if (payForm) {
+      payForm.addEventListener('submit', function (ev) {
+        if (payForm.classList.contains('busy')) { ev.preventDefault(); return; }
+        payForm.classList.add('busy');
+      });
+    }
+    return { open: function () { if (payForm) payForm.classList.remove('busy'); } };
   }
 
   /* ================================================================== which page is showing */
@@ -239,6 +270,7 @@
     if (name === 'production') return [wireBelt(sec), wireForm(sec)];
     if (name === 'about') return [wireAbout(sec)];
     if (name === 'products') return [wireProducts(sec)];
+    if (name === 'buy') return [wireBuy(sec)];
     return [];
   }
   function each(name, what) { var sec = dest.querySelector('.pg[data-pg="' + name + '"]'), w = wired[name]; if (!sec) return; if (!w || w.sec !== sec) { w = wired[name] = { sec: sec, parts: parts(name, sec).filter(Boolean) }; } w.parts.forEach(function (p) { if (p[what]) p[what](); }); }

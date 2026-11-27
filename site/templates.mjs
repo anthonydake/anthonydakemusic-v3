@@ -23,6 +23,11 @@ export function door(label, tag, attrs) {
   return open + '<i aria-hidden="true">(</i><span data-t="' + esc(label) + '">' + esc(label) + '</span><i aria-hidden="true">)</i>' + (tag === 'button' ? '</button>' : '</a>');
 }
 export function price(cents) { var d = cents / 100; return '$' + (Math.round(d) === d ? String(d) : d.toFixed(2)); }
+/* A column of amounts (cart totals, order breakdown): if ANY amount has fractional cents, every amount shows cents, so $1.00 / $0.08 / $1.08 — not $1 / $0.08 / $1.08. */
+export function priceCol(centsList) {
+  var any = centsList.some(function (c) { return (c || 0) % 100 !== 0; });
+  return function (c) { c = c || 0; return any ? '$' + (c / 100).toFixed(2) : price(c); };
+}
 export function countWord(n) { return ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'][n] || String(n); }
 
 /* ------------------------------------------------------------------ the home screen's words (they are in every document: Back flies home without a reload) */
@@ -117,9 +122,13 @@ export function buy(t, data) {
   var d = data || {}, product = d.product, step = d.step || 'state';
   if (!product) return '<h1 class="pg-h">' + esc(STORE.cart.title) + '</h1><p class="pd-none">' + esc(STORE.none) + '</p>';
 
+  // Known cart errors: "state" (buyer didn't pick a state), "checkout" (Square
+  // call failed). Shown as .pd-err so the same wording and style as the
+  // Products page apply.
+  var errMsg = d.error === 'state' ? STORE.cart.badState : d.error === 'checkout' ? STORE.failed : '';
   var headline = '<h1 class="pg-h">' + esc(STORE.cart.title) + '</h1>' +
     (d.sandbox ? '<p class="pd-mode">' + esc(STORE.testMode) + '</p>' : '') +
-    (d.error ? '<p class="pd-err" role="alert">' + esc(d.error) + '</p>' : '');
+    (errMsg ? '<p class="pd-err" role="alert">' + esc(errMsg) + '</p>' : '');
   var item =
     '<div class="ct-item"><p class="ct-t">' + esc(product.title) + '</p>' +
     '<p class="ct-p">' + esc(price(product.priceCents)) + '</p></div>';
@@ -151,9 +160,13 @@ export function buy(t, data) {
   // it distinct from the table's own ct-tot (they would clash in CSS).
   var totals = d.totals || {};
   var ohio = (d.buyerState || '').toUpperCase() === 'OH';
+  // priceCol(amounts) returns a formatter that agrees across the column: if
+  // any line has fractional cents the whole column shows cents ($1.00 / $0.08
+  // / $1.08), so the amounts never read as if some were rounded.
+  var p = priceCol([totals.subtotalCents, totals.shippingCents, ohio ? totals.taxCents : 0, totals.totalCents]);
   var row = function (label, cents, cls) {
     return '<tr class="ct-row ct-' + cls + '"><th scope="row">' + esc(label) + '</th>' +
-      '<td>' + esc(price(cents)) + '</td></tr>';
+      '<td>' + esc(p(cents)) + '</td></tr>';
   };
   var rows = row(STORE.cart.subtotal, totals.subtotalCents || 0, 'sub');
   if ((totals.shippingCents || 0) > 0) rows += row(STORE.cart.shipping, totals.shippingCents, 'ship');
@@ -179,11 +192,14 @@ export function buy(t, data) {
 export function order(t, data) {
   var d = data || {}, s = d.state || 'pending', mail = '<a class="od-mail" href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + '</a>';
   var totals = d.totals;
-  var row = function (label, cents, cls) {
-    return '<tr class="od-row od-' + cls + '"><th scope="row">' + esc(label) + '</th><td>' + esc(price(cents)) + '</td></tr>';
-  };
   var breakdown = '';
   if (totals && (s === 'ready' || s === 'refunded')) {
+    // Same column-wide cents rule as the cart: if any amount has cents,
+    // every amount shows cents.
+    var p = priceCol([totals.subtotalCents, totals.shippingCents, totals.taxCents, totals.totalCents]);
+    var row = function (label, cents, cls) {
+      return '<tr class="od-row od-' + cls + '"><th scope="row">' + esc(label) + '</th><td>' + esc(p(cents)) + '</td></tr>';
+    };
     var tr = row(STORE.totals.subtotal, totals.subtotalCents || 0, 'sub');
     if ((totals.shippingCents || 0) > 0) tr += row(STORE.totals.shipping, totals.shippingCents, 'ship');
     if ((totals.taxCents || 0) > 0) tr += row(STORE.totals.tax, totals.taxCents, 'tax');

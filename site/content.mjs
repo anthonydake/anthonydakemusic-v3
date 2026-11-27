@@ -126,7 +126,9 @@ export const STORE = {
     noTax: 'No Ohio sales tax for this order.',
     total: 'Total',
     backToStore: '← Back to products',
-    badState: 'Pick a state to see the total.'
+    badState: 'Pick a state to see the total.',
+    /* The site's own "Needed" badge for the state picker (same word the booking form uses). */
+    needed: 'Needed'
   },
   /* THE ORDER PAGE (/products/thanks/<id>): the money breakdown, under the download button. */
   totals: { subtotal: 'Subtotal', shipping: 'Shipping', tax: 'Ohio sales tax', paid: 'Amount paid' }
